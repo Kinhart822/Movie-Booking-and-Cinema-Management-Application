@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend;
+package vn.edu.usth.mcmafrontend;
 
 import org.junit.Test;
 

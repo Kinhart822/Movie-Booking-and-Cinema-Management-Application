@@ -3,12 +3,12 @@ plugins {
 }
 
 android {
-    namespace = "vn.edu.usth.mcma.frontend"
+    namespace = "vn.edu.usth.mcmafrontend"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "vn.edu.usth.mcma.frontend"
-        minSdk = 30
+        applicationId = "vn.edu.usth.mcmafrontend"
+        minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -35,6 +35,8 @@ dependencies {
 
     implementation(libs.appcompat)
     implementation(libs.material)
+    implementation(libs.activity)
+    implementation(libs.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
