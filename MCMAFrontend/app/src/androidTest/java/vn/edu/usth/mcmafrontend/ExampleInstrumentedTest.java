@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend;
+package vn.edu.usth.mcmafrontend;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("vn.edu.usth.mcma.frontend", appContext.getPackageName());
+        assertEquals("vn.edu.usth.mcmafrontend", appContext.getPackageName());
     }
 }
