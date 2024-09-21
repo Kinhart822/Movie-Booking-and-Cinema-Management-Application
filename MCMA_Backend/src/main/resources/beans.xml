@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- Configuration for DataSource -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="user" value="sa"/>
+        <property name="password" value="kinhart822"/>
+        <property name="driverClass" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+        <property name="jdbcUrl" value="jdbc:sqlserver://localhost:1433;database=CinemaManagement;encrypt=true;trustServerCertificate=true"/>
+    </bean>
+
+    <!-- Configuration for Hibernate SessionFactory -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="com.spring.entities"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</prop>
+            </props>
+        </property>
+        <!-- Mapping -->
+        <property name="annotatedClasses">
+            <list>
+                <value>com.spring.entities.Authority</value>
+                <value>com.spring.entities.Cinema</value>
+                <value>com.spring.entities.City</value>
+                <value>com.spring.entities.Coupon</value>
+                <value>com.spring.entities.Drink</value>
+                <value>com.spring.entities.Food</value>
+                <value>com.spring.entities.Movie</value>
+                <value>com.spring.entities.MovieCoupon</value>
+                <value>com.spring.entities.MovieGenre</value>
+                <value>com.spring.entities.MovieGenreDetail</value>
+                <value>com.spring.entities.MoviePerformer</value>
+                <value>com.spring.entities.MoviePerformerDetail</value>
+                <value>com.spring.entities.MovieRatingDetail</value>
+                <value>com.spring.entities.MovieRespond</value>
+                <value>com.spring.entities.MovieSchedule</value>
+                <value>com.spring.entities.Screen</value>
+                <value>com.spring.entities.ScreenType</value>
+                <value>com.spring.entities.Seat</value>
+                <value>com.spring.entities.Users</value>
+                <value>com.spring.entities.UserAuthority</value>
+                <value>com.spring.entities.UserCoupon</value>
+            </list>
+        </property>
+    </bean>
+    <!-- Configuration for Hibernate Transaction Manager -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+</beans>
