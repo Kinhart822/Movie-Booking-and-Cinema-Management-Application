@@ -61,7 +61,4 @@ public class Food {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "movieSchedule_id", nullable = false)
     private MovieSchedule movieSchedule;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "food")
-    private List<Users> usersList = new ArrayList<>();
 }

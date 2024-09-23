@@ -49,7 +49,7 @@ public class MovieRespond {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id", nullable = false)
-    private Users users;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "movie_id", nullable = false)

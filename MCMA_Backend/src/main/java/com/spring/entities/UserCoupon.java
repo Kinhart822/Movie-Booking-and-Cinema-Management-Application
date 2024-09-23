@@ -19,8 +19,8 @@ public class UserCoupon {
     private int id;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
-    private Users users;
+    @JoinColumn(name = "users_id")
+    private User user;
 
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @JoinTable(name = "coupon", joinColumns = @JoinColumn(name = "userCoupon_id"), inverseJoinColumns = @JoinColumn(name = "coupon_id"))

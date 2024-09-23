@@ -3,13 +3,14 @@ package com.spring.entities;
 import com.spring.enums.Status;
 import com.spring.enums.Type;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -17,13 +18,15 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
-public class Users {
+@Table(name = "users")
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "Email")
+    @Column(name = "Email", nullable = false)
     private String email;
 
     @Column(name = "Password", nullable = false)
@@ -69,7 +72,7 @@ public class Users {
     @Enumerated(EnumType.ORDINAL)
     private Status lastModifiedBy;
 
-    @Column(name = "Date_Created")
+    @Column(name = "Date_Created", updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
@@ -79,20 +82,44 @@ public class Users {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateUpdated;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "users")
-    private List<UserAuthority> userAuthorityList = new ArrayList<>();
-
-    @OneToOne(mappedBy = "users", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserCoupon userCoupon;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "users")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<MovieRespond> movieResponds = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "food_id", nullable = false)
-    private Food food;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "drink_id", nullable = false)
-    private Drink drink;
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
