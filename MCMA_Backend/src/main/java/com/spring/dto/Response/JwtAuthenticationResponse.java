@@ -1,4 +1,4 @@
-package com.spring.payload;
+package com.spring.dto.Response;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,4 +8,7 @@ import lombok.Setter;
 public class JwtAuthenticationResponse {
     private String token;
     private String refreshToken;
+    private String resetToken;
+    private String message;
+    private String error;
 }

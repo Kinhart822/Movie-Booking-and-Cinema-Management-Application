@@ -1,6 +1,5 @@
-package com.spring.payload;
+package com.spring.dto.Request;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -8,18 +7,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SignUpRequest {
-    @NotBlank
-    @Email
-    private String email;
+public class ResetPasswordRequest {
 
-    @NotBlank
+    private String token;
+
     @Size(min = 6, message = "Password must be at least 6 characters long")
-    private String password;
+    private String newPassword;
 
-    @NotBlank
+    @Size(min = 6, message = "Password must be at least 6 characters long")
     private String confirmPassword;
-
-    @NotBlank
-    private String role;
 }

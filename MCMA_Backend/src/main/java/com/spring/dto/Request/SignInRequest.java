@@ -1,4 +1,4 @@
-package com.spring.payload;
+package com.spring.dto.Request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -14,6 +14,6 @@ public class SignInRequest {
     private String email;
 
     @NotBlank
-    @Size(min = 6, message = "Password must be at least 6 characters long")
+    @Size(min = 6, message = "Password must be at least 6 characters long and not blank")
     private String password;
 }

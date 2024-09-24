@@ -1,5 +1,6 @@
 package com.spring.entities;
 
+import com.spring.enums.Gender;
 import com.spring.enums.Status;
 import com.spring.enums.Type;
 import jakarta.persistence.*;
@@ -26,6 +27,26 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "First_Name", length = 50)
+    private String firstName;
+
+    @Column(name = "Last_Name", length = 50)
+    private String lastName;
+
+    @Column(name = "Address")
+    private String address;
+
+    @Column(name = "Gender")
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @Column(name = "Date_of_birth")
+    @Temporal(TemporalType.DATE)
+    private Date dateOfBirth;
+
+    @Column(name = "Phone", nullable = false)
+    private String phoneNumber;
+
     @Column(name = "Email", nullable = false)
     private String email;
 
@@ -39,38 +60,6 @@ public class User implements UserDetails {
     @Column(name = "Status")
     @Enumerated(EnumType.ORDINAL)
     private Status status;
-
-    @Column(name = "Activation_Key", length = 20)
-    private String activationKey;
-
-    @Column(name = "Reset_Key", length = 20)
-    private String resetKey;
-
-    @Column(name = "Delete_Key", length = 20)
-    private String deleteKey;
-
-    @Column(name = "Date_Last_Login")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateLastLogin;
-
-    @Column(name = "Date_Reset")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateReset;
-
-    @Column(name = "Date_Delete")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateDelete;
-
-    @Column(name = "Created_By")
-    @Enumerated(EnumType.ORDINAL)
-    private Status createdBy;
-
-    @Column(name = "Last_Modified_By")
-    @Enumerated(EnumType.ORDINAL)
-    private Status lastModifiedBy;
 
     @Column(name = "Date_Created", updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
