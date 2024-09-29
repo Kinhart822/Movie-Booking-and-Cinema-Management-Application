@@ -2,7 +2,6 @@ package com.spring.controller;
 
 import com.spring.dto.Request.*;
 import com.spring.dto.Response.JwtAuthenticationResponse;
-import com.spring.entities.User;
 import com.spring.service.AuthenticationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -44,5 +43,15 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.resetPassword(resetPasswordRequest));
     }
 
+    @PutMapping("/update-account/{userId}")
+    public ResponseEntity<String> updateAccount(@PathVariable int userId, @RequestBody UpdateAccountRequest updateAccountRequest) {
+        authenticationService.updateAccount(userId, updateAccountRequest);
+        return ResponseEntity.ok("Account updated successfully");
+    }
 
+    @DeleteMapping("/delete-account/{userId}")
+    public ResponseEntity<String> deleteAccount(@PathVariable int userId) {
+        authenticationService.deleteAccount(userId);
+        return ResponseEntity.ok("Account deleted successfully");
+    }
 }

@@ -1,7 +1,7 @@
 package com.spring.entities;
 
 import com.spring.enums.SizeFoodOrDrink;
-import com.spring.enums.Status;
+import com.spring.enums.Type;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
@@ -38,11 +36,11 @@ public class Food {
 
     @Column(name = "Created_By")
     @Enumerated(EnumType.ORDINAL)
-    private Status createdBy;
+    private Type createdBy;
 
     @Column(name = "Last_Modified_By")
     @Enumerated(EnumType.ORDINAL)
-    private Status lastModifiedBy;
+    private Type lastModifiedBy;
 
     @Column(name = "Date_Created")
     @DateTimeFormat(pattern = "yyyy-MM-dd")

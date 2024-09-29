@@ -1,13 +1,10 @@
 package com.spring.entities;
 
 import com.spring.enums.Gender;
-import com.spring.enums.Status;
 import com.spring.enums.Type;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
@@ -55,10 +52,6 @@ public class User implements UserDetails {
     @Column(name = "User_Type")
     @Enumerated(EnumType.ORDINAL)
     private Type userType;
-
-    @Column(name = "Status")
-    @Enumerated(EnumType.ORDINAL)
-    private Status status;
 
     @Column(name = "Date_Created", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)

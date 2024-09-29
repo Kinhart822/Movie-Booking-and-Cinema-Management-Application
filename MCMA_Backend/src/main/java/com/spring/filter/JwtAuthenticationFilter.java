@@ -1,4 +1,4 @@
-package com.spring.config;
+package com.spring.filter;
 
 import com.spring.service.JwtService;
 import com.spring.service.UserService;

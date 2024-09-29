@@ -8,7 +8,6 @@ import com.spring.dto.Response.JwtAuthenticationResponse;
 import com.spring.repository.TokenRepository;
 import com.spring.repository.UserRepository;
 import com.spring.service.AuthenticationService;
-import com.spring.service.EmailService;
 import com.spring.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +34,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
     private JwtService jwtService;
-
-    @Autowired
-    private EmailService emailService;
 
     @Autowired
     private TokenRepository tokenRepository;
@@ -155,10 +151,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             jwtAuthenticationResponse.setResetToken(resetToken);
 
-            String resetPasswordUrl = String.format("http://localhost:8080/api/v1/auth/reset-password?token=%s", resetToken);
-            emailService.sendPasswordResetEmail(forgotPasswordRequest.getEmail(), resetPasswordUrl);
-
-            jwtAuthenticationResponse.setMessage("We've sent a password reset link to your email");
+            jwtAuthenticationResponse.setMessage("Success!");
             return jwtAuthenticationResponse;
         } catch (Exception e) {
             jwtAuthenticationResponse.setError("An error occurred while processing your request.");
@@ -176,6 +169,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new IllegalArgumentException("Invalid or expired token");
         }
 
+        if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("New password cannot be the same as the old password");
+        }
+
         if (!request.getNewPassword().equals(request.getConfirmPassword())) {
             throw new IllegalArgumentException("Passwords do not match");
         }
@@ -184,5 +181,47 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         userRepository.save(user);
 
         return "Password has been reset successfully. You can log in again!";
+    }
+
+    @Override
+    public void updateAccount(int userId, UpdateAccountRequest updateAccountRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        if (updateAccountRequest.getEmail() != null) {
+            user.setEmail(updateAccountRequest.getEmail());
+        }
+        if (updateAccountRequest.getFirstName() != null) {
+            user.setFirstName(updateAccountRequest.getFirstName());
+        }
+        if (updateAccountRequest.getLastName() != null) {
+            user.setLastName(updateAccountRequest.getLastName());
+        }
+        if (updateAccountRequest.getPhone() != null) {
+            user.setPhoneNumber(updateAccountRequest.getPhone());
+        }
+        if (updateAccountRequest.getDateOfBirth()!= null) {
+            user.setDateOfBirth(updateAccountRequest.getDateOfBirth());
+        }
+        if (updateAccountRequest.getGender()!= null) {
+            user.setGender(updateAccountRequest.getGender());
+        }
+        if (updateAccountRequest.getAddress() != null) {
+            user.setAddress(updateAccountRequest.getAddress());
+        }
+        user.setDateUpdated(new Date());
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public void deleteAccount(int userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        List<Token> allTokens = tokenRepository.findAllByUser(userId);
+        tokenRepository.deleteAll(allTokens);
+
+        userRepository.delete(user);
     }
 }

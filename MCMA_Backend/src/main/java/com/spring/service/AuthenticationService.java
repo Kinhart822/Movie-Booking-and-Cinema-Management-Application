@@ -1,7 +1,6 @@
 package com.spring.service;
 
 import com.spring.dto.Request.*;
-import com.spring.entities.User;
 import com.spring.dto.Response.JwtAuthenticationResponse;
 
 public interface AuthenticationService {
@@ -14,4 +13,8 @@ public interface AuthenticationService {
     JwtAuthenticationResponse forgotPassword(ForgotPasswordRequest forgotPasswordRequest);
 
     String resetPassword(ResetPasswordRequest request);
+
+    void updateAccount(int userId, UpdateAccountRequest updateAccountRequest);
+
+    void deleteAccount(int userId);
 }

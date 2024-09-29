@@ -1,6 +1,6 @@
 package com.spring.entities;
 
-import com.spring.enums.Status;
+import com.spring.enums.Type;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,11 +49,11 @@ public class Coupon {
 
     @Column(name = "Created_By")
     @Enumerated(EnumType.ORDINAL)
-    private Status createdBy;
+    private Type createdBy;
 
     @Column(name = "Last_Modified_By")
     @Enumerated(EnumType.ORDINAL)
-    private Status lastModifiedBy;
+    private Type lastModifiedBy;
 
     @Column(name = "Date_Created")
     @DateTimeFormat(pattern = "yyyy-MM-dd")

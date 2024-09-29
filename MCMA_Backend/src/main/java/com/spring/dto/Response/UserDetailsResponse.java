@@ -1,7 +1,6 @@
 package com.spring.dto.Response;
 
 import com.spring.enums.Gender;
-import com.spring.enums.Status;
 import com.spring.enums.Type;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,8 +27,6 @@ public class UserDetailsResponse implements Serializable {
     private Gender gender;
 
     private Type type;
-
-    private Status status;
 
     private String address;
 
