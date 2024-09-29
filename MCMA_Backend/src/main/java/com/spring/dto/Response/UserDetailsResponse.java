@@ -1,19 +1,11 @@
 package com.spring.dto.Response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.spring.dto.validator.EnumValue;
-import com.spring.dto.validator.GenderSubset;
-import com.spring.dto.validator.PhoneNumber;
 import com.spring.enums.Gender;
 import com.spring.enums.Status;
 import com.spring.enums.Type;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;

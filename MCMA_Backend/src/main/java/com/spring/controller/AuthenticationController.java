@@ -2,9 +2,9 @@ package com.spring.controller;
 
 import com.spring.dto.Request.*;
 import com.spring.dto.Response.JwtAuthenticationResponse;
-import com.spring.dto.Response.UserDetailsResponse;
 import com.spring.entities.User;
 import com.spring.service.AuthenticationService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ public class AuthenticationController {
     private AuthenticationService authenticationService;
 
     @PostMapping("/signUp")
-    public ResponseEntity<User> signUp(@RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<JwtAuthenticationResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
         return ResponseEntity.ok(authenticationService.signUp(signUpRequest));
     }
 
@@ -35,32 +35,14 @@ public class AuthenticationController {
 
     @PostMapping("/forgot-password")
     public ResponseEntity<JwtAuthenticationResponse> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
-        JwtAuthenticationResponse response = authenticationService.forgotPassword(forgotPasswordRequest);
-        if (response.getError() != null) {
-            return ResponseEntity.badRequest().body(response);
-        }
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(authenticationService.forgotPassword(forgotPasswordRequest));
     }
 
-    @PostMapping("/reset-password")
-    public ResponseEntity<String> changePassword(@RequestBody ResetPasswordRequest request) {
-        String responseMessage = authenticationService.resetPassword(request);
-        return ResponseEntity.ok(responseMessage);
+    @Transactional
+    @RequestMapping(value = "/reset-password", method = {RequestMethod.POST, RequestMethod.GET})
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+        return ResponseEntity.ok(authenticationService.resetPassword(resetPasswordRequest));
     }
-            //TODO: UPDATE CODE
-//    @PostMapping("/logout")
-//    public ResponseEntity<String> logout(@RequestBody LogOutRequest logOutRequest) {
-//        return ResponseEntity.ok(authenticationService.logout(logOutRequest));
-//    }
-//
-//    @PostMapping("/remove-account")
-//    public ResponseEntity<JwtAuthenticationResponse> removeToken(@RequestBody RemoveAccountRequest removeAccountRequest) {
-//        return ResponseEntity.ok(authenticationService.removeToken(removeAccountRequest));
-//    }
 
-    @PostMapping("/update-account")
-    public ResponseEntity<UserDetailsResponse> updateAccount(@RequestBody UpdateAccountRequest updateAccountRequest) {
-        UserDetailsResponse updatedUserDetails = authenticationService.updateAccount(updateAccountRequest);
-        return ResponseEntity.ok(updatedUserDetails);
-    }
+
 }

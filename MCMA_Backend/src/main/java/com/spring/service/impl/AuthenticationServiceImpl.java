@@ -1,10 +1,11 @@
 package com.spring.service.impl;
 
 import com.spring.dto.Request.*;
-import com.spring.dto.Response.UserDetailsResponse;
+import com.spring.entities.Token;
 import com.spring.entities.User;
 import com.spring.enums.Type;
 import com.spring.dto.Response.JwtAuthenticationResponse;
+import com.spring.repository.TokenRepository;
 import com.spring.repository.UserRepository;
 import com.spring.service.AuthenticationService;
 import com.spring.service.EmailService;
@@ -17,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -39,8 +39,33 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private TokenRepository tokenRepository;
+
+    private void saveUserToken(String jwt, User user) {
+        Token saveToken = new Token();
+        saveToken.setToken(jwt);
+        saveToken.setLoggedOut(false);
+        saveToken.setUser(user);
+        tokenRepository.save(saveToken);
+    }
+
+    private void revokeAllTokenByUser(User user) {
+        List<Token> validTokensByUser = tokenRepository.findAllValidTokenByUser(user.getId());
+
+        if (!validTokensByUser.isEmpty()) {
+            validTokensByUser.forEach(t -> {
+                t.setLoggedOut(true);
+            });
+        } else {
+            return;
+        }
+
+        tokenRepository.saveAll(validTokensByUser);
+    }
+
     @Override
-    public User signUp(SignUpRequest signUpRequest) {
+    public JwtAuthenticationResponse signUp(SignUpRequest signUpRequest) {
         if (!signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())) {
             throw new IllegalArgumentException("Password and confirm password do not match");
         }
@@ -57,6 +82,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setPhoneNumber(signUpRequest.getPhone());
         user.setDateOfBirth(signUpRequest.getDateOfBirth());
         user.setDateCreated(new Date());
+        user.setDateUpdated(new Date());
         user.setAddress(signUpRequest.getAddress());
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
@@ -66,22 +92,33 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Incorrect Role: " + signUpRequest.getType());
         }
+        var saveUser = userRepository.save(user);
 
-        return userRepository.save(user);
+        var jwt = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        saveUserToken(jwt, saveUser);
+
+        JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
+        jwtAuthenticationResponse.setToken(jwt);
+        jwtAuthenticationResponse.setRefreshToken(refreshToken);
+
+        return jwtAuthenticationResponse;
     }
 
     @Override
     public JwtAuthenticationResponse signIn(SignInRequest signInRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                signInRequest.getEmail(), signInRequest.getPassword()
+                signInRequest.getEmail(),
+                signInRequest.getPassword()
         ));
         var user = userRepository.findByEmail(signInRequest.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Email or Password"));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid User: " + signInRequest.getEmail()));
         var jwt = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        revokeAllTokenByUser(user);
+        saveUserToken(jwt, user);
 
         JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
-
         jwtAuthenticationResponse.setToken(jwt);
         jwtAuthenticationResponse.setRefreshToken(refreshToken);
 
@@ -94,9 +131,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userRepository.findByEmail(userEmail).orElseThrow();
         if (jwtService.isTokenValid(refreshTokenRequest.getToken(), user)) {
             var jwt = jwtService.generateToken(user);
+            revokeAllTokenByUser(user);
+            saveUserToken(jwt, user);
 
             JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
-
             jwtAuthenticationResponse.setToken(jwt);
             jwtAuthenticationResponse.setRefreshToken(refreshTokenRequest.getToken());
 
@@ -112,7 +150,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             User user = userRepository.findByEmail(forgotPasswordRequest.getEmail())
                     .orElseThrow(() -> new IllegalArgumentException("User not found with this email"));
 
-            String resetToken = jwtService.generateResetToken(new HashMap<>(), user);
+            String resetToken = jwtService.generateResetToken(user);
+            saveUserToken(resetToken, user);
+
             jwtAuthenticationResponse.setResetToken(resetToken);
 
             String resetPasswordUrl = String.format("http://localhost:8080/api/v1/auth/reset-password?token=%s", resetToken);
@@ -130,7 +170,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public String resetPassword(ResetPasswordRequest request) {
         String email = jwtService.extractUsername(request.getToken());
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user"));
 
         if (!jwtService.isTokenValid(request.getToken(), user)) {
             throw new IllegalArgumentException("Invalid or expired token");
@@ -144,32 +184,5 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         userRepository.save(user);
 
         return "Password has been reset successfully. You can log in again!";
-    }
-
-    //TODO: UPDATE CODE
-    @Override
-    public UserDetailsResponse updateAccount(UpdateAccountRequest updateAccountRequest) {
-        User user = userRepository.findByEmail(updateAccountRequest.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        // Update user fields based on the request
-        user.setFirstName(updateAccountRequest.getFirstName());
-        user.setLastName(updateAccountRequest.getLastName());
-        user.setPhoneNumber(updateAccountRequest.getPhone());
-        user.setDateOfBirth(updateAccountRequest.getDateOfBirth());
-        user.setAddress(updateAccountRequest.getAddress());
-        user.setGender(updateAccountRequest.getGender());
-        user.setDateUpdated(new Date());
-        userRepository.save(user);
-
-        return UserDetailsResponse.builder()
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .phone(user.getPhoneNumber())
-                .dateOfBirth(user.getDateOfBirth())
-                .gender(user.getGender())
-                .address(user.getAddress())
-                .dateUpdated(user.getDateUpdated())
-                .build();
     }
 }
