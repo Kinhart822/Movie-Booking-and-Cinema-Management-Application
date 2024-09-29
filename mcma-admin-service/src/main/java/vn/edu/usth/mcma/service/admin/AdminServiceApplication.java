@@ -1,4 +1,4 @@
-package vn.minoxd.usth.mymcma.service.admin;
+package vn.edu.usth.mcma.service.admin;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
