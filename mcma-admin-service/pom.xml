@@ -27,6 +27,11 @@
             <artifactId>mcma-common-domain</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>vn.edu.usth.mcma</groupId>
+            <artifactId>mcma-common-common</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 </project>
