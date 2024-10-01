@@ -65,6 +65,6 @@ public class Coupon {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateUpdated;
 
-    @ManyToMany(mappedBy = "coupons")
+    @ManyToMany(mappedBy = "userCoupons")
     private Set<UserCoupon> userCouponSet;
 }

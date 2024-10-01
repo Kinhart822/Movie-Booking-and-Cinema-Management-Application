@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -43,6 +44,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/admin").hasAuthority(Type.ADMIN.name())
                         .requestMatchers("/api/v1/user").hasAuthority(Type.USER.name())
+                        .requestMatchers("/api/v1/user/search-movie-by-name").permitAll()
+                        .requestMatchers("/api/v1/user/search-movie-by-genre").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -72,8 +75,25 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception{
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    @Bean
+    public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+        return (request, response, authentication) -> {
+            String role = authentication.getAuthorities().stream()
+                    .findFirst()
+                    .get()
+                    .getAuthority();
+
+            if (role.equals("USER")) {
+                response.sendRedirect("/api/v1/user");
+            } else if (role.equals("ADMIN")) {
+                response.sendRedirect("/api/v1/admin");
+            } else {
+                response.sendRedirect("/signUp");
+            }
+        };
+    }
 }

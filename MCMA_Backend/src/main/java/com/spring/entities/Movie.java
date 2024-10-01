@@ -45,7 +45,7 @@ public class Movie {
     @Enumerated(EnumType.ORDINAL)
     private Type lastModifiedBy;
 
-    @Column(name = "Date_Created")
+    @Column(name = "Date_Created", updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
@@ -55,22 +55,34 @@ public class Movie {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateUpdated;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie", cascade = CascadeType.ALL)
     private List<MovieSchedule> movieScheduleList = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "movieSet")
+    @ManyToMany
+    @JoinTable(
+            name = "set_movie_genre",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "movieGenre_id"))
     private Set<MovieGenre> movieGenreSet;
 
-    @ManyToMany(mappedBy = "movieSet")
+    @ManyToMany
+    @JoinTable(
+            name = "set_movie_performer",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "moviePerformer_id"))
     private Set<MoviePerformer> moviePerformerSet;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "movieRatingDetail_id", nullable = false)
     private MovieRatingDetail movieRatingDetail;
 
-    @ManyToMany(mappedBy = "movieSet")
+    @ManyToMany
+    @JoinTable(
+            name = "set_movie_coupon",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "movieCoupon_id"))
     private Set<MovieCoupon> movieCouponSet;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie", cascade = CascadeType.ALL)
     private List<MovieRespond> movieResponds = new ArrayList<>();
 }

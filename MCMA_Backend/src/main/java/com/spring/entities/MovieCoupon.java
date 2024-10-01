@@ -18,8 +18,7 @@ public class MovieCoupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-    @JoinTable(name = "movie", joinColumns = @JoinColumn(name = "movieCoupon_id"), inverseJoinColumns = @JoinColumn(name = "movie_id"))
+    @ManyToMany(mappedBy = "movieCouponSet")
     private Set<Movie> movieSet;
 
 }

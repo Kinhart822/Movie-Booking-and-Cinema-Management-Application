@@ -18,10 +18,10 @@ public class MovieGenre {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-    @JoinTable(name = "movie", joinColumns = @JoinColumn(name = "movieGenre_id"), inverseJoinColumns = @JoinColumn(name = "movie_id"))
+    @ManyToMany(mappedBy = "movieGenreSet")
     private Set<Movie> movieSet;
 
-    @OneToOne(mappedBy = "movieGenre", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "movieGenreDetail_id")
     private MovieGenreDetail movieGenreDetail;
 }

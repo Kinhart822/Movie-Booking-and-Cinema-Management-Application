@@ -22,7 +22,10 @@ public class UserCoupon {
     @JoinColumn(name = "users_id")
     private User user;
 
-    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-    @JoinTable(name = "coupon", joinColumns = @JoinColumn(name = "userCoupon_id"), inverseJoinColumns = @JoinColumn(name = "coupon_id"))
-    private Set<Coupon> coupons;
+    @ManyToMany
+    @JoinTable(
+            name = "coupons_that_user_has",
+            joinColumns = @JoinColumn(name = "userCoupon_id"),
+            inverseJoinColumns = @JoinColumn(name = "coupon_id"))
+    private Set<Coupon> userCoupons;
 }

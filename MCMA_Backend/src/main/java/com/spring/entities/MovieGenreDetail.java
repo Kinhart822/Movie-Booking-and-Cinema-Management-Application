@@ -21,6 +21,9 @@ public class MovieGenreDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "Name", length = 50)
+    private String Name;
+
     @Column(name = "Description", length = 20)
     private String Description;
 
@@ -32,7 +35,7 @@ public class MovieGenreDetail {
     @Enumerated(EnumType.ORDINAL)
     private Type lastModifiedBy;
 
-    @Column(name = "Date_Created")
+    @Column(name = "Date_Created", updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
@@ -42,8 +45,6 @@ public class MovieGenreDetail {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateUpdated;
 
-    @OneToOne
-    @JoinColumn(name = "movieGenre_id")
+    @OneToOne(mappedBy = "movieGenreDetail")
     private MovieGenre movieGenre;
-
 }
