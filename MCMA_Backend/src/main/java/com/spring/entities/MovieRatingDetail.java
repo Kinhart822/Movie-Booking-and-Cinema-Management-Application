@@ -48,4 +48,5 @@ public class MovieRatingDetail {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movieRatingDetail")
     private List<Movie> movies = new ArrayList<>();
+
 }
