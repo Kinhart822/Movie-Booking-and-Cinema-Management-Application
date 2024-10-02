@@ -56,4 +56,8 @@ public class Cinema {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cinema")
     private List<Drink> drinks = new ArrayList<>();
+
+    @OneToOne(mappedBy = "cinema")
+    private Booking booking;
+
 }

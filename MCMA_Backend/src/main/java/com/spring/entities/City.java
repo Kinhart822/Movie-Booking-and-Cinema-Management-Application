@@ -45,4 +45,7 @@ public class City {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "city")
     private List<Cinema> cinemaList = new ArrayList<>();
+
+    @OneToOne(mappedBy = "city")
+    private Booking booking;
 }

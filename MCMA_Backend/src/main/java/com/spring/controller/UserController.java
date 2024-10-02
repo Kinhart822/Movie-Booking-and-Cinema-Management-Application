@@ -1,15 +1,16 @@
 package com.spring.controller;
 
+import com.spring.dto.Request.BookingRequest;
+import com.spring.dto.Response.BookingResponse;
 import com.spring.dto.Response.SearchMovieByGenreResponse;
 import com.spring.dto.Response.SearchMovieByNameResponse;
+import com.spring.service.BookingService;
 import com.spring.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,6 +21,9 @@ public class UserController {
 
     @Autowired
     private MovieService movieService;
+
+    @Autowired
+    private BookingService bookingService;
 
     @GetMapping
     public ResponseEntity<String> sayHello(){
@@ -40,5 +44,11 @@ public class UserController {
     public ResponseEntity<List<SearchMovieByGenreResponse>> getAllMoviesByMovieGenreSet(
             @RequestParam(required = false, name = "movieGenreId") Integer movieGenreId) {
         return ResponseEntity.ok(movieService.getAllMoviesByMovieGenreSet(movieGenreId));
+    }
+
+    @PostMapping("/booking-movie")
+    public ResponseEntity<BookingResponse> bookMovie(@RequestBody BookingRequest bookingRequest) {
+        BookingResponse bookingResponse = bookingService.createBooking(bookingRequest);
+        return ResponseEntity.ok(bookingResponse);
     }
 }

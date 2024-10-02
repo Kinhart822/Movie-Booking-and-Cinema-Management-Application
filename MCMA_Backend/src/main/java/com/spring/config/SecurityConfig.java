@@ -46,6 +46,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/user").hasAuthority(Type.USER.name())
                         .requestMatchers("/api/v1/user/search-movie-by-name").permitAll()
                         .requestMatchers("/api/v1/user/search-movie-by-genre").permitAll()
+                        .requestMatchers("/api/v1/user/booking-movie").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
