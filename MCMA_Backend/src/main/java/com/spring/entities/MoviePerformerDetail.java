@@ -12,7 +12,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -36,7 +35,6 @@ public class MoviePerformerDetail {
 
     @Column(name = "DOB")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.DATE)
     private Date dob;
 
     @Column(name = "Created_By")
@@ -47,17 +45,14 @@ public class MoviePerformerDetail {
     @Enumerated(EnumType.ORDINAL)
     private Type lastModifiedBy;
 
-    @Column(name = "Date_Created")
+    @Column(name = "Date_Created", updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
 
     @Column(name = "Date_Updated")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date dateUpdated;
 
-    @OneToOne
-    @JoinColumn(name = "moviePerformer_id")
+    @OneToOne(mappedBy = "moviePerformerDetail")
     private MoviePerformer moviePerformer;
 }

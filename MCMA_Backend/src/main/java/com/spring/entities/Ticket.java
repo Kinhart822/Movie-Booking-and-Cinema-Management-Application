@@ -1,7 +1,6 @@
 package com.spring.entities;
 
-import com.spring.enums.SeatStatus;
-import com.spring.enums.SeatType;
+import com.spring.enums.TicketType;
 import com.spring.enums.Type;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,27 +17,14 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Seat {
+public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "Seat_Row")
-    private Integer row;
-
-    @Column(name = "Seat_Column")
-    private Integer column;
-
-    @Column(name = "Type")
-    @Enumerated(EnumType.ORDINAL)
-    private SeatType seatType;
-
-    @Column(name = "Status")
-    @Enumerated(EnumType.ORDINAL)
-    private SeatStatus seatStatus;
-
-    @Column(name = "Name", length = 5)
-    private String name;
+    @Column(name = "Ticket_Type")
+    @Enumerated(EnumType.STRING)
+    private TicketType ticketType;
 
     @Column(name = "Created_By")
     @Enumerated(EnumType.ORDINAL)
@@ -56,10 +42,10 @@ public class Seat {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateUpdated;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "screen_id", nullable = false)
-    private Screen screen;
-
-    @ManyToMany(mappedBy = "seats")
-    private Set<Booking> bookings;
+    @ManyToMany
+    @JoinTable(
+            name = "set_movie_ticket",
+            joinColumns = @JoinColumn(name = "ticket_id"),
+            inverseJoinColumns = @JoinColumn(name = "movieSchedule_id"))
+    private Set<MovieSchedule> movieScheduleSet;
 }

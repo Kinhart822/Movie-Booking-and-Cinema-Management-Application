@@ -31,7 +31,6 @@ public class Movie {
 
     @Column(name = "Date_Publish")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date datePublish;
 
     @Column(name = "Trailer_Link")
@@ -47,12 +46,10 @@ public class Movie {
 
     @Column(name = "Date_Created", updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
 
     @Column(name = "Date_Updated")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date dateUpdated;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie", cascade = CascadeType.ALL)
@@ -80,9 +77,13 @@ public class Movie {
     @JoinTable(
             name = "set_movie_coupon",
             joinColumns = @JoinColumn(name = "movie_id"),
-            inverseJoinColumns = @JoinColumn(name = "movieCoupon_id"))
-    private Set<MovieCoupon> movieCouponSet;
+            inverseJoinColumns = @JoinColumn(name = "coupon_id"))
+    private Set<Coupon> movieCouponSet;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie", cascade = CascadeType.ALL)
     private List<MovieRespond> movieResponds = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cinema_id")
+    private Cinema cinema;
 }

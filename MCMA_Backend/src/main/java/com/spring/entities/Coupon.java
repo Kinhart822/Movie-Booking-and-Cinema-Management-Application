@@ -39,12 +39,10 @@ public class Coupon {
 
     @Column(name = "DATE_AVAILABLE")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date dateAvailable;
 
     @Column(name = "DATE_EXPIRED")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date dateExpired;
 
     @Column(name = "Created_By")
@@ -55,16 +53,17 @@ public class Coupon {
     @Enumerated(EnumType.ORDINAL)
     private Type lastModifiedBy;
 
-    @Column(name = "Date_Created")
+    @Column(name = "Date_Created", updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
 
     @Column(name = "Date_Updated")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date dateUpdated;
 
     @ManyToMany(mappedBy = "userCoupons")
     private Set<UserCoupon> userCouponSet;
+
+    @ManyToMany(mappedBy = "movieCouponSet")
+    private Set<Movie> movieSet;
 }

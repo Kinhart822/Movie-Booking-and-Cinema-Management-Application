@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,14 +33,12 @@ public class Cinema {
     @Enumerated(EnumType.ORDINAL)
     private Type lastModifiedBy;
 
-    @Column(name = "Date_Created")
+    @Column(name = "Date_Created", updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
 
     @Column(name = "Date_Updated")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date dateUpdated;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -57,7 +54,9 @@ public class Cinema {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cinema")
     private List<Drink> drinks = new ArrayList<>();
 
-    @OneToOne(mappedBy = "cinema")
-    private Booking booking;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cinema")
+    private List<Booking> bookings;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cinema")
+    private List<Movie> movieList;
 }

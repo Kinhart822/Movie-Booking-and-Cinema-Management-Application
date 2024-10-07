@@ -21,6 +21,7 @@ public class MoviePerformer {
     @ManyToMany(mappedBy = "moviePerformerSet")
     private Set<Movie> movieSet;
 
-    @OneToOne(mappedBy = "moviePerformer", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "moviePerformerDetail_id")
     private MoviePerformerDetail moviePerformerDetail;
 }

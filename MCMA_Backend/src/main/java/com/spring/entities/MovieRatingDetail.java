@@ -36,14 +36,12 @@ public class MovieRatingDetail {
     @Enumerated(EnumType.ORDINAL)
     private Type lastModifiedBy;
 
-    @Column(name = "Date_Created")
+    @Column(name = "Date_Created", updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
 
     @Column(name = "Date_Updated")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date dateUpdated;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movieRatingDetail")

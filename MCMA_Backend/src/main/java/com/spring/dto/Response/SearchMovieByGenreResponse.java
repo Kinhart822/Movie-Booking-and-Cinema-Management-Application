@@ -16,8 +16,12 @@ public class SearchMovieByGenreResponse {
     private String name;
     private Integer length;
     private String trailerLink;
-    private Date datePublish;
+    private String datePublish;
     private String ratingName;
     private String ratingDescription;
     private String genreName;
+    private String performerName;
+    private String performerType;
+    private String performerSex;
 }
+

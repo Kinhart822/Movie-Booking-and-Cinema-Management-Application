@@ -1,7 +1,11 @@
 package com.spring.enums;
 
 public enum TicketType {
-    Normal,
-    Vip,
-    Twin
+    Adult,
+    Child,
+    Teen,
+    Senior,
+    Student,
+    Couple_Ticket,
+    Family_Ticket
 }

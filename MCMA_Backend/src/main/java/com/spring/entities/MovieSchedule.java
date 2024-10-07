@@ -8,10 +8,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,8 +25,8 @@ public class MovieSchedule {
     private int id;
 
     @Column(name = "Start_Time")
-    @DateTimeFormat(pattern = "HH:mm:ss")  
-    private LocalTime startTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm a")
+    private LocalDateTime startTime;
 
     @Column(name = "Created_By")
     @Enumerated(EnumType.ORDINAL)
@@ -35,19 +36,20 @@ public class MovieSchedule {
     @Enumerated(EnumType.ORDINAL)
     private Type lastModifiedBy;
 
-    @Column(name = "Date_Created")
+    @Column(name = "Date_Created", updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
 
     @Column(name = "Date_Updated")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date dateUpdated;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
+
+    @ManyToMany(mappedBy = "movieScheduleSet")
+    private Set<Ticket> ticketSet;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "screen_id", nullable = false)
@@ -58,4 +60,6 @@ public class MovieSchedule {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movieSchedule")
     private List<Drink> drinks = new ArrayList<>();
-}
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "movieSchedule")
+    private List<Booking> bookings = new ArrayList<>();}

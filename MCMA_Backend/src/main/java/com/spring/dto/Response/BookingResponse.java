@@ -1,13 +1,16 @@
 package com.spring.dto.Response;
 
+import com.spring.entities.Seat;
 import com.spring.enums.BookingStatus;
 import com.spring.enums.PaymentMethod;
+import com.spring.enums.SeatType;
+import com.spring.enums.TicketType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,8 +19,12 @@ import java.time.LocalDateTime;
 public class BookingResponse {
     private String bookingNo;
     private String movieName;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
+    private String startDateTime;
+    private String endDateTime;
     private PaymentMethod paymentMethod;
     private BookingStatus status;
+    private TicketType ticketType;
+    private Double ticketPrice;
+    private List<Integer> seatIds;
+    private List<SeatType> seatTypes;
 }

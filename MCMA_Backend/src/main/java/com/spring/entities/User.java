@@ -4,6 +4,7 @@ import com.spring.enums.Gender;
 import com.spring.enums.Type;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -37,7 +38,7 @@ public class User implements UserDetails {
     private Gender gender;
 
     @Column(name = "Date_of_birth")
-    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateOfBirth;
 
     @Column(name = "Phone", nullable = false)
@@ -54,11 +55,11 @@ public class User implements UserDetails {
     private Type userType;
 
     @Column(name = "Date_Created", updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateCreated;
 
     @Column(name = "Date_Updated")
-    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateUpdated;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)

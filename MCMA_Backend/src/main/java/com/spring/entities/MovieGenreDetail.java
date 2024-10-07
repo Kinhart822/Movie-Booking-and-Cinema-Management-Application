@@ -10,7 +10,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -37,12 +36,10 @@ public class MovieGenreDetail {
 
     @Column(name = "Date_Created", updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
 
     @Column(name = "Date_Updated")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date dateUpdated;
 
     @OneToOne(mappedBy = "movieGenreDetail")
