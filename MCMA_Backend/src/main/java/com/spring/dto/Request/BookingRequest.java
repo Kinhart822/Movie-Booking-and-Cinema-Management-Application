@@ -31,5 +31,8 @@ public class BookingRequest {
     private List<SizeFoodOrDrink> sizeFood;
     private List<SizeFoodOrDrink> sizeDrinks;
 
+    private List<Integer> movieCouponIds;
+    private List<Integer> userCouponIds;
+
     private PaymentMethod paymentMethod;
 }

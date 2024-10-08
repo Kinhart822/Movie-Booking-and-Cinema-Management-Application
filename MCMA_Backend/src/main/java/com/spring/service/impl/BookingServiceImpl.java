@@ -6,8 +6,10 @@ import com.spring.entities.*;
 import com.spring.enums.*;
 import com.spring.repository.*;
 import com.spring.service.BookingService;
+import com.spring.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +50,12 @@ public class BookingServiceImpl implements BookingService {
 
     @Autowired
     private DrinkRepository drinkRepository;
+
+    @Autowired
+    private CouponRepository couponRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public List<MovieSchedule> getSchedulesForSelectedDate(Integer movieId, Integer cinemaId, LocalDate selectedDate) {
@@ -145,7 +154,7 @@ public class BookingServiceImpl implements BookingService {
             selectedDrinks = drinkRepository.findAllById(bookingRequest.getDrinkIds());
         }
 
-// 7. Calculate Total Price
+// 5. Calculate Total Price
         double totalTicketPrice = selectedTickets.stream().mapToDouble(ticket -> getTicketPrice(ticket.getTicketType())).sum();
         double totalSeatPrice = selectedSeats.stream().mapToDouble(seat -> getSeatPrice(seat.getSeatType())).sum();
         double totalFoodPrice = 0;
@@ -174,7 +183,53 @@ public class BookingServiceImpl implements BookingService {
         }
         double totalPrice = totalTicketPrice + totalSeatPrice + totalDrinkPrice + totalFoodPrice;
 
-// 8. Choose Payment, Create a new Booking
+// 6. Choose Coupons
+        List<Coupon> availableMovieCoupons = couponRepository.findAllById(couponRepository.findCouponIdsByMovieId(movie.getId()));
+        List<Coupon> availableUserCoupons = couponRepository.findAllById(couponRepository.findCouponIdsByUserId(user.getId()));
+
+        // Fetch and validate selected movie coupons
+        List<Coupon> selectedMovieCoupons = new ArrayList<>();
+        if (bookingRequest.getMovieCouponIds() != null && !bookingRequest.getMovieCouponIds().isEmpty()) {
+            selectedMovieCoupons = couponRepository.findAllById(bookingRequest.getMovieCouponIds());
+
+            for (Coupon coupon : selectedMovieCoupons) {
+                // Check if the coupon is valid based on date
+                if (coupon.getDateAvailable().after(new Date()) || coupon.getDateExpired().before(new Date())) {
+                    throw new IllegalArgumentException("Coupon " + coupon.getId() + " is not valid.");
+                }
+
+                // Check if the minimum spend requirement is met
+                if (totalPrice < coupon.getMinSpendReq()) {
+                    throw new IllegalArgumentException("Minimum spend requirement not met for coupon " + coupon.getId() + ".");
+                }
+
+                // Apply the discount for each valid coupon
+                totalPrice -= coupon.getDiscount().doubleValue();
+            }
+        }
+
+        // Fetch and validate selected user coupons
+        List<Coupon> selectedUserCoupons = new ArrayList<>();
+        if (bookingRequest.getUserCouponIds() != null && !bookingRequest.getUserCouponIds().isEmpty()) {
+            selectedUserCoupons = couponRepository.findAllById(bookingRequest.getUserCouponIds());
+
+            for (Coupon coupon : selectedUserCoupons) {
+                // Check if the coupon is valid based on date
+                if (coupon.getDateAvailable().after(new Date()) || coupon.getDateExpired().before(new Date())) {
+                    throw new IllegalArgumentException("Coupon " + coupon.getId() + " is not valid.");
+                }
+
+                // Check if the minimum spend requirement is met
+                if (totalPrice < coupon.getMinSpendReq()) {
+                    throw new IllegalArgumentException("Minimum spend requirement not met for coupon " + coupon.getId() + ".");
+                }
+
+                // Apply the discount for each valid coupon
+                totalPrice -= coupon.getDiscount().doubleValue();
+            }
+        }
+
+// 7. Choose Payment, Create a new Booking
         String bookingNo = generateBookingNo(user.getLastName(), user.getFirstName(), movie.getName());
         Booking booking = new Booking();
         booking.setBookingNo(bookingNo);
@@ -201,6 +256,14 @@ public class BookingServiceImpl implements BookingService {
 //        }
 //        seatRepository.saveAll(selectedSeats);
 
+// 8. Send mail notification
+        try {
+            emailService.sendSimpleMailMessage(user.getEmail());
+            System.out.println("Notification sent to " + user.getEmail());
+        } catch (Exception e) {
+            System.out.println("Failed to send email notification. Please try again later.");
+        }
+
         return new BookingResponse(
                 bookingNo,
                 movie.getName(),
@@ -215,6 +278,10 @@ public class BookingServiceImpl implements BookingService {
                 selectedDrinks.stream().map(Drink::getId).toList(),
                 bookingRequest.getSizeFood(),
                 bookingRequest.getSizeDrinks(),
+                availableMovieCoupons.stream().map(Coupon::getId).toList(),
+                selectedMovieCoupons.stream().map(Coupon::getId).toList(),
+                availableUserCoupons.stream().map(Coupon::getId).toList(),
+                selectedUserCoupons.stream().map(Coupon::getId).toList(),
                 totalPrice
         );
     }

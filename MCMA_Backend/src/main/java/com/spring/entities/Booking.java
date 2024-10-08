@@ -82,6 +82,14 @@ public class Booking {
             inverseJoinColumns = @JoinColumn(name = "drink_id")
     )
     private List<Drink> drinks;
+
+    @ManyToMany
+    @JoinTable(
+            name = "booking_coupons",
+            joinColumns = @JoinColumn(name = "booking_id"),
+            inverseJoinColumns = @JoinColumn(name = "coupon_id")
+    )
+    private List<Coupon> coupons;
 }
 
 

@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -61,4 +62,7 @@ public class Drink {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "movieSchedule_id", nullable = false)
     private MovieSchedule movieSchedule;
+
+    @ManyToMany(mappedBy = "drinks")
+    private Set<Booking> bookings;
 }

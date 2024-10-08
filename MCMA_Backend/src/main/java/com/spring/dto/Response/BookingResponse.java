@@ -30,5 +30,11 @@ public class BookingResponse {
     private List<SizeFoodOrDrink> sizeFood;
     private List<SizeFoodOrDrink> sizeDrinks;
 
+    private List<Integer> availableMovieCoupons;
+    private List<Integer> selectedMovieCoupons;
+
+    private List<Integer> availableUserCoupons;
+    private List<Integer> selectedUserCoupons;
+
     private Double totalPrice;
 }
