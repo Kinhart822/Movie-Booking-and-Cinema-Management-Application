@@ -48,4 +48,7 @@ public class Ticket {
             joinColumns = @JoinColumn(name = "ticket_id"),
             inverseJoinColumns = @JoinColumn(name = "movieSchedule_id"))
     private Set<MovieSchedule> movieScheduleSet;
+
+    @ManyToMany(mappedBy = "tickets")
+    private Set<Booking> bookings;
 }

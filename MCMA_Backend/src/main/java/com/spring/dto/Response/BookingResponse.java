@@ -1,10 +1,6 @@
 package com.spring.dto.Response;
 
-import com.spring.entities.Seat;
-import com.spring.enums.BookingStatus;
-import com.spring.enums.PaymentMethod;
-import com.spring.enums.SeatType;
-import com.spring.enums.TicketType;
+import com.spring.enums.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,8 +19,16 @@ public class BookingResponse {
     private String endDateTime;
     private PaymentMethod paymentMethod;
     private BookingStatus status;
-    private TicketType ticketType;
-    private Double ticketPrice;
-    private List<Integer> seatIds;
+
+    private List<Integer> selectedTickets;
+
+    private List<Integer> selectedSeat;
     private List<SeatType> seatTypes;
+
+    private List<Integer> selectedFoods;
+    private List<Integer> selectedDrinks;
+    private List<SizeFoodOrDrink> sizeFood;
+    private List<SizeFoodOrDrink> sizeDrinks;
+
+    private Double totalPrice;
 }

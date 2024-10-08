@@ -3,10 +3,7 @@ package com.spring.service.impl;
 import com.spring.dto.Request.BookingRequest;
 import com.spring.dto.Response.BookingResponse;
 import com.spring.entities.*;
-import com.spring.enums.BookingStatus;
-import com.spring.enums.PaymentMethod;
-import com.spring.enums.SeatStatus;
-import com.spring.enums.SeatType;
+import com.spring.enums.*;
 import com.spring.repository.*;
 import com.spring.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +16,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -36,10 +34,19 @@ public class BookingServiceImpl implements BookingService {
     private CinemaRepository cinemaRepository;
 
     @Autowired
+    private TicketRepository ticketRepository;
+
+    @Autowired
     private MovieScheduleRepository movieScheduleRepository;
 
     @Autowired
     private SeatRepository seatRepository;
+
+    @Autowired
+    private FoodRepository foodRepository;
+
+    @Autowired
+    private DrinkRepository drinkRepository;
 
     @Override
     public List<MovieSchedule> getSchedulesForSelectedDate(Integer movieId, Integer cinemaId, LocalDate selectedDate) {
@@ -48,6 +55,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingResponse createBooking(BookingRequest bookingRequest) {
+// 1. Choose city and cinema
         Movie movie = movieRepository.findById(bookingRequest.getMovieId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid movie ID"));
 
@@ -57,6 +65,7 @@ public class BookingServiceImpl implements BookingService {
         Cinema cinema = cinemaRepository.findByIdAndCityId(bookingRequest.getCinemaId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid cinema for the specified city"));
 
+// 2. Choose ticket, date and time
         List<MovieSchedule> movieSchedules = getSchedulesForSelectedDate(
                 bookingRequest.getMovieId(),
                 bookingRequest.getCinemaId(),
@@ -66,14 +75,12 @@ public class BookingServiceImpl implements BookingService {
             throw new IllegalArgumentException("No movie schedules found for the selected date.");
         }
 
-        // Lọc ra các lịch chiếu có startTime trùng với thời gian được chọn
         LocalTime selectedTime = bookingRequest.getSelectedTime();
         MovieSchedule selectedSchedule = movieSchedules.stream()
                 .filter(schedule -> schedule.getStartTime().toLocalTime().equals(selectedTime))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("No matching movie schedule found for the selected time."));
 
-        // Check if the booking is being made within 10 minutes after the movie starts
         LocalDateTime currentTime = LocalDateTime.now();
         LocalDateTime movieStartTime = selectedSchedule.getStartTime();
         LocalDateTime movieStartTimePlus10Minutes = movieStartTime.plusMinutes(10);
@@ -82,7 +89,6 @@ public class BookingServiceImpl implements BookingService {
             throw new IllegalArgumentException("Cannot book a ticket after the movie has started for more than 10 minutes.");
         }
 
-        // Tính toán thời gian kết thúc dựa trên độ dài phim
         LocalDateTime startDateTime = bookingRequest.getSelectedDate().atTime(selectedTime);
         int lengthInMinutes = movie.getLength();
         long lengthInSeconds = lengthInMinutes * 60L;
@@ -93,10 +99,13 @@ public class BookingServiceImpl implements BookingService {
         String formattedStartDateTime = startDateTime.format(formatter);
         String formattedEndDateTime = endDateTime.format(formatter);
 
-        // Lấy danh sách ghế trống dựa trên loại ghế người dùng đã chọn
+        List<Ticket> selectedTickets = new ArrayList<>();
+        if (bookingRequest.getTicketIds() != null && !bookingRequest.getTicketIds().isEmpty()) {
+            selectedTickets = ticketRepository.findAllById(bookingRequest.getTicketIds());
+        }
+// 3. Choose Seat
         List<Seat> availableSeats = new ArrayList<>();
 
-        // Collect available seats for each selected seat type
         for (SeatType seatType : bookingRequest.getSeatTypes()) {
             List<Seat> seatsOfType = seatRepository.findBySeatTypeAndSeatStatus(seatType, SeatStatus.Available);
             availableSeats.addAll(seatsOfType);
@@ -106,12 +115,10 @@ public class BookingServiceImpl implements BookingService {
             throw new IllegalArgumentException("No available seats of the selected type.");
         }
 
-        // Hiển thị các ghế có sẵn cho người dùng dựa trên loại ghế đã chọn
         List<Integer> availableSeatIds = availableSeats.stream()
                 .map(Seat::getId)
                 .toList();
 
-        // Xác nhận các ghế mà người dùng đã chọn nằm trong danh sách ghế có sẵn
         List<Seat> selectedSeats = seatRepository.findAllById(bookingRequest.getSeatIds());
 
         List<String> unavailableSeats = new ArrayList<>();
@@ -126,13 +133,52 @@ public class BookingServiceImpl implements BookingService {
             throw new IllegalArgumentException("Selected seats are not available or do not match the requested type(s): " + unavailableSeatsMessage);
         }
 
-        String bookingNo = generateBookingNo(user.getLastName(), user.getFirstName(), movie.getName());
+// 4. Food, Drink Ordering
+        List<Food> selectedFoods = new ArrayList<>();
+        if (bookingRequest.getFoodIds() != null && !bookingRequest.getFoodIds().isEmpty()) {
+            selectedFoods = foodRepository.findAllById(bookingRequest.getFoodIds());
+        }
 
-        // Tạo booking
+        // Select drinks if drinkIds are provided
+        List<Drink> selectedDrinks = new ArrayList<>();
+        if (bookingRequest.getDrinkIds() != null && !bookingRequest.getDrinkIds().isEmpty()) {
+            selectedDrinks = drinkRepository.findAllById(bookingRequest.getDrinkIds());
+        }
+
+// 7. Calculate Total Price
+        double totalTicketPrice = selectedTickets.stream().mapToDouble(ticket -> getTicketPrice(ticket.getTicketType())).sum();
+        double totalSeatPrice = selectedSeats.stream().mapToDouble(seat -> getSeatPrice(seat.getSeatType())).sum();
+        double totalFoodPrice = 0;
+        if (bookingRequest.getFoodIds() != null && bookingRequest.getSizeFood() != null) {
+            for (int i = 0; i < bookingRequest.getFoodIds().size(); i++) {
+                Integer foodId = bookingRequest.getFoodIds().get(i);
+                Optional<Food> foodOpt = foodRepository.findById(foodId);
+                if (foodOpt.isPresent()) {
+                    Food food = foodOpt.get();
+                    SizeFoodOrDrink size = bookingRequest.getSizeFood().get(i);
+                    totalFoodPrice += food.getPrice() * getFoodOrDrinkPrice(size);
+                }
+            }
+        }
+        double totalDrinkPrice = 0;
+        if (bookingRequest.getDrinkIds() != null && bookingRequest.getSizeDrinks() != null) {
+            for (int i = 0; i < bookingRequest.getDrinkIds().size(); i++) {
+                Integer drinkId = bookingRequest.getDrinkIds().get(i);
+                Optional<Drink> drinkOpt = drinkRepository.findById(drinkId);
+                if (drinkOpt.isPresent()) {
+                    Drink drink = drinkOpt.get();
+                    SizeFoodOrDrink size = bookingRequest.getSizeDrinks().get(i);
+                    totalDrinkPrice += drink.getPrice() * getFoodOrDrinkPrice(size);
+                }
+            }
+        }
+        double totalPrice = totalTicketPrice + totalSeatPrice + totalDrinkPrice + totalFoodPrice;
+
+// 8. Choose Payment, Create a new Booking
+        String bookingNo = generateBookingNo(user.getLastName(), user.getFirstName(), movie.getName());
         Booking booking = new Booking();
         booking.setBookingNo(bookingNo);
         booking.setStartDateTime(startDateTime);
-        booking.setTicketType(bookingRequest.getTicketType());
         booking.setPaymentMethod(bookingRequest.getPaymentMethod());
 
         if (bookingRequest.getPaymentMethod() == PaymentMethod.Cash) {
@@ -144,22 +190,16 @@ public class BookingServiceImpl implements BookingService {
         booking.setUser(user);
         booking.setCinema(cinema);
         booking.setMovieSchedule(selectedSchedule);
+        booking.setTickets(selectedTickets);
         booking.setSeats(selectedSeats);
-
+        booking.setFoodList(selectedFoods);
+        booking.setDrinks(selectedDrinks);
         bookingRepository.save(booking);
 
 //        for (Seat seat : selectedSeats) {
 //            seat.setSeatStatus(SeatStatus.Unavailable);
 //        }
 //        seatRepository.saveAll(selectedSeats);
-
-        List<Integer> selectedSeatIds = selectedSeats.stream()
-                .map(Seat::getId)
-                .toList();
-
-        List<SeatType> bookedSeatTypes = selectedSeats.stream()
-                .map(Seat::getSeatType)
-                .toList();
 
         return new BookingResponse(
                 bookingNo,
@@ -168,10 +208,14 @@ public class BookingServiceImpl implements BookingService {
                 formattedEndDateTime,
                 booking.getPaymentMethod(),
                 booking.getStatus(),
-                booking.getTicketType(),
-                booking.getTicketPrice(bookingRequest.getTicketType()),
-                selectedSeatIds,
-                bookedSeatTypes
+                selectedTickets.stream().map(Ticket::getId).toList(),
+                selectedSeats.stream().map(Seat::getId).toList(),
+                selectedSeats.stream().map(Seat::getSeatType).toList(),
+                selectedFoods.stream().map(Food::getId).toList(),
+                selectedDrinks.stream().map(Drink::getId).toList(),
+                bookingRequest.getSizeFood(),
+                bookingRequest.getSizeDrinks(),
+                totalPrice
         );
     }
 
@@ -200,5 +244,36 @@ public class BookingServiceImpl implements BookingService {
         }
 
         return camelCaseName.toString();
+    }
+
+    private double getTicketPrice(TicketType ticketType) {
+        return switch (ticketType) {
+            case Adult -> 15.00;
+            case Child -> 10.00;
+            case Teen -> 12.00;
+            case Senior -> 8.00;
+            case Student -> 11.00;
+            case Couple_Ticket -> 25.00;
+            case Family_Ticket -> 40.00;
+            default -> throw new IllegalArgumentException("Invalid ticket type");
+        };
+    }
+
+    private double getSeatPrice(SeatType seatType) {
+        return switch (seatType) {
+            case Normal -> 10.00;
+            case Vip -> 15.00;
+            case Twin -> 20.00;
+            default -> throw new IllegalArgumentException("Invalid seat type");
+        };
+    }
+
+    private double getFoodOrDrinkPrice(SizeFoodOrDrink sizeFoodOrDrink) {
+        return switch (sizeFoodOrDrink) {
+            case Small -> 0.75;
+            case Medium -> 1.00;
+            case Large -> 1.25;
+            default -> throw new IllegalArgumentException("Invalid size of Food or Drink");
+        };
     }
 }

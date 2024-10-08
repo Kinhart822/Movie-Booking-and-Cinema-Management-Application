@@ -2,6 +2,7 @@ package com.spring.entities;
 
 import com.spring.enums.BookingStatus;
 import com.spring.enums.PaymentMethod;
+import com.spring.enums.SizeFoodOrDrink;
 import com.spring.enums.TicketType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -50,9 +51,13 @@ public class Booking {
     @JoinColumn(name = "movie_schedule_id")
     private MovieSchedule movieSchedule;
 
-    @Column(name = "Ticket_Type")
-    @Enumerated(EnumType.STRING)
-    private TicketType ticketType;
+    @ManyToMany
+    @JoinTable(
+            name = "booking_tickets",
+            joinColumns = @JoinColumn(name = "booking_id"),
+            inverseJoinColumns = @JoinColumn(name = "ticket_id")
+    )
+    private List<Ticket> tickets;
 
     @ManyToMany
     @JoinTable(
@@ -62,18 +67,21 @@ public class Booking {
     )
     private List<Seat> seats;
 
-    public double getTicketPrice(TicketType ticketType) {
-        return switch (ticketType) {
-            case Adult -> 15.00;
-            case Child -> 10.00;
-            case Teen -> 12.00;
-            case Senior -> 8.00;
-            case Student -> 11.00;
-            case Couple_Ticket -> 25.00;
-            case Family_Ticket -> 40.00;
-            default -> throw new IllegalArgumentException("Invalid ticket type");
-        };
-    }
+    @ManyToMany
+    @JoinTable(
+            name = "booking_food_orders",
+            joinColumns = @JoinColumn(name = "booking_id"),
+            inverseJoinColumns = @JoinColumn(name = "food_id")
+    )
+    private List<Food> foodList;
+
+    @ManyToMany
+    @JoinTable(
+            name = "booking_drink_orders",
+            joinColumns = @JoinColumn(name = "booking_id"),
+            inverseJoinColumns = @JoinColumn(name = "drink_id")
+    )
+    private List<Drink> drinks;
 }
 
 

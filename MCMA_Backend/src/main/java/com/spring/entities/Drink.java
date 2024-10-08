@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Getter
@@ -35,7 +36,7 @@ public class Drink {
     private Integer volume;
 
     @Column(name = "Price")
-    private Integer price;
+    private Double price;
 
     @Column(name = "Created_By")
     @Enumerated(EnumType.ORDINAL)

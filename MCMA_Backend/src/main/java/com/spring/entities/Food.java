@@ -32,7 +32,7 @@ public class Food {
     private SizeFoodOrDrink size;
 
     @Column(name = "Price")
-    private Integer price;
+    private Double price;
 
     @Column(name = "Created_By")
     @Enumerated(EnumType.ORDINAL)
