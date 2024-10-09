@@ -70,7 +70,7 @@ public class Movie {
     private Set<MoviePerformer> moviePerformerSet;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "movieRatingDetail_id", nullable = false)
+    @JoinColumn(name = "movieRatingDetail_id")
     private MovieRatingDetail movieRatingDetail;
 
     @ManyToMany
@@ -86,4 +86,8 @@ public class Movie {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cinema_id")
     private Cinema cinema;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id")
+    private City city;
 }

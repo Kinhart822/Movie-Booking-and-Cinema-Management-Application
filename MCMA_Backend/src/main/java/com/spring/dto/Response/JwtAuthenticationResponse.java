@@ -11,4 +11,5 @@ public class JwtAuthenticationResponse {
     private String resetToken;
     private String message;
     private String error;
+    private Integer userId;
 }

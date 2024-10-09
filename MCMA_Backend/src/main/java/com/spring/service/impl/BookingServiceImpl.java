@@ -1,7 +1,6 @@
 package com.spring.service.impl;
 
-import com.spring.dto.Request.BookingRequest;
-import com.spring.dto.Response.BookingResponse;
+import com.spring.dto.Request.booking.*;
 import com.spring.entities.*;
 import com.spring.enums.*;
 import com.spring.repository.*;
@@ -9,7 +8,6 @@ import com.spring.service.BookingService;
 import com.spring.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -28,6 +26,9 @@ public class BookingServiceImpl implements BookingService {
     private BookingRepository bookingRepository;
 
     @Autowired
+    private BookingDraftRepository bookingDraftRepository;
+
+    @Autowired
     private MovieRepository movieRepository;
 
     @Autowired
@@ -35,6 +36,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Autowired
     private CinemaRepository cinemaRepository;
+
+    @Autowired
+    private CityRepository cityRepository;
 
     @Autowired
     private TicketRepository ticketRepository;
@@ -57,34 +61,59 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     private EmailService emailService;
 
+    // 1. Choose movie/city and cinema
     @Override
-    public List<MovieSchedule> getSchedulesForSelectedDate(Integer movieId, Integer cinemaId, LocalDate selectedDate) {
-        return movieScheduleRepository.findSchedulesByMovieCinemaAndDate(movieId, cinemaId, selectedDate);
+    public Movie selectMovie(MovieRequest movieRequest, Integer userId) {
+        Movie movie = movieRepository.findById(movieRequest.getMovieId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid movie"));
+
+        BookingDraft draft = getOrCreateDraft(userId);
+        draft.setMovie(movie);
+        bookingDraftRepository.save(draft);
+
+        return movie;
     }
 
     @Override
-    public BookingResponse createBooking(BookingRequest bookingRequest) {
-// 1. Choose city and cinema
-        Movie movie = movieRepository.findById(bookingRequest.getMovieId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid movie ID"));
+    public City selectCity(CityRequest cityRequest, Integer userId) {
+        City city = cityRepository.findById(cityRequest.getCityId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid city"));
 
-        User user = userRepository.findById(bookingRequest.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+        BookingDraft draft = getOrCreateDraft(userId);
+        draft.setCity(city);
+        bookingDraftRepository.save(draft);
 
-        Cinema cinema = cinemaRepository.findByIdAndCityId(bookingRequest.getCinemaId())
+        return city;
+    }
+
+    @Override
+    public Cinema selectCinema(CinemaRequest cinemaRequest, Integer userId) {
+        Cinema cinema = cinemaRepository.findByIdAndCityId(cinemaRequest.getCinemaId(), cinemaRequest.getCityId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid cinema for the specified city"));
 
-// 2. Choose ticket, date and time
-        List<MovieSchedule> movieSchedules = getSchedulesForSelectedDate(
-                bookingRequest.getMovieId(),
-                bookingRequest.getCinemaId(),
-                bookingRequest.getSelectedDate()
+        BookingDraft draft = getOrCreateDraft(userId);
+        draft.setCinema(cinema);
+        bookingDraftRepository.save(draft);
+
+        return cinema;
+    }
+
+    // 2. Choose ticket, date and time
+    @Override
+    public List<MovieSchedule> getSchedulesForSelectedDate(ScheduleRequest scheduleRequest, Integer userId) {
+        Movie movie = movieRepository.findById(scheduleRequest.getMovieId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid movie"));
+
+        List<MovieSchedule> movieSchedules = movieScheduleRepository.findSchedulesByMovieCinemaAndDate(
+                scheduleRequest.getMovieId(),
+                scheduleRequest.getCinemaId(),
+                scheduleRequest.getSelectedDate()
         );
         if (movieSchedules.isEmpty()) {
-            throw new IllegalArgumentException("No movie schedules found for the selected date.");
+            throw new IllegalArgumentException("No available schedules for the selected date.");
         }
 
-        LocalTime selectedTime = bookingRequest.getSelectedTime();
+        LocalTime selectedTime = scheduleRequest.getSelectedTime();
         MovieSchedule selectedSchedule = movieSchedules.stream()
                 .filter(schedule -> schedule.getStartTime().toLocalTime().equals(selectedTime))
                 .findFirst()
@@ -98,28 +127,42 @@ public class BookingServiceImpl implements BookingService {
             throw new IllegalArgumentException("Cannot book a ticket after the movie has started for more than 10 minutes.");
         }
 
-        LocalDateTime startDateTime = bookingRequest.getSelectedDate().atTime(selectedTime);
+        LocalDateTime startDateTime = scheduleRequest.getSelectedDate().atTime(selectedTime);
         int lengthInMinutes = movie.getLength();
         long lengthInSeconds = lengthInMinutes * 60L;
         Duration movieDuration = Duration.ofSeconds(lengthInSeconds);
         LocalDateTime endDateTime = startDateTime.plus(movieDuration);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm a");
-        String formattedStartDateTime = startDateTime.format(formatter);
-        String formattedEndDateTime = endDateTime.format(formatter);
+        BookingDraft draft = getOrCreateDraft(userId);
+        draft.setStartDateTime(startDateTime);
+        draft.setEndDateTime(endDateTime);
+        draft.setMovieSchedule(selectedSchedule);
+        bookingDraftRepository.save(draft);
 
-        List<Ticket> selectedTickets = new ArrayList<>();
-        if (bookingRequest.getTicketIds() != null && !bookingRequest.getTicketIds().isEmpty()) {
-            selectedTickets = ticketRepository.findAllById(bookingRequest.getTicketIds());
+        return movieSchedules;
+    }
+
+    @Override
+    public List<Ticket> selectTickets(TicketRequest ticketRequest, Integer userId) {
+        List<Ticket> tickets = new ArrayList<>();
+        if (ticketRequest.getTicketIds() != null && !ticketRequest.getTicketIds().isEmpty()) {
+            tickets = ticketRepository.findAllById(ticketRequest.getTicketIds());
         }
-// 3. Choose Seat
+
+        BookingDraft draft = getOrCreateDraft(userId);
+        draft.setTickets(tickets);
+        bookingDraftRepository.save(draft);
+
+        return tickets;
+    }
+
+    // 3. Choose Seat
+    @Override
+    public List<Seat> selectSeats(SeatRequest seatRequest, Integer userId) {
         List<Seat> availableSeats = new ArrayList<>();
-
-        for (SeatType seatType : bookingRequest.getSeatTypes()) {
-            List<Seat> seatsOfType = seatRepository.findBySeatTypeAndSeatStatus(seatType, SeatStatus.Available);
-            availableSeats.addAll(seatsOfType);
+        for (SeatType seatType : seatRequest.getSeatTypes()) {
+            availableSeats.addAll(seatRepository.findBySeatTypeAndSeatStatus(seatType, SeatStatus.Available));
         }
-
         if (availableSeats.isEmpty()) {
             throw new IllegalArgumentException("No available seats of the selected type.");
         }
@@ -128,7 +171,7 @@ public class BookingServiceImpl implements BookingService {
                 .map(Seat::getId)
                 .toList();
 
-        List<Seat> selectedSeats = seatRepository.findAllById(bookingRequest.getSeatIds());
+        List<Seat> selectedSeats = seatRepository.findAllById(seatRequest.getSeatIds());
 
         List<String> unavailableSeats = new ArrayList<>();
         for (Seat seat : selectedSeats) {
@@ -138,59 +181,125 @@ public class BookingServiceImpl implements BookingService {
         }
 
         if (!unavailableSeats.isEmpty()) {
-            String unavailableSeatsMessage = String.join(", ", unavailableSeats);
-            throw new IllegalArgumentException("Selected seats are not available or do not match the requested type(s): " + unavailableSeatsMessage);
+            throw new IllegalArgumentException("Selected seats are not available: " + String.join(", ", unavailableSeats));
         }
 
-// 4. Food, Drink Ordering
+        BookingDraft draft = getOrCreateDraft(userId);
+        draft.setSeats(selectedSeats);
+        bookingDraftRepository.save(draft);
+
+        return selectedSeats;
+    }
+
+    // 4. Food, Drink Ordering
+    @Override
+    public List<Food> selectFood(FoodDrinkRequest foodDrinkRequest, Integer userId) {
         List<Food> selectedFoods = new ArrayList<>();
-        if (bookingRequest.getFoodIds() != null && !bookingRequest.getFoodIds().isEmpty()) {
-            selectedFoods = foodRepository.findAllById(bookingRequest.getFoodIds());
+        if (foodDrinkRequest.getFoodIds() != null && !foodDrinkRequest.getFoodIds().isEmpty()) {
+            selectedFoods = foodRepository.findAllById(foodDrinkRequest.getFoodIds());
         }
 
-        // Select drinks if drinkIds are provided
+        BookingDraft draft = getOrCreateDraft(userId);
+        draft.setFoodList(selectedFoods);
+        bookingDraftRepository.save(draft);
+
+        return selectedFoods;
+    }
+
+    @Override
+    public List<Drink> selectDrinks(FoodDrinkRequest foodDrinkRequest, Integer userId) {
         List<Drink> selectedDrinks = new ArrayList<>();
-        if (bookingRequest.getDrinkIds() != null && !bookingRequest.getDrinkIds().isEmpty()) {
-            selectedDrinks = drinkRepository.findAllById(bookingRequest.getDrinkIds());
+        if (foodDrinkRequest.getDrinkIds() != null && !foodDrinkRequest.getDrinkIds().isEmpty()) {
+            selectedDrinks = drinkRepository.findAllById(foodDrinkRequest.getDrinkIds());
         }
 
-// 5. Calculate Total Price
-        double totalTicketPrice = selectedTickets.stream().mapToDouble(ticket -> getTicketPrice(ticket.getTicketType())).sum();
-        double totalSeatPrice = selectedSeats.stream().mapToDouble(seat -> getSeatPrice(seat.getSeatType())).sum();
+        BookingDraft draft = getOrCreateDraft(userId);
+        draft.setDrinks(selectedDrinks);
+        bookingDraftRepository.save(draft);
+
+        return selectedDrinks;
+    }
+
+    // 5. Choose Coupon and Calculate Total Price
+    @Override
+    public Double calculateTotalPrice(CouponRequest couponRequest, Integer userId) {
+        BookingDraft draft = bookingDraftRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("No booking draft found for user"));
+
+        double totalTicketPrice = draft.getTickets().stream()
+                .mapToDouble(ticket -> getTicketPrice(ticket.getTicketType()))
+                .sum();
+
+        double totalSeatPrice = draft.getSeats().stream()
+                .mapToDouble(seat -> getSeatPrice(seat.getSeatType()))
+                .sum();
+
         double totalFoodPrice = 0;
-        if (bookingRequest.getFoodIds() != null && bookingRequest.getSizeFood() != null) {
-            for (int i = 0; i < bookingRequest.getFoodIds().size(); i++) {
-                Integer foodId = bookingRequest.getFoodIds().get(i);
-                Optional<Food> foodOpt = foodRepository.findById(foodId);
-                if (foodOpt.isPresent()) {
-                    Food food = foodOpt.get();
-                    SizeFoodOrDrink size = bookingRequest.getSizeFood().get(i);
-                    totalFoodPrice += food.getPrice() * getFoodOrDrinkPrice(size);
-                }
-            }
-        }
-        double totalDrinkPrice = 0;
-        if (bookingRequest.getDrinkIds() != null && bookingRequest.getSizeDrinks() != null) {
-            for (int i = 0; i < bookingRequest.getDrinkIds().size(); i++) {
-                Integer drinkId = bookingRequest.getDrinkIds().get(i);
-                Optional<Drink> drinkOpt = drinkRepository.findById(drinkId);
-                if (drinkOpt.isPresent()) {
-                    Drink drink = drinkOpt.get();
-                    SizeFoodOrDrink size = bookingRequest.getSizeDrinks().get(i);
-                    totalDrinkPrice += drink.getPrice() * getFoodOrDrinkPrice(size);
-                }
-            }
-        }
-        double totalPrice = totalTicketPrice + totalSeatPrice + totalDrinkPrice + totalFoodPrice;
+        if (draft.getFoodList() != null && couponRequest.getSizeFood() != null) {
+            List<Integer> foodList = new ArrayList<>();
 
-// 6. Choose Coupons
-        List<Coupon> availableMovieCoupons = couponRepository.findAllById(couponRepository.findCouponIdsByMovieId(movie.getId()));
-        List<Coupon> availableUserCoupons = couponRepository.findAllById(couponRepository.findCouponIdsByUserId(user.getId()));
+            for (Food food : draft.getFoodList()) {
+                Integer foodId = foodRepository.findFoodIdByFood(food.getName());
+                if (foodId != null) {
+                    foodList.add(foodId);
+                }
+            }
+
+            List<SizeFoodOrDrink> sizeFood = couponRequest.getSizeFood();
+
+            // Check for list size match to avoid index out of bounds
+            if (foodList.size() == sizeFood.size()) {
+                for (int i = 0; i < foodList.size(); i++) {
+                    Integer foodId = foodList.get(i);
+                    Optional<Food> foodOpt = foodRepository.findById(foodId);
+
+                    if (foodOpt.isPresent()) {
+                        Food food = foodOpt.get();
+                        SizeFoodOrDrink size = sizeFood.get(i);
+                        totalFoodPrice += food.getPrice() * getFoodOrDrinkPrice(size);
+                    }
+                }
+            } else {
+                throw new IllegalArgumentException("Mismatch between food items and size selections.");
+            }
+        }
+
+        double totalDrinkPrice = 0;
+        if (draft.getDrinks() != null && couponRequest.getSizeDrinks() != null) {
+            List<Integer> drinkList = new ArrayList<>();
+
+            for (Drink drink : draft.getDrinks()) {
+                Integer drinkId = drinkRepository.findDrinkIdByFood(drink.getName());
+                if (drinkId != null) {
+                    drinkList.add(drinkId);
+                }
+            }
+
+            List<SizeFoodOrDrink> sizeDrinks = couponRequest.getSizeDrinks();
+
+            // Check for list size match to avoid index out of bounds
+            if (drinkList.size() == sizeDrinks.size()) {
+                for (int i = 0; i < drinkList.size(); i++) {
+                    Integer drinkId = drinkList.get(i);
+                    Optional<Drink> drinkOpt = drinkRepository.findById(drinkId);
+
+                    if (drinkOpt.isPresent()) {
+                        Drink drink = drinkOpt.get();
+                        SizeFoodOrDrink size = sizeDrinks.get(i);
+                        totalDrinkPrice += drink.getPrice() * getFoodOrDrinkPrice(size);
+                    }
+                }
+            } else {
+                throw new IllegalArgumentException("Mismatch between drink items and size selections.");
+            }
+        }
+
+        double totalPrice = totalTicketPrice + totalSeatPrice + totalDrinkPrice + totalFoodPrice;
 
         // Fetch and validate selected movie coupons
         List<Coupon> selectedMovieCoupons = new ArrayList<>();
-        if (bookingRequest.getMovieCouponIds() != null && !bookingRequest.getMovieCouponIds().isEmpty()) {
-            selectedMovieCoupons = couponRepository.findAllById(bookingRequest.getMovieCouponIds());
+        if (couponRequest.getMovieCouponIds() != null && !couponRequest.getMovieCouponIds().isEmpty()) {
+            selectedMovieCoupons = couponRepository.findAllById(couponRequest.getMovieCouponIds());
 
             for (Coupon coupon : selectedMovieCoupons) {
                 // Check if the coupon is valid based on date
@@ -206,12 +315,13 @@ public class BookingServiceImpl implements BookingService {
                 // Apply the discount for each valid coupon
                 totalPrice -= coupon.getDiscount().doubleValue();
             }
+
         }
 
         // Fetch and validate selected user coupons
         List<Coupon> selectedUserCoupons = new ArrayList<>();
-        if (bookingRequest.getUserCouponIds() != null && !bookingRequest.getUserCouponIds().isEmpty()) {
-            selectedUserCoupons = couponRepository.findAllById(bookingRequest.getUserCouponIds());
+        if (couponRequest.getUserCouponIds() != null && !couponRequest.getUserCouponIds().isEmpty()) {
+            selectedUserCoupons = couponRepository.findAllById(couponRequest.getUserCouponIds());
 
             for (Coupon coupon : selectedUserCoupons) {
                 // Check if the coupon is valid based on date
@@ -229,34 +339,68 @@ public class BookingServiceImpl implements BookingService {
             }
         }
 
-// 7. Choose Payment, Create a new Booking
-        String bookingNo = generateBookingNo(user.getLastName(), user.getFirstName(), movie.getName());
-        Booking booking = new Booking();
-        booking.setBookingNo(bookingNo);
-        booking.setStartDateTime(startDateTime);
-        booking.setPaymentMethod(bookingRequest.getPaymentMethod());
+        List<Coupon> allSelectedCoupons = draft.getCoupons() != null ? new ArrayList<>(draft.getCoupons()) : new ArrayList<>();
 
-        if (bookingRequest.getPaymentMethod() == PaymentMethod.Cash) {
+        if (!selectedMovieCoupons.isEmpty()) {
+            allSelectedCoupons.addAll(selectedMovieCoupons);
+        }
+        if (!selectedUserCoupons.isEmpty()) {
+            allSelectedCoupons.addAll(selectedUserCoupons);
+        }
+
+        draft = getOrCreateDraft(userId);
+        draft.setTotalPrice(totalPrice);
+        draft.setCoupons(allSelectedCoupons);
+
+        bookingDraftRepository.save(draft);
+
+        return totalPrice;
+    }
+
+    // 6. Complete Booking and Send Confirmation Email
+    @Override
+    public Booking completeBooking(CompleteRequest completeRequest, Integer userId) {
+        BookingDraft draft = bookingDraftRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("No booking draft found for user"));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+
+        if (draft.getTotalPrice() == null) {
+            throw new IllegalArgumentException("Total price is not calculated. Please calculate the total price first.");
+        }
+
+        Booking booking = new Booking();
+        booking.setBookingNo(generateBookingNo(
+                draft.getUser().getLastName(),
+                draft.getUser().getFirstName(),
+                draft.getMovie().getName())
+        );
+        booking.setUser(draft.getUser());
+        booking.setMovie(draft.getMovie());
+        booking.setStartDateTime(draft.getStartDateTime());
+        booking.setEndDateTime(draft.getEndDateTime());
+        booking.setSeats(new ArrayList<>(draft.getSeats()));
+        booking.setFoodList(new ArrayList<>(draft.getFoodList()));
+        booking.setDrinks(new ArrayList<>(draft.getDrinks()));
+        booking.setTotalPrice(draft.getTotalPrice());
+        booking.setPaymentMethod(completeRequest.getPaymentMethod());
+
+        if (completeRequest.getPaymentMethod() == PaymentMethod.Cash) {
             booking.setStatus(BookingStatus.Pending_Payment);
-        } else if (bookingRequest.getPaymentMethod() == PaymentMethod.Bank_Transfer) {
+        } else if (completeRequest.getPaymentMethod() == PaymentMethod.Bank_Transfer) {
             booking.setStatus(BookingStatus.Confirmed);
         }
 
-        booking.setUser(user);
-        booking.setCinema(cinema);
-        booking.setMovieSchedule(selectedSchedule);
-        booking.setTickets(selectedTickets);
-        booking.setSeats(selectedSeats);
-        booking.setFoodList(selectedFoods);
-        booking.setDrinks(selectedDrinks);
+        for (Seat seat : draft.getSeats()) {
+            seat.setSeatStatus(SeatStatus.Unavailable);
+        }
+        seatRepository.saveAll(draft.getSeats());
+
         bookingRepository.save(booking);
+        bookingDraftRepository.delete(draft);
 
-//        for (Seat seat : selectedSeats) {
-//            seat.setSeatStatus(SeatStatus.Unavailable);
-//        }
-//        seatRepository.saveAll(selectedSeats);
-
-// 8. Send mail notification
+        // Send mail notification
         try {
             emailService.sendSimpleMailMessage(user.getEmail());
             System.out.println("Notification sent to " + user.getEmail());
@@ -264,26 +408,32 @@ public class BookingServiceImpl implements BookingService {
             System.out.println("Failed to send email notification. Please try again later.");
         }
 
-        return new BookingResponse(
-                bookingNo,
-                movie.getName(),
-                formattedStartDateTime,
-                formattedEndDateTime,
-                booking.getPaymentMethod(),
-                booking.getStatus(),
-                selectedTickets.stream().map(Ticket::getId).toList(),
-                selectedSeats.stream().map(Seat::getId).toList(),
-                selectedSeats.stream().map(Seat::getSeatType).toList(),
-                selectedFoods.stream().map(Food::getId).toList(),
-                selectedDrinks.stream().map(Drink::getId).toList(),
-                bookingRequest.getSizeFood(),
-                bookingRequest.getSizeDrinks(),
-                availableMovieCoupons.stream().map(Coupon::getId).toList(),
-                selectedMovieCoupons.stream().map(Coupon::getId).toList(),
-                availableUserCoupons.stream().map(Coupon::getId).toList(),
-                selectedUserCoupons.stream().map(Coupon::getId).toList(),
-                totalPrice
-        );
+        return booking;
+    }
+
+    @Override
+    public void deleteBooking(Integer bookingId) {
+        // Check if the booking exists
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: " + bookingId));
+
+        for (Seat seat : booking.getSeats()) {
+            seat.setSeatStatus(SeatStatus.Available);
+            seatRepository.save(seat);
+        }
+
+        // Delete the booking
+        bookingRepository.delete(booking);
+    }
+
+
+    private BookingDraft getOrCreateDraft(Integer userId) {
+        return bookingDraftRepository.findByUserId(userId)
+                .orElseGet(() -> {
+                    BookingDraft newDraft = new BookingDraft();
+                    newDraft.setUser(userRepository.findUserById(userId));
+                    return newDraft;
+                });
     }
 
     private String generateBookingNo(String lastName, String firstName, String movieName) {

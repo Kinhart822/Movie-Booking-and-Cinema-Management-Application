@@ -74,6 +74,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Booking> bookings;
 
+    @OneToMany(mappedBy = "user")
+    private List<BookingDraft> bookingDrafts;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();

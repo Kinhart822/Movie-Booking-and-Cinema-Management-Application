@@ -69,4 +69,7 @@ public class Coupon {
 
     @ManyToMany(mappedBy = "coupons")
     private Set<Booking> bookings;
+
+    @ManyToMany(mappedBy = "coupons")
+    private Set<BookingDraft> bookingDrafts;
 }

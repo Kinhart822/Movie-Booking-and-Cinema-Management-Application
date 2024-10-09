@@ -62,4 +62,8 @@ public class MovieSchedule {
     private List<Drink> drinks = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movieSchedule")
-    private List<Booking> bookings = new ArrayList<>();}
+    private List<Booking> bookings = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "movieSchedule")
+    private List<BookingDraft> bookingDrafts = new ArrayList<>();
+}

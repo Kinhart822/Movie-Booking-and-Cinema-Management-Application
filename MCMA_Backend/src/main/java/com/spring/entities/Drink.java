@@ -63,6 +63,9 @@ public class Drink {
     @JoinColumn(name = "movieSchedule_id", nullable = false)
     private MovieSchedule movieSchedule;
 
-    @ManyToMany(mappedBy = "drinks")
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "drinks")
     private Set<Booking> bookings;
+
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "drinks")
+    private Set<BookingDraft> bookingDrafts;
 }

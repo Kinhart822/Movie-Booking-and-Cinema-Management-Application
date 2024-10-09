@@ -2,8 +2,6 @@ package com.spring.entities;
 
 import com.spring.enums.BookingStatus;
 import com.spring.enums.PaymentMethod;
-import com.spring.enums.SizeFoodOrDrink;
-import com.spring.enums.TicketType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,13 +17,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Booking {
+public class BookingDraft {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @Column(name = "Booking_No")
-    private String bookingNo;
 
     @Column(name = "Start_Date_Time")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
@@ -68,43 +63,41 @@ public class Booking {
 
     @ManyToMany
     @JoinTable(
-            name = "booking_tickets",
-            joinColumns = @JoinColumn(name = "booking_id"),
+            name = "booking_draf_tickets",
+            joinColumns = @JoinColumn(name = "booking_draf_id"),
             inverseJoinColumns = @JoinColumn(name = "ticket_id")
     )
     private List<Ticket> tickets;
 
     @ManyToMany
     @JoinTable(
-            name = "booking_seats",
-            joinColumns = @JoinColumn(name = "booking_id"),
+            name = "booking_draf_seats",
+            joinColumns = @JoinColumn(name = "booking_draf_id"),
             inverseJoinColumns = @JoinColumn(name = "seat_id")
     )
     private List<Seat> seats;
 
     @ManyToMany
     @JoinTable(
-            name = "booking_food_orders",
-            joinColumns = @JoinColumn(name = "booking_id"),
+            name = "booking_draf_food_orders",
+            joinColumns = @JoinColumn(name = "booking_draf_id"),
             inverseJoinColumns = @JoinColumn(name = "food_id")
     )
     private List<Food> foodList;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "booking_drink_orders",
-            joinColumns = @JoinColumn(name = "booking_id"),
+            name = "booking_draf_drink_orders",
+            joinColumns = @JoinColumn(name = "booking_draf_id"),
             inverseJoinColumns = @JoinColumn(name = "drink_id")
     )
     private List<Drink> drinks;
 
     @ManyToMany
     @JoinTable(
-            name = "booking_coupons",
-            joinColumns = @JoinColumn(name = "booking_id"),
+            name = "booking_draf_coupons",
+            joinColumns = @JoinColumn(name = "booking_draf_id"),
             inverseJoinColumns = @JoinColumn(name = "coupon_id")
     )
     private List<Coupon> coupons;
 }
-
-
