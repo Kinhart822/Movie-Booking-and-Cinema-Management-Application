@@ -2,8 +2,6 @@ package com.spring.entities;
 
 import com.spring.enums.BookingStatus;
 import com.spring.enums.PaymentMethod;
-import com.spring.enums.SizeFoodOrDrink;
-import com.spring.enums.TicketType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -66,45 +64,24 @@ public class Booking {
     @JoinColumn(name = "movie_schedule_id")
     private MovieSchedule movieSchedule;
 
-    @ManyToMany
-    @JoinTable(
-            name = "booking_tickets",
-            joinColumns = @JoinColumn(name = "booking_id"),
-            inverseJoinColumns = @JoinColumn(name = "ticket_id")
-    )
-    private List<Ticket> tickets;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "screen_id")
+    private Screen screen;
 
-    @ManyToMany
-    @JoinTable(
-            name = "booking_seats",
-            joinColumns = @JoinColumn(name = "booking_id"),
-            inverseJoinColumns = @JoinColumn(name = "seat_id")
-    )
-    private List<Seat> seats;
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
+    private List<BookingTicket> tickets;
 
-    @ManyToMany
-    @JoinTable(
-            name = "booking_food_orders",
-            joinColumns = @JoinColumn(name = "booking_id"),
-            inverseJoinColumns = @JoinColumn(name = "food_id")
-    )
-    private List<Food> foodList;
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
+    private List<BookingSeat> seatList;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "booking_drink_orders",
-            joinColumns = @JoinColumn(name = "booking_id"),
-            inverseJoinColumns = @JoinColumn(name = "drink_id")
-    )
-    private List<Drink> drinks;
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
+    private List<BookingFood> foodList;
 
-    @ManyToMany
-    @JoinTable(
-            name = "booking_coupons",
-            joinColumns = @JoinColumn(name = "booking_id"),
-            inverseJoinColumns = @JoinColumn(name = "coupon_id")
-    )
-    private List<Coupon> coupons;
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
+    private List<BookingDrink> drinks;
+
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
+    private List<BookingCoupon> coupons;
 }
 
 

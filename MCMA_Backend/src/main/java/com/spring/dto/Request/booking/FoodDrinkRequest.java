@@ -11,7 +11,7 @@ import java.util.List;
 public class FoodDrinkRequest {
     private List<Integer> foodIds;
     private List<Integer> drinkIds;
-    private List<SizeFoodOrDrink> sizeFood;
+    private List<SizeFoodOrDrink> sizeFoodList;
     private List<SizeFoodOrDrink> sizeDrinks;
 }
 

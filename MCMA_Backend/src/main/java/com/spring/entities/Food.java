@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -59,9 +60,9 @@ public class Food {
     @JoinColumn(name = "movieSchedule_id", nullable = false)
     private MovieSchedule movieSchedule;
 
-    @ManyToMany(mappedBy = "foodList")
-    private Set<Booking> bookings;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "food")
+    private List<BookingFood> foodList;
 
-    @ManyToMany(mappedBy = "foodList")
-    private Set<BookingDraft> bookingDrafts;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "food")
+    private List<BookingDraftFood> foodDraftList;
 }

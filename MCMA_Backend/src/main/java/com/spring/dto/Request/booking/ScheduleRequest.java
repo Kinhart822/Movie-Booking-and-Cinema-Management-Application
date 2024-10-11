@@ -9,8 +9,6 @@ import java.time.LocalTime;
 @Getter
 @Setter
 public class ScheduleRequest {
-    private Integer cinemaId;
-    private Integer movieId;
     private LocalDate selectedDate;
     private LocalTime selectedTime;
 }

@@ -1,20 +1,20 @@
 package com.spring.service;
 
 import com.spring.dto.Request.booking.*;
-import com.spring.entities.*;
-
-import java.util.List;
+import com.spring.dto.Response.booking.*;
+import com.spring.entities.Booking;
 
 public interface BookingService {
-    Movie selectMovie(MovieRequest movieRequest, Integer userId);
-    City selectCity(CityRequest cityRequest, Integer userId);
-    Cinema selectCinema(CinemaRequest cinemaRequest, Integer userId);
-    List<MovieSchedule> getSchedulesForSelectedDate(ScheduleRequest scheduleRequest, Integer userId);
-    List<Ticket> selectTickets(TicketRequest ticketRequest, Integer userId);
-    List<Seat> selectSeats(SeatRequest seatRequest, Integer userId);
-    List<Food> selectFood(FoodDrinkRequest foodDrinkRequest, Integer userId);
-    List<Drink> selectDrinks(FoodDrinkRequest foodDrinkRequest, Integer userId);
+    BookingMovieRespond selectMovie(MovieRequest movieRequest, Integer userId);
+    CityResponse selectCity(CityRequest cityRequest, Integer userId);
+    CinemaResponse selectCinema(CinemaRequest cinemaRequest, Integer userId);
+    ScreenResponse selectScreen(ScreenRequest screenRequest, Integer userId);
+    ScheduleResponse selectSchedule(ScheduleRequest scheduleRequest, Integer userId);
+    TicketResponse selectTickets(TicketRequest ticketRequest, Integer userId);
+    SeatResponse selectSeats(SeatRequest seatRequest, Integer userId);
+    FoodResponse selectFood(FoodDrinkRequest foodDrinkRequest, Integer userId);
+    DrinkResponse selectDrinks(FoodDrinkRequest foodDrinkRequest, Integer userId);
     Double calculateTotalPrice(CouponRequest couponRequest, Integer userId);
     Booking completeBooking(CompleteRequest completeRequest, Integer userId);
-    void deleteBooking(Integer bookingId);
+    void deleteBooking(Integer bookingId, Integer userId);
 }

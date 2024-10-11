@@ -10,16 +10,21 @@ import java.util.List;
 
 public interface MovieScheduleRepository extends JpaRepository<MovieSchedule, Integer> {
 
+    @Query("SELECT ms FROM MovieSchedule ms JOIN ms.movie m JOIN ms.cinema c WHERE m.id = :movieId AND c.id = :cinemaId")
+    List<MovieSchedule> findMovieSchedulesByMovieIdAndCinemaId(@Param("movieId") Integer movieId, @Param("cinemaId") Integer cinemaId);
+
     @Query("SELECT ms " +
             "FROM MovieSchedule ms " +
             "WHERE ms.movie.id = :movieId " +
-            "AND ms.movie.cinema.id = :cinemaId " +
+            "AND ms.cinema.id = :cinemaId " +
             "AND DATE(ms.startTime) = :selectedDate")
     List<MovieSchedule> findSchedulesByMovieCinemaAndDate(
             @Param("movieId") Integer movieId,
             @Param("cinemaId") Integer cinemaId,
             @Param("selectedDate") LocalDate selectedDate
     );
+
+
 }
 
 

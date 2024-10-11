@@ -9,7 +9,6 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -52,18 +51,22 @@ public class MovieSchedule {
     private Set<Ticket> ticketSet;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cinema_id")
+    private Cinema cinema;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "screen_id", nullable = false)
     private Screen screen;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movieSchedule")
-    private List<Food> foodList = new ArrayList<>();
+    private List<Food> foodList;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movieSchedule")
-    private List<Drink> drinks = new ArrayList<>();
+    private List<Drink> drinks;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movieSchedule")
-    private List<Booking> bookings = new ArrayList<>();
+    private List<Booking> bookings;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movieSchedule")
-    private List<BookingDraft> bookingDrafts = new ArrayList<>();
+    private List<BookingDraft> bookingDrafts;
 }

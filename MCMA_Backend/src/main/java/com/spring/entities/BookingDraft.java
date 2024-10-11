@@ -61,43 +61,22 @@ public class BookingDraft {
     @JoinColumn(name = "movie_schedule_id")
     private MovieSchedule movieSchedule;
 
-    @ManyToMany
-    @JoinTable(
-            name = "booking_draf_tickets",
-            joinColumns = @JoinColumn(name = "booking_draf_id"),
-            inverseJoinColumns = @JoinColumn(name = "ticket_id")
-    )
-    private List<Ticket> tickets;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "screen_id")
+    private Screen screen;
 
-    @ManyToMany
-    @JoinTable(
-            name = "booking_draf_seats",
-            joinColumns = @JoinColumn(name = "booking_draf_id"),
-            inverseJoinColumns = @JoinColumn(name = "seat_id")
-    )
-    private List<Seat> seats;
+    @OneToMany(mappedBy = "bookingDraft", cascade = CascadeType.ALL)
+    private List<BookingDraftTicket> tickets;
 
-    @ManyToMany
-    @JoinTable(
-            name = "booking_draf_food_orders",
-            joinColumns = @JoinColumn(name = "booking_draf_id"),
-            inverseJoinColumns = @JoinColumn(name = "food_id")
-    )
-    private List<Food> foodList;
+    @OneToMany(mappedBy = "bookingDraft", cascade = CascadeType.ALL)
+    private List<BookingDraftSeat> seatList;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "booking_draf_drink_orders",
-            joinColumns = @JoinColumn(name = "booking_draf_id"),
-            inverseJoinColumns = @JoinColumn(name = "drink_id")
-    )
-    private List<Drink> drinks;
+    @OneToMany(mappedBy = "bookingDraft", cascade = CascadeType.ALL)
+    private List<BookingDraftFood> foodList;
 
-    @ManyToMany
-    @JoinTable(
-            name = "booking_draf_coupons",
-            joinColumns = @JoinColumn(name = "booking_draf_id"),
-            inverseJoinColumns = @JoinColumn(name = "coupon_id")
-    )
-    private List<Coupon> coupons;
+    @OneToMany(mappedBy = "bookingDraft", cascade = CascadeType.ALL)
+    private List<BookingDraftDrink> drinks;
+
+    @OneToMany(mappedBy = "bookingDraft", cascade = CascadeType.ALL)
+    private List<BookingDraftCoupon> coupons;
 }

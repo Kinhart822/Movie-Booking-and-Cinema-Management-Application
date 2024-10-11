@@ -1,6 +1,5 @@
 package com.spring.entities;
 
-import com.spring.enums.TicketType;
 import com.spring.enums.Type;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,6 +9,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -21,10 +21,6 @@ public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @Column(name = "Ticket_Type")
-    @Enumerated(EnumType.STRING)
-    private TicketType ticketType;
 
     @Column(name = "Created_By")
     @Enumerated(EnumType.ORDINAL)
@@ -49,9 +45,13 @@ public class Ticket {
             inverseJoinColumns = @JoinColumn(name = "movieSchedule_id"))
     private Set<MovieSchedule> movieScheduleSet;
 
-    @ManyToMany(mappedBy = "tickets")
-    private Set<Booking> bookings;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ticket")
+    private List<BookingTicket> ticketList;
 
-    @ManyToMany(mappedBy = "tickets")
-    private Set<BookingDraft> bookingDrafts;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ticket")
+    private List<BookingDraftTicket> ticketDraftList;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ticket_type_id")
+    private TicketType ticketType;
 }

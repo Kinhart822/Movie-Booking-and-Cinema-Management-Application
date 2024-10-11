@@ -9,6 +9,6 @@ import java.util.List;
 @Getter
 @Setter
 public class SeatRequest {
-    private List<Integer> seatIds;
     private List<SeatType> seatTypes;
+    private List<Integer> seatIds;
 }

@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -53,7 +52,7 @@ public class Movie {
     private Date dateUpdated;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie", cascade = CascadeType.ALL)
-    private List<MovieSchedule> movieScheduleList = new ArrayList<>();
+    private List<MovieSchedule> movieScheduleList;
 
     @ManyToMany
     @JoinTable(
@@ -69,9 +68,12 @@ public class Movie {
             inverseJoinColumns = @JoinColumn(name = "moviePerformer_id"))
     private Set<MoviePerformer> moviePerformerSet;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "movieRatingDetail_id")
-    private MovieRatingDetail movieRatingDetail;
+    @ManyToMany
+    @JoinTable(
+            name = "set_movie_rating_detail",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "movieRatingDetail_id"))
+    private Set<MovieRatingDetail> movieRatingDetailSet;
 
     @ManyToMany
     @JoinTable(
@@ -81,13 +83,8 @@ public class Movie {
     private Set<Coupon> movieCouponSet;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie", cascade = CascadeType.ALL)
-    private List<MovieRespond> movieResponds = new ArrayList<>();
+    private List<MovieRespond> movieResponds;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cinema_id")
-    private Cinema cinema;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "city_id")
-    private City city;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie", cascade = CascadeType.ALL)
+    private List<City> cityList;
 }

@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -44,7 +45,7 @@ public class MovieRatingDetail {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateUpdated;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "movieRatingDetail")
-    private List<Movie> movies = new ArrayList<>();
+    @ManyToMany(mappedBy = "movieRatingDetailSet")
+    private Set<Movie> movieSet;
 
 }

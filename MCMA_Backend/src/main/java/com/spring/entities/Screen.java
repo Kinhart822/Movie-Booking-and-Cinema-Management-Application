@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -45,12 +44,19 @@ public class Screen {
     @JoinColumn(name = "cinema_id", nullable = false)
     private Cinema cinema;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "screen")
-    private List<ScreenType> screenTypeList = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "screen_type_id")
+    private ScreenType screenType;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "screen")
-    private List<Seat> seatList = new ArrayList<>();
+    private List<Seat> seatList;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "screen")
-    private List<MovieSchedule> movieScheduleList = new ArrayList<>();
+    private List<MovieSchedule> movieScheduleList;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "screen")
+    private List<Booking> bookings;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "screen")
+    private List<BookingDraft> bookingDrafts;
 }

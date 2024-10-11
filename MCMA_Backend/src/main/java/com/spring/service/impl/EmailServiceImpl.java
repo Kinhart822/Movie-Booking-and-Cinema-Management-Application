@@ -20,7 +20,19 @@ public class EmailServiceImpl implements EmailService {
         String subject = "Booking movie ticket(s) successfully";
         String body = "Congratulations! You have successfully booked your movie ticket(s). Thank you!";
 
-        // Create a SimpleMailMessage object
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(toEmail);
+        message.setSubject(subject);
+        message.setText(body);
+        message.setFrom(fromEmail);
+        javaMailSender.send(message);
+    }
+
+    @Override
+    public void sendDeleteMailMessage(String toEmail) {
+        String subject = "Delete movie ticket(s) successfully";
+        String body = "Congratulations! You have successfully deleted your movie ticket(s). Thank you!";
+
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
         message.setSubject(subject);

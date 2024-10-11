@@ -4,7 +4,8 @@ import com.spring.config.JwtUtil;
 import com.spring.dto.Request.booking.*;
 import com.spring.dto.Response.SearchMovieByGenreResponse;
 import com.spring.dto.Response.SearchMovieByNameResponse;
-import com.spring.entities.*;
+import com.spring.dto.Response.booking.*;
+import com.spring.entities.Booking;
 import com.spring.service.BookingService;
 import com.spring.service.MovieService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -50,60 +51,69 @@ public class UserController {
         return ResponseEntity.ok(movieService.getAllMoviesByMovieGenreSet(movieGenreId));
     }
 
+
+
     @PostMapping("/booking/choose-movie")
-    public ResponseEntity<Movie> selectMovie(HttpServletRequest request, @RequestBody MovieRequest movieRequest) {
+    public ResponseEntity<BookingMovieRespond> selectMovie(HttpServletRequest request, @RequestBody MovieRequest movieRequest) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        Movie movie = bookingService.selectMovie(movieRequest, userId);
-        return ResponseEntity.ok(movie);
+        BookingMovieRespond movieRespond = bookingService.selectMovie(movieRequest, userId);
+        return ResponseEntity.ok(movieRespond);
     }
 
     @PostMapping("/booking/select-city")
-    public ResponseEntity<City> selectCity(HttpServletRequest request, @RequestBody CityRequest cityRequest) {
+    public ResponseEntity<CityResponse> selectCity(HttpServletRequest request, @RequestBody CityRequest cityRequest) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        City city = bookingService.selectCity(cityRequest, userId);
-        return ResponseEntity.ok(city);
+        CityResponse cityResponse = bookingService.selectCity(cityRequest, userId);
+        return ResponseEntity.ok(cityResponse);
     }
 
     @PostMapping("/booking/select-cinema")
-    public ResponseEntity<Cinema> selectCinema(HttpServletRequest request, @RequestBody CinemaRequest cinemaRequest) {
+    public ResponseEntity<CinemaResponse> selectCinema(HttpServletRequest request, @RequestBody CinemaRequest cinemaRequest) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        Cinema cinema = bookingService.selectCinema(cinemaRequest, userId);
-        return ResponseEntity.ok(cinema);
+        CinemaResponse cinemaResponse = bookingService.selectCinema(cinemaRequest, userId);
+        return ResponseEntity.ok(cinemaResponse);
+    }
+
+    @PostMapping("/booking/select-screen")
+    public ResponseEntity<ScreenResponse> selectScreen(HttpServletRequest request, @RequestBody ScreenRequest screenRequest) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        ScreenResponse screenResponse = bookingService.selectScreen(screenRequest, userId);
+        return ResponseEntity.ok(screenResponse);
     }
 
     @PostMapping("/booking/select-schedule")
-    public ResponseEntity<List<MovieSchedule>> selectSchedule(HttpServletRequest request, @RequestBody ScheduleRequest scheduleRequest) {
+    public ResponseEntity<ScheduleResponse> selectSchedule(HttpServletRequest request, @RequestBody ScheduleRequest scheduleRequest) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        List<MovieSchedule> schedules = bookingService.getSchedulesForSelectedDate(scheduleRequest, userId);
-        return ResponseEntity.ok(schedules);
+        ScheduleResponse scheduleResponse = bookingService.selectSchedule(scheduleRequest, userId);
+        return ResponseEntity.ok(scheduleResponse);
     }
 
     @PostMapping("/booking/select-tickets")
-    public ResponseEntity<List<Ticket>> selectTickets(HttpServletRequest request, @RequestBody TicketRequest ticketRequest) {
+    public ResponseEntity<TicketResponse> selectTickets(HttpServletRequest request, @RequestBody TicketRequest ticketRequest) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        List<Ticket> tickets = bookingService.selectTickets(ticketRequest, userId);
-        return ResponseEntity.ok(tickets);
+        TicketResponse ticketResponse = bookingService.selectTickets(ticketRequest, userId);
+        return ResponseEntity.ok(ticketResponse);
     }
 
     @PostMapping("/booking/select-seats")
-    public ResponseEntity<List<Seat>> selectSeats(HttpServletRequest request, @RequestBody SeatRequest seatRequest) {
+    public ResponseEntity<SeatResponse> selectSeats(HttpServletRequest request, @RequestBody SeatRequest seatRequest) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        List<Seat> seats = bookingService.selectSeats(seatRequest, userId);
-        return ResponseEntity.ok(seats);
+        SeatResponse seatResponse = bookingService.selectSeats(seatRequest, userId);
+        return ResponseEntity.ok(seatResponse);
     }
 
     @PostMapping("/booking/select-food")
-    public ResponseEntity<List<Food>> selectFood(HttpServletRequest request, @RequestBody FoodDrinkRequest foodDrinkRequest) {
+    public ResponseEntity<FoodResponse> selectFood(HttpServletRequest request, @RequestBody FoodDrinkRequest foodDrinkRequest) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        List<Food> foods = bookingService.selectFood(foodDrinkRequest, userId);
-        return ResponseEntity.ok(foods);
+        FoodResponse foodResponse = bookingService.selectFood(foodDrinkRequest, userId);
+        return ResponseEntity.ok(foodResponse);
     }
 
     @PostMapping("/booking/select-drinks")
-    public ResponseEntity<List<Drink>> selectDrinks(HttpServletRequest request, @RequestBody FoodDrinkRequest foodDrinkRequest) {
+    public ResponseEntity<DrinkResponse> selectDrinks(HttpServletRequest request, @RequestBody FoodDrinkRequest foodDrinkRequest) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        List<Drink> drinks = bookingService.selectDrinks(foodDrinkRequest, userId);
-        return ResponseEntity.ok(drinks);
+        DrinkResponse drinkResponse = bookingService.selectDrinks(foodDrinkRequest, userId);
+        return ResponseEntity.ok(drinkResponse);
     }
 
     @PostMapping("/booking/calculate-total-price")
@@ -121,8 +131,9 @@ public class UserController {
     }
 
     @DeleteMapping("booking/delete-booking/{bookingId}")
-    public ResponseEntity<String> deleteBooking(@PathVariable Integer bookingId) {
-        bookingService.deleteBooking(bookingId);
+    public ResponseEntity<String> deleteBooking(HttpServletRequest request, @PathVariable Integer bookingId) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        bookingService.deleteBooking(bookingId, userId);
         return ResponseEntity.ok("Booking deleted successfully");
     }
 }

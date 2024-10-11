@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -67,9 +68,9 @@ public class Coupon {
     @ManyToMany(mappedBy = "movieCouponSet")
     private Set<Movie> movieSet;
 
-    @ManyToMany(mappedBy = "coupons")
-    private Set<Booking> bookings;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "coupon")
+    private List<BookingCoupon> coupons;
 
-    @ManyToMany(mappedBy = "coupons")
-    private Set<BookingDraft> bookingDrafts;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "coupon")
+    private List<BookingDraftCoupon> draftCoupons;
 }

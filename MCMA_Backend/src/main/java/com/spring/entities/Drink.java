@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -63,9 +62,9 @@ public class Drink {
     @JoinColumn(name = "movieSchedule_id", nullable = false)
     private MovieSchedule movieSchedule;
 
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "drinks")
-    private Set<Booking> bookings;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "drink")
+    private List<BookingDrink> drinks;
 
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "drinks")
-    private Set<BookingDraft> bookingDrafts;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "drink")
+    private List<BookingDraftDrink> draftDrinks;
 }

@@ -6,6 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CinemaRequest {
-    private Integer cityId;
     private Integer cinemaId;
 }

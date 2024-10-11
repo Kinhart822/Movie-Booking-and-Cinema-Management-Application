@@ -11,6 +11,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -60,9 +61,9 @@ public class Seat {
     @JoinColumn(name = "screen_id", nullable = false)
     private Screen screen;
 
-    @ManyToMany(mappedBy = "seats")
-    private Set<Booking> bookings;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "seat")
+    private List<BookingSeat> seatList;
 
-    @ManyToMany(mappedBy = "seats")
-    private Set<BookingDraft> bookingDrafts;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "seat")
+    private List<BookingDraftSeat> draftSeatList;
 }

@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,6 +28,9 @@ public class ScreenType {
     @Column(name = "Description")
     private String description;
 
+    @Column(name = "Price")
+    private Double price;
+
     @Column(name = "Created_By")
     @Enumerated(EnumType.ORDINAL)
     private Type createdBy;
@@ -42,7 +47,6 @@ public class ScreenType {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateUpdated;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "screen_id", nullable = false)
-    private Screen screen;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "screenType")
+    private List<Screen> screenList;
 }
