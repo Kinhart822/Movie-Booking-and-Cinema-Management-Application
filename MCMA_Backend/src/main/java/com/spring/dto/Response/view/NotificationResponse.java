@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ViewCityResponse {
-    private List<Integer> cityIds;
-    private List<String> cityNameList;
+public class NotificationResponse {
+    private List<String> message;
+    private List<String> dateCreated;
 }

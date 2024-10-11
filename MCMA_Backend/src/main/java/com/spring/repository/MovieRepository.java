@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -68,5 +69,9 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
             """)
     List<Object[]> getAllMoviesByMovieGenreSet(@Param("movieGenreId") Integer movieGenreId);
 
+    List<Movie> findByDatePublishBefore(Date date);
+
+    @Query("SELECT m FROM Movie m WHERE m.datePublish > :futureStartDate")
+    List<Movie> findComingSoonMovies(@Param("futureStartDate") Date futureStartDate);
 }
 

@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -272,8 +273,8 @@ public class BookingServiceImpl implements BookingService {
         bookingDraftRepository.save(draft);
 
         return new ScheduleResponse(
-            formattedStartDateTime,
-            formattedEndDateTime
+                formattedStartDateTime,
+                formattedEndDateTime
         );
     }
 
@@ -614,10 +615,42 @@ public class BookingServiceImpl implements BookingService {
         bookingRepository.save(booking);
         bookingDraftRepository.delete(draft);
 
-        // Send mail notification
+        // Send notifications
         try {
-            emailService.sendSimpleMailMessage(user.getEmail());
+            String subject = "Your Movie Booking Confirmation";
+            String body = "Dear " + user.getFirstName() + ",\n\n"
+                    + "Your booking for the movie \"" + booking.getMovie().getName() + "\" is confirmed!\n"
+                    + "Booking Number: " + booking.getBookingNo() + "\n"
+                    + "Date & Time: " + booking.getStartDateTime() + " - " + booking.getEndDateTime() + "\n"
+                    + "Cinema: " + booking.getCinema().getName() + ", " + booking.getCity().getName() + "\n"
+                    + "Screen: " + booking.getScreen().getName() + "\n"
+                    + "Tickets: " + booking.getTickets().stream()
+                    .map(ticket -> ticket.getTicket().getTicketType().getName())
+                    .collect(Collectors.joining(", ")) + "\n"
+                    + "Seats: " + booking.getSeatList().stream()
+                    .map(seat -> seat.getSeat().getName() + " (" + seat.getSeatType() + ")")
+                    .collect(Collectors.joining(", ")) + "\n"
+                    + "Food: " + booking.getFoodList().stream()
+                    .map(food -> food.getFood().getName() + " (" + food.getSizeFood() + ")")
+                    .collect(Collectors.joining(", ")) + "\n"
+                    + "Drinks: " + booking.getDrinks().stream()
+                    .map(drink -> drink.getDrink().getName() + " (" + drink.getSizeDrink() + ")")
+                    .collect(Collectors.joining(", ")) + "\n"
+                    + "Total Price: $" + booking.getTotalPrice() + "\n\n"
+                    + "Thank you for booking with us!\n\n"
+                    + "Best regards,\n"
+                    + "Your Movie Booking Team";
+
+            emailService.sendSimpleMailMessage(user.getEmail(), subject, body);
             System.out.println("Notification sent to " + user.getEmail());
+
+            Notification notification = new Notification();
+            notification.setUser(user);
+            notification.setMessage("Your booking for " + booking.getMovie().getName() + " is confirmed. Booking Number: " + booking.getBookingNo());
+            notification.setDateCreated(LocalDateTime.now());
+
+            notificationRepository.save(notification);
+            System.out.println("Notification saved for user " + user.getId());
         } catch (Exception e) {
             System.out.println("Failed to send email notification. Please try again later.");
         }

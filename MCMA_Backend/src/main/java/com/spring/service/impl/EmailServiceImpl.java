@@ -16,10 +16,7 @@ public class EmailServiceImpl implements EmailService {
     private String fromEmail;
 
     @Override
-    public void sendSimpleMailMessage(String toEmail) {
-        String subject = "Booking movie ticket(s) successfully";
-        String body = "Congratulations! You have successfully booked your movie ticket(s). Thank you!";
-
+    public void sendSimpleMailMessage(String toEmail, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
         message.setSubject(subject);

@@ -14,4 +14,6 @@ import java.util.Optional;
 public interface CinemaRepository extends JpaRepository<Cinema, Integer> {
     @Query("SELECT c FROM Cinema c WHERE c.id = :cinemaId AND c.city.id = :cityId")
     Optional<Cinema> findByIdAndCityId(@Param("cinemaId") Integer cinemaId, @Param("cityId") Integer cityId);
+
+    List<Cinema> findByCityId(Integer cityId);
 }
