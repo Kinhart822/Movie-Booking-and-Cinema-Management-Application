@@ -472,7 +472,6 @@ public class BookingServiceImpl implements BookingService {
                 .mapToDouble(food -> food.getFood().getPrice() * getFoodOrDrinkSize(food.getSizeFood()))
                 .sum();
 
-        // Tính toán tổng giá đồ uống
         double totalDrinkPrice = draft.getDrinks().stream()
                 .mapToDouble(drink -> drink.getDrink().getPrice() * getFoodOrDrinkSize(drink.getSizeDrink()))
                 .sum();
