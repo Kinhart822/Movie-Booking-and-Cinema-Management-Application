@@ -212,7 +212,7 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new IllegalArgumentException("No booking draft found for user"));
 
         Screen screen = screenRepository.findByIdAndCinemaId(screenRequest.getScreenId(), draft.getCinema().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid cinema for the specified city"));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid screen for the specified cinema"));
 
         draft = getOrCreateDraft(userId);
         draft.setScreen(screen);
@@ -335,6 +335,12 @@ public class BookingServiceImpl implements BookingService {
                 .stream()
                 .filter(seat -> availableSeatIds.contains(seat.getId()))
                 .toList();
+        List<String> selectedSeatStrings = selectedSeats.stream()
+                .map(Seat::getName)
+                .toList();
+        List<SeatType> selectedSeatTypeList = selectedSeats.stream()
+                .map(Seat::getSeatType)
+                .toList();
 
         List<String> unavailableSeats = new ArrayList<>();
         for (Seat seat : selectedSeats) {
@@ -354,13 +360,14 @@ public class BookingServiceImpl implements BookingService {
             BookingDraftSeat bookingDraftSeat = new BookingDraftSeat();
             bookingDraftSeat.setBookingDraft(draft);
             bookingDraftSeat.setSeat(seat);
+            bookingDraftSeat.setSeatType(seat.getSeatType());
             bookingDraftSeats.add(bookingDraftSeat);
         }
 
         draft.getSeatList().addAll(bookingDraftSeats);
         bookingDraftRepository.save(draft);
 
-        return new SeatResponse(unavailableSeats, availableSeatList, availableSeatTypeList);
+        return new SeatResponse(unavailableSeats, availableSeatList, availableSeatTypeList, selectedSeatStrings, selectedSeatTypeList);
     }
 
     // 4. Food, Drink Ordering
@@ -521,7 +528,7 @@ public class BookingServiceImpl implements BookingService {
 
     // 6. Complete Booking and Send Confirmation Email
     @Override
-    public Booking completeBooking(CompleteRequest completeRequest, Integer userId) {
+    public BookingResponse completeBooking(CompleteRequest completeRequest, Integer userId) {
         BookingDraft draft = bookingDraftRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("No booking draft found for user"));
 
@@ -539,6 +546,9 @@ public class BookingServiceImpl implements BookingService {
                 draft.getMovie().getName())
         );
         booking.setUser(draft.getUser());
+        booking.setCity(draft.getCity());
+        booking.setCinema(draft.getCinema());
+        booking.setMovieSchedule(draft.getMovieSchedule());
         booking.setMovie(draft.getMovie());
         booking.setStartDateTime(draft.getStartDateTime());
         booking.setEndDateTime(draft.getEndDateTime());
@@ -614,13 +624,17 @@ public class BookingServiceImpl implements BookingService {
         bookingRepository.save(booking);
         bookingDraftRepository.delete(draft);
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm a");
+        String formattedStartDateTime = booking.getStartDateTime().format(formatter);
+        String formattedEndDateTime = booking.getEndDateTime().format(formatter);
+
         // Send notifications
         try {
             String subject = "Your Movie Booking Confirmation";
-            String body = "Dear " + user.getFirstName() + ",\n\n"
+            String body = "Dear " + user.getFirstName() + " " + user.getLastName() + ",\n\n"
                     + "Your booking for the movie \"" + booking.getMovie().getName() + "\" is confirmed!\n"
                     + "Booking Number: " + booking.getBookingNo() + "\n"
-                    + "Date & Time: " + booking.getStartDateTime() + " - " + booking.getEndDateTime() + "\n"
+                    + "Date & Time: " + formattedStartDateTime + " - " + formattedEndDateTime + "\n"
                     + "Cinema: " + booking.getCinema().getName() + ", " + booking.getCity().getName() + "\n"
                     + "Screen: " + booking.getScreen().getName() + "\n"
                     + "Tickets: " + booking.getTickets().stream()
@@ -654,7 +668,28 @@ public class BookingServiceImpl implements BookingService {
             System.out.println("Failed to send email notification. Please try again later.");
         }
 
-        return booking;
+        return new BookingResponse(
+               booking.getBookingNo(),
+               booking.getMovie().getName(),
+               booking.getCity().getName(),
+               booking.getCinema().getName(),
+               formattedStartDateTime,
+               formattedEndDateTime,
+               booking.getScreen().getName(),
+               booking.getTickets().stream()
+                        .map(ticket -> ticket.getTicket().getTicketType().getName())
+                        .toList(),
+               booking.getSeatList().stream()
+                        .map(seat -> seat.getSeat().getName() + " (" + seat.getSeatType() + ")")
+                        .toList(),
+               booking.getFoodList().stream()
+                        .map(food -> food.getFood().getName() + " (" + food.getSizeFood() + ")")
+                        .toList(),
+               booking.getDrinks().stream()
+                        .map(drink -> drink.getDrink().getName() + " (" + drink.getSizeDrink() + ")")
+                        .toList(),
+               booking.getTotalPrice()
+        );
     }
 
     // 7. Delete Booking and Send Confirmation Email

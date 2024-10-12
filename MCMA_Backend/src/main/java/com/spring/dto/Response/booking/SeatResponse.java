@@ -16,4 +16,6 @@ public class SeatResponse {
     private List<String> unAvailableSeats;
     private List<String> availableSeats;
     private List<SeatType> seatTypeList;
+    private List<String> selectedSeats;
+    private List<SeatType> selectedSeatTypeList;
 }

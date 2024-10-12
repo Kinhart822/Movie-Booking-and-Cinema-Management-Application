@@ -15,6 +15,6 @@ public interface BookingService {
     FoodResponse selectFood(FoodDrinkRequest foodDrinkRequest, Integer userId);
     DrinkResponse selectDrinks(FoodDrinkRequest foodDrinkRequest, Integer userId);
     Double calculateTotalPrice(CouponRequest couponRequest, Integer userId);
-    Booking completeBooking(CompleteRequest completeRequest, Integer userId);
+    BookingResponse completeBooking(CompleteRequest completeRequest, Integer userId);
     void deleteBooking(Integer bookingId, Integer userId);
 }

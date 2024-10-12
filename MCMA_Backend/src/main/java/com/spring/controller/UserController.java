@@ -135,10 +135,10 @@ public class UserController {
     }
 
     @PostMapping("/booking/complete-booking")
-    public ResponseEntity<Booking> completeBooking(HttpServletRequest request, @RequestBody CompleteRequest completeRequest) {
+    public ResponseEntity<BookingResponse> completeBooking(HttpServletRequest request, @RequestBody CompleteRequest completeRequest) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        Booking booking = bookingService.completeBooking(completeRequest, userId);
-        return ResponseEntity.ok(booking);
+        BookingResponse bookingResponse = bookingService.completeBooking(completeRequest, userId);
+        return ResponseEntity.ok(bookingResponse);
     }
 
     @DeleteMapping("booking/delete-booking/{bookingId}")

@@ -6,8 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-
 @Component
 public class JwtUtil {
     @Autowired
@@ -31,5 +29,4 @@ public class JwtUtil {
             throw new IllegalArgumentException("Token is missing, invalid, or expired.");
         }
     }
-
 }
