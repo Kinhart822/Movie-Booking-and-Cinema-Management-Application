@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Đăng Nhập"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="96dp"/>
+
+    <EditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Mật khẩu"
+        android:inputType="textPassword"
+        android:layout_marginBottom="16dp"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="32dp">
+
+        <RadioButton
+            android:id="@+id/radioAdmin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quản trị viên"
+            android:layout_marginRight="16dp"/>
+
+        <RadioButton
+            android:id="@+id/radioUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Người dùng"
+            android:checked="true"/>
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/buttonLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ĐĂNG NHẬP TÀI KHOẢN"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/textViewForgotPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quên mật khẩu"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@android:color/holo_blue_dark"/>
+
+    <TextView
+        android:id="@+id/textViewRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chưa có tài khoản? Đăng Ký"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="144dp"
+        android:textColor="@android:color/holo_blue_dark"/>
+</LinearLayout>
