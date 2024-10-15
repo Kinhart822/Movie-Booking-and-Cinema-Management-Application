@@ -1,6 +1,5 @@
 package com.spring.dto.Response.booking;
 
-import com.spring.enums.SeatType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +14,7 @@ import java.util.List;
 public class SeatResponse {
     private List<String> unAvailableSeats;
     private List<String> availableSeats;
-    private List<SeatType> seatTypeList;
+    private List<String> seatTypeList;
     private List<String> selectedSeats;
-    private List<SeatType> selectedSeatTypeList;
+    private List<String> selectedSeatTypeList;
 }

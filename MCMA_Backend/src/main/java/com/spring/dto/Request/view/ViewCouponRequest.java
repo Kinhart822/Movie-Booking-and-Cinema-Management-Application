@@ -8,5 +8,5 @@ import java.util.List;
 @Getter
 @Setter
 public class ViewCouponRequest {
-    private List<Integer> cinemaId;
+    private List<Integer> movieIds;
 }

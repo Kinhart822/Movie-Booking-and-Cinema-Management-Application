@@ -23,7 +23,7 @@ public class Notification {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "Message", length = 100)
+    @Column(name = "Message", length = 255)
     private String message;
 
     @Column(name = "Date_Created", updatable = false)

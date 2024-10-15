@@ -8,7 +8,6 @@ import com.spring.dto.Response.SearchMovieByGenreResponse;
 import com.spring.dto.Response.SearchMovieByNameResponse;
 import com.spring.dto.Response.booking.*;
 import com.spring.dto.Response.view.*;
-import com.spring.entities.Booking;
 import com.spring.service.BookingService;
 import com.spring.service.MovieService;
 import com.spring.service.NotificationService;
@@ -139,6 +138,12 @@ public class UserController {
         Integer userId = jwtUtil.getUserIdFromToken(request);
         BookingResponse bookingResponse = bookingService.completeBooking(completeRequest, userId);
         return ResponseEntity.ok(bookingResponse);
+    }
+
+    @DeleteMapping("booking/delete-booking-draft/{bookingDraftId}")
+    public ResponseEntity<String> deleteBookingDraft(@PathVariable Integer bookingDraftId) {
+        bookingService.deleteBookingDraft(bookingDraftId);
+        return ResponseEntity.ok("Booking Draft deleted successfully");
     }
 
     @DeleteMapping("booking/delete-booking/{bookingId}")

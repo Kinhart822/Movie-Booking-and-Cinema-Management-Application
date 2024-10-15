@@ -2,7 +2,6 @@ package com.spring.service;
 
 import com.spring.dto.Request.booking.*;
 import com.spring.dto.Response.booking.*;
-import com.spring.entities.Booking;
 
 public interface BookingService {
     BookingMovieRespond selectMovie(MovieRequest movieRequest, Integer userId);
@@ -16,5 +15,6 @@ public interface BookingService {
     DrinkResponse selectDrinks(FoodDrinkRequest foodDrinkRequest, Integer userId);
     Double calculateTotalPrice(CouponRequest couponRequest, Integer userId);
     BookingResponse completeBooking(CompleteRequest completeRequest, Integer userId);
+    void deleteBookingDraft(Integer bookingDraftId);
     void deleteBooking(Integer bookingId, Integer userId);
 }
