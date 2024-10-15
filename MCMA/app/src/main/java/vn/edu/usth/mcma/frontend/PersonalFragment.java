@@ -15,20 +15,17 @@ import android.widget.ImageButton;
 import vn.edu.usth.mcma.R;
 
 
-public class ListFragment extends Fragment {
-
-
+public class PersonalFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_list
-                , container, false);
+        View v = inflater.inflate(R.layout.fragment_personal, container, false);
 
         ImageButton mImageView = v.findViewById(R.id.menu_button);
 
-        DrawerLayout mDrawerLayout = v.findViewById(R.id.list_fragment);
+        DrawerLayout mDrawerLayout = v.findViewById(R.id.personal_fragment);
 
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override

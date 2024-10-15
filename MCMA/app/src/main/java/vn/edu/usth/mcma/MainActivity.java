@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
 
+    //thanh bottom navi id lấy từ homepage.xml trong menu chứ không phải từ fragment trong layout
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

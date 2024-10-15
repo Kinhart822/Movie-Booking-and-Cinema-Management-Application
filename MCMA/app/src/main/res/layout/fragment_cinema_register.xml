@@ -162,17 +162,19 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:text="Having account?"
-                    android:textColor="#4287f5"
+                    android:textColor="@color/black"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/textViewLogin"
+                    android:id="@+id/text_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="Login"
                     android:textColor="#4287f5"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle=""
+                    android:text="@string/login_underlined" />
+
             </LinearLayout>
 
 
