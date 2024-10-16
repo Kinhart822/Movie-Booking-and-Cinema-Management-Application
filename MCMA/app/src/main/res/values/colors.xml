@@ -8,6 +8,9 @@
     <color name="better_grey">#e2e5ea</color>
     <color name="blue_dot">#294fd1</color>
 
+    <color name="bottom_navigator_before">#9BA6AB</color>
+    <color name="bottom_navigator_after">#85FAF0</color>
+
     <color name="green">#00ff00</color>
     <color name="colorPrimary">#3b5998</color>
     <color name="colorPrimaryLight">#8b9dc3</color>
