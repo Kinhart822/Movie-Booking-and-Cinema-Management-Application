@@ -51,13 +51,13 @@
             </LinearLayout>
 
             <!-- Body -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/LightBlue"
-                android:orientation="vertical">
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:background="@color/LightBlue"-->
+<!--                android:orientation="vertical">-->
 
-            </LinearLayout>
+<!--            </LinearLayout>-->
 
         </LinearLayout>
 
@@ -84,28 +84,7 @@
                     android:background="@color/colorAccentLight"
                     android:orientation="vertical">
 
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="55dp"
-                        android:layout_height="55dp"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="20dp"
-                        app:cardCornerRadius="50dp">
-
-<!--                        <ImageButton-->
-<!--                            android:layout_width="55dp"-->
-<!--                            android:layout_height="55dp"-->
-<!--                            android:background="@drawable/"/>-->
-
-                    </androidx.cardview.widget.CardView>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Hi, USTH"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
-                        android:gravity="center"
-                        android:layout_marginTop="10dp"/>
+                    <!-- Commented code for CardView and TextView -->
 
                 </LinearLayout>
 
@@ -117,7 +96,6 @@
                     android:background="@color/colorAccentLight">
 
                     <LinearLayout
-                        android:id="@+id/to_home_page"
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
                         android:orientation="horizontal">
@@ -127,7 +105,7 @@
                             android:layout_height="25dp"
                             android:layout_gravity="center_vertical"
                             android:src="@drawable/home"
-                            android:layout_marginLeft="25dp"/>
+                            android:layout_marginLeft="25dp" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -135,14 +113,14 @@
                             android:text="Home"
                             android:textColor="@color/black"
                             android:textSize="20sp"
-                            android:gravity="center"/>
+                            android:gravity="center" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/black"/>
+                        android:background="@color/black" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -154,7 +132,7 @@
                             android:layout_height="25dp"
                             android:layout_gravity="center_vertical"
                             android:src="@drawable/videoclip"
-                            android:layout_marginLeft="25dp"/>
+                            android:layout_marginLeft="25dp" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -162,14 +140,14 @@
                             android:text="Showtimes"
                             android:textColor="@color/black"
                             android:textSize="20sp"
-                            android:gravity="center"/>
+                            android:gravity="center" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/black"/>
+                        android:background="@color/black" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -181,7 +159,7 @@
                             android:layout_height="25dp"
                             android:layout_gravity="center_vertical"
                             android:src="@drawable/shop"
-                            android:layout_marginLeft="25dp"/>
+                            android:layout_marginLeft="25dp" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -189,14 +167,14 @@
                             android:text="Store"
                             android:textColor="@color/black"
                             android:textSize="20sp"
-                            android:gravity="center"/>
+                            android:gravity="center" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/black"/>
+                        android:background="@color/black" />
 
                     <LinearLayout
                         android:id="@+id/to_result_page"
@@ -209,7 +187,7 @@
                             android:layout_height="25dp"
                             android:layout_gravity="center_vertical"
                             android:src="@drawable/profile"
-                            android:layout_marginLeft="25dp"/>
+                            android:layout_marginLeft="25dp" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -217,14 +195,14 @@
                             android:text="Personal information"
                             android:textColor="@color/black"
                             android:textSize="20sp"
-                            android:gravity="center"/>
+                            android:gravity="center" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/black"/>
+                        android:background="@color/black" />
 
                 </LinearLayout>
 

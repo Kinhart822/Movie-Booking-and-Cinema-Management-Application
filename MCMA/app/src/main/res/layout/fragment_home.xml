@@ -8,6 +8,145 @@
     android:id="@+id/home_fragment"
     tools:context=".frontend.HomeFragment">
 
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/home_nav"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:background="@color/colorAccentLight"
+                    android:orientation="vertical">
+                    <!-- Commented code for CardView and TextView -->
+                </LinearLayout>
+
+                <!-- Task (?) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:background="@color/colorAccentLight">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/home"
+                            android:layout_marginLeft="25dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Home"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/black" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/videoclip"
+                            android:layout_marginLeft="25dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Showtimes"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/black" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/shop"
+                            android:layout_marginLeft="25dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Store"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/black" />
+
+                    <LinearLayout
+                        android:id="@+id/to_result_page"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/profile"
+                            android:layout_marginLeft="25dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Personal information"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/black" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.navigation.NavigationView>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -46,7 +185,6 @@
                     android:layout_height="32dp"
                     android:layout_marginTop="6.5dp"
                     android:background="@drawable/searching" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -127,9 +265,7 @@
                         android:text="Drama"
                         android:textColor="@color/colorAccentDark"
                         android:textSize="17.5sp" />
-
                 </LinearLayout>
-
             </HorizontalScrollView>
 
             <HorizontalScrollView
@@ -170,7 +306,6 @@
                             android:text="Spiderman - Across the spider verse"
                             android:textStyle="bold"
                             android:gravity="center" />
-
                     </LinearLayout>
 
                     <LinearLayout
@@ -199,7 +334,6 @@
                             android:text="The Beekeeper"
                             android:textStyle="bold"
                             android:gravity="center" />
-
                     </LinearLayout>
 
                     <LinearLayout
@@ -228,7 +362,6 @@
                             android:text="The Walking Dead"
                             android:textStyle="bold"
                             android:gravity="center" />
-
                     </LinearLayout>
 
                     <LinearLayout
@@ -257,7 +390,6 @@
                             android:text="Iron Man 1"
                             android:textStyle="bold"
                             android:gravity="center" />
-
                     </LinearLayout>
 
                     <LinearLayout
@@ -286,7 +418,6 @@
                             android:text="Captain America 1"
                             android:textStyle="bold"
                             android:gravity="center" />
-
                     </LinearLayout>
 
                     <LinearLayout
@@ -315,7 +446,6 @@
                             android:text="Inside out 2"
                             android:textStyle="bold"
                             android:gravity="center" />
-
                     </LinearLayout>
 
                     <LinearLayout
@@ -344,27 +474,23 @@
                             android:text="Iron Man 3"
                             android:textStyle="bold"
                             android:gravity="center" />
-
                     </LinearLayout>
-
                 </LinearLayout>
-
             </HorizontalScrollView>
-            
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
                 android:layout_marginTop="12dp"
                 android:orientation="vertical">
-                
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Coming Soon"
                     android:textSize="25dp"
-                    android:textStyle="bold|italic"/>
-                
+                    android:textStyle="bold|italic" />
             </LinearLayout>
 
             <HorizontalScrollView
@@ -377,6 +503,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#ffffff"
+                    android:layout_marginLeft="9dp"
                     android:orientation="horizontal">
 
                     <LinearLayout
@@ -404,13 +531,13 @@
                             android:text="Quỷ ăn tạng 2"
                             android:textStyle="bold"
                             android:gravity="center" />
-
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="270dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:layout_marginLeft="12dp"
                         android:orientation="vertical">
 
                         <androidx.cardview.widget.CardView
@@ -432,13 +559,13 @@
                             android:text="Quỷ ăn tạng 2"
                             android:textStyle="bold"
                             android:gravity="center" />
-
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="270dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:layout_marginLeft="12dp"
                         android:orientation="vertical">
 
                         <androidx.cardview.widget.CardView
@@ -460,12 +587,13 @@
                             android:text="Quỷ ăn tạng 2"
                             android:textStyle="bold"
                             android:gravity="center" />
-
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="270dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:layout_marginLeft="12dp"
                         android:orientation="vertical">
 
                         <androidx.cardview.widget.CardView
@@ -487,12 +615,13 @@
                             android:text="Quỷ ăn tạng 2"
                             android:textStyle="bold"
                             android:gravity="center" />
-
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="270dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:layout_marginLeft="12dp"
                         android:orientation="vertical">
 
                         <androidx.cardview.widget.CardView
@@ -504,7 +633,7 @@
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="300dp"
-                                android:src="@drawable/movie8" />
+                                android:src="@drawable/movie10" />
 
                         </androidx.cardview.widget.CardView>
 
@@ -514,17 +643,9 @@
                             android:text="Quỷ ăn tạng 2"
                             android:textStyle="bold"
                             android:gravity="center" />
-
                     </LinearLayout>
-
                 </LinearLayout>
-
             </HorizontalScrollView>
-
-
-
         </LinearLayout>
-
     </ScrollView>
-
 </androidx.drawerlayout.widget.DrawerLayout>
