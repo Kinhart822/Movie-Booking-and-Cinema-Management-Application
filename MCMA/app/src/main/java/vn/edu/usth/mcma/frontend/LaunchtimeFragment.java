@@ -1,6 +1,7 @@
 package vn.edu.usth.mcma.frontend;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.core.view.GravityCompat;
@@ -33,6 +34,15 @@ public class LaunchtimeFragment extends Fragment {
                 if (mDrawerLayout != null && !mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
                     mDrawerLayout.openDrawer(GravityCompat.START);
                 }
+            }
+        });
+
+        ImageButton searchbutton = v.findViewById(R.id.searching_button);
+        searchbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(requireContext(), Search_Activity.class );
+                startActivity(i);
             }
         });
 

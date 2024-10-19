@@ -1,6 +1,7 @@
 package vn.edu.usth.mcma.frontend;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.core.view.GravityCompat;
@@ -25,6 +26,7 @@ public class HomeFragment extends Fragment {
 
         ImageButton mImageView = v.findViewById(R.id.menu_button);
 
+
         DrawerLayout mDrawerLayout = v.findViewById(R.id.home_fragment);
 
         mImageView.setOnClickListener(new View.OnClickListener() {
@@ -33,6 +35,15 @@ public class HomeFragment extends Fragment {
                 if (mDrawerLayout != null && !mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
                     mDrawerLayout.openDrawer(GravityCompat.START);
                 }
+            }
+        });
+
+        ImageButton searchbutton = v.findViewById(R.id.searching_button);
+        searchbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(requireContext(), Search_Activity.class );
+                startActivity(i);
             }
         });
 
