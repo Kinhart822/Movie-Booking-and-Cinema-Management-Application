@@ -7,6 +7,7 @@
     <color name="dark_grey">#CCC</color>
     <color name="better_grey">#e2e5ea</color>
     <color name="blue_dot">#294fd1</color>
+    <color name="very_dark_grey">#181818</color>
 
     <color name="bottom_navigator_before">#9BA6AB</color>
     <color name="bottom_navigator_after">#85FAF0</color>
