@@ -184,6 +184,7 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginTop="6.5dp"
+                    android:layout_marginRight="5.7dp"
                     android:background="@drawable/searching" />
             </LinearLayout>
 
@@ -202,71 +203,6 @@
                     android:textStyle="bold|italic" />
             </LinearLayout>
 
-            <!-- Scroll Type -->
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:scrollbars="none"
-                android:fillViewport="true">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="#ffffff"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="@color/colorLightBlue"
-                        android:layout_marginLeft="8dp"
-                        android:padding="10dp"
-                        android:text="Action"
-                        android:textColor="@color/colorAccentDark"
-                        android:textSize="17.5sp" />
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:backgroundTint="@color/colorLightBlue"
-                        android:padding="10dp"
-                        android:text="Adventure"
-                        android:textColor="@color/colorAccentDark"
-                        android:textSize="17.5sp" />
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:backgroundTint="@color/colorLightBlue"
-                        android:padding="10dp"
-                        android:text="Comedy"
-                        android:textColor="@color/colorAccentDark"
-                        android:textSize="17.5sp" />
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:backgroundTint="@color/colorLightBlue"
-                        android:padding="10dp"
-                        android:text="Horror"
-                        android:textColor="@color/colorAccentDark"
-                        android:textSize="17.5sp" />
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:backgroundTint="@color/colorLightBlue"
-                        android:padding="10dp"
-                        android:text="Drama"
-                        android:textColor="@color/colorAccentDark"
-                        android:textSize="17.5sp" />
-                </LinearLayout>
-            </HorizontalScrollView>
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -410,14 +346,15 @@
                                 android:layout_height="300dp"
                                 android:src="@drawable/movie6" />
 
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Captain America 1"
+                                android:textStyle="bold" />
+
                         </androidx.cardview.widget.CardView>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Captain America 1"
-                            android:textStyle="bold"
-                            android:gravity="center" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -549,7 +486,35 @@
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="300dp"
-                                android:src="@drawable/movie8" />
+                                android:src="@drawable/movie11" />
+
+                        </androidx.cardview.widget.CardView>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Red one"
+                            android:textStyle="bold"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="270dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginLeft="12dp"
+                        android:orientation="vertical">
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="20dp"
+                            app:cardElevation="4dp">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="300dp"
+                                android:src="@drawable/movie13" />
 
                         </androidx.cardview.widget.CardView>
 
@@ -577,42 +542,14 @@
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="300dp"
-                                android:src="@drawable/movie8" />
+                                android:src="@drawable/movie14" />
 
                         </androidx.cardview.widget.CardView>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Quỷ ăn tạng 2"
-                            android:textStyle="bold"
-                            android:gravity="center" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="270dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:layout_marginLeft="12dp"
-                        android:orientation="vertical">
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:cardCornerRadius="20dp"
-                            app:cardElevation="4dp">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:src="@drawable/movie8" />
-
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Quỷ ăn tạng 2"
+                            android:text="28 years later"
                             android:textStyle="bold"
                             android:gravity="center" />
                     </LinearLayout>
@@ -640,7 +577,35 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Quỷ ăn tạng 2"
+                            android:text="Venom 2"
+                            android:textStyle="bold"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="270dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginLeft="12dp"
+                        android:orientation="vertical">
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="20dp"
+                            app:cardElevation="4dp">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="300dp"
+                                android:src="@drawable/movie12" />
+
+                        </androidx.cardview.widget.CardView>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Wicked(2024)"
                             android:textStyle="bold"
                             android:gravity="center" />
                     </LinearLayout>
