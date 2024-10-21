@@ -71,8 +71,6 @@ public class ViewServiceImpl implements ViewService {
         List<Coupon> coupons = couponRepository.findAvailableCouponsForUser(userId);
         return mapCouponsToResponse(coupons);
     }
-
-    // TODO: FIX COUPONS
     @Override
     public ViewCouponsResponse getAvailableCouponsByMovieId(ViewCouponRequest viewCouponRequest) {
         List<Coupon> coupons = couponRepository.findAvailableCouponsByMovieIds(viewCouponRequest.getMovieIds());

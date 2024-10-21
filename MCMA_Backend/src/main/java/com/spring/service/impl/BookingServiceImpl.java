@@ -75,7 +75,7 @@ public class BookingServiceImpl implements BookingService {
     // 1. Choose movie/city and cinema
     @Override
     public BookingMovieRespond selectMovie(MovieRequest movieRequest, Integer userId) {
-        BookingDraft draft = getOrCreateDraft(userId);
+        BookingDraft draft = new BookingDraft();
 
         try {
             Movie movie = movieRepository.findById(movieRequest.getMovieId())

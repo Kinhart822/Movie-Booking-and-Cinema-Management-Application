@@ -1,19 +1,19 @@
 package com.spring.dto.Response;
 
+import com.spring.entities.User;
 import com.spring.enums.Gender;
 import com.spring.enums.Type;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class UserDetailsResponse implements Serializable {
-
     private String firstName;
 
     private String lastName;

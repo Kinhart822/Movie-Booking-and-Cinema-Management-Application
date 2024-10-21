@@ -1,6 +1,5 @@
 package com.spring.entities;
 
-import com.spring.enums.RatingStar;
 import com.spring.enums.Type;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,8 +9,6 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -22,13 +19,6 @@ public class MovieRespond {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @Column(name = "User_Rating")
-    @Enumerated(EnumType.STRING)
-    private RatingStar ratings;
-
-    @Column(name = "User_Comment")
-    private String userComment;
 
     @Column(name = "Created_By")
     @Enumerated(EnumType.ORDINAL)
@@ -54,15 +44,11 @@ public class MovieRespond {
     @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
 
-    public double getRatingAvgStar() {
-        int star = 0;
-        for (MovieRespond movieRating : movie.getMovieResponds()) {
-            if (movieRating.getRatings() == null) {
-                star += 0;
-            } else {
-                star += movieRating.getRatings().ordinal() + 1;
-            }
-        }
-        return (double) star / (double) movie.getMovieResponds().size();
-    }
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "rating_id")
+    private Rating rating;
 }

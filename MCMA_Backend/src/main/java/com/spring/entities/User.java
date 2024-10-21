@@ -64,21 +64,21 @@ public class User implements UserDetails {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserCoupon userCoupon;
-
+    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<MovieRespond> movieResponds = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
     private List<Token> tokens;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Booking> bookings;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<BookingDraft> bookingDrafts;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Notification> notifications;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<MovieRespond> movieResponds;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

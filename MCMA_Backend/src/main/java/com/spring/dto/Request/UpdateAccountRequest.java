@@ -16,7 +16,6 @@ import java.util.Date;
 @Getter
 @Setter
 public class UpdateAccountRequest {
-    //TODO: UPDATE CODE
     @NotBlank
     @Email
     private String email;

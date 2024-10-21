@@ -2,16 +2,17 @@ package com.spring.controller;
 
 import com.spring.config.JwtUtil;
 import com.spring.dto.Request.booking.*;
+import com.spring.dto.Request.movieRespond.MovieRespondRequest;
 import com.spring.dto.Request.view.ViewCinemaRequest;
 import com.spring.dto.Request.view.ViewCouponRequest;
 import com.spring.dto.Response.SearchMovieByGenreResponse;
 import com.spring.dto.Response.SearchMovieByNameResponse;
 import com.spring.dto.Response.booking.*;
+import com.spring.dto.Response.movieRespond.CommentResponse;
+import com.spring.dto.Response.movieRespond.MovieRespondResponse;
+import com.spring.dto.Response.movieRespond.RatingResponse;
 import com.spring.dto.Response.view.*;
-import com.spring.service.BookingService;
-import com.spring.service.MovieService;
-import com.spring.service.NotificationService;
-import com.spring.service.ViewService;
+import com.spring.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,9 @@ public class UserController {
     private ViewService viewService;
 
     @Autowired
+    private MovieRespondService movieRespondService;
+
+    @Autowired
     private JwtUtil jwtUtil;
 
     @GetMapping
@@ -51,8 +55,7 @@ public class UserController {
     public ResponseEntity<List<SearchMovieByNameResponse>> getAllMovies(
             @RequestParam(required = false, name = "title") String title,
             @RequestParam(required = false, name = "limit", defaultValue = "10") Integer limit,
-            @RequestParam(required = false, name = "offset", defaultValue = "0") Integer offset)
-    {
+            @RequestParam(required = false, name = "offset", defaultValue = "0") Integer offset) {
         return ResponseEntity.ok(movieService.getAllMovies(title, limit, offset));
     }
 
@@ -153,6 +156,28 @@ public class UserController {
         return ResponseEntity.ok("Booking deleted successfully");
     }
 
+    // Comments and Ratings for a Movie
+    @PostMapping("/movieRespond/add")
+    public ResponseEntity<MovieRespondResponse> addRespond(HttpServletRequest request, @RequestBody MovieRespondRequest movieRespondRequest) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        MovieRespondResponse movieRespondResponse = movieRespondService.createMovieRespond(userId, movieRespondRequest);
+        return ResponseEntity.ok(movieRespondResponse);
+    }
+
+    @PutMapping("/movieRespond/update")
+    public ResponseEntity<MovieRespondResponse> updateRespond(HttpServletRequest request, @RequestBody MovieRespondRequest movieRespondRequest) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        MovieRespondResponse movieRespondResponse = movieRespondService.updateMovieRespond(userId, movieRespondRequest);
+        return ResponseEntity.ok(movieRespondResponse);
+    }
+
+    @DeleteMapping("/movieRespond/delete")
+    public ResponseEntity<String> deleteRespond(HttpServletRequest request, @RequestBody MovieRespondRequest movieRespondRequest) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        movieRespondService.deleteMovieRespond(userId, movieRespondRequest);
+        return ResponseEntity.ok("Delete Movie Respond Successfully");
+    }
+
     // View
     @GetMapping("/view/cityList")
     public ResponseEntity<ViewCityResponse> getCities() {
@@ -202,6 +227,66 @@ public class UserController {
         Integer userId = jwtUtil.getUserIdFromToken(request);
         NotificationResponse notificationResponse = notificationService.getNotificationsByUserId(userId);
         return ResponseEntity.ok(notificationResponse);
+    }
+
+    @GetMapping("/view/viewCommentByUserAndMovie")
+    public ResponseEntity<CommentResponse> viewCommentByUserAndMovie(HttpServletRequest request, @RequestBody MovieRespondRequest movieRespondRequest) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        CommentResponse commentResponse = movieRespondService.getMovieCommentByUserIdAndMovieId(userId, movieRespondRequest);
+        return ResponseEntity.ok(commentResponse);
+    }
+
+    @GetMapping("/view/viewCommentByUser")
+    public ResponseEntity<List<CommentResponse>> viewCommentByUser(HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        List<CommentResponse> commentResponses = movieRespondService.getMovieCommentsByUserId(userId);
+        return ResponseEntity.ok(commentResponses);
+    }
+
+    @GetMapping("/view/viewCommentByMovie")
+    public ResponseEntity<List<CommentResponse>> viewCommentByMovie(@RequestBody MovieRespondRequest movieRespondRequest) {
+        List<CommentResponse> commentResponses = movieRespondService.getMovieCommentsByMovieId(movieRespondRequest);
+        return ResponseEntity.ok(commentResponses);
+    }
+
+    @GetMapping("/view/viewRatingByUserAndMovie")
+    public ResponseEntity<RatingResponse> viewRatingByUserAndMovie(HttpServletRequest request, @RequestBody MovieRespondRequest movieRespondRequest) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        RatingResponse ratingResponse = movieRespondService.getMovieRatingByUserIdAndMovieId(userId, movieRespondRequest);
+        return ResponseEntity.ok(ratingResponse);
+    }
+
+    @GetMapping("/view/viewRatingByUser")
+    public ResponseEntity<List<RatingResponse>> viewRatingByUser(HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        List<RatingResponse> ratingResponses = movieRespondService.getMovieRatingsByUserId(userId);
+        return ResponseEntity.ok(ratingResponses);
+    }
+
+    @GetMapping("/view/viewRatingByMovie")
+    public ResponseEntity<List<RatingResponse>> viewRatingByMovie(@RequestBody MovieRespondRequest movieRespondRequest) {
+        List<RatingResponse> ratingResponses = movieRespondService.getMovieRatingsByMovieId(movieRespondRequest);
+        return ResponseEntity.ok(ratingResponses);
+    }
+
+    @GetMapping("/view/viewMovieRespondByUserAndMovie")
+    public ResponseEntity<MovieRespondResponse> viewMovieRespondByUserAndMovie(HttpServletRequest request, @RequestBody MovieRespondRequest movieRespondRequest) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        MovieRespondResponse movieRespondResponse = movieRespondService.getMovieRespondsByUserIdAndMovieId(userId, movieRespondRequest);
+        return ResponseEntity.ok(movieRespondResponse);
+    }
+
+    @GetMapping("/view/viewMovieRespondByUser")
+    public ResponseEntity<List<MovieRespondResponse>> viewMovieRespondByUser(HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        List<MovieRespondResponse> movieRespondResponses = movieRespondService.getAllMovieRespondsByUserId(userId);
+        return ResponseEntity.ok(movieRespondResponses);
+    }
+
+    @GetMapping("/view/viewMovieRespondByMovie")
+    public ResponseEntity<List<MovieRespondResponse>> viewMovieRespondByMovie(@RequestBody MovieRespondRequest movieRespondRequest) {
+        List<MovieRespondResponse> movieRespondResponses = movieRespondService.getAllMovieRespondsByMovieId(movieRespondRequest);
+        return ResponseEntity.ok(movieRespondResponses);
     }
 }
 
