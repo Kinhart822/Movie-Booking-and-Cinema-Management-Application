@@ -29,4 +29,7 @@ public class BookingMovieRespond {
 
     private List<String> movieRatingDetailNameList;
     private List<String> movieRatingDetailDescriptions;
+
+    private  List<String> comments;
+    private  Double averageRating;
 }

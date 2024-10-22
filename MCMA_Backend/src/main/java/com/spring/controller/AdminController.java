@@ -1,11 +1,16 @@
 package com.spring.controller;
 
 import com.spring.config.JwtUtil;
+import com.spring.dto.Request.movieRespond.MovieRespondRequest;
 import com.spring.dto.Request.view.ViewCinemaRequest;
 import com.spring.dto.Request.view.ViewCouponRequest;
 import com.spring.dto.Response.SearchMovieByGenreResponse;
 import com.spring.dto.Response.SearchMovieByNameResponse;
+import com.spring.dto.Response.movieRespond.CommentResponse;
+import com.spring.dto.Response.movieRespond.MovieRespondResponse;
+import com.spring.dto.Response.movieRespond.RatingResponse;
 import com.spring.dto.Response.view.*;
+import com.spring.service.MovieRespondService;
 import com.spring.service.MovieService;
 import com.spring.service.NotificationService;
 import com.spring.service.ViewService;
@@ -33,6 +38,9 @@ public class AdminController {
 
     @Autowired
     private ViewService viewService;
+
+    @Autowired
+    private MovieRespondService movieRespondService;
 
     @GetMapping
     public ResponseEntity<String> sayHello(HttpServletRequest request) {
@@ -105,5 +113,23 @@ public class AdminController {
         Integer userId = jwtUtil.getUserIdFromToken(request);
         NotificationResponse notificationResponse = notificationService.getNotificationsByUserId(userId);
         return ResponseEntity.ok(notificationResponse);
+    }
+
+    @GetMapping("/view/viewCommentByMovie")
+    public ResponseEntity<List<CommentResponse>> viewCommentByMovie(@RequestBody MovieRespondRequest movieRespondRequest) {
+        List<CommentResponse> commentResponses = movieRespondService.getMovieCommentsByMovieId(movieRespondRequest);
+        return ResponseEntity.ok(commentResponses);
+    }
+
+    @GetMapping("/view/viewRatingByMovie")
+    public ResponseEntity<List<RatingResponse>> viewRatingByMovie(@RequestBody MovieRespondRequest movieRespondRequest) {
+        List<RatingResponse> ratingResponses = movieRespondService.getMovieRatingsByMovieId(movieRespondRequest);
+        return ResponseEntity.ok(ratingResponses);
+    }
+
+    @GetMapping("/view/viewMovieRespondByMovie")
+    public ResponseEntity<List<MovieRespondResponse>> viewMovieRespondByMovie(@RequestBody MovieRespondRequest movieRespondRequest) {
+        List<MovieRespondResponse> movieRespondResponses = movieRespondService.getAllMovieRespondsByMovieId(movieRespondRequest);
+        return ResponseEntity.ok(movieRespondResponses);
     }
 }

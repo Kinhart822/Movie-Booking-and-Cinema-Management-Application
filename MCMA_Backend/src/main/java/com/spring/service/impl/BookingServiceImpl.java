@@ -70,6 +70,12 @@ public class BookingServiceImpl implements BookingService {
     private NotificationRepository notificationRepository;
 
     @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private RatingRepository ratingRepository;
+
+    @Autowired
     private EmailService emailService;
 
     // 1. Choose movie/city and cinema
@@ -123,6 +129,25 @@ public class BookingServiceImpl implements BookingService {
             SimpleDateFormat publishDateFormatter = new SimpleDateFormat("dd/MM/yyyy");
             String formattedDatePublish = publishDateFormatter.format(movie.getDatePublish());
 
+            // Movie Respond
+            List<Comment> comments = commentRepository.findByMovieId(movie.getId());
+            List<String> contents = comments.stream()
+                    .map(Comment::getContent)
+                    .toList();
+
+            List<Rating> ratings = ratingRepository.findByMovieId(movie.getId());
+            OptionalDouble averageRating = ratings.stream()
+                    .mapToDouble(Rating::getRatingStar)
+                    .average();
+
+            double avg = 0;
+            if (averageRating.isPresent()) {
+                avg = averageRating.getAsDouble();
+                System.out.println("Average rating: " + avg);
+            } else {
+                System.out.println("No ratings available.");
+            }
+
             // Create and add BookingMovieRespond object
             BookingMovieRespond movieResponse = new BookingMovieRespond(
                     movie.getName(),
@@ -136,7 +161,9 @@ public class BookingServiceImpl implements BookingService {
                     moviePerformerSex,
                     moviePerformerType,
                     movieRatingDetailNameList,
-                    movieRatingDetailDescriptions
+                    movieRatingDetailDescriptions,
+                    contents,
+                    avg
             );
             bookingMovieResponses.add(movieResponse);
         }
@@ -195,6 +222,24 @@ public class BookingServiceImpl implements BookingService {
                     .map(MovieRatingDetail::getDescription)
                     .toList();
 
+            List<Comment> comments = commentRepository.findByMovieId(movieRequest.getMovieId());
+            List<String> contents = comments.stream()
+                    .map(Comment::getContent)
+                    .toList();
+
+            List<Rating> ratings = ratingRepository.findByMovieId(movieRequest.getMovieId());
+            OptionalDouble averageRating = ratings.stream()
+                    .mapToDouble(Rating::getRatingStar)
+                    .average();
+
+            double avg = 0;
+            if (averageRating.isPresent()) {
+                avg = averageRating.getAsDouble();
+                System.out.println("Average rating: " + avg);
+            } else {
+                System.out.println("No ratings available.");
+            }
+
             return new BookingMovieRespond(
                     movie.getName(),
                     movie.getLength(),
@@ -207,7 +252,9 @@ public class BookingServiceImpl implements BookingService {
                     moviePerformerSex,
                     moviePerformerType,
                     movieRatingDetailNameList,
-                    movieRatingDetailDescriptions
+                    movieRatingDetailDescriptions,
+                    contents,
+                    avg
             );
         } catch (Exception e) {
             bookingDraftRepository.delete(draft);
