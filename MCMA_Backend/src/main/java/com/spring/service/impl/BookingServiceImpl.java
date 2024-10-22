@@ -74,6 +74,77 @@ public class BookingServiceImpl implements BookingService {
 
     // 1. Choose movie/city and cinema
     @Override
+    public List<BookingMovieRespond> getAllMovies() {
+        List<Movie> movies = movieRepository.findAll();
+        List<BookingMovieRespond> bookingMovieResponses = new ArrayList<>();
+
+        for (Movie movie : movies) {
+            // Fetch Movie Genres
+            List<MovieGenre> movieGenres = movieGenreRepository.findMovieGenresByMovie(movie.getId());
+            List<String> movieGenreNameList = movieGenres.stream()
+                    .map(movieGenre -> movieGenre.getMovieGenreDetail().getName())
+                    .toList();
+            List<String> movieGenreDescriptions = movieGenres.stream()
+                    .map(movieGenre -> movieGenre.getMovieGenreDetail().getDescription())
+                    .toList();
+
+            // Fetch Movie Performers
+            List<MoviePerformer> moviePerformers = moviePerformerRepository.findMoviePerformersByMovieId(movie.getId());
+            List<String> moviePerformerNameList = moviePerformers.stream()
+                    .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getName())
+                    .toList();
+
+            SimpleDateFormat formatterDate = new SimpleDateFormat("dd/MM/yyyy");
+            List<Date> moviePerformerDobList = moviePerformers.stream()
+                    .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getDob())
+                    .toList();
+            List<String> formatMoviePerformerDobList = new ArrayList<>();
+            for (Date dob : moviePerformerDobList) {
+                formatMoviePerformerDobList.add(formatterDate.format(dob));
+            }
+
+            List<PerformerSex> moviePerformerSex = moviePerformers.stream()
+                    .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getPerformerSex())
+                    .toList();
+            List<PerformerType> moviePerformerType = moviePerformers.stream()
+                    .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getPerformerType())
+                    .toList();
+
+            // Fetch Movie Rating Details
+            List<MovieRatingDetail> movieRatingDetails = movieRatingDetailRepository.findMovieRatingDetailsByMovieId(movie.getId());
+            List<String> movieRatingDetailNameList = movieRatingDetails.stream()
+                    .map(MovieRatingDetail::getName)
+                    .toList();
+            List<String> movieRatingDetailDescriptions = movieRatingDetails.stream()
+                    .map(MovieRatingDetail::getDescription)
+                    .toList();
+
+            // Format date
+            SimpleDateFormat publishDateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+            String formattedDatePublish = publishDateFormatter.format(movie.getDatePublish());
+
+            // Create and add BookingMovieRespond object
+            BookingMovieRespond movieResponse = new BookingMovieRespond(
+                    movie.getName(),
+                    movie.getLength(),
+                    formattedDatePublish,
+                    movie.getTrailerLink(),
+                    movieGenreNameList,
+                    movieGenreDescriptions,
+                    moviePerformerNameList,
+                    formatMoviePerformerDobList,
+                    moviePerformerSex,
+                    moviePerformerType,
+                    movieRatingDetailNameList,
+                    movieRatingDetailDescriptions
+            );
+            bookingMovieResponses.add(movieResponse);
+        }
+
+        return bookingMovieResponses;
+    }
+
+    @Override
     public BookingMovieRespond selectMovie(MovieRequest movieRequest, Integer userId) {
         BookingDraft draft = new BookingDraft();
 
@@ -116,7 +187,7 @@ public class BookingServiceImpl implements BookingService {
                     .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getPerformerType())
                     .toList();
 
-            List<MovieRatingDetail> movieRatingDetails = movieRatingDetailRepository.findMoviePerformersByMovieId(movie.getId());
+            List<MovieRatingDetail> movieRatingDetails = movieRatingDetailRepository.findMovieRatingDetailsByMovieId(movie.getId());
             List<String> movieRatingDetailNameList = movieRatingDetails.stream()
                     .map(MovieRatingDetail::getName)
                     .toList();
@@ -145,6 +216,27 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public List<CityResponse> getAllCities() {
+        List<City> cities = cityRepository.findAll();
+        List<CityResponse> cityResponses = new ArrayList<>();
+
+        for (City city : cities) {
+            List<Cinema> cinemaList = city.getCinemaList();
+            List<String> cinemaNameList = cinemaList.stream()
+                    .map(Cinema::getName)
+                    .toList();
+
+            CityResponse cityResponse = new CityResponse(
+                            city.getName(),
+                            cinemaNameList
+            );
+            cityResponses.add(cityResponse);
+        }
+
+        return cityResponses;
+    }
+
+    @Override
     public CityResponse selectCity(CityRequest cityRequest, Integer userId) {
         BookingDraft draft = getOrCreateDraft(userId);
 
@@ -154,8 +246,6 @@ public class BookingServiceImpl implements BookingService {
         } else {
             City city = cityRepository.findByIdAndMovieId(cityRequest.getCityId(), draft.getMovie().getId())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid city"));
-
-            draft = getOrCreateDraft(userId);
             draft.setCity(city);
             bookingDraftRepository.save(draft);
 
@@ -172,6 +262,45 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public List<CinemaResponse> getAllCinemas() {
+        List<Cinema> cinemaList = cinemaRepository.findAll();
+        List<CinemaResponse> cinemaResponses = new ArrayList<>();
+
+        for (Cinema cinema : cinemaList) {
+            List<Screen> screenList = cinema.getScreenList();
+            List<String> screenType = screenList.stream()
+                    .map(screen -> screen.getScreenType().getName())
+                    .toList();
+            List<String> screenDescription = screenList.stream()
+                    .map(screen -> screen.getScreenType().getDescription())
+                    .toList();
+
+            List<Food> foodList = cinema.getFoodList();
+            List<String> foodName = foodList.stream().map(Food::getName).toList();
+
+            List<Drink> drinks = cinema.getDrinks();
+            List<String> drinkName = drinks.stream().map(Drink::getName).toList();
+
+            List<MovieSchedule> movieSchedules = movieScheduleRepository.findMovieSchedulesByCinemaId(cinema.getId());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm a");
+            List<String> formattedSchedules = movieSchedules.stream()
+                    .map(schedule -> schedule.getStartTime().format(formatter))
+                    .toList();
+
+            CinemaResponse cinemaResponse = new CinemaResponse(
+                    cinema.getName(),
+                    screenType,
+                    screenDescription,
+                    foodName,
+                    drinkName,
+                    formattedSchedules
+            );
+            cinemaResponses.add(cinemaResponse);
+        }
+
+        return cinemaResponses;    }
+
+    @Override
     public CinemaResponse selectCinema(CinemaRequest cinemaRequest, Integer userId) {
         BookingDraft draft = getOrCreateDraft(userId);
 
@@ -181,8 +310,6 @@ public class BookingServiceImpl implements BookingService {
         } else {
             Cinema cinema = cinemaRepository.findByIdAndCityId(cinemaRequest.getCinemaId(), draft.getCity().getId())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid cinema for the specified city"));
-
-            draft = getOrCreateDraft(userId);
             draft.setCinema(cinema);
             bookingDraftRepository.save(draft);
 
@@ -230,8 +357,6 @@ public class BookingServiceImpl implements BookingService {
         } else {
             Screen screen = screenRepository.findByIdAndCinemaId(screenRequest.getScreenId(), draft.getCinema().getId())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid screen for the specified cinema"));
-
-            draft = getOrCreateDraft(userId);
             draft.setScreen(screen);
             bookingDraftRepository.save(draft);
 
@@ -287,7 +412,6 @@ public class BookingServiceImpl implements BookingService {
             String formattedStartDateTime = startDateTime.format(formatter);
             String formattedEndDateTime = endDateTime.format(formatter);
 
-            draft = getOrCreateDraft(userId);
             draft.setStartDateTime(startDateTime);
             draft.setEndDateTime(endDateTime);
             draft.setMovieSchedule(selectedSchedule);
@@ -449,7 +573,6 @@ public class BookingServiceImpl implements BookingService {
                 }
             }
 
-            draft = getOrCreateDraft(userId);
             draft.getFoodList().addAll(draftFoods);
             bookingDraftRepository.save(draft);
 
@@ -499,8 +622,7 @@ public class BookingServiceImpl implements BookingService {
                 }
             }
 
-            draft = getOrCreateDraft(userId);
-            draft.getDrinks().addAll(draftDrinks);
+                                      draft.getDrinks().addAll(draftDrinks);
             bookingDraftRepository.save(draft);
 
             return new DrinkResponse(drinkNameList, descriptionList, sizeDrinkList);
@@ -763,7 +885,6 @@ public class BookingServiceImpl implements BookingService {
             System.out.println("Failed to send email notification. Please try again later.");
         }
     }
-
 
     private BookingDraft getOrCreateDraft(Integer userId) {
         return bookingDraftRepository.findByUserId(userId)

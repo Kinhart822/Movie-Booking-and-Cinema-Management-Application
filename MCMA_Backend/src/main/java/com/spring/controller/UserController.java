@@ -12,6 +12,7 @@ import com.spring.dto.Response.movieRespond.CommentResponse;
 import com.spring.dto.Response.movieRespond.MovieRespondResponse;
 import com.spring.dto.Response.movieRespond.RatingResponse;
 import com.spring.dto.Response.view.*;
+import com.spring.entities.MovieRespond;
 import com.spring.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +65,26 @@ public class UserController {
             @RequestParam(required = false, name = "movieGenreId") Integer movieGenreId) {
         return ResponseEntity.ok(movieService.getAllMoviesByMovieGenreSet(movieGenreId));
     }
+
+    // Get Some Information
+    @GetMapping("/information/allMovies")
+    public ResponseEntity<List<BookingMovieRespond>> getAllMovies() {
+        List<BookingMovieRespond> movieResponds = bookingService.getAllMovies();
+        return ResponseEntity.ok(movieResponds);
+    }
+
+    @GetMapping("/information/allCities")
+    public ResponseEntity<List<CityResponse>> getAllCities() {
+        List<CityResponse> cityResponses = bookingService.getAllCities();
+        return ResponseEntity.ok(cityResponses);
+    }
+
+    @GetMapping("/information/allCinemas")
+    public ResponseEntity<List<CinemaResponse>> getAllCinemas() {
+        List<CinemaResponse> movies = bookingService.getAllCinemas();
+        return ResponseEntity.ok(movies);
+    }
+
 
     // Booking ticket(s)
     @PostMapping("/booking/choose-movie")

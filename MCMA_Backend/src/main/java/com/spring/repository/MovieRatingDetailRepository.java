@@ -10,5 +10,5 @@ import java.util.List;
 
 public interface MovieRatingDetailRepository extends JpaRepository<MovieRatingDetail, Integer> {
     @Query("SELECT mrd FROM MovieRatingDetail mrd JOIN mrd.movieSet m WHERE m.id = :movieId")
-    List<MovieRatingDetail> findMoviePerformersByMovieId(@Param("movieId") Integer movieId);
+    List<MovieRatingDetail> findMovieRatingDetailsByMovieId(@Param("movieId") Integer movieId);
 }
