@@ -4,19 +4,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".frontend.CinemaRegister">
-
+    android:id="@+id/login_fragment"
+    tools:context=".frontend.LoginFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/LightBlue"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:background="@color/DarkBlue"
             android:padding="16dp">
 
@@ -44,20 +45,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical"
             android:padding="24dp">
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="380dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="52dp"
+                android:layout_marginTop="60dp"
                 android:gravity="center"
-                android:text="Sign up"
+                android:text="Log in"
                 android:textSize="33sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.47"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -65,7 +64,7 @@
                 android:id="@+id/editTextEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="64dp"
+                android:layout_marginTop="48dp"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
                 android:padding="16dp"
@@ -78,90 +77,49 @@
                 android:id="@+id/editTextPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="28dp"
                 android:hint="Password"
                 android:inputType="textPassword"
                 android:padding="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextEmail" />
-
-
-            <EditText
-                android:id="@+id/editTextConfirmPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="84dp"
-                android:hint="Confirm password"
-                android:inputType="textPassword"
-                android:padding="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextEmail" />
-
-            <RadioGroup
-                android:id="@+id/radioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextPassword"
-                app:layout_constraintVertical_bias="0.309">
-
-                <RadioButton
-                    android:id="@+id/radioButtonAdmin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="24dp"
-                    android:buttonTint="@color/black"
-                    android:text="Admin" />
-
-                <RadioButton
-                    android:id="@+id/radioButtonUser"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="@color/black"
-                    android:text="User" />
-            </RadioGroup>
+                app:layout_constraintTop_toBottomOf="@+id/editTextEmail" />
 
             <Button
-                android:id="@+id/RegisterForAccount"
+                android:id="@+id/login_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
+                android:layout_marginTop="52dp"
                 android:layout_marginEnd="32dp"
                 android:backgroundTint="@color/colorLightBlue"
                 android:padding="10dp"
-                android:text="Register for account"
+                android:text="Log in"
                 android:textColor="@color/colorAccentDark"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup"
-                app:layout_constraintVertical_bias="0.23" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
 
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/submit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
                     android:layout_marginBottom="8dp"
-                    android:text="Having account?"
+                    android:text="Don't have an account?"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
@@ -169,32 +127,16 @@
                     android:id="@+id/text_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginLeft="10dp"
+                    android:text="@string/forgotpassword_underlined"
                     android:textColor="#4287f5"
-                    android:textSize="16sp"
-                    android:textStyle=""
-                    android:text="@string/login_underlined" />
+                    android:textSize="16sp" />
 
-            </LinearLayout>
-
+            </RelativeLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="49dp"
-            android:gravity="center_vertical"
-            android:padding="16dp">
-
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-
-        </LinearLayout>
     </LinearLayout>
-
 
 </FrameLayout>
