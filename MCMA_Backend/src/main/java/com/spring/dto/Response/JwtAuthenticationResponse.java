@@ -7,8 +7,6 @@ import lombok.Setter;
 @Setter
 public class JwtAuthenticationResponse {
     private String token;
-    private String refreshToken;
-    private String resetToken;
     private String message;
     private String error;
     private Integer userId;

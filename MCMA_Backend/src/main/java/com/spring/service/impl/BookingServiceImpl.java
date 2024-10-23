@@ -176,10 +176,14 @@ public class BookingServiceImpl implements BookingService {
         BookingDraft draft = new BookingDraft();
 
         try {
+            bookingDraftRepository.deleteAllByUserId(userId);
+
             Movie movie = movieRepository.findById(movieRequest.getMovieId())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid movie"));
 
             draft.setMovie(movie);
+            draft.setUser(userRepository.findById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid user")));
             bookingDraftRepository.save(draft);
 
             LocalDate datePublish = movie.getDatePublish().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();

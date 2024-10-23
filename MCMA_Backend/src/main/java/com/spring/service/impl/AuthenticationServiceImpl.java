@@ -16,7 +16,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -92,12 +91,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var saveUser = userRepository.save(user);
 
         var jwt = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(jwt, saveUser);
 
         JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
         jwtAuthenticationResponse.setToken(jwt);
-        jwtAuthenticationResponse.setRefreshToken(refreshToken);
 
         return jwtAuthenticationResponse;
     }
@@ -110,14 +107,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         ));
         var user = userRepository.findByEmail(signInRequest.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid User: " + signInRequest.getEmail()));
+        List<Token> loggedOutTokens = tokenRepository.findAllLoggedOutTokensByUser(user.getId());
+        if (!loggedOutTokens.isEmpty()) {
+            tokenRepository.deleteAll(loggedOutTokens);
+        }
+
         var jwt = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllTokenByUser(user);
         saveUserToken(jwt, user);
 
         JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
         jwtAuthenticationResponse.setToken(jwt);
-        jwtAuthenticationResponse.setRefreshToken(refreshToken);
         jwtAuthenticationResponse.setUserId(user.getId());
 
         return jwtAuthenticationResponse;
@@ -128,13 +128,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String userEmail = jwtService.extractUsername(refreshTokenRequest.getToken());
         User user = userRepository.findByEmail(userEmail).orElseThrow();
         if (jwtService.isTokenValid(refreshTokenRequest.getToken(), user)) {
-            var jwt = jwtService.generateToken(user);
+            var jwt = jwtService.generateRefreshToken(user);
             revokeAllTokenByUser(user);
             saveUserToken(jwt, user);
 
             JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
             jwtAuthenticationResponse.setToken(jwt);
-            jwtAuthenticationResponse.setRefreshToken(refreshTokenRequest.getToken());
 
             return jwtAuthenticationResponse;
         }
@@ -151,7 +150,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             String resetToken = jwtService.generateResetToken(user);
             saveUserToken(resetToken, user);
 
-            jwtAuthenticationResponse.setResetToken(resetToken);
+            jwtAuthenticationResponse.setToken(resetToken);
 
             jwtAuthenticationResponse.setMessage("Success!");
             return jwtAuthenticationResponse;

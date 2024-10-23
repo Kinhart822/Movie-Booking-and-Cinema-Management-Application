@@ -10,6 +10,9 @@ import java.util.Optional;
 
 @Repository
 public interface TokenRepository extends JpaRepository<Token, Integer> {
+    @Query("SELECT t FROM Token t WHERE t.user.id = :userId AND t.isLoggedOut = true")
+    List<Token> findAllLoggedOutTokensByUser(Integer userId);
+
     @Query("""
              select t from Token t\s
              inner join User u on t.user.id = u.id
