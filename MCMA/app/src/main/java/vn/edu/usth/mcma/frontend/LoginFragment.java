@@ -77,7 +77,7 @@ public class LoginFragment extends Fragment {
 
             if (validateLogin(email, password)) {
                 // Lưu trạng thái đăng nhập
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Login", getContext().MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Thing", getContext().MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("isLoggedIn", true);
                 editor.apply();

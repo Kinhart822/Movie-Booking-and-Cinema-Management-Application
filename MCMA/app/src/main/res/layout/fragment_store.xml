@@ -175,7 +175,6 @@
                     android:layout_height="39dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Cinema+Name"
                     android:textColor="@color/black"
                     android:textSize="26sp" />
 

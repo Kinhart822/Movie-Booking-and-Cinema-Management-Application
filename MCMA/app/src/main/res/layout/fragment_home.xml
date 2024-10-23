@@ -175,9 +175,24 @@
                     android:layout_height="39dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Cinema+Name"
                     android:textColor="@color/black"
                     android:textSize="26sp" />
+
+
+                <ImageButton
+                    android:id="@+id/notification_button"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginTop="6.5dp"
+                    android:layout_marginRight="5.7dp"
+                    android:background="@drawable/notification" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:orientation="vertical">
 
                 <ImageButton
                     android:id="@+id/searching_button"
@@ -186,8 +201,12 @@
                     android:layout_marginTop="6.5dp"
                     android:layout_marginRight="5.7dp"
                     android:background="@drawable/searching" />
+
+
             </LinearLayout>
 
+
+<!-- Thay bằng thể loại (Tất các ảnh làm bằng recycle view) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -414,7 +433,7 @@
                     </LinearLayout>
                 </LinearLayout>
             </HorizontalScrollView>
-
+<!--Làm tab layout cho now showing và coming soon (Hiển thị các phim bằng cách làm recycle view) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -27,11 +27,11 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("Login", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("Thing", MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
 
         if (!isLoggedIn) {
-            // Nếu chưa đăng nhập
+            // If not logged in
             navigateToLoginFragment();
             return;
         }
