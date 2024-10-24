@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class DrinkResponse {
     private List<String> drinkNameList;
+    private List<String> imageUrlList;
     private List<String> descriptionList;
     private List<SizeFoodOrDrink> sizeDrinkList;
 }

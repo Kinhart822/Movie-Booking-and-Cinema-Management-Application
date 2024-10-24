@@ -18,8 +18,10 @@ public class BookingMovieRespond {
     private Integer movieLength;
     private String publishedDate;
     private String trailerLink;
+    private String imageUrl;
 
     private List<String> movieGenreNameList;
+    private List<String> imageUrlList;
     private List<String> movieGenreDescriptions;
 
     private List<String> moviePerformerNameList;

@@ -90,6 +90,9 @@ public class BookingServiceImpl implements BookingService {
             List<String> movieGenreNameList = movieGenres.stream()
                     .map(movieGenre -> movieGenre.getMovieGenreDetail().getName())
                     .toList();
+            List<String> movieGenreImageUrls = movieGenres.stream()
+                    .map(movieGenre -> movieGenre.getMovieGenreDetail().getImageUrl())
+                    .toList();
             List<String> movieGenreDescriptions = movieGenres.stream()
                     .map(movieGenre -> movieGenre.getMovieGenreDetail().getDescription())
                     .toList();
@@ -154,7 +157,9 @@ public class BookingServiceImpl implements BookingService {
                     movie.getLength(),
                     formattedDatePublish,
                     movie.getTrailerLink(),
+                    movie.getImageUrl(),
                     movieGenreNameList,
+                    movieGenreImageUrls,
                     movieGenreDescriptions,
                     moviePerformerNameList,
                     formatMoviePerformerDobList,
@@ -193,6 +198,9 @@ public class BookingServiceImpl implements BookingService {
             List<MovieGenre> movieGenres = movieGenreRepository.findMovieGenresByMovie(movie.getId());
             List<String> movieGenreNameList = movieGenres.stream()
                     .map(movieGenre -> movieGenre.getMovieGenreDetail().getName())
+                    .toList();
+            List<String> movieGenreImageUrls = movieGenres.stream()
+                    .map(movieGenre -> movieGenre.getMovieGenreDetail().getImageUrl())
                     .toList();
             List<String> movieGenreDescriptions = movieGenres.stream()
                     .map(movieGenre -> movieGenre.getMovieGenreDetail().getDescription())
@@ -249,7 +257,9 @@ public class BookingServiceImpl implements BookingService {
                     movie.getLength(),
                     formattedDatePublish,
                     movie.getTrailerLink(),
+                    movie.getImageUrl(),
                     movieGenreNameList,
+                    movieGenreImageUrls,
                     movieGenreDescriptions,
                     moviePerformerNameList,
                     formatMoviePerformerDobList,
@@ -278,8 +288,8 @@ public class BookingServiceImpl implements BookingService {
                     .toList();
 
             CityResponse cityResponse = new CityResponse(
-                            city.getName(),
-                            cinemaNameList
+                    city.getName(),
+                    cinemaNameList
             );
             cityResponses.add(cityResponse);
         }
@@ -349,7 +359,8 @@ public class BookingServiceImpl implements BookingService {
             cinemaResponses.add(cinemaResponse);
         }
 
-        return cinemaResponses;    }
+        return cinemaResponses;
+    }
 
     @Override
     public CinemaResponse selectCinema(CinemaRequest cinemaRequest, Integer userId) {
@@ -599,6 +610,7 @@ public class BookingServiceImpl implements BookingService {
 
             List<BookingDraftFood> draftFoods = new ArrayList<>();
             List<String> foodNameList = new ArrayList<>();
+            List<String> imageUrlList = new ArrayList<>();
             List<String> descriptionList = new ArrayList<>();
             List<SizeFoodOrDrink> sizeFoodList = new ArrayList<>();
 
@@ -618,6 +630,7 @@ public class BookingServiceImpl implements BookingService {
                         draftFoods.add(draftFood);
 
                         foodNameList.add(food.getName());
+                        imageUrlList.add(food.getImageUrl());
                         descriptionList.add(food.getDescription());
                         sizeFoodList.add(size);
                     }
@@ -627,7 +640,7 @@ public class BookingServiceImpl implements BookingService {
             draft.getFoodList().addAll(draftFoods);
             bookingDraftRepository.save(draft);
 
-            return new FoodResponse(foodNameList, descriptionList, sizeFoodList);
+            return new FoodResponse(foodNameList, imageUrlList, descriptionList, sizeFoodList);
         }
     }
 
@@ -648,6 +661,7 @@ public class BookingServiceImpl implements BookingService {
 
             List<BookingDraftDrink> draftDrinks = new ArrayList<>();
             List<String> drinkNameList = new ArrayList<>();
+            List<String> imageUrlList = new ArrayList<>();
             List<String> descriptionList = new ArrayList<>();
             List<SizeFoodOrDrink> sizeDrinkList = new ArrayList<>();
 
@@ -667,16 +681,17 @@ public class BookingServiceImpl implements BookingService {
                         draftDrinks.add(draftDrink);
 
                         drinkNameList.add(drink.getName());
+                        imageUrlList.add(drink.getImageUrl());
                         descriptionList.add(drink.getDescription());
                         sizeDrinkList.add(size);
                     }
                 }
             }
 
-                                      draft.getDrinks().addAll(draftDrinks);
+            draft.getDrinks().addAll(draftDrinks);
             bookingDraftRepository.save(draft);
 
-            return new DrinkResponse(drinkNameList, descriptionList, sizeDrinkList);
+            return new DrinkResponse(drinkNameList, imageUrlList, descriptionList, sizeDrinkList);
         }
     }
 

@@ -23,6 +23,9 @@ public class MovieGenreDetail {
     @Column(name = "Name", length = 50)
     private String Name;
 
+    @Column(name = "Image_Url", length = 1000)
+    private String imageUrl;
+
     @Column(name = "Description", length = 20)
     private String Description;
 

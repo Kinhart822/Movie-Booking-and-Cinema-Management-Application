@@ -26,6 +26,9 @@ public class Food {
     @Column(name = "Name", length = 20)
     private String name;
 
+    @Column(name = "Image_Url", length = 1000)
+    private String imageUrl;
+
     @Column(name = "Description")
     private String description;
 

@@ -32,6 +32,9 @@ public class Movie {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date datePublish;
 
+    @Column(name = "Image_Url", length = 1000)
+    private String imageUrl;
+
     @Column(name = "Trailer_Link")
     private String trailerLink;
 
