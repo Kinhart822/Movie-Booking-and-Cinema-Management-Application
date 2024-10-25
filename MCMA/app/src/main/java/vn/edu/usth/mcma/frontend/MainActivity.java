@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("Thing", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("Hahaa", MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
 
         if (!isLoggedIn) {
@@ -62,11 +62,9 @@ public class MainActivity extends AppCompatActivity {
                     case 2:
                         bottomNavigationView.getMenu().findItem(R.id.store_page).setChecked(true);
                         break;
-
                     case 3:
                         bottomNavigationView.getMenu().findItem(R.id.personal_page).setChecked(true);
                         break;
-
                 }
             }
 
@@ -110,4 +108,10 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(android.R.id.content, loginFragment);
         transaction.commit();
     }
+
+    // close icon to home page in personal
+    public void close_to_home_page(){
+        mviewPager.setCurrentItem(0,true);
+    }
+
 }

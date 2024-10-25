@@ -24,11 +24,9 @@ public class HomeFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
-        ImageButton mImageView = v.findViewById(R.id.menu_button);
-
-
         DrawerLayout mDrawerLayout = v.findViewById(R.id.home_fragment);
 
+        ImageButton mImageView = v.findViewById(R.id.menu_button);
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -26,5 +26,4 @@
         app:itemTextColor="@color/home_changing_color"
         app:menu="@menu/home_changing"/>
 
-
 </RelativeLayout>
