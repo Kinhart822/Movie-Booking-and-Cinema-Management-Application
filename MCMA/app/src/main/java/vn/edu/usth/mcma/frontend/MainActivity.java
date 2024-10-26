@@ -27,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("Hahaa", MODE_PRIVATE);
+        // Mng muốn đăng nhập vào trang chủ lại nhiều lần thì thay name ở dòng 31 và thay giống name ở dòng 42 trong Login Fragment nhé
+        SharedPreferences sharedPreferences = getSharedPreferences("ok", MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
 
         if (!isLoggedIn) {

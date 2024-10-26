@@ -39,7 +39,7 @@ public class LoginFragment extends Fragment {
 
             if (validateLogin(email, password)) {
                 // Lưu trạng thái đăng nhập
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Hahaa", getContext().MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("ok", getContext().MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("isLoggedIn", true);
                 editor.apply();
@@ -59,6 +59,15 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(requireContext(), Register_Activity.class );
+                startActivity(i);
+            }
+        });
+
+        TextView forgot_password = view.findViewById(R.id.forgot_password);
+        forgot_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(requireContext(), ForgotPassword_Activity.class );
                 startActivity(i);
             }
         });
