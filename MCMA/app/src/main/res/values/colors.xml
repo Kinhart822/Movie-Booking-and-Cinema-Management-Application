@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="blue">#0765ff</color>
+    <color name="grey">#f0f2f5</color>
+    <color name="dark_grey">#CCC</color>
+    <color name="better_grey">#e2e5ea</color>
+    <color name="blue_dot">#294fd1</color>
+    <color name="very_dark_grey">#181818</color>
+
+    <color name="bottom_navigator_before">#9BA6AB</color>
+    <color name="bottom_navigator_after">#85FAF0</color>
+
+    <color name="green">#00ff00</color>
+    <color name="colorPrimary">#3b5998</color>
+    <color name="colorPrimaryLight">#8b9dc3</color>
+    <color name="colorAccentDark">#dfe3ee</color>
+    <color name="colorAccent">#f7f7f7</color>
+    <color name="colorAccentLight">#ffffff</color>
+    <color name="colorLightBlue">#6098eb</color>
+    <color name="colorNeonBlue">#4dc0e3</color>
+
+
+    <color name="DarkBlue">#4a67d9</color>
+    <color name="LightBlue">#c4d5ff</color>
+
+    <color name="backgroundColor">#000000</color>
+    <color name="selectedDayColor">#4CAF50</color>
+    <color name="unselectedDayColor">#333333</color>
+    <color name="selectedTimeColor">#4CAF50</color>
+    <color name="unselectedTimeColor">#555555</color>
+    <color name="linkColor">#03A9F4</color>
+    <color name="dividerColor">#777777</color>
+
+</resources>
