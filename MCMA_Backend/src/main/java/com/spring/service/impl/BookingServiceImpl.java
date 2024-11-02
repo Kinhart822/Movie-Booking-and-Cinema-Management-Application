@@ -10,6 +10,8 @@ import com.spring.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -542,11 +544,13 @@ public class BookingServiceImpl implements BookingService {
                         ") does not match the number of tickets (" + ticketCount + ").");
             }
 
-            List<Seat> availableSeats = seatRepository.findBySeatStatus(SeatStatus.Available);
+            List<Seat> availableSeats = seatRepository.findBySeatStatusAndScreenId(SeatStatus.Available, draft.getScreen().getId());
 
             if (availableSeats.isEmpty()) {
                 throw new IllegalArgumentException("No available seats of the selected type.");
             }
+
+            List<Seat> unAvailableSeats = seatRepository.findBySeatStatusAndScreenId(SeatStatus.Unavailable, draft.getScreen().getId());
 
             List<Integer> availableSeatIds = availableSeats.stream()
                     .map(Seat::getId)
@@ -559,15 +563,6 @@ public class BookingServiceImpl implements BookingService {
 
             if (selectedSeats.size() != seatCount) {
                 throw new IllegalArgumentException("One or more selected seats are unavailable.");
-            }
-
-            List<String> unavailableSeats = seatRequest.getSeatIds().stream()
-                    .filter(seatId -> !availableSeatIds.contains(seatId))
-                    .map(seatId -> "Seat ID: " + seatId)
-                    .toList();
-
-            if (!unavailableSeats.isEmpty()) {
-                throw new IllegalArgumentException("Selected seats are not available: " + String.join(", ", unavailableSeats));
             }
 
             List<BookingDraftSeat> bookingDraftSeats = new ArrayList<>();
@@ -583,8 +578,10 @@ public class BookingServiceImpl implements BookingService {
             bookingDraftRepository.save(draft);
 
             return new SeatResponse(
-                    unavailableSeats,
+                    unAvailableSeats.stream().map(Seat::getName).toList(),
+                    unAvailableSeats.stream().map(seat -> seat.getSeatType().getName()).toList(),
                     availableSeats.stream().map(Seat::getName).toList(),
+                    availableSeats.stream().map(seat -> seat.getSeatType().getName()).toList(),
                     selectedSeats.stream().map(Seat::getName).toList(),
                     selectedSeats.stream().map(seat -> seat.getSeatType().getName()).toList()
             );
@@ -696,7 +693,7 @@ public class BookingServiceImpl implements BookingService {
 
     // 5. Choose Coupon and Calculate Total Price
     @Override
-    public Double calculateTotalPrice(CouponRequest couponRequest, Integer userId) {
+    public CalculateResponse calculateTotalPrice(CouponRequest couponRequest, Integer userId) {
         BookingDraft draft = getOrCreateDraft(userId);
 
         if (draft.getMovie() == null || draft.getCity() == null || draft.getCinema() == null ||
@@ -726,18 +723,69 @@ public class BookingServiceImpl implements BookingService {
             double totalPrice = totalScreenPrice + totalTicketPrice + totalSeatPrice + totalDrinkPrice + totalFoodPrice;
 
             // Fetch and validate selected movie coupons
+            List<Integer> availableMovieCouponIds = couponRepository.findCouponIdsByMovieId(draft.getMovie().getId());
             List<Coupon> selectedMovieCoupons = new ArrayList<>();
             if (couponRequest.getMovieCouponIds() != null && !couponRequest.getMovieCouponIds().isEmpty()) {
                 selectedMovieCoupons = couponRepository.findAllById(couponRequest.getMovieCouponIds());
-                validateAndApplyCoupons(selectedMovieCoupons, totalPrice);
+                List<Integer> selectedMovieCouponIds = selectedMovieCoupons.stream()
+                        .map(Coupon::getId)
+                        .toList();
+
+                if (!availableMovieCouponIds.containsAll(selectedMovieCouponIds)) {
+                    List<Integer> invalidCoupons = selectedMovieCouponIds.stream()
+                            .filter(couponId -> !availableMovieCouponIds.contains(couponId))
+                            .toList();
+
+                    throw new IllegalArgumentException("Selected movie coupons are not available: " + invalidCoupons);
+                }
+
+                for (Coupon coupon : selectedMovieCoupons) {
+                    if (coupon.getDateAvailable().after(new Date()) || coupon.getDateExpired().before(new Date())) {
+                        throw new IllegalArgumentException("Coupon " + coupon.getId() + " is not valid.");
+                    }
+
+                    if (totalPrice < coupon.getMinSpendReq()) {
+                        throw new IllegalArgumentException("Minimum spend requirement not met for coupon " + coupon.getId() + ".");
+                    }
+
+                    totalPrice -= coupon.getDiscount().doubleValue();
+                }
             }
 
             // Fetch and validate selected user coupons
+            List<Integer> availableUserCouponIds = couponRepository.findCouponIdsByUserId(userId);
             List<Coupon> selectedUserCoupons = new ArrayList<>();
+
             if (couponRequest.getUserCouponIds() != null && !couponRequest.getUserCouponIds().isEmpty()) {
                 selectedUserCoupons = couponRepository.findAllById(couponRequest.getUserCouponIds());
-                validateAndApplyCoupons(selectedUserCoupons, totalPrice);
+                List<Integer> selectedUserCouponIds = selectedUserCoupons.stream()
+                        .map(Coupon::getId)
+                        .toList();
+
+                if (!availableUserCouponIds.containsAll(selectedUserCouponIds)) {
+                    List<Integer> invalidCoupons = selectedUserCouponIds.stream()
+                            .filter(couponId -> !availableUserCouponIds.contains(couponId))
+                            .toList();
+
+                    throw new IllegalArgumentException("Selected user coupons are not available: " + invalidCoupons);
+                }
+
+                for (Coupon coupon : selectedUserCoupons) {
+                    if (coupon.getDateAvailable().after(new Date()) || coupon.getDateExpired().before(new Date())) {
+                        throw new IllegalArgumentException("Coupon " + coupon.getId() + " is not valid.");
+                    }
+
+                    if (totalPrice < coupon.getMinSpendReq()) {
+                        throw new IllegalArgumentException("Minimum spend requirement not met for coupon " + coupon.getId() + ".");
+                    }
+
+                    totalPrice -= coupon.getDiscount().doubleValue();
+                }
             }
+
+            totalPrice = BigDecimal.valueOf(totalPrice)
+                    .setScale(2, RoundingMode.HALF_UP)
+                    .doubleValue();
 
             List<BookingDraftCoupon> bookingDraftCoupons = new ArrayList<>();
             if (!selectedMovieCoupons.isEmpty()) {
@@ -763,7 +811,11 @@ public class BookingServiceImpl implements BookingService {
 
             bookingDraftRepository.save(draft);
 
-            return totalPrice;
+            return new CalculateResponse(
+                    availableMovieCouponIds,
+                    availableUserCouponIds,
+                    totalPrice
+            );
         }
     }
 
@@ -995,19 +1047,5 @@ public class BookingServiceImpl implements BookingService {
             case Medium -> 1.00;
             case Large -> 1.25;
         };
-    }
-
-    private void validateAndApplyCoupons(List<Coupon> coupons, double totalPrice) {
-        for (Coupon coupon : coupons) {
-            if (coupon.getDateAvailable().after(new Date()) || coupon.getDateExpired().before(new Date())) {
-                throw new IllegalArgumentException("Coupon " + coupon.getId() + " is not valid.");
-            }
-
-            if (totalPrice < coupon.getMinSpendReq()) {
-                throw new IllegalArgumentException("Minimum spend requirement not met for coupon " + coupon.getId() + ".");
-            }
-
-            totalPrice -= coupon.getDiscount().doubleValue();
-        }
     }
 }

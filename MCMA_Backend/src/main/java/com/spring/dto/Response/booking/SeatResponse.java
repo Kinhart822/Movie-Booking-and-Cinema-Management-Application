@@ -13,7 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 public class SeatResponse {
     private List<String> unAvailableSeats;
+    private List<String> unAvailableSeatsTypeList;
     private List<String> availableSeats;
+    private List<String> availableSeatsTypeList;
     private List<String> selectedSeats;
     private List<String> selectedSeatTypeList;
 }

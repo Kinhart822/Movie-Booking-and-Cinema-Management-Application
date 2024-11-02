@@ -150,8 +150,8 @@ VALUES ('Coke', 'Chilled soft drink', 'MEDIUM', 500, 200, 0, 0, NOW(), NOW(), 1,
 INSERT INTO seat_type (name, description, price, created_by, last_modified_by, date_created, date_updated)
 VALUES
 ('Standard', 'Standard seat type', 50.00, 0, 0, NOW(), NOW()),
-('VIP', 'VIP seat type with extra comfort', 100.00, 1, 1, NOW(), NOW()),
-('Economy', 'Economy seat type', 30.00, 2, 2, NOW(), NOW());
+('VIP', 'VIP seat type with extra comfort', 100.00, 0, 0, NOW(), NOW()),
+('Economy', 'Economy seat type', 30.00, 0, 0, NOW(), NOW());
 
 -- Inserting seats for all Screens (1 to 5)
 INSERT INTO seat (seat_row, seat_column, seat_type_id, name, status, created_by, last_modified_by, date_created, date_updated, screen_id)

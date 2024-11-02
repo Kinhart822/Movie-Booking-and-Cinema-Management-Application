@@ -11,8 +11,8 @@ import java.util.List;
 
 @Repository
 public interface SeatRepository extends JpaRepository<Seat, Integer> {
-    @Query("SELECT s FROM Seat s WHERE s.seatStatus = :status")
-    List<Seat> findBySeatStatus(@Param("status") SeatStatus status);
+    @Query("SELECT s FROM Seat s WHERE s.seatStatus = :status AND s.screen.id = :screenId")
+    List<Seat> findBySeatStatusAndScreenId(@Param("status") SeatStatus status, @Param("screenId") Integer screenId);
 }
 
 

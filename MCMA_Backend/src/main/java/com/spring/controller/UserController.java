@@ -12,7 +12,6 @@ import com.spring.dto.Response.movieRespond.CommentResponse;
 import com.spring.dto.Response.movieRespond.MovieRespondResponse;
 import com.spring.dto.Response.movieRespond.RatingResponse;
 import com.spring.dto.Response.view.*;
-import com.spring.entities.MovieRespond;
 import com.spring.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -150,9 +149,9 @@ public class UserController {
     }
 
     @PostMapping("/booking/calculate-total-price")
-    public ResponseEntity<Double> getTotalPrice(HttpServletRequest request, @RequestBody CouponRequest couponRequest) {
+    public ResponseEntity<CalculateResponse> getTotalPrice(HttpServletRequest request, @RequestBody CouponRequest couponRequest) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        Double updatedPrice = bookingService.calculateTotalPrice(couponRequest, userId);
+        CalculateResponse updatedPrice = bookingService.calculateTotalPrice(couponRequest, userId);
         return ResponseEntity.ok(updatedPrice);
     }
 
