@@ -22,6 +22,6 @@ public class Rating {
     @Column(name = "ratingStar")
     private Double ratingStar;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "rating")
     private MovieRespond movieRespond;
 }

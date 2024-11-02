@@ -85,7 +85,6 @@ public class UserController {
         return ResponseEntity.ok(movies);
     }
 
-
     // Booking ticket(s)
     @PostMapping("/booking/choose-movie")
     public ResponseEntity<BookingMovieRespond> selectMovie(HttpServletRequest request, @RequestBody MovieRequest movieRequest) {

@@ -14,7 +14,6 @@ import java.util.List;
 public class SeatResponse {
     private List<String> unAvailableSeats;
     private List<String> availableSeats;
-    private List<String> seatTypeList;
     private List<String> selectedSeats;
     private List<String> selectedSeatTypeList;
 }

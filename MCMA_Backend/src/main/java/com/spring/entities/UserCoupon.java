@@ -18,7 +18,7 @@ public class UserCoupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "users_id")
     private User user;
 

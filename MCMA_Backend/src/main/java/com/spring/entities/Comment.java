@@ -17,6 +17,6 @@ public class Comment {
     @Column(name = "content")
     private String content;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "comment")
     private MovieRespond movieRespond;
 }

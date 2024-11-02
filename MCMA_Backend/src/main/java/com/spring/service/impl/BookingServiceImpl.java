@@ -585,7 +585,6 @@ public class BookingServiceImpl implements BookingService {
             return new SeatResponse(
                     unavailableSeats,
                     availableSeats.stream().map(Seat::getName).toList(),
-                    availableSeats.stream().map(seat -> seat.getSeatType().getName()).toList(),
                     selectedSeats.stream().map(Seat::getName).toList(),
                     selectedSeats.stream().map(seat -> seat.getSeatType().getName()).toList()
             );
@@ -825,6 +824,7 @@ public class BookingServiceImpl implements BookingService {
 
                 booking.setFoodList(draft.getFoodList().stream().map(draftFood -> {
                     BookingFood bookingFood = new BookingFood();
+                    bookingFood.setBooking(booking);
                     bookingFood.setFood(draftFood.getFood());
                     bookingFood.setSizeFood(draftFood.getSizeFood());
                     return bookingFood;
@@ -832,6 +832,7 @@ public class BookingServiceImpl implements BookingService {
 
                 booking.setDrinks(draft.getDrinks().stream().map(draftDrink -> {
                     BookingDrink bookingDrink = new BookingDrink();
+                    bookingDrink.setBooking(booking);
                     bookingDrink.setDrink(draftDrink.getDrink());
                     bookingDrink.setSizeDrink(draftDrink.getSizeDrink());
                     return bookingDrink;
