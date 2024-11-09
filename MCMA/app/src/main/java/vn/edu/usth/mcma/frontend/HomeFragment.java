@@ -36,14 +36,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        ImageButton searchbutton = v.findViewById(R.id.searching_button);
-        searchbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(requireContext(), Search_Activity.class );
-                startActivity(i);
-            }
-        });
 
         return v;
     }

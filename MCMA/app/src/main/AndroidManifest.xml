@@ -25,7 +25,7 @@
             android:name=".frontend.EditUpdateAccountInformation"
             android:exported="false" />
         <activity
-            android:name=".frontend.LoadingPageActivity"
+            android:name=".frontend.MainActivity"
             android:exported="false" />
         <activity
             android:name=".frontend.Search_Activity"
@@ -37,7 +37,7 @@
             android:name=".frontend.CinemaActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.MainActivity"
+            android:name=".frontend.LoadingPageActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

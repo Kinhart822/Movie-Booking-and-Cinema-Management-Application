@@ -29,8 +29,8 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        editTextEmail = view.findViewById(R.id.editTextEmail);
-        editTextPassword = view.findViewById(R.id.editTextPassword);
+        editTextEmail = view.findViewById(R.id.editText);
+        editTextPassword = view.findViewById(R.id.editText2);
         buttonLogin = view.findViewById(R.id.login_button);
 
         buttonLogin.setOnClickListener(v -> {
@@ -38,19 +38,18 @@ public class LoginFragment extends Fragment {
             String password = editTextPassword.getText().toString();
 
             if (validateLogin(email, password)) {
-                // Lưu trạng thái đăng nhập
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("ok", getContext().MODE_PRIVATE);
+
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("123", getContext().MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("isLoggedIn", true);
                 editor.apply();
 
-                // Chuyển đến FaceBookActivity
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
                 getActivity().finish();
             } else {
-                // Xử lý khi thông tin đăng nhập không hợp lệ
-                Toast.makeText(getActivity(), "Error, Please try again!", Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(getActivity(), "Enter email or phone number to log in", Toast.LENGTH_SHORT).show();
             }
         });
 

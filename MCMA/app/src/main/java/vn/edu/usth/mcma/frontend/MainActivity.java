@@ -1,7 +1,9 @@
 package vn.edu.usth.mcma.frontend;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -28,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Mng muốn đăng nhập vào trang chủ lại nhiều lần thì thay name ở dòng 31 và thay giống name ở dòng 42 trong Login Fragment nhé
-        SharedPreferences sharedPreferences = getSharedPreferences("ok", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("123", MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
 
         if (!isLoggedIn) {
