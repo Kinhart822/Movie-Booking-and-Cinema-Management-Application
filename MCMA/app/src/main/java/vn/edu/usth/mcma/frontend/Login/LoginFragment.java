@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend;
+package vn.edu.usth.mcma.frontend.Login;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.MainActivity;
 
 public class LoginFragment extends Fragment {
 
@@ -57,7 +58,7 @@ public class LoginFragment extends Fragment {
         create_account.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(requireContext(), Register_Activity.class );
+                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Login.Register_Activity.class );
                 startActivity(i);
             }
         });
@@ -66,7 +67,7 @@ public class LoginFragment extends Fragment {
         forgot_password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(requireContext(), ForgotPassword_Activity.class );
+                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Login.ForgotPassword_Activity.class );
                 startActivity(i);
             }
         });

@@ -1,5 +1,4 @@
-package vn.edu.usth.mcma.frontend;
-
+package vn.edu.usth.mcma.frontend.Login;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;

@@ -16,6 +16,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.Home.Fragment_changing;
+import vn.edu.usth.mcma.frontend.Login.LoginFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         mviewPager = findViewById(R.id.view_pager);
         bottomNavigationView = findViewById(R.id.home_bottom_navigation);
 
-        Fragment_home_changing adapter = new Fragment_home_changing(getSupportFragmentManager(), getLifecycle());
+        Fragment_changing adapter = new Fragment_changing(getSupportFragmentManager(), getLifecycle());
         mviewPager.setAdapter(adapter);
         mviewPager.setUserInputEnabled(false);
 

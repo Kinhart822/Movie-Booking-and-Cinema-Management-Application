@@ -41,7 +41,7 @@ public class PersonalFragment extends Fragment {
         logout_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment loginFragment = new vn.edu.usth.mcma.frontend.LoginFragment();
+                Fragment loginFragment = new vn.edu.usth.mcma.frontend.Login.LoginFragment();
                 FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(android.R.id.content, loginFragment);
                 fragmentTransaction.commit();

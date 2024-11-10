@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend;
+package vn.edu.usth.mcma.frontend.Login;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,7 +44,7 @@ public class ForgotPassword_Activity extends AppCompatActivity {
                 editor.putBoolean("isForgotPassword", true);
                 editor.apply();
 
-                Intent intent = new Intent(this, ResetPassword_Activity.class);
+                Intent intent = new Intent(this, vn.edu.usth.mcma.frontend.Login.ResetPassword_Activity.class);
                 startActivity(intent);
                 finish();
             }

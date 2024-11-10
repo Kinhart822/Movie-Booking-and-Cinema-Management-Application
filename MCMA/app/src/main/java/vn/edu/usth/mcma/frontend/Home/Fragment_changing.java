@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend;
+package vn.edu.usth.mcma.frontend.Home;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -6,8 +6,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-public class Fragment_home_changing extends FragmentStateAdapter {
-    public Fragment_home_changing(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+public class Fragment_changing extends FragmentStateAdapter {
+    public Fragment_changing(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
         super(fragmentManager, lifecycle);
     }
 
@@ -18,11 +18,11 @@ public class Fragment_home_changing extends FragmentStateAdapter {
             case 0:
                 return new HomeFragment();
             case 1:
-                return new LaunchtimeFragment();
+                return new vn.edu.usth.mcma.frontend.LaunchtimeFragment();
             case 2:
-                return new StoreFragment();
+                return new vn.edu.usth.mcma.frontend.StoreFragment();
             case 3:
-                return new PersonalFragment();
+                return new vn.edu.usth.mcma.frontend.PersonalFragment();
             default:
                 return new HomeFragment();
         }

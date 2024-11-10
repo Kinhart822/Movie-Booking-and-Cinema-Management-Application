@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend;
+package vn.edu.usth.mcma.frontend.Home;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
