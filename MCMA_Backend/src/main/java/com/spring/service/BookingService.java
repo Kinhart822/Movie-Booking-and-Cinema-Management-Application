@@ -1,28 +1,56 @@
 package com.spring.service;
 
-import com.spring.dto.Request.booking.*;
-import com.spring.dto.Response.booking.*;
+import com.spring.dto.request.booking.*;
+import com.spring.dto.response.booking.*;
 
 import java.util.List;
 
 public interface BookingService {
-    List<BookingMovieRespond> getAllMovies();
-    BookingMovieRespond selectMovie(MovieRequest movieRequest, Integer userId);
+    List<MovieResponse> getAllMovies();
 
-    List<CityResponse> getAllCities();
+    MovieResponse selectMovie(MovieRequest movieRequest, Integer userId);
+
+    List<CityResponse> getAllCitiesBySelectedMovie(Integer userId);
+
     CityResponse selectCity(CityRequest cityRequest, Integer userId);
 
-    List<CinemaResponse> getAllCinemas();
+    List<CinemaResponse> getAllCinemasBySelectedCity(Integer userId);
+
     CinemaResponse selectCinema(CinemaRequest cinemaRequest, Integer userId);
 
+    List<ScreenResponse> getAllScreensBySelectedCinema(Integer userId);
+
     ScreenResponse selectScreen(ScreenRequest screenRequest, Integer userId);
-    ScheduleResponse selectSchedule(ScheduleRequest scheduleRequest, Integer userId);
+
+    List<ScheduleResponse> getAllSchedulesBySelectedMovieAndSelectedCinemaAndSelectedScreen(Integer userId);
+
+    SelectedScheduleResponse selectSchedule(ScheduleRequest scheduleRequest, Integer userId);
+
+    List<TicketResponse> getAllTickets();
+
     TicketResponse selectTickets(TicketRequest ticketRequest, Integer userId);
-    SeatResponse selectSeats(SeatRequest seatRequest, Integer userId);
-    FoodResponse selectFood(FoodDrinkRequest foodDrinkRequest, Integer userId);
-    DrinkResponse selectDrinks(FoodDrinkRequest foodDrinkRequest, Integer userId);
+
+    List<SeatResponse> getAllSeatsBySelectedScreen(Integer userId);
+
+    SelectedSeatsResponse selectSeats(SeatRequest seatRequest, Integer userId);
+
+    List<ListFoodAndDrinkToOrderingResponse> getAllFoodsAndDrinks();
+
+    SelectedFoodResponse selectFood(FoodDrinkRequest foodDrinkRequest, Integer userId);
+
+    SelectedDrinkResponse selectDrinks(FoodDrinkRequest foodDrinkRequest, Integer userId);
+
+    List<CouponResponse> getAllCouponsByUser(Integer userId);
+
+    List<CouponResponse> getAllCouponsByMovie(Integer movieId);
+
     CalculateResponse calculateTotalPrice(CouponRequest couponRequest, Integer userId);
+
     BookingResponse completeBooking(CompleteRequest completeRequest, Integer userId);
+
     void deleteBookingDraft(Integer bookingDraftId);
+
+    void cancelBooking(Integer bookingId, Integer userId);
+
     void deleteBooking(Integer bookingId, Integer userId);
 }

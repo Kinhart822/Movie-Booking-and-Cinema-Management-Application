@@ -11,7 +11,7 @@ VALUES ('Action', 'Action-packed movie', 0, 0, NOW(), NOW()),
        ('Drama', 'Emotional storytelling', 0, 0, NOW(), NOW());
 
 -- Inserting movie genres
-INSERT INTO movie_genre (movie_genre_detail_id) VALUES (2), (1), (3);
+INSERT INTO movie_genre (movie_genre_detail_id) VALUES (1), (2), (3);
 
 -- Inserting 10 movies
 INSERT INTO movie (name, length, date_publish, trailer_link, created_by, last_modified_by, date_created, date_updated)
@@ -30,7 +30,7 @@ VALUES
 -- Inserting city details
 INSERT INTO city (Name, Created_By, Last_Modified_By, Date_Created, Date_Updated, movie_id)
 VALUES ('New York', 0, 0, NOW(), NOW(), 1),
-       ('Los Angeles', 0, 0, NOW(), NOW(), 2),
+       ('Los Angeles', 0, 0, NOW(), NOW(), 1),
        ('Chicago', 0, 0, NOW(), NOW(), 1),
        ('Houston', 0, 0, NOW(), NOW(), 1),
        ('Phoenix', 0, 0, NOW(), NOW(), 1);
@@ -119,31 +119,30 @@ VALUES ('Screen 1', 0, 0, NOW(), NOW(), 1, 1),
        ('Screen 4', 0, 0, NOW(), NOW(), 2, 5),
        ('Screen 5', 0, 0, NOW(), NOW(), 3, 3);
 
-
 -- Inserting movie schedules for movies in different screens
 INSERT INTO movie_schedule (start_time, created_by, last_modified_by, date_created, date_updated, cinema_id, movie_id, screen_id)
 VALUES
-('2024-10-07 15:30:00', 0, 0, NOW(), NOW(), 1, 1, 1),
-('2024-10-07 18:00:00', 0, 0, NOW(), NOW(), 2, 1, 2),
-('2024-10-07 20:30:00', 0, 0, NOW(), NOW(), 4, 2, 3),
-('2024-10-08 10:00:00', 0, 0, NOW(), NOW(), 5, 3, 4),
-('2024-10-08 13:00:00', 0, 0, NOW(), NOW(), 3, 3, 5);
+('2024-11-12 15:30:00', 0, 0, NOW(), NOW(), 1, 1, 1),
+('2024-11-12 18:00:00', 0, 0, NOW(), NOW(), 2, 1, 2),
+('2024-11-12 20:30:00', 0, 0, NOW(), NOW(), 4, 2, 3),
+('2024-11-12 21:00:00', 0, 0, NOW(), NOW(), 5, 3, 4),
+('2024-11-12 21:30:00', 0, 0, NOW(), NOW(), 3, 3, 5);
 
--- Inserting food items for different movie schedules and cinemas
-INSERT INTO food (name, description, size, price, created_by, last_modified_by, date_created, date_updated, cinema_id, movie_schedule_id)
-VALUES ('Popcorn', 'Large buttered popcorn', 'LARGE', 500, 0, 0, NOW(), NOW(), 1, 1),
-       ('Nachos', 'Cheesy nachos', 'MEDIUM', 300, 0, 0, NOW(), NOW(), 2, 2),
-       ('Hotdog', 'Regular hotdog with ketchup', 'MEDIUM', 400, 0, 0, NOW(), NOW(), 3, 3),
-       ('Pizza', 'Small pepperoni pizza', 'SMALL', 700, 0, 0, NOW(), NOW(), 4, 4),
-       ('Sandwich', 'Ham sandwich with lettuce', 'MEDIUM', 350, 0, 0, NOW(), NOW(), 5, 5);
+-- Inserting food items for different cinemas
+INSERT INTO food (name, description, size, price, created_by, last_modified_by, date_created, date_updated, cinema_id)
+VALUES ('Popcorn', 'Large buttered popcorn', 'LARGE', 500, 0, 0, NOW(), NOW(), 1),
+       ('Nachos', 'Cheesy nachos', 'MEDIUM', 300, 0, 0, NOW(), NOW(), 2),
+       ('Hotdog', 'Regular hotdog with ketchup', 'MEDIUM', 400, 0, 0, NOW(), NOW(), 3),
+       ('Pizza', 'Small pepperoni pizza', 'SMALL', 700, 0, 0, NOW(), NOW(), 4),
+       ('Sandwich', 'Ham sandwich with lettuce', 'MEDIUM', 350, 0, 0, NOW(), NOW(), 5);
 
--- Inserting drink items for different movie schedules and cinemas
-INSERT INTO drink (name, description, size, volume, price, created_by, last_modified_by, date_created, date_updated, cinema_id, movie_schedule_id)
-VALUES ('Coke', 'Chilled soft drink', 'MEDIUM', 500, 200, 0, 0, NOW(), NOW(), 1, 1),
-       ('Sprite', 'Chilled lemon-lime drink', 'LARGE', 750, 250, 0, 0, NOW(), NOW(), 2, 2),
-       ('Water', 'Bottle of water', 'SMALL', 300, 100, 0, 0, NOW(), NOW(), 3, 3),
-       ('Juice', 'Fresh orange juice', 'MEDIUM', 450, 300, 0, 0, NOW(), NOW(), 4, 4),
-       ('Coffee', 'Hot brewed coffee', 'LARGE', 400, 350, 0, 0, NOW(), NOW(), 5, 5);
+-- Inserting drink items for different cinemas
+INSERT INTO drink (name, description, size, volume, price, created_by, last_modified_by, date_created, date_updated, cinema_id)
+VALUES ('Coke', 'Chilled soft drink', 'MEDIUM', 500, 200, 0, 0, NOW(), NOW(), 1),
+       ('Sprite', 'Chilled lemon-lime drink', 'LARGE', 750, 250, 0, 0, NOW(), NOW(), 2),
+       ('Water', 'Bottle of water', 'SMALL', 300, 100, 0, 0, NOW(), NOW(), 3),
+       ('Juice', 'Fresh orange juice', 'MEDIUM', 450, 300, 0, 0, NOW(), NOW(), 4),
+       ('Coffee', 'Hot brewed coffee', 'LARGE', 400, 350, 0, 0, NOW(), NOW(), 5);
 
 -- Inserting seats for each screen (10 rows and 10 columns for each seat type)
 
@@ -276,13 +275,8 @@ VALUES
     ('VIP Member Offer', 'Exclusive 25% discount', 0.25, 150, 70, NOW(), DATE_ADD(NOW(), INTERVAL 30 DAY), 0, 0, NOW(), NOW());
 
 
--- Inserting user coupons
-INSERT INTO user_coupon (users_id)
-VALUES
-    (1)  -- Assuming User ID 1
-
 -- Mapping user coupons to coupons
-INSERT INTO coupons_that_user_has (user_coupon_id, coupon_id)
+INSERT INTO coupons_that_user_has (user_id, coupon_id)
 VALUES
     (1, 1),  -- User 1 gets the Summer Sale coupon
     (1, 2),  -- User 1 also gets the Winter Fest coupon
@@ -319,18 +313,6 @@ VALUES
 (5, 0, 0, NOW(), NOW()),  -- Student ticket
 (6, 0, 0, NOW(), NOW()),  -- Couple Ticket
 (7, 0, 0, NOW(), NOW());  -- Family Ticket
-
-INSERT INTO set_movie_ticket (ticket_id, movie_schedule_id)
-VALUES
-(1, 1), -- Ticket 1 (Adult) for Movie Schedule 1
-(1, 2), -- Ticket 1 (Adult) for Movie Schedule 2
-(2, 3), -- Ticket 2 (Child) for Movie Schedule 3
-(3, 4), -- Ticket 3 (Teen) for Movie Schedule 4
-(4, 5), -- Ticket 4 (Senior) for Movie Schedule 5
-(5, 1), -- Ticket 5 (Student) for Movie Schedule 1
-(6, 2), -- Ticket 6 (Couple Ticket) for Movie Schedule 2
-(7, 3); -- Ticket 7 (Family Ticket) for Movie Schedule 3
-
 
 
 

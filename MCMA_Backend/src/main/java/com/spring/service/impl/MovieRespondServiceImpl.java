@@ -1,16 +1,18 @@
 package com.spring.service.impl;
 
-import com.spring.dto.Request.movieRespond.MovieRespondRequest;
-import com.spring.dto.Response.movieRespond.CommentResponse;
-import com.spring.dto.Response.movieRespond.MovieRespondResponse;
-import com.spring.dto.Response.movieRespond.RatingResponse;
+import com.spring.dto.request.movieRespond.MovieRespondRequest;
+import com.spring.dto.response.movieRespond.CommentResponse;
+import com.spring.dto.response.movieRespond.MovieRespondResponse;
+import com.spring.dto.response.movieRespond.RatingResponse;
 import com.spring.entities.*;
+import com.spring.enums.BookingStatus;
 import com.spring.enums.Type;
 import com.spring.repository.*;
 import com.spring.service.MovieRespondService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -32,8 +34,22 @@ public class MovieRespondServiceImpl implements MovieRespondService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private BookingRepository bookingRepository;
+
     @Override
     public MovieRespondResponse createMovieRespond(Integer userId, MovieRespondRequest movieRespondRequest) {
+        List<Booking> bookings = bookingRepository.findByUserIdAndMovieId(userId, movieRespondRequest.getMovieId());
+
+        boolean hasValidBooking = bookings.stream().anyMatch(booking ->
+                booking.getEndDateTime().isBefore(LocalDateTime.now()) &&
+                        booking.getStatus() == BookingStatus.Completed
+        );
+
+        if (!hasValidBooking) {
+            throw new IllegalStateException("You can only leave a response after watching the movie and the booking has ended.");
+        }
+
         MovieRespond movieRespond = new MovieRespond();
         movieRespond.setDateCreated(new Date());
         movieRespond.setDateUpdated(new Date());
@@ -154,7 +170,8 @@ public class MovieRespondServiceImpl implements MovieRespondService {
         return RatingResponse.builder()
                 .movieName(movie.getName())
                 .ratingStar(rating.getRatingStar())
-                .build();    }
+                .build();
+    }
 
     @Override
     public MovieRespondResponse getMovieRespondsByUserIdAndMovieId(Integer userId, MovieRespondRequest movieRespondRequest) {
@@ -232,7 +249,8 @@ public class MovieRespondServiceImpl implements MovieRespondService {
                         .movieName(rating.getMovieRespond().getMovie().getName())
                         .ratingStar(rating.getRatingStar())
                         .build())
-                .toList();        }
+                .toList();
+    }
 
     @Override
     public List<MovieRespondResponse> getAllMovieRespondsByUserId(Integer userId) {

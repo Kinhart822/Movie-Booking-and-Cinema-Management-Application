@@ -1,7 +1,6 @@
 package com.spring.repository;
 
 import com.spring.entities.Movie;
-import com.spring.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -76,5 +75,12 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
 
     @Query("SELECT m FROM Movie m WHERE m.datePublish > :futureStartDate")
     List<Movie> findComingSoonMovies(@Param("futureStartDate") Date futureStartDate);
+
+    @Query("SELECT m FROM Movie m " +
+            "JOIN m.movieResponds mr " +
+            "JOIN mr.rating r " +
+            "GROUP BY m.id " +
+            "HAVING AVG(r.ratingStar) BETWEEN :minRating AND :maxRating")
+    List<Movie> findHighestRatingMovies(@Param("minRating") Double minRating, @Param("maxRating") Double maxRating);
 }
 

@@ -1,7 +1,7 @@
 package com.spring.service;
 
-import com.spring.dto.Response.SearchMovieByGenreResponse;
-import com.spring.dto.Response.SearchMovieByNameResponse;
+import com.spring.dto.response.SearchMovieByGenreResponse;
+import com.spring.dto.response.SearchMovieByNameResponse;
 
 import java.util.List;
 

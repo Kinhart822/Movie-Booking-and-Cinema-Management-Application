@@ -1,7 +1,7 @@
 package com.spring.service;
 
-import com.spring.dto.Request.*;
-import com.spring.dto.Response.JwtAuthenticationResponse;
+import com.spring.dto.request.*;
+import com.spring.dto.response.JwtAuthenticationResponse;
 
 public interface AuthenticationService {
     JwtAuthenticationResponse signUp(SignUpRequest signUpRequest);

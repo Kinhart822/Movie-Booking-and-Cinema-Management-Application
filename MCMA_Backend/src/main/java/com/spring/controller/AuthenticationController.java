@@ -1,7 +1,7 @@
 package com.spring.controller;
 
-import com.spring.dto.Request.*;
-import com.spring.dto.Response.JwtAuthenticationResponse;
+import com.spring.dto.request.*;
+import com.spring.dto.response.JwtAuthenticationResponse;
 import com.spring.service.AuthenticationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

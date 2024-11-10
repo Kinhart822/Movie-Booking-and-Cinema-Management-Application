@@ -1,15 +1,15 @@
 package com.spring.controller;
 
 import com.spring.config.JwtUtil;
-import com.spring.dto.Request.movieRespond.MovieRespondRequest;
-import com.spring.dto.Request.view.ViewCinemaRequest;
-import com.spring.dto.Request.view.ViewCouponRequest;
-import com.spring.dto.Response.SearchMovieByGenreResponse;
-import com.spring.dto.Response.SearchMovieByNameResponse;
-import com.spring.dto.Response.movieRespond.CommentResponse;
-import com.spring.dto.Response.movieRespond.MovieRespondResponse;
-import com.spring.dto.Response.movieRespond.RatingResponse;
-import com.spring.dto.Response.view.*;
+import com.spring.dto.request.movieRespond.MovieRespondRequest;
+import com.spring.dto.request.view.ViewCinemaRequest;
+import com.spring.dto.request.view.ViewCouponRequest;
+import com.spring.dto.response.SearchMovieByGenreResponse;
+import com.spring.dto.response.SearchMovieByNameResponse;
+import com.spring.dto.response.movieRespond.CommentResponse;
+import com.spring.dto.response.movieRespond.MovieRespondResponse;
+import com.spring.dto.response.movieRespond.RatingResponse;
+import com.spring.dto.response.view.*;
 import com.spring.service.MovieRespondService;
 import com.spring.service.MovieService;
 import com.spring.service.NotificationService;

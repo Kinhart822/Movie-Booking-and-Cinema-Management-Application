@@ -7,10 +7,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface CityRepository extends JpaRepository<City, Integer> {
-    @Query("SELECT c FROM City c WHERE c.id = :cityId AND c.movie.id = :movieId")
-    Optional<City> findByIdAndMovieId(@Param("cityId") Integer cityId, @Param("movieId") Integer movieId);
+    @Query("SELECT c FROM City c WHERE c.movie.id = :movieId")
+    List<City> findByMovieId(@Param("movieId") Integer movieId);
 }

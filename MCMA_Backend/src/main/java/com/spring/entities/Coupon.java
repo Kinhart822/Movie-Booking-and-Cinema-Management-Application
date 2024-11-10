@@ -29,7 +29,7 @@ public class Coupon {
     @Column(name = "Description")
     private String description;
 
-    @Column(name = "Discount", precision = 3, scale = 2)
+    @Column(name = "Discount", precision = 10, scale = 2)
     private BigDecimal discount;
 
     @Column(name = "MIN_SPEND_REQ")
@@ -63,7 +63,7 @@ public class Coupon {
     private Date dateUpdated;
 
     @ManyToMany(mappedBy = "userCoupons")
-    private Set<UserCoupon> userCouponSet;
+    private Set<User> userSet;
 
     @ManyToMany(mappedBy = "movieCouponSet")
     private Set<Movie> movieSet;

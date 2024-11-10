@@ -38,13 +38,6 @@ public class Ticket {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateUpdated;
 
-    @ManyToMany
-    @JoinTable(
-            name = "set_movie_ticket",
-            joinColumns = @JoinColumn(name = "ticket_id"),
-            inverseJoinColumns = @JoinColumn(name = "movieSchedule_id"))
-    private Set<MovieSchedule> movieScheduleSet;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "ticket")
     private List<BookingTicket> ticketList;
 

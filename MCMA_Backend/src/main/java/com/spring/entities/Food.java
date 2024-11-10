@@ -59,10 +59,6 @@ public class Food {
     @JoinColumn(name = "cinema_id", nullable = false)
     private Cinema cinema;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "movieSchedule_id", nullable = false)
-    private MovieSchedule movieSchedule;
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "food")
     private List<BookingFood> foodList;
 

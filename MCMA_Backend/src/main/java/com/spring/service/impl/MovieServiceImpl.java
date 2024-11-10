@@ -1,7 +1,7 @@
 package com.spring.service.impl;
 
-import com.spring.dto.Response.SearchMovieByGenreResponse;
-import com.spring.dto.Response.SearchMovieByNameResponse;
+import com.spring.dto.response.SearchMovieByGenreResponse;
+import com.spring.dto.response.SearchMovieByNameResponse;
 import com.spring.enums.PerformerSex;
 import com.spring.enums.PerformerType;
 import com.spring.repository.MovieRepository;

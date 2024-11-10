@@ -61,10 +61,6 @@ public class Drink {
     @JoinColumn(name = "cinema_id", nullable = false)
     private Cinema cinema;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "movieSchedule_id", nullable = false)
-    private MovieSchedule movieSchedule;
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "drink")
     private List<BookingDrink> drinks;
 

@@ -1,9 +1,11 @@
 package com.spring.service;
 
-import com.spring.dto.Request.movieRespond.MovieRespondRequest;
-import com.spring.dto.Response.movieRespond.CommentResponse;
-import com.spring.dto.Response.movieRespond.MovieRespondResponse;
-import com.spring.dto.Response.movieRespond.RatingResponse;
+import com.spring.dto.request.movieRespond.MovieRespondRequest;
+import com.spring.dto.response.booking.MovieResponse;
+import com.spring.dto.response.movieRespond.CommentResponse;
+import com.spring.dto.response.movieRespond.MovieRespondResponse;
+import com.spring.dto.response.movieRespond.RatingResponse;
+import com.spring.entities.MovieRespond;
 
 import java.util.List;
 

@@ -24,7 +24,7 @@ public class MovieSchedule {
     private int id;
 
     @Column(name = "Start_Time")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm a")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime startTime;
 
     @Column(name = "Created_By")
@@ -47,9 +47,6 @@ public class MovieSchedule {
     @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
 
-    @ManyToMany(mappedBy = "movieScheduleSet")
-    private Set<Ticket> ticketSet;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cinema_id")
     private Cinema cinema;
@@ -57,12 +54,6 @@ public class MovieSchedule {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "screen_id", nullable = false)
     private Screen screen;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "movieSchedule")
-    private List<Food> foodList;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "movieSchedule")
-    private List<Drink> drinks;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movieSchedule")
     private List<Booking> bookings;
