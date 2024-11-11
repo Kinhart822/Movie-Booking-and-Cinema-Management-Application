@@ -1,4 +1,4 @@
-package com.spring.dto.response.booking;
+package com.spring.dto.response.booking.bookingSelected;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

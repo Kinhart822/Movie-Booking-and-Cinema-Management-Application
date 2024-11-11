@@ -1,4 +1,4 @@
-package com.spring.dto.response.booking;
+package com.spring.dto.response.booking.bookingSelected;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SelectedSeatsResponse {
-    private List<String> selectedSeats;
-    private List<String> selectedSeatTypeList;
+public class SelectedCityResponse {
+    private Integer cityId;
+    private String cityName;
+    private List<String> cinemaNameList;
 }
