@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/home_fragment"
-    tools:context=".frontend.HomeFragment">
+    tools:context=".frontend.Home.HomeFragment">
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/home_nav"
@@ -220,217 +220,27 @@
                     android:textStyle="bold|italic" />
             </LinearLayout>
 
-
-            <HorizontalScrollView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:scrollbars="none">
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_weight="0.5">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#ffffff"
-                    android:layout_marginLeft="9dp"
-                    android:orientation="horizontal">
+                <ViewFlipper
+                    android:id="@+id/view_flipper"
+                    android:layout_width="0dp"
+                    android:layout_height="335dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="270dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical">
 
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:cardCornerRadius="20dp"
-                            app:cardElevation="4dp">
 
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:src="@drawable/movie4" />
 
-                        </androidx.cardview.widget.CardView>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Spiderman - Across the spider verse"
-                            android:textStyle="bold"
-                            android:gravity="center" />
-                    </LinearLayout>
+            <!--View Flipper-->
 
-                    <LinearLayout
-                        android:layout_width="270dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="12dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:cardCornerRadius="20dp"
-                            app:cardElevation="4dp">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:src="@drawable/beekeeper" />
-
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="The Beekeeper"
-                            android:textStyle="bold"
-                            android:gravity="center" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="270dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="12dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:cardCornerRadius="27dp"
-                            app:cardElevation="4dp">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:src="@drawable/movie3" />
-
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="The Walking Dead"
-                            android:textStyle="bold"
-                            android:gravity="center" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="270dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="12dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:cardCornerRadius="27dp"
-                            app:cardElevation="4dp">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:src="@drawable/movie5" />
-
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Iron Man 1"
-                            android:textStyle="bold"
-                            android:gravity="center" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="270dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="12dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:cardCornerRadius="27dp"
-                            app:cardElevation="4dp">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:src="@drawable/movie6" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="Captain America 1"
-                                android:textStyle="bold" />
-
-                        </androidx.cardview.widget.CardView>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="270dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="12dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:cardCornerRadius="27dp"
-                            app:cardElevation="4dp">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:src="@drawable/movie7" />
-
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Inside out 2"
-                            android:textStyle="bold"
-                            android:gravity="center" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="270dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="12dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:cardCornerRadius="27dp"
-                            app:cardElevation="4dp">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:src="@drawable/movie9" />
-
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Iron Man 3"
-                            android:textStyle="bold"
-                            android:gravity="center" />
-                    </LinearLayout>
-                </LinearLayout>
-            </HorizontalScrollView>
 <!--Làm tab layout cho now showing và coming soon (Hiển thị các phim bằng cách làm recycle view) -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -479,223 +289,23 @@
                 </androidx.cardview.widget.CardView>
 
             </LinearLayout>
-            
-<!--            <HorizontalScrollView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="12dp"-->
-<!--                android:scrollbars="none">-->
 
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:background="#ffffff"-->
-<!--                    android:layout_marginLeft="9dp"-->
-<!--                    android:orientation="horizontal">-->
-
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="270dp"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:gravity="center"-->
-<!--                        android:orientation="vertical">-->
-
-<!--                        <androidx.cardview.widget.CardView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            app:cardCornerRadius="20dp"-->
-<!--                            app:cardElevation="4dp">-->
-
-<!--                            <ImageView-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="300dp"-->
-<!--                                android:src="@drawable/movie8" />-->
-
-<!--                        </androidx.cardview.widget.CardView>-->
-
-<!--                        <TextView-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="Quỷ ăn tạng 2"-->
-<!--                            android:textStyle="bold"-->
-<!--                            android:gravity="center" />-->
-<!--                    </LinearLayout>-->
-
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="270dp"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:gravity="center"-->
-<!--                        android:layout_marginLeft="12dp"-->
-<!--                        android:orientation="vertical">-->
-
-<!--                        <androidx.cardview.widget.CardView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            app:cardCornerRadius="20dp"-->
-<!--                            app:cardElevation="4dp">-->
-
-<!--                            <ImageView-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="300dp"-->
-<!--                                android:src="@drawable/movie11" />-->
-
-<!--                        </androidx.cardview.widget.CardView>-->
-
-<!--                        <TextView-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="Red one"-->
-<!--                            android:textStyle="bold"-->
-<!--                            android:gravity="center" />-->
-<!--                    </LinearLayout>-->
-
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="270dp"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:gravity="center"-->
-<!--                        android:layout_marginLeft="12dp"-->
-<!--                        android:orientation="vertical">-->
-
-<!--                        <androidx.cardview.widget.CardView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            app:cardCornerRadius="20dp"-->
-<!--                            app:cardElevation="4dp">-->
-
-<!--                            <ImageView-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="300dp"-->
-<!--                                android:src="@drawable/movie15" />-->
-
-<!--                        </androidx.cardview.widget.CardView>-->
-
-<!--                        <TextView-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="Avatar 3"-->
-<!--                            android:textStyle="bold"-->
-<!--                            android:gravity="center" />-->
-<!--                    </LinearLayout>-->
-
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="270dp"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:gravity="center"-->
-<!--                        android:layout_marginLeft="12dp"-->
-<!--                        android:orientation="vertical">-->
-
-<!--                        <androidx.cardview.widget.CardView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            app:cardCornerRadius="20dp"-->
-<!--                            app:cardElevation="4dp">-->
-
-<!--                            <ImageView-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="300dp"-->
-<!--                                android:src="@drawable/movie13" />-->
-
-<!--                        </androidx.cardview.widget.CardView>-->
-
-<!--                        <TextView-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="Quỷ ăn tạng 2"-->
-<!--                            android:textStyle="bold"-->
-<!--                            android:gravity="center" />-->
-<!--                    </LinearLayout>-->
-
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="270dp"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:gravity="center"-->
-<!--                        android:layout_marginLeft="12dp"-->
-<!--                        android:orientation="vertical">-->
-
-<!--                        <androidx.cardview.widget.CardView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            app:cardCornerRadius="20dp"-->
-<!--                            app:cardElevation="4dp">-->
-
-<!--                            <ImageView-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="300dp"-->
-<!--                                android:src="@drawable/movie14" />-->
-
-<!--                        </androidx.cardview.widget.CardView>-->
-
-<!--                        <TextView-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="28 years later"-->
-<!--                            android:textStyle="bold"-->
-<!--                            android:gravity="center" />-->
-<!--                    </LinearLayout>-->
-
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="270dp"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:gravity="center"-->
-<!--                        android:layout_marginLeft="12dp"-->
-<!--                        android:orientation="vertical">-->
-
-<!--                        <androidx.cardview.widget.CardView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            app:cardCornerRadius="20dp"-->
-<!--                            app:cardElevation="4dp">-->
-
-<!--                            <ImageView-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="300dp"-->
-<!--                                android:src="@drawable/movie10" />-->
-
-<!--                        </androidx.cardview.widget.CardView>-->
-
-<!--                        <TextView-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="Venom 2"-->
-<!--                            android:textStyle="bold"-->
-<!--                            android:gravity="center" />-->
-<!--                    </LinearLayout>-->
-
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="270dp"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:gravity="center"-->
-<!--                        android:layout_marginLeft="12dp"-->
-<!--                        android:orientation="vertical">-->
-
-<!--                        <androidx.cardview.widget.CardView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            app:cardCornerRadius="20dp"-->
-<!--                            app:cardElevation="4dp">-->
-
-<!--                            <ImageView-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="300dp"-->
-<!--                                android:src="@drawable/movie12" />-->
-
-<!--                        </androidx.cardview.widget.CardView>-->
-
-<!--                        <TextView-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="Wicked(2024)"-->
-<!--                            android:textStyle="bold"-->
-<!--                            android:gravity="center" />-->
-<!--                    </LinearLayout>-->
-<!--                </LinearLayout>-->
-<!--            </HorizontalScrollView>-->
-
-            <LinearLayout
-                android:id="@+id/movie_list"
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_marginTop="15dp"/>
+                android:layout_marginTop="10dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerviewhome"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false" />
+
+            </androidx.core.widget.NestedScrollView>
+
         </LinearLayout>
+
+
     </ScrollView>
+
 </androidx.drawerlayout.widget.DrawerLayout>

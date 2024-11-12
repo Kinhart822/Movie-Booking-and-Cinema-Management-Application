@@ -16,7 +16,7 @@ import android.widget.ImageButton;
 import vn.edu.usth.mcma.R;
 
 
-public class StoreFragment extends Fragment {
+public class    StoreFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
