@@ -211,6 +211,13 @@ public class UserController {
         return ResponseEntity.ok(bookingResponse);
     }
 
+    @PostMapping("/booking/edit-booking")
+    public ResponseEntity<String> editBooking(HttpServletRequest request, @RequestBody EditBookingRequest editBookingRequest) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        bookingService.editBooking(editBookingRequest, userId);
+        return ResponseEntity.ok("Booking updated successfully");
+    }
+
     @PostMapping("/booking/cancel-booking/{bookingId}")
     public ResponseEntity<String> cancelBooking(HttpServletRequest request, @PathVariable Integer bookingId) {
         Integer userId = jwtUtil.getUserIdFromToken(request);

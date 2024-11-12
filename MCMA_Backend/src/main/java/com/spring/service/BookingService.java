@@ -47,6 +47,8 @@ public interface BookingService {
 
     CalculateResponse calculateTotalPrice(CouponRequest couponRequest, Integer userId);
 
+    void editBooking(EditBookingRequest editBookingRequest, Integer userId);
+
     BookingResponse completeBooking(CompleteRequest completeRequest, Integer userId);
 
     void deleteBookingDraft(Integer bookingDraftId);
