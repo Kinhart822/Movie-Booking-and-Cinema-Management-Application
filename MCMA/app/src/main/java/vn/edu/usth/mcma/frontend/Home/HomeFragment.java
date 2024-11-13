@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -26,9 +27,11 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
 
     private ViewFlipper v_flipper;
     private List<FilmItem> items;
+    private List<FilmItem> filteredItems = new ArrayList<>(); // Initialize filteredItems
     private FilmAdapter adapter;
     private Button buttonnowshowing, buttoncomingsoon;
     private RecyclerView recyclerView;
+    private SearchView searchView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,46 +39,53 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
 
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
+        searchView = v.findViewById(R.id.searchView);
+        searchView.clearFocus();
+
         buttoncomingsoon = v.findViewById(R.id.button_comingsoon);
         buttonnowshowing = v.findViewById(R.id.button_nowshowing);
+
         recyclerView = v.findViewById(R.id.recyclerviewhome);
 
-        int images[] = {R.drawable.movie9 , R.drawable.movie3, R.drawable.movie4};
+        int images[] = {R.drawable.movie9, R.drawable.movie3, R.drawable.movie4};
         v_flipper = v.findViewById(R.id.view_flipper);
 
-        for (int image : images) {
-            flipperImages(image);
-        }
-
-        buttonnowshowing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateFilmList("nowshowing");
+        // Run flipperImages method on the UI thread to ensure it’s fully loaded
+        v_flipper.post(() -> {
+            for (int image : images) {
+                flipperImages(image);
             }
         });
 
-        buttoncomingsoon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateFilmList("comingsoon");
-            }
-        });
+        buttonnowshowing.setOnClickListener(v1 -> updateFilmList("nowshowing"));
 
-        // Thiết lập LinearLayoutManager và Adapter cho RecyclerView
-        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
+        buttoncomingsoon.setOnClickListener(v1 -> updateFilmList("comingsoon"));
+
+        // Set up LinearLayoutManager and Adapter for RecyclerView
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        items = new ArrayList<>(); // Khởi tạo danh sách phim trống ban đầu
-        adapter = new FilmAdapter(requireContext(), items, this);
+        items = new ArrayList<>(); // Initialize the empty film list
+        adapter = new FilmAdapter(requireContext(), filteredItems, this); // Set adapter to use filteredItems
         recyclerView.setAdapter(adapter);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterList(newText);
+                return true;
+            }
+        });
 
         DrawerLayout mDrawerLayout = v.findViewById(R.id.home_fragment);
         ImageButton mImageButton = v.findViewById(R.id.menu_button);
-        mImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mDrawerLayout != null && !mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    mDrawerLayout.openDrawer(GravityCompat.START);
-                }
+        mImageButton.setOnClickListener(view -> {
+            if (mDrawerLayout != null && !mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                mDrawerLayout.openDrawer(GravityCompat.START);
             }
         });
 
@@ -83,7 +93,7 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
     }
 
     private void updateFilmList(String type) {
-        items.clear(); // Xóa dữ liệu hiện có trong danh sách
+        items.clear(); // Clear the current list
 
         if (type.equals("nowshowing")) {
             items.add(new FilmItem("Grace Morgan", R.drawable.movie1));
@@ -97,24 +107,46 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
             items.add(new FilmItem("Noah Brown", R.drawable.movie8));
         }
 
-        adapter.notifyDataSetChanged(); // Cập nhật RecyclerView với danh sách mới
+        filteredItems.clear();
+        filteredItems.addAll(items);
+
+        adapter.notifyDataSetChanged(); // Update RecyclerView with the new list
     }
 
+    // Chỗ này cho ảnh tự động chạy ở banner
     public void flipperImages(int image) {
-        ImageView imageView = new ImageView(requireContext());
+        if (getContext() == null) return; // Check if context is available
+        ImageView imageView = new ImageView(getContext());
         imageView.setBackgroundResource(image);
 
         v_flipper.addView(imageView);
         v_flipper.setFlipInterval(5000);
         v_flipper.setAutoStart(true);
 
-        v_flipper.setInAnimation(requireContext(), android.R.anim.slide_in_left);
-        v_flipper.setOutAnimation(requireContext(), android.R.anim.slide_out_right);
+        v_flipper.setInAnimation(getContext(), android.R.anim.slide_in_left);
+        v_flipper.setOutAnimation(getContext(), android.R.anim.slide_out_right);
+    }
+
+    private void filterList(String text) {
+        filteredItems.clear();
+        for (FilmItem item : items) {
+            if (item.getName().toLowerCase().contains(text.toLowerCase())) {
+                filteredItems.add(item);
+            }
+        }
+
+        if (filteredItems.isEmpty()) {
+            Toast.makeText(getContext(), "No results found", Toast.LENGTH_SHORT).show();
+        }
+
+        adapter.notifyDataSetChanged(); // Update adapter to show filtered list
     }
 
     @Override
     public void onItemClick(int position) {
-        FilmItem selectedFilm = items.get(position);
-        Toast.makeText(requireContext(), "Selected Film: " + selectedFilm.getName(), Toast.LENGTH_SHORT).show();
+        if (position < filteredItems.size()) {
+            FilmItem selectedFilm = filteredItems.get(position);
+            Toast.makeText(getContext(), "Selected Film: " + selectedFilm.getName(), Toast.LENGTH_SHORT).show();
+        }
     }
 }
