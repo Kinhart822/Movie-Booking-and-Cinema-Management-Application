@@ -3,239 +3,271 @@ drop schema if exists mcma;
 create schema if not exists mcma;
 create table if not exists mcma.cinema
 (
-    ID                 bigint unsigned                   not null
+    id                 bigint unsigned auto_increment
         primary key,
-    CITY_ID            bigint unsigned                   not null,
-    NAME               varchar(50)                       null,
-    CREATED_BY         bigint unsigned                   null,
-    LAST_MODIFIED_BY   bigint unsigned                   null,
-    CREATED_DATE       timestamp default utc_timestamp() null,
-    LAST_MODIFIED_DATE timestamp default utc_timestamp() null
+    city_id            bigint unsigned                   not null,
+    name               varchar(50)                       null,
+    status             tinyint                           null comment '-1, 1',
+    created_by         bigint unsigned                   null,
+    last_modified_by   bigint unsigned                   null,
+    created_date       timestamp default utc_timestamp() null,
+    last_modified_date timestamp default utc_timestamp() null
 );
-
 create table if not exists mcma.city
 (
-    ID                 bigint unsigned                   not null
+    id                 bigint unsigned auto_increment
         primary key,
-    NAME               varchar(30)                       null,
-    CREATED_BY         bigint unsigned                   null,
-    LAST_MODIFIED_BY   bigint unsigned                   null,
-    CREATED_DATE       timestamp default utc_timestamp() null,
-    LAST_MODIFIED_DATE timestamp default utc_timestamp() null
+    name               varchar(30)                       null,
+    status             tinyint                           null comment '-1, 1',
+    created_by         bigint unsigned                   null,
+    last_modified_by   bigint unsigned                   null,
+    created_date       timestamp default utc_timestamp() null,
+    last_modified_date timestamp default utc_timestamp() null
 );
-
 create table if not exists mcma.coupon
 (
-    ID                 bigint unsigned                   not null
+    id                 bigint unsigned auto_increment
         primary key,
-    NAME               varchar(20)                       null,
-    DESCRIPTION        text                              null,
-    DISCOUNT           decimal(3, 2)                     null,
-    MIN_SPEND_REQ      int                               null,
-    DISCOUNT_LIMIT     int                               null,
-    DATE_AVAILABLE     timestamp default utc_timestamp() null,
-    DATE_EXPIRED       timestamp default utc_timestamp() null,
-    CREATED_BY         bigint unsigned                   null,
-    LAST_MODIFIED_BY   bigint unsigned                   null,
-    CREATED_DATE       timestamp default utc_timestamp() null,
-    LAST_MODIFIED_DATE timestamp default utc_timestamp() null
+    name               varchar(20)                       null,
+    description        text                              null,
+    discount           decimal(3, 2)                     null,
+    min_spend_req      int                               null,
+    discount_limit     int                               null,
+    date_available     timestamp                         null,
+    date_expired       timestamp                         null,
+    status             tinyint                           null comment '-1, 1',
+    created_by         bigint unsigned                   null,
+    last_modified_by   bigint unsigned                   null,
+    created_date       timestamp default utc_timestamp() null,
+    last_modified_date timestamp default utc_timestamp() null
 );
-
-create table if not exists mcma.drink
-(
-    ID                 bigint unsigned                   not null
-        primary key,
-    NAME               varchar(20)                       null,
-    DESCRIPTION        text                              null,
-    SIZE               varchar(5)                        null,
-    VOLUME             smallint                          null,
-    PRICE              int                               null,
-    CREATED_BY         bigint unsigned                   null,
-    LAST_MODIFIED_BY   bigint unsigned                   null,
-    CREATED_DATE       timestamp default utc_timestamp() null,
-    LAST_MODIFIED_DATE timestamp default utc_timestamp() null
-);
-
-create table if not exists mcma.food
-(
-    ID                 bigint unsigned                   not null
-        primary key,
-    NAME               varchar(20)                       null,
-    DESCRIPTION        text                              null,
-    SIZE               varchar(5)                        null,
-    PRICE              int                               null,
-    CREATED_BY         bigint unsigned                   null,
-    LAST_MODIFIED_BY   bigint unsigned                   null,
-    CREATED_DATE       timestamp default utc_timestamp() null,
-    LAST_MODIFIED_DATE timestamp default utc_timestamp() null
-);
-
-create table if not exists mcma.movie
-(
-    ID                 bigint unsigned                   not null
-        primary key,
-    NAME               varchar(50)                       null,
-    LENGTH             int                               null,
-    DATE_PUBLISH       timestamp default utc_timestamp() null,
-    RATING_ID          tinyint                           null,
-    TRAILER_LINK       text                              null,
-    CREATED_BY         bigint unsigned                   null,
-    LAST_MODIFIED_BY   bigint unsigned                   null,
-    CREATED_DATE       timestamp default utc_timestamp() null,
-    LAST_MODIFIED_DATE timestamp default utc_timestamp() null
-);
-
-create table if not exists mcma.movie_coupon
-(
-    MOVIE_ID  bigint unsigned not null,
-    COUPON_ID bigint unsigned not null,
-    primary key (MOVIE_ID, COUPON_ID)
-);
-
-create table if not exists mcma.movie_genre
-(
-    MOVIE_ID bigint unsigned not null,
-    GENRE_ID bigint unsigned not null,
-    primary key (MOVIE_ID, GENRE_ID)
-);
-
-create table if not exists mcma.movie_genre_detail
-(
-    ID                 bigint unsigned                   not null
-        primary key,
-    NAME               varchar(20)                       null,
-    DESCRIPTION        text                              null,
-    CREATED_BY         bigint unsigned                   null,
-    LAST_MODIFIED_BY   bigint unsigned                   null,
-    CREATED_DATE       timestamp default utc_timestamp() null,
-    LAST_MODIFIED_DATE timestamp default utc_timestamp() null
-);
-
-create table if not exists mcma.movie_performer
-(
-    MOVIE_ID     bigint unsigned not null,
-    PERFORMER_ID bigint unsigned not null,
-    primary key (MOVIE_ID, PERFORMER_ID)
-);
-
-create table if not exists mcma.movie_performer_detail
-(
-    ID                 bigint unsigned                   not null
-        primary key,
-    NAME               varchar(50)                       null,
-    TYPE               tinyint                           null comment '1: director; 2: actor',
-    SEX                tinyint                           null comment '0: male; 1: female',
-    DOB                date                              null,
-    CREATED_BY         bigint unsigned                   null,
-    LAST_MODIFIED_BY   bigint unsigned                   null,
-    CREATED_DATE       timestamp default utc_timestamp() null,
-    LAST_MODIFIED_DATE timestamp default utc_timestamp() null
-);
-
-create table if not exists mcma.movie_rating_detail
-(
-    ID                 bigint unsigned                   not null
-        primary key,
-    NAME               varchar(20)                       null,
-    DESCRIPTION        text                              null,
-    CREATED_BY         bigint unsigned                   null,
-    LAST_MODIFIED_BY   bigint unsigned                   null,
-    CREATED_DATE       timestamp default utc_timestamp() null,
-    LAST_MODIFIED_DATE timestamp default utc_timestamp() null
-);
-
-create table if not exists mcma.movie_response
-(
-    ID                 bigint unsigned                   not null
-        primary key,
-    USER_ID            bigint unsigned                   not null,
-    MOVIE_ID           bigint unsigned                   not null,
-    USER_RATING        tinyint                           null,
-    USER_COMMENT       text                              null,
-    CREATED_BY         bigint unsigned                   null,
-    LAST_MODIFIED_BY   bigint unsigned                   null,
-    CREATED_DATE       timestamp default utc_timestamp() null,
-    LAST_MODIFIED_DATE timestamp default utc_timestamp() null
-);
-
-create table if not exists mcma.movie_schedule
-(
-    ID                 bigint unsigned                   not null
-        primary key,
-    SCREEN_ID          bigint unsigned                   not null,
-    MOVIE_ID           bigint unsigned                   not null,
-    START_TIME         timestamp                         null,
-    CREATED_BY         bigint unsigned                   null,
-    LAST_MODIFIED_BY   bigint unsigned                   null,
-    CREATED_DATE       timestamp default utc_timestamp() null,
-    LAST_MODIFIED_DATE timestamp default utc_timestamp() null
-);
-
-create table if not exists mcma.screen
-(
-    ID                 bigint unsigned                   not null
-        primary key,
-    CINEMA_ID          bigint unsigned                   not null,
-    NAME               varchar(20)                       null,
-    TYPE_ID            tinyint                           null,
-    CREATED_BY         bigint unsigned                   null,
-    LAST_MODIFIED_BY   bigint unsigned                   null,
-    CREATED_DATE       timestamp default utc_timestamp() null,
-    LAST_MODIFIED_DATE timestamp default utc_timestamp() null
-);
-
-create table if not exists mcma.screen_type
-(
-    ID                 bigint unsigned                   not null
-        primary key,
-    NAME               varchar(20)                       null,
-    DESCRIPTION        text                              null,
-    CREATED_BY         bigint unsigned                   null,
-    LAST_MODIFIED_BY   bigint unsigned                   null,
-    CREATED_DATE       timestamp default utc_timestamp() null,
-    LAST_MODIFIED_DATE timestamp default utc_timestamp() null
-);
-
-create table if not exists mcma.seat
-(
-    ID                 bigint unsigned                   not null
-        primary key,
-    SCREEN_ID          bigint unsigned                   not null,
-    ROW                tinyint unsigned                  null,
-    COL                tinyint unsigned                  null,
-    TYPE               tinyint                           null,
-    NAME               varchar(5)                        null,
-    CREATED_BY         bigint unsigned                   null,
-    LAST_MODIFIED_BY   bigint unsigned                   null,
-    CREATED_DATE       timestamp default utc_timestamp() null,
-    LAST_MODIFIED_DATE timestamp default utc_timestamp() null
-);
-
-create table if not exists mcma.user
-(
-    ID                 bigint unsigned auto_increment
-        primary key,
-    EMAIL              varchar(255)    null,
-    PASSWORD           varchar(255)    null,
-    USER_TYPE          smallint        null,
-    STATUS             smallint        null,
-    ACTIVATION_KEY     varchar(20)     null,
-    RESET_KEY          varchar(20)     null,
-    DELETE_KEY         varchar(20)     null,
-    DATE_LAST_LOGIN    timestamp       null,
-    DATE_RESET         timestamp       null,
-    DATE_DELETE        timestamp       null,
-    CREATED_BY         bigint unsigned null,
-    LAST_MODIFIED_BY   bigint unsigned null,
-    CREATED_DATE       timestamp       null,
-    LAST_MODIFIED_DATE timestamp       null
-);
-
 create table if not exists mcma.user_coupon
 (
-    USER_ID   bigint unsigned not null,
-    COUPON_ID bigint unsigned not null,
-    primary key (USER_ID, COUPON_ID)
+    user_id   bigint unsigned not null,
+    coupon_id bigint unsigned not null,
+    primary key (user_id, coupon_id)
+) comment 'coupons that an user owns';
+create table if not exists mcma.drink
+(
+    id                 bigint unsigned auto_increment
+        primary key,
+    cinema_id          bigint unsigned                   null,
+    name               varchar(20)                       null,
+    description        text                              null,
+    image_url          text                              null,
+    size               varchar(5)                        null,
+    volume             smallint                          null,
+    price              int                               null,
+    status             tinyint                           null comment '-1, 1',
+    created_by         bigint unsigned                   null,
+    last_modified_by   bigint unsigned                   null,
+    created_date       timestamp default utc_timestamp() null,
+    last_modified_date timestamp default utc_timestamp() null
 );
-
-
+create table if not exists mcma.food
+(
+    id                 bigint unsigned auto_increment
+        primary key,
+    cinema_id          bigint unsigned                   null,
+    name               varchar(20)                       null,
+    description        text                              null,
+    image_url          text                              null,
+    size               varchar(5)                        null,
+    price              int                               null,
+    status             tinyint                           null comment '-1, 1',
+    created_by         bigint unsigned                   null,
+    last_modified_by   bigint unsigned                   null,
+    created_date       timestamp default utc_timestamp() null,
+    last_modified_date timestamp default utc_timestamp() null
+);
+create table if not exists mcma.movie
+(
+    id                 bigint unsigned auto_increment
+        primary key,
+    name               varchar(50)                       null,
+    image_url          text                              null,
+    length             int                               null,
+    publish_date       timestamp                         null,
+    rating_id          tinyint                           null,
+    trailer_url        text                              null,
+    status             tinyint                           null comment '-1, 1',
+    created_by         bigint unsigned                   null,
+    last_modified_by   bigint unsigned                   null,
+    created_date       timestamp default utc_timestamp() null,
+    last_modified_date timestamp default utc_timestamp() null
+);
+create table if not exists mcma.movie_genre
+(
+    movie_id        bigint unsigned not null,
+    genre_detail_id bigint unsigned not null,
+    primary key (movie_id, genre_detail_id)
+);
+create table if not exists mcma.movie_genre_detail
+(
+    id                 bigint unsigned auto_increment
+        primary key,
+    name               varchar(20)                       null,
+    description        text                              null,
+    image_url          text                              null,
+    status             tinyint                           null comment '-1, 1',
+    created_by         bigint unsigned                   null,
+    last_modified_by   bigint unsigned                   null,
+    created_date       timestamp default utc_timestamp() null,
+    last_modified_date timestamp default utc_timestamp() null
+);
+create table if not exists mcma.movie_performer
+(
+    movie_id            bigint unsigned not null,
+    performer_detail_id bigint unsigned not null,
+    primary key (movie_id, performer_detail_id)
+);
+create table if not exists mcma.movie_performer_detail
+(
+    id                 bigint unsigned auto_increment
+        primary key,
+    name               varchar(50)                       null,
+    type_id            tinyint                           null comment '1: director; 2: actor',
+    sex                bit                               null comment '0: male; 1: female',
+    dob                date                              null,
+    status             tinyint                           null comment '-1, 1',
+    created_by         bigint unsigned                   null,
+    last_modified_by   bigint unsigned                   null,
+    created_date       timestamp default utc_timestamp() null,
+    last_modified_date timestamp default utc_timestamp() null
+);
+create table if not exists mcma.movie_performer_type
+(
+    id   bigint unsigned not null primary key,
+    name varchar(50)     null
+);
+create table if not exists mcma.movie_rating_detail
+(
+    id                 bigint unsigned auto_increment
+        primary key,
+    name               varchar(20)                       null,
+    description        text                              null,
+    status             tinyint                           null comment '-1, 1',
+    created_by         bigint unsigned                   null,
+    last_modified_by   bigint unsigned                   null,
+    created_date       timestamp default utc_timestamp() null,
+    last_modified_date timestamp default utc_timestamp() null
+) comment 'e.g. age restriction';
+create table if not exists mcma.movie_response
+(
+    id                 bigint unsigned auto_increment
+        primary key,
+    user_id            bigint unsigned                   not null,
+    movie_id           bigint unsigned                   not null,
+    user_vote          tinyint                           null comment 'from 1 to 5 stars',
+    user_comment       text                              null,
+    status             tinyint                           null comment '-1, 1',
+    created_by         bigint unsigned                   null,
+    last_modified_by   bigint unsigned                   null,
+    created_date       timestamp default utc_timestamp() null,
+    last_modified_date timestamp default utc_timestamp() null
+);
+create table if not exists mcma.movie_schedule
+(
+    id                 bigint unsigned auto_increment
+        primary key,
+    screen_id          bigint unsigned                   not null,
+    movie_id           bigint unsigned                   not null,
+    start_time         timestamp                         null,
+    status             tinyint                           null comment '-1, 1',
+    created_by         bigint unsigned                   null,
+    last_modified_by   bigint unsigned                   null,
+    created_date       timestamp default utc_timestamp() null,
+    last_modified_date timestamp default utc_timestamp() null
+);
+create table if not exists notification
+(
+    id                 bigint unsigned auto_increment
+        primary key,
+    content            text                              null,
+    status             tinyint                           null comment '-1, 1',
+    created_by         bigint unsigned                   null,
+    last_modified_by   bigint unsigned                   null,
+    created_date       timestamp default utc_timestamp() null,
+    last_modified_date timestamp default utc_timestamp() null
+);
+create table if not exists mcma.screen
+(
+    id                 bigint unsigned auto_increment
+        primary key,
+    cinema_id          bigint unsigned                   not null,
+    name               varchar(20)                       null,
+    type_id            tinyint                           null,
+    status             tinyint                           null comment '-1, 1',
+    created_by         bigint unsigned                   null,
+    last_modified_by   bigint unsigned                   null,
+    created_date       timestamp default utc_timestamp() null,
+    last_modified_date timestamp default utc_timestamp() null
+);
+create table if not exists mcma.screen_type
+(
+    id                 bigint unsigned auto_increment
+        primary key,
+    name               varchar(20)                       null,
+    description        text                              null,
+    status             tinyint                           null comment '-1, 1',
+    created_by         bigint unsigned                   null,
+    last_modified_by   bigint unsigned                   null,
+    created_date       timestamp default utc_timestamp() null,
+    last_modified_date timestamp default utc_timestamp() null
+);
+create table if not exists mcma.seat
+(
+    screen_id          bigint unsigned                   not null,
+    row                tinyint unsigned                  not null,
+    col                tinyint unsigned                  not null,
+    type_id            tinyint                           null,
+    name               varchar(5)                        null,
+    created_by         bigint unsigned                   null,
+    last_modified_by   bigint unsigned                   null,
+    created_date       timestamp default utc_timestamp() null,
+    last_modified_date timestamp default utc_timestamp() null,
+    primary key (screen_id, row, col)
+);
+create table if not exists mcma.seat_type
+(
+    id                 bigint unsigned auto_increment
+        primary key,
+    name               varchar(20)                       null,
+    description        text                              null,
+    status             tinyint                           null comment '-1, 1',
+    created_by         bigint unsigned                   null,
+    last_modified_by   bigint unsigned                   null,
+    created_date       timestamp default utc_timestamp() null,
+    last_modified_date timestamp default utc_timestamp() null
+);
+create table if not exists mcma.movie_coupon
+(
+    movie_id  bigint unsigned not null,
+    coupon_id bigint unsigned not null,
+    primary key (movie_id, coupon_id)
+);
+create table if not exists token
+(
+    id            bigint unsigned auto_increment
+        primary key,
+    user_id       bigint unsigned null,
+    is_logged_out bit             null,
+    token         text            null
+);
+create table if not exists mcma.user
+(
+    id                 bigint unsigned auto_increment
+        primary key,
+    sex                bit             null comment '0: male; 1: female',
+    dob                date            null,
+    email              varchar(255)    not null,
+    phone              varchar(255)    not null,
+    password           varchar(255)    not null,
+    address            text            null,
+    user_type          smallint        null,
+    status             tinyint         null comment '-1, 1',
+    created_by         bigint unsigned null,
+    last_modified_by   bigint unsigned null,
+    created_date       timestamp       null,
+    last_modified_date timestamp       null
+);
