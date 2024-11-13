@@ -28,7 +28,7 @@
                     android:layout_height="150dp"
                     android:background="@color/colorAccentLight"
                     android:orientation="vertical">
-                    <!-- Commented code for CardView and TextView -->
+
                 </LinearLayout>
 
                 <!-- Task (?) -->
@@ -230,16 +230,10 @@
                 <ViewFlipper
                     android:id="@+id/view_flipper"
                     android:layout_width="0dp"
-                    android:layout_height="335dp"
+                    android:layout_height="285dp"
                     android:layout_marginTop="8dp"
                     android:layout_weight="1" />
             </LinearLayout>
-
-
-
-
-
-            <!--View Flipper-->
 
 <!--Làm tab layout cho now showing và coming soon (Hiển thị các phim bằng cách làm recycle view) -->
             <LinearLayout
@@ -249,44 +243,31 @@
                 android:background="#ffffff"
                 android:orientation="horizontal">
 
-                <androidx.cardview.widget.CardView
+                <Button
+                    android:id="@+id/button_nowshowing"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="45dp"
                     android:layout_weight="1"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="15dp"
                     android:layout_marginRight="10dp"
-                    app:cardBackgroundColor="#e2e5ea"
-                    app:cardCornerRadius="15dp">
+                    android:backgroundTint="@color/DarkBlue"
+                    android:text="Now Showing"
+                    android:textAlignment="center"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"/>
 
-                    <TextView
-                        android:id="@+id/now_showing"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="Now Showing"
-                        android:gravity="center"
-                        android:textColor="#000000"
-                        android:textStyle="bold"/>
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
+                <Button
+                    android:id="@+id/button_comingsoon"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="45dp"
                     android:layout_weight="1"
-                    android:layout_marginRight="20dp"
-                    app:cardBackgroundColor="#e2e5ea"
-                    app:cardCornerRadius="15dp">
-
-                    <TextView
-                        android:id="@+id/coming_soon"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="Coming soon"
-                        android:gravity="center"
-                        android:textColor="#8a8a8a"
-                        android:textStyle="bold"/>
-
-                </androidx.cardview.widget.CardView>
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="10dp"
+                    android:backgroundTint="@color/DarkBlue"
+                    android:text="Coming soon"
+                    android:textAlignment="center"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"/>
 
             </LinearLayout>
 

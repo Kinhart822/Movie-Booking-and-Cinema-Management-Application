@@ -28,7 +28,7 @@
         </androidx.cardview.widget.CardView>
 
         <TextView
-            android:id="@+id/file_name"
+            android:id="@+id/film_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
