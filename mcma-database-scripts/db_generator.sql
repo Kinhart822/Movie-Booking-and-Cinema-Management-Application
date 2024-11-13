@@ -41,12 +41,6 @@ create table if not exists mcma.coupon
     created_date       timestamp default utc_timestamp() null,
     last_modified_date timestamp default utc_timestamp() null
 );
-create table if not exists mcma.user_coupon
-(
-    user_id   bigint unsigned not null,
-    coupon_id bigint unsigned not null,
-    primary key (user_id, coupon_id)
-) comment 'coupons that an user owns';
 create table if not exists mcma.drink
 (
     id                 bigint unsigned auto_increment
@@ -95,6 +89,12 @@ create table if not exists mcma.movie
     last_modified_by   bigint unsigned                   null,
     created_date       timestamp default utc_timestamp() null,
     last_modified_date timestamp default utc_timestamp() null
+);
+create table if not exists mcma.movie_coupon
+(
+    movie_id  bigint unsigned not null,
+    coupon_id bigint unsigned not null,
+    primary key (movie_id, coupon_id)
 );
 create table if not exists mcma.movie_genre
 (
@@ -179,7 +179,7 @@ create table if not exists mcma.movie_schedule
     created_date       timestamp default utc_timestamp() null,
     last_modified_date timestamp default utc_timestamp() null
 );
-create table if not exists notification
+create table if not exists mcma.notification
 (
     id                 bigint unsigned auto_increment
         primary key,
@@ -240,13 +240,7 @@ create table if not exists mcma.seat_type
     created_date       timestamp default utc_timestamp() null,
     last_modified_date timestamp default utc_timestamp() null
 );
-create table if not exists mcma.movie_coupon
-(
-    movie_id  bigint unsigned not null,
-    coupon_id bigint unsigned not null,
-    primary key (movie_id, coupon_id)
-);
-create table if not exists token
+create table if not exists mcma.token
 (
     id            bigint unsigned auto_increment
         primary key,
@@ -271,3 +265,9 @@ create table if not exists mcma.user
     created_date       timestamp       null,
     last_modified_date timestamp       null
 );
+create table if not exists mcma.user_coupon
+(
+    user_id   bigint unsigned not null,
+    coupon_id bigint unsigned not null,
+    primary key (user_id, coupon_id)
+) comment 'coupons that an user owns';
