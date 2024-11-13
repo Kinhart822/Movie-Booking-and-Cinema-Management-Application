@@ -1,0 +1,1 @@
+package vn.edu.usth.mcma.service.common.web.rest;

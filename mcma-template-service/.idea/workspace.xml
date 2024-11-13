@@ -4,11 +4,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dc9b1d10-f7fc-4f25-8267-0cae6282ff9e" name="Changes" comment="" />
+    <list default="true" id="dc9b1d10-f7fc-4f25-8267-0cae6282ff9e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../mcma-admin-service/src/main/java/vn/edu/usth/mcma/service/admin/AdminServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../mcma-admin-service/src/main/java/vn/edu/usth/mcma/service/admin/AdminServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mcma-admin-service/src/main/java/vn/edu/usth/mcma/service/admin/controller/MovieController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../mcma-admin-service/src/main/java/vn/edu/usth/mcma/service/admin/controller/MovieController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mcma-common-common/src/main/java/vn/edu/usth/mcma/service/common/dto/response/CommonResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/mcma-common-common/src/main/java/vn/edu/usth/mcma/service/common/dto/response/CommonResponseDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mcma-common-domain/src/main/java/vn/edu/usth/mcma/service/common/domain/AbstractAuditing.java" beforeDir="false" afterPath="$PROJECT_DIR$/mcma-common-domain/src/main/java/vn/edu/usth/mcma/service/common/domain/AbstractAuditing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mcma-common-domain/src/main/java/vn/edu/usth/mcma/service/common/domain/Movie.java" beforeDir="false" afterPath="$PROJECT_DIR$/mcma-common-domain/src/main/java/vn/edu/usth/mcma/service/common/domain/Movie.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mcma-common-service-parent/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/mcma-common-service-parent/pom.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="package-info" />
+        <option value="Interface" />
+        <option value="Enum" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -17,7 +35,9 @@
   &quot;associatedIndex&quot;: 1
 }</component>
   <component name="ProjectId" id="2lxDA7zEquiw68ReMimi1UxGMk0" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -26,7 +46,7 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/movie__management&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -35,6 +55,11 @@
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mariadb&quot;
+    ]
   }
 }</component>
   <component name="SharedIndexes">
@@ -55,6 +80,11 @@
       <updated>1726112687863</updated>
       <workItem from="1726112688979" duration="982000" />
       <workItem from="1727594355547" duration="818000" />
+      <workItem from="1727604414010" duration="1113000" />
+      <workItem from="1727693927004" duration="2699000" />
+      <workItem from="1728010108198" duration="1636000" />
+      <workItem from="1729929446868" duration="6000" />
+      <workItem from="1730277717832" duration="689000" />
     </task>
     <servers />
   </component>

@@ -29,7 +29,7 @@ public class AbstractAuditing implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @CreatedBy
-    @Column(name = "created_by", nullable = false, updatable = false)
+    @Column(name = "created_by", nullable = true, updatable = false) // TODO nullable = false
     @JsonIgnore
     private Long createdBy;
 

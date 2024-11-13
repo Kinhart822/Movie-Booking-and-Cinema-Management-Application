@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import vn.edu.usth.mcma.service.common.constants.ApiResponseCode;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -13,6 +14,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommonResponseDTO {
 
-    private String response;
     private String status;
+    private String message;
+
+    public static CommonResponseDTO successResponse() {
+        CommonResponseDTO commonResponseDTO = new CommonResponseDTO();
+        commonResponseDTO.setStatus(ApiResponseCode.SUCCESS.getStatus());
+        commonResponseDTO.setMessage(ApiResponseCode.SUCCESS.getMessage());
+        return commonResponseDTO;
+    }
 }
