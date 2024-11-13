@@ -6,7 +6,7 @@
     android:id="@+id/store_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".frontend.StoreFragment">
+    tools:context=".frontend.Store.UI.StoreFragment">
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/home_nav"
@@ -147,44 +147,43 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.navigation.NavigationView>
 
-    <ScrollView
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffff"
-        android:scrollbars="none">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cửa hàng"
+            android:textSize="24sp"
+            android:layout_margin="16dp"/>
+
+        <Button
+            android:id="@+id/theater_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="Tất cả các rạp"/>
+
+        <LinearLayout
+            android:id="@+id/no_data_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/DarkBlue"
-                android:orientation="horizontal">
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_radar"/>
 
-                <ImageButton
-                    android:id="@+id/menu_button"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/menu" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="39dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:textSize="26sp" />
-
-                <ImageButton
-                    android:id="@+id/searching_button"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginTop="6.5dp"
-                    android:background="@drawable/searching" />
-            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chưa có dữ liệu"
+                android:layout_marginTop="16dp"/>
         </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
+
 </androidx.drawerlayout.widget.DrawerLayout>

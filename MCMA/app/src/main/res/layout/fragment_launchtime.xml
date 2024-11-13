@@ -194,7 +194,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Đặt vé theo rạp"
+                android:text="Book ticket by theater"
                 android:textSize="25sp"
                 android:textColor="@android:color/black"
                 android:gravity="center"
@@ -211,7 +211,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Phòng chiếu"
+                    android:text="Theater"
                     android:textSize="16sp"
                     android:textColor="@android:color/black"
                     android:layout_weight="1"/>
@@ -269,7 +269,7 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <!-- Theater List (Here is the missing part) -->
+            <!-- RecycleView -->
             <LinearLayout
                 android:id="@+id/theater_list_layout"
                 android:layout_width="match_parent"

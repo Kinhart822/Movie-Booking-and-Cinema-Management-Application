@@ -33,4 +33,10 @@
     <color name="linkColor">#03A9F4</color>
     <color name="dividerColor">#777777</color>
 
+    <color name="green_primary">#4CAF50</color>
+    <color name="green_dark">#388E3C</color>
+    <color name="gray_background">#F5F5F5</color>
+    <color name="gray_text">#757575</color>
+    <color name="black_text">#212121</color>
+    <color name="button_disabled">#BDBDBD</color>
 </resources>

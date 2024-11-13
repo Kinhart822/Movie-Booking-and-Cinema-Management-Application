@@ -10,7 +10,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import vn.edu.usth.mcma.R;
 
-public class CinemaActivity extends AppCompatActivity {
+public class    CinemaActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
