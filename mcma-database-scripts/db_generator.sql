@@ -1,17 +1,6 @@
+set global max_allowed_packet = 52428800;
 drop schema if exists mcma;
 create schema if not exists mcma;
-create table if not exists mcma.authority
-(
-    ID                 smallint auto_increment
-        primary key,
-    CODE               varchar(20)  null,
-    NAME               varchar(255) null,
-    TYPE               smallint     null comment '1: Admin; 2: User',
-    STATUS             smallint     null comment '1: Active; -1: Inactive',
-    CREATED_DATE       timestamp    null,
-    LAST_MODIFIED_DATE timestamp    null
-);
-
 create table if not exists mcma.cinema
 (
     ID                 bigint unsigned                   not null
@@ -175,7 +164,7 @@ create table if not exists mcma.movie_schedule
         primary key,
     SCREEN_ID          bigint unsigned                   not null,
     MOVIE_ID           bigint unsigned                   not null,
-    START_TIME         timestamp default utc_timestamp() null,
+    START_TIME         timestamp                         null,
     CREATED_BY         bigint unsigned                   null,
     LAST_MODIFIED_BY   bigint unsigned                   null,
     CREATED_DATE       timestamp default utc_timestamp() null,
@@ -241,21 +230,6 @@ create table if not exists mcma.user
     CREATED_DATE       timestamp       null,
     LAST_MODIFIED_DATE timestamp       null
 );
-
-create table if not exists mcma.user_authority
-(
-    ID           int auto_increment
-        primary key,
-    USER_ID      bigint unsigned not null,
-    AUTHORITY_ID smallint        null,
-    STATUS       smallint        null comment '1: Active; -1: Inactive'
-);
-
-create index if not exists FK_user_authority_authority
-    on mcma.user_authority (AUTHORITY_ID);
-
-create index if not exists FK_user_authority_user
-    on mcma.user_authority (USER_ID);
 
 create table if not exists mcma.user_coupon
 (
