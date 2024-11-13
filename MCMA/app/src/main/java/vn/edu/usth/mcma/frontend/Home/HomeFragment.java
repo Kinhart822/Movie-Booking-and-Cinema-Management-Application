@@ -27,7 +27,7 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
 
     private ViewFlipper v_flipper;
     private List<FilmItem> items;
-    private List<FilmItem> filteredItems = new ArrayList<>(); // Initialize filteredItems
+    private List<FilmItem> filteredItems = new ArrayList<>();
     private FilmAdapter adapter;
     private Button buttonnowshowing, buttoncomingsoon;
     private RecyclerView recyclerView;
@@ -50,22 +50,19 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
         int images[] = {R.drawable.movie9, R.drawable.movie3, R.drawable.movie4};
         v_flipper = v.findViewById(R.id.view_flipper);
 
-        // Run flipperImages method on the UI thread to ensure it’s fully loaded
-        v_flipper.post(() -> {
+        if (v_flipper != null && v_flipper.getChildCount() == 0) {
             for (int image : images) {
                 flipperImages(image);
             }
-        });
+        }
 
         buttonnowshowing.setOnClickListener(v1 -> updateFilmList("nowshowing"));
-
         buttoncomingsoon.setOnClickListener(v1 -> updateFilmList("comingsoon"));
 
-        // Set up LinearLayoutManager and Adapter for RecyclerView
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        items = new ArrayList<>(); // Initialize the empty film list
-        adapter = new FilmAdapter(requireContext(), filteredItems, this); // Set adapter to use filteredItems
+        items = new ArrayList<>();
+        adapter = new FilmAdapter(requireContext(), filteredItems, this);
         recyclerView.setAdapter(adapter);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -93,7 +90,7 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
     }
 
     private void updateFilmList(String type) {
-        items.clear(); // Clear the current list
+        items.clear();
 
         if (type.equals("nowshowing")) {
             items.add(new FilmItem("Grace Morgan", R.drawable.movie1));
@@ -110,17 +107,17 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
         filteredItems.clear();
         filteredItems.addAll(items);
 
-        adapter.notifyDataSetChanged(); // Update RecyclerView with the new list
+        adapter.notifyDataSetChanged();
     }
 
-    // Chỗ này cho ảnh tự động chạy ở banner
-    public void flipperImages(int image) {
-        if (getContext() == null) return; // Check if context is available
+    private void flipperImages(int image) {
+        if (getContext() == null || v_flipper == null) return;
+
         ImageView imageView = new ImageView(getContext());
         imageView.setBackgroundResource(image);
 
         v_flipper.addView(imageView);
-        v_flipper.setFlipInterval(5000);
+        v_flipper.setFlipInterval(3000);
         v_flipper.setAutoStart(true);
 
         v_flipper.setInAnimation(getContext(), android.R.anim.slide_in_left);
@@ -139,7 +136,7 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
             Toast.makeText(getContext(), "No results found", Toast.LENGTH_SHORT).show();
         }
 
-        adapter.notifyDataSetChanged(); // Update adapter to show filtered list
+        adapter.notifyDataSetChanged();
     }
 
     @Override
