@@ -26,8 +26,6 @@ public class PersonalFragment extends Fragment {
 
         // Find the ImageButton by its ID (assuming you have an ImageButton in your layout)
         ImageButton closeButton = v.findViewById(R.id.close_button);
-
-        // Set an OnClickListener for the button
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -8,6 +8,8 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
@@ -118,5 +120,18 @@ public class MainActivity extends AppCompatActivity {
     public void close_to_home_page(){
         mviewPager.setCurrentItem(0,true);
     }
+
+    public void close_to_showtimes_page() {
+        mviewPager.setCurrentItem(1, true); // Điều này sẽ chuyển đến trang Showtimes
+        closeDrawer(); // Đóng DrawerLayout nếu nó đang mở
+    }
+
+    private void closeDrawer() {
+        DrawerLayout drawerLayout = findViewById(R.id.home_fragment); // Thay thế với ID của DrawerLayout trong XML
+        if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+
 
 }

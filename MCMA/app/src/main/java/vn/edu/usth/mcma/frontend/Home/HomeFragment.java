@@ -1,6 +1,6 @@
 package vn.edu.usth.mcma.frontend.Home;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.MainActivity;
 
 public class HomeFragment extends Fragment implements FilmViewInterface {
 
@@ -32,6 +34,7 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
     private Button buttonnowshowing, buttoncomingsoon;
     private RecyclerView recyclerView;
     private SearchView searchView;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,12 +82,27 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
         });
 
         DrawerLayout mDrawerLayout = v.findViewById(R.id.home_fragment);
+
         ImageButton mImageButton = v.findViewById(R.id.menu_button);
         mImageButton.setOnClickListener(view -> {
             if (mDrawerLayout != null && !mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
                 mDrawerLayout.openDrawer(GravityCompat.START);
             }
         });
+
+//        LinearLayout to_home_page = v.findViewById(R.id.home_side_navigation);
+//        to_home_page.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(getActivity() instanceof MainActivity){
+//                    ((MainActivity) getActivity()).close_to_home_page();
+//                }
+//            }
+//        });
+
+
+        // Hiện list film Now Showing mặc định khi khởi chạy
+        updateFilmList("nowshowing");
 
         return v;
     }
@@ -93,15 +111,15 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
         items.clear();
 
         if (type.equals("nowshowing")) {
-            items.add(new FilmItem("Grace Morgan", R.drawable.movie1));
-            items.add(new FilmItem("Isabella Lewis", R.drawable.movie3));
-            items.add(new FilmItem("Evelyn", R.drawable.movie4));
-            items.add(new FilmItem("Jack", R.drawable.movie5));
-            items.add(new FilmItem("Tino", R.drawable.movie7));
+            items.add(new FilmItem("Grace Morgan","(Horror)" ,R.drawable.movie1));
+            items.add(new FilmItem("Isabella Lewis","(Comedy)", R.drawable.movie3));
+            items.add(new FilmItem("Evelyn", "(Sci-Fi)" ,R.drawable.movie4));
+            items.add(new FilmItem("Jack", "Horror" ,R.drawable.movie5));
+            items.add(new FilmItem("Tino", "Horror" ,R.drawable.movie7));
         } else if (type.equals("comingsoon")) {
-            items.add(new FilmItem("Olivia Adams", R.drawable.movie12));
-            items.add(new FilmItem("Liam Johnson", R.drawable.movie6));
-            items.add(new FilmItem("Noah Brown", R.drawable.movie8));
+            items.add(new FilmItem("Olivia Adams","Horror", R.drawable.movie12));
+            items.add(new FilmItem("Liam Johnson","Horror", R.drawable.movie6));
+            items.add(new FilmItem("Noah Brown","Horror", R.drawable.movie8));
         }
 
         filteredItems.clear();
@@ -111,7 +129,8 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
     }
 
     private void flipperImages(int image) {
-        if (getContext() == null || v_flipper == null) return;
+        if (getContext() == null || v_flipper == null)
+            return;
 
         ImageView imageView = new ImageView(getContext());
         imageView.setBackgroundResource(image);
@@ -127,7 +146,8 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
     private void filterList(String text) {
         filteredItems.clear();
         for (FilmItem item : items) {
-            if (item.getName().toLowerCase().contains(text.toLowerCase())) {
+            if (item.getName().toLowerCase().contains(text.toLowerCase()) ||
+                    item.getCategory().toLowerCase().contains(text.toLowerCase())) {
                 filteredItems.add(item);
             }
         }

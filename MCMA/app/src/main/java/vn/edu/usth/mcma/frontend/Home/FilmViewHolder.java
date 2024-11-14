@@ -9,13 +9,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import vn.edu.usth.mcma.R;
 
 public class FilmViewHolder extends RecyclerView.ViewHolder {
-    TextView nameView;
+    TextView nameView, typeView;
     ImageView filmView;
 
     public FilmViewHolder(View itemView, final FilmViewInterface filmViewInterface) {
         super(itemView);
         filmView = itemView.findViewById(R.id.film_image);
         nameView = itemView.findViewById(R.id.film_name);
+        typeView = itemView.findViewById(R.id.category_name);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override

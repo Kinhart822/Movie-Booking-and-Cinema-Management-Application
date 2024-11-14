@@ -29,6 +29,12 @@
                     android:background="@color/colorAccentLight"
                     android:orientation="vertical">
 
+                    <ImageView
+                        android:layout_width="200dp"
+                        android:layout_height="150dp"
+                        android:src="@drawable/usthlogo"
+                        android:layout_gravity="center"/>
+
                 </LinearLayout>
 
                 <!-- Task (?) -->
@@ -39,6 +45,7 @@
                     android:background="@color/colorAccentLight">
 
                     <LinearLayout
+                        android:id="@+id/home_side_navigation"
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
                         android:orientation="horizontal">
@@ -65,6 +72,7 @@
                         android:background="@color/black" />
 
                     <LinearLayout
+                        android:id="@+id/showtimes_side_navigation"
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
                         android:orientation="horizontal">
@@ -205,26 +213,12 @@
             </LinearLayout>
 
             <!-- Thay bằng thể loại (Tất các ảnh làm bằng recycle view) -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#ffffff"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Trending"
-                    android:textSize="25dp"
-                    android:textStyle="bold|italic" />
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="0dp"
                 android:layout_weight="0.5">
 
                 <ViewFlipper
@@ -274,7 +268,7 @@
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="15dp">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerviewhome"
@@ -284,8 +278,13 @@
 
             </androidx.core.widget.NestedScrollView>
 
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:orientation="vertical">
+            </LinearLayout>
 
+        </LinearLayout>
 
     </ScrollView>
 

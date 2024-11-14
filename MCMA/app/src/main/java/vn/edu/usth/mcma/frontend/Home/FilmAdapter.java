@@ -32,6 +32,7 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull FilmViewHolder holder, int position) {
         holder.nameView.setText(items.get(position).getName());
+        holder.typeView.setText(items.get(position).getCategory());
         holder.filmView.setImageResource(items.get(position).getFilm_image());
     }
 
