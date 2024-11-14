@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.Store.Utils.PriceCalculator;
 
 import android.widget.Button;
 import android.widget.TextView;
@@ -12,6 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class ComboMenuActivity extends AppCompatActivity {
@@ -34,15 +37,18 @@ public class ComboMenuActivity extends AppCompatActivity {
     }
 
     private void setupComboList() {
-        adapter = new ComboAdapter();
+        List<ComboItem> comboItems = getComboItems(); // Method to get combo items
+        adapter = new ComboAdapter(comboItems);
         adapter.setTotalPriceChangedListener(this::updateTotalPrice);
         comboRecyclerView.setAdapter(adapter);
         comboRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void updateTotalPrice(double total) {
-        totalPriceText.setText(String.format(Locale.getDefault(), "%,.0fđ", total));
-        checkoutButton.setEnabled(total > 0);
+        PriceCalculator.PriceResult result = PriceCalculator.calculateTotalPrice(adapter.getComboItems());
+        String formattedPrice = PriceCalculator.formatPrice(result.getTotal());
+        totalPriceText.setText(String.format("Tổng tiền (đã bao gồm phụ thu): %s", formattedPrice));
+        checkoutButton.setEnabled(result.getTotal() > 0);
     }
 
     private void initializeViews() {
@@ -55,5 +61,13 @@ public class ComboMenuActivity extends AppCompatActivity {
         checkoutButton.setOnClickListener(v -> {
             // Handle checkout logic here
         });
+    }
+
+    private List<ComboItem> getComboItems() {
+        // Sample data - replace with actual data from your backend
+        List<ComboItem> items = new ArrayList<>();
+        items.add(new ComboItem("Combo 1", "url1", 80000));
+        items.add(new ComboItem("Combo 2", "url2", 120000));
+        return items;
     }
 }

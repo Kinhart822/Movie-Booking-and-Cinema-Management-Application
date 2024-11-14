@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.frontend.Store.UI;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,21 +18,43 @@ public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHol
     private List<ComboItem> comboItems;
     private OnTotalPriceChangedListener listener;
 
+    public ComboAdapter(List<ComboItem> comboItems) {
+        this.comboItems = comboItems;
+    }
+
+    // Custom listener interface for price updates
+    public interface OnTotalPriceChangedListener {
+        void onTotalPriceChanged(double total);
+    }
+
+    public List<ComboItem> getComboItems() {
+        return comboItems;
+    }
+
+    public void setTotalPriceChangedListener(OnTotalPriceChangedListener listener) {
+        this.listener = listener;
+    }
+
+    @NonNull
     @Override
-    public ComboViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ComboViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.store_item_combo, parent, false);
         return new ComboViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ComboViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ComboViewHolder holder, int position) {
         ComboItem item = comboItems.get(position);
         holder.bind(item);
-        holder.plusButton.setOnClickListener(v -> updateQuantity(position, 1));
-        holder.minusButton.setOnClickListener(v -> updateQuantity(position, -1));
     }
 
+    @Override
+    public int getItemCount() {
+        return comboItems != null ? comboItems.size() : 0;
+    }
+
+    // Updates the quantity of a ComboItem and recalculates the total price
     private void updateQuantity(int position, int delta) {
         ComboItem item = comboItems.get(position);
         int newQuantity = Math.max(0, item.getQuantity() + delta);
@@ -40,44 +63,44 @@ public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHol
         calculateTotalPrice();
     }
 
+    // Calculates the total price based on the quantities of ComboItems
     private void calculateTotalPrice() {
-        double total = comboItems.stream()
-                .mapToDouble(item -> item.getPrice() * item.getQuantity())
-                .sum();
+        double total = 0;
+        for (ComboItem item : comboItems) {
+            total += item.getPrice() * item.getQuantity();
+        }
         if (listener != null) {
             listener.onTotalPriceChanged(total);
         }
     }
 
-    public static class ComboViewHolder extends RecyclerView.ViewHolder {
-        TextView comboName, comboPrice, comboQuantity;
-        ImageView comboImage;
-        Button plusButton, minusButton;
+    // ViewHolder class for ComboItem
+    class ComboViewHolder extends RecyclerView.ViewHolder {
+        private TextView nameText;
+        private TextView priceText;
+        private TextView quantityText;
+        private ImageView plusButton;
+        private ImageView minusButton;
 
-        public ComboViewHolder(View itemView) {
+        ComboViewHolder(@NonNull View itemView) {
             super(itemView);
-            comboName = itemView.findViewById(R.id.combo_name);
-            comboPrice = itemView.findViewById(R.id.combo_price);
-            comboQuantity = itemView.findViewById(R.id.combo_quantity);
-            comboImage = itemView.findViewById(R.id.combo_image);
+            nameText = itemView.findViewById(R.id.combo_name);
+            priceText = itemView.findViewById(R.id.combo_price);
+            quantityText = itemView.findViewById(R.id.combo_quantity);
             plusButton = itemView.findViewById(R.id.plus_button);
             minusButton = itemView.findViewById(R.id.minus_button);
+
+            // Setting up button click listeners to adjust quantity
+            plusButton.setOnClickListener(v -> updateQuantity(getAdapterPosition(), 1));
+            minusButton.setOnClickListener(v -> updateQuantity(getAdapterPosition(), -1));
         }
 
-        public void bind(ComboItem item) {
-            comboName.setText(item.getName());
-            comboPrice.setText(String.format(Locale.getDefault(), "%,.0fđ", item.getPrice()));
-            comboQuantity.setText(String.valueOf(item.getQuantity()));
-            // Load image using a library like Glide or Picasso if needed
+        // Binds data to the view holder elements
+        void bind(ComboItem item) {
+            nameText.setText(item.getName());
+            priceText.setText(String.format(Locale.getDefault(), "%,.0fđ", item.getPrice()));
+            quantityText.setText(String.valueOf(item.getQuantity()));
         }
     }
-
-    public interface OnTotalPriceChangedListener {
-        void onTotalPriceChanged(double totalPrice);
-    }
-
-    public void setTotalPriceChangedListener(OnTotalPriceChangedListener listener) {
-        this.listener = listener;
-    }
-
 }
+

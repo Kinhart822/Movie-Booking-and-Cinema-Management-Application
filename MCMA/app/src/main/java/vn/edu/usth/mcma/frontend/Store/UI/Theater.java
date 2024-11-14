@@ -11,7 +11,7 @@ public class Theater {
         this.isSelected = false;
     }
 
-    // Getters and setters
+    // Basic getters and setters
     public String getId() { return id; }
     public String getName() { return name; }
     public boolean isSelected() { return isSelected; }
