@@ -5,8 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc9b1d10-f7fc-4f25-8267-0cae6282ff9e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../mcma-admin-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../mcma-admin-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mcma-admin-service/.idea/sqldialects.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mcma-database-scripts/db_generator.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../mcma-database-scripts/db_generator.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/48a1a7cf-b7ae-4028-b7fe-05c14b0dcea7.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/48a1a7cf-b7ae-4028-b7fe-05c14b0dcea7.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mcma-common-domain/src/main/java/vn/edu/usth/mcma/service/common/domain/AbstractAuditing.java" beforeDir="false" afterPath="$PROJECT_DIR$/mcma-common-domain/src/main/java/vn/edu/usth/mcma/service/common/dao/AbstractAuditing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mcma-common-domain/src/main/java/vn/edu/usth/mcma/service/common/domain/Movie.java" beforeDir="false" afterPath="$PROJECT_DIR$/mcma-common-domain/src/main/java/vn/edu/usth/mcma/service/common/dao/Movie.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mcma-common-domain/src/main/java/vn/edu/usth/mcma/service/common/domain/MovieGenreDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/mcma-common-domain/src/main/java/vn/edu/usth/mcma/service/common/dao/MovieGenreDetail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mcma-common-domain/src/main/java/vn/edu/usth/mcma/service/common/repository/MovieGenreDetailRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/mcma-common-domain/src/main/java/vn/edu/usth/mcma/service/common/repository/MovieGenreDetailRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mcma-common-domain/src/main/java/vn/edu/usth/mcma/service/common/repository/MovieRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/mcma-common-domain/src/main/java/vn/edu/usth/mcma/service/common/repository/MovieRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,10 +24,10 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="package-info" />
         <option value="Interface" />
         <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -40,15 +48,17 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "dev",
+    "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -60,8 +70,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.18034.62" />
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.18034.62" />
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.21565.193" />
+        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-IU-243.21565.193" />
       </set>
     </attachedChunks>
   </component>
@@ -81,6 +91,8 @@
       <workItem from="1729929446868" duration="6000" />
       <workItem from="1730277717832" duration="689000" />
       <workItem from="1731491482228" duration="902000" />
+      <workItem from="1731592930199" duration="400000" />
+      <workItem from="1731593350350" duration="2530000" />
     </task>
     <servers />
   </component>

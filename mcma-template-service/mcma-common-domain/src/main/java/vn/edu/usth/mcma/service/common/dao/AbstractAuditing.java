@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.service.common.domain;
+package vn.edu.usth.mcma.service.common.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
@@ -27,24 +27,20 @@ import java.time.Instant;
 public class AbstractAuditing implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-
     @CreatedBy
-    @Column(name = "created_by", nullable = true, updatable = false) // TODO nullable = false
+    @Column(nullable = false, updatable = false)
     @JsonIgnore
     private Long createdBy;
-
     @LastModifiedBy
-    @Column(name = "last_modified_by")
+    @Column
     @JsonIgnore
     private Long lastModifiedBy;
-
     @CreatedDate
-    @Column(name = "created_date", updatable = false)
+    @Column(updatable = false)
     @JsonIgnore
     private Instant createdDate;
-
     @LastModifiedDate
-    @Column(name = "last_modified_date")
+    @Column
     @JsonIgnore
     private Instant lastModifiedDate;
 }

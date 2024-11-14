@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.service.common.domain;
+package vn.edu.usth.mcma.service.common.dao;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,12 +16,15 @@ import java.io.Serializable;
 public class MovieGenreDetail extends AbstractAuditing implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name")
+    @Column
     private String name;
-    @Column(name = "description")
+    @Column
     private String description;
+    @Column
+    private String imageUrl;
+    @Column
+    private Integer status;
 }

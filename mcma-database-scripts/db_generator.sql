@@ -33,8 +33,8 @@ create table if not exists mcma.coupon
     discount           decimal(3, 2)                     null,
     min_spend_req      int                               null,
     discount_limit     int                               null,
-    date_available     timestamp                         null,
-    date_expired       timestamp                         null,
+    available_date     timestamp                         null,
+    expired_date       timestamp                         null,
     status             tinyint                           null comment '-1, 1',
     created_by         bigint unsigned                   null,
     last_modified_by   bigint unsigned                   null,
@@ -252,7 +252,7 @@ create table if not exists mcma.user
 (
     id                 bigint unsigned auto_increment
         primary key,
-    sex                bit             null comment '0: male; 1: female',
+    sex                bit             null comment '0: female; 1: male',
     dob                date            null,
     email              varchar(255)    not null,
     phone              varchar(255)    not null,

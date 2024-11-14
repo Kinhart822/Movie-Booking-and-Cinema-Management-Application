@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.service.common.domain;
+package vn.edu.usth.mcma.service.common.dao;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,20 +17,21 @@ import java.time.Instant;
 public class Movie extends AbstractAuditing implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "title")
-    private String title;
-    @Column(name = "description")
-    private String description;
-    @Column(name = "length")
+    @Column
+    private String name;
+    @Column
+    private String imageUrl;
+    @Column
     private Integer length;
-    @Column(name = "date_publish")
-    private Instant datePublish;
-    @Column(name = "rating_id")
+    @Column
+    private Instant publishDate;
+    @Column
     private Long ratingId;
-    @Column(name = "trailer_link")
-    private String trailerLink;
+    @Column
+    private String trailerUrl;
+    @Column
+    private Integer status;
 }
