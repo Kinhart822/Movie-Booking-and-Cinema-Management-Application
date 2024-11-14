@@ -13,8 +13,8 @@
 
         <!-- Movie Poster Image -->
         <ImageView
+            android:id="@+id/movie_poster"
             android:layout_marginTop="30dp"
-            android:id="@+id/moviePoster"
             android:layout_width="match_parent"
             android:layout_height="220dp"
             android:scaleType="centerCrop"
@@ -23,7 +23,7 @@
 
         <!-- Movie Title -->
         <TextView
-            android:id="@+id/movieTitle"
+            android:id="@+id/movie_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="LINH MIEU: QUY NHAP TRANG"
@@ -34,7 +34,7 @@
 
         <!-- Movie Genre -->
         <TextView
-            android:id="@+id/movieGenre"
+            android:id="@+id/movie_genre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Horror, Thriller, Drama"
@@ -44,7 +44,7 @@
 
         <!-- Duration, Rating, Language, Screen Type -->
         <TextView
-            android:id="@+id/movieDuration"
+            android:id="@+id/movie_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="109 phút"
@@ -118,7 +118,7 @@
             android:paddingTop="12dp" />
 
         <TextView
-            android:id="@+id/movieDescription"
+            android:id="@+id/movie_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Linh Mieu is based on folklore material related to demonic possession, exploring the tragedy of a family living in Hue..."
@@ -149,7 +149,7 @@
             android:paddingTop="12dp" />
 
         <TextView
-            android:id="@+id/releaseDate"
+            android:id="@+id/release_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="22 tháng 11, 2024"
@@ -159,7 +159,7 @@
 
         <!-- Rating -->
         <TextView
-            android:id="@+id/ratingLabel"
+            android:id="@+id/rating_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Rating"
@@ -169,7 +169,7 @@
             android:paddingTop="12dp" />
 
         <TextView
-            android:id="@+id/Rating"
+            android:id="@+id/rating"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="C18 - No Children Under 18 Years Old"
@@ -179,7 +179,7 @@
 
         <!-- Languages -->
         <TextView
-            android:id="@+id/languageLabel"
+            android:id="@+id/language_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Languages"
@@ -238,7 +238,7 @@
 
         <!-- Cast -->
         <TextView
-            android:id="@+id/castLabel"
+            android:id="@+id/cast_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Cast"
@@ -248,7 +248,7 @@
             android:paddingTop="12dp" />
 
         <TextView
-            android:id="@+id/cast"
+            android:id="@+id/cast_actor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Hồng Đào, Thiên An, Nguyễn Thúc Thùy Tiên, Văn Bảo Duy"

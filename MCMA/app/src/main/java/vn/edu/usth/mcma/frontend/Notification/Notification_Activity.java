@@ -34,9 +34,9 @@ public class Notification_Activity extends AppCompatActivity {
 
         List<NotificationItem> items = new ArrayList<NotificationItem>();
 
-        items.add(new NotificationItem("VTV24 was live", R.drawable.user));
-        items.add(new NotificationItem("Netflix posted a new video",  R.drawable.user));
-        items.add(new NotificationItem("Vu Duc Duy invite you to like him", R.drawable.user));
+        items.add(new NotificationItem("VTV24", R.drawable.user));
+        items.add(new NotificationItem("Netflix",  R.drawable.user));
+        items.add(new NotificationItem("Vu Duc Duy", R.drawable.user));
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new NotificationAdapter(this, items));

@@ -28,7 +28,20 @@
                     android:layout_height="150dp"
                     android:background="@color/colorAccentLight"
                     android:orientation="vertical">
-                    <!-- Commented code for CardView and TextView -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:background="@color/colorAccentLight"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="200dp"
+                            android:layout_height="150dp"
+                            android:src="@drawable/usthlogo"
+                            android:layout_gravity="center"/>
+
+                    </LinearLayout>
                 </LinearLayout>
 
                 <!-- Task Section -->

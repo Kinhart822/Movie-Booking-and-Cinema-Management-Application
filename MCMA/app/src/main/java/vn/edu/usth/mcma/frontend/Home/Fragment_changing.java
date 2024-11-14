@@ -20,7 +20,7 @@ public class Fragment_changing extends FragmentStateAdapter {
             case 1:
                 return new vn.edu.usth.mcma.frontend.LaunchtimeFragment();
             case 2:
-                return new vn.edu.usth.mcma.frontend.StoreFragment();
+                return new vn.edu.usth.mcma.frontend.Store.UI.StoreFragment();
             case 3:
                 return new vn.edu.usth.mcma.frontend.PersonalFragment();
             default:
