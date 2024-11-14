@@ -85,19 +85,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.home_page) {
-                    mviewPager.setCurrentItem(0, true); // Switch to the first fragment
+                    mviewPager.setCurrentItem(0, true);
                     return true;
                 }
                 if (item.getItemId() == R.id.showtimes_page) {
-                    mviewPager.setCurrentItem(1, true); // Switch to the first fragment
+                    mviewPager.setCurrentItem(1, true);
                     return true;
                 }
                 if (item.getItemId() == R.id.store_page) {
-                    mviewPager.setCurrentItem(2, true); // Switch to the first fragment
+                    mviewPager.setCurrentItem(2, true);
                     return true;
                 }
                 if (item.getItemId() == R.id.personal_page) {
-                    mviewPager.setCurrentItem(3, true); // Switch to the first fragment
+                    mviewPager.setCurrentItem(3, true);
                     return true;
                 }
                 return false;
@@ -122,16 +122,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void close_to_showtimes_page() {
-        mviewPager.setCurrentItem(1, true); // Điều này sẽ chuyển đến trang Showtimes
-        closeDrawer(); // Đóng DrawerLayout nếu nó đang mở
+        mviewPager.setCurrentItem(1, true);
     }
-
-    private void closeDrawer() {
-        DrawerLayout drawerLayout = findViewById(R.id.home_fragment); // Thay thế với ID của DrawerLayout trong XML
-        if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        }
-    }
-
-
 }

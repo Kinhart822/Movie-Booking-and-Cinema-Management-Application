@@ -24,6 +24,7 @@ import java.util.List;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.MainActivity;
+import vn.edu.usth.mcma.frontend.Notification.Notification_Activity;
 
 public class HomeFragment extends Fragment implements FilmViewInterface {
 
@@ -90,15 +91,33 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
             }
         });
 
-//        LinearLayout to_home_page = v.findViewById(R.id.home_side_navigation);
-//        to_home_page.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if(getActivity() instanceof MainActivity){
-//                    ((MainActivity) getActivity()).close_to_home_page();
-//                }
-//            }
-//        });
+        ImageButton notication_buttonn = v.findViewById(R.id.notification_button);
+        notication_buttonn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Notification.Notification_Activity.class );
+                startActivity(i);
+            }
+        });
+
+        LinearLayout to_home_page = v.findViewById(R.id.home_side_navigation);
+        to_home_page.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.MainActivity.class);
+                startActivity(i);;
+            }
+        });
+
+        LinearLayout to_showtimes_page = v.findViewById(R.id.showtimes_side_navigation);
+        to_showtimes_page.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getActivity() instanceof MainActivity){
+                    ((MainActivity) getActivity()).close_to_showtimes_page();
+                }
+            }
+        });
 
 
         // Hiện list film Now Showing mặc định khi khởi chạy

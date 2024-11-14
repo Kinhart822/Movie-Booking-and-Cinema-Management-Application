@@ -179,11 +179,12 @@
                     android:textSize="26sp" />
 
                 <ImageButton
-                    android:id="@+id/searching_button"
+                    android:id="@+id/notification_button"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginTop="6.5dp"
-                    android:background="@drawable/searching" />
+                    android:layout_marginRight="5.7dp"
+                    android:background="@drawable/notification" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

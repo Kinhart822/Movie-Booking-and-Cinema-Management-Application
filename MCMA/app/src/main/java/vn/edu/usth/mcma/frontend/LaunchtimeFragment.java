@@ -37,11 +37,11 @@ public class LaunchtimeFragment extends Fragment {
             }
         });
 
-        ImageButton searchbutton = v.findViewById(R.id.searching_button);
-        searchbutton.setOnClickListener(new View.OnClickListener() {
+        ImageButton notication_buttonn = v.findViewById(R.id.notification_button);
+        notication_buttonn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(requireContext(), Search_Activity.class );
+                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Notification.Notification_Activity.class );
                 startActivity(i);
             }
         });
