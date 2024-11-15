@@ -61,7 +61,4 @@ public class Seat {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "seat")
     private List<BookingSeat> seatList;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "seat")
-    private List<BookingDraftSeat> draftSeatList;
 }

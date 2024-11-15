@@ -63,7 +63,4 @@ public class Drink {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "drink")
     private List<BookingDrink> drinks;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "drink")
-    private List<BookingDraftDrink> draftDrinks;
 }

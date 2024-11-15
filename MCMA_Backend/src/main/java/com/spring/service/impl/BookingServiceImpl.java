@@ -1,8 +1,7 @@
 package com.spring.service.impl;
 
-import com.spring.dto.request.*;
 import com.spring.dto.request.booking.*;
-import com.spring.dto.response.BookingResponse;
+import com.spring.dto.response.booking.BookingResponse;
 import com.spring.dto.response.booking.*;
 import com.spring.entities.*;
 import com.spring.enums.*;
@@ -632,14 +631,15 @@ public class BookingServiceImpl implements BookingService {
         if (selectedSeats.stream().anyMatch(seat -> seat.getScreen().getId() != screen.getId())){
             throw new IllegalArgumentException("The selected seats do not match the specified screen!");
         }
+        if (selectedSeats.stream().anyMatch(seat -> seat.getSeatStatus() == SeatStatus.Unavailable) ) {
+            throw new IllegalArgumentException("Selected seats are already unavailable, please select a different seat.");
+        }
 
         if (bookingRequest.getSeatIds() != null && !bookingRequest.getSeatIds().isEmpty()) {
             Map<Integer, BookingSeat> seatMap = new HashMap<>();
 
             for (Seat seat : selectedSeats) {
-                if (seat.getSeatStatus() == SeatStatus.Unavailable) {
-                    throw new IllegalArgumentException("Seat %d is already unavailable, please select a different seat.".formatted(seat.getId()));
-                }
+
 
                 BookingSeat bookingSeat = seatMap.computeIfAbsent(seat.getId(), id -> {
                     BookingSeat newBookingSeat = new BookingSeat();
@@ -818,24 +818,19 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found for ID: %d".formatted(userId)));
 
         if (isBookingIncomplete(booking)) {
-            if (isBookingIncomplete(booking)) {
-                throw new IllegalArgumentException("Booking is still not completed. Please fill all the booking information again!");
-            }
             deleteBooking(booking.getId(), userId);
+            throw new IllegalArgumentException("Booking is still not completed. Please fill all the booking information again!");
         }
 
         if (booking.getSeatList().stream().anyMatch(seat -> seat.getSeat().getSeatStatus() == SeatStatus.Unavailable)) {
-            if (booking.getSeatList().stream().anyMatch(seat -> seat.getSeat().getSeatStatus() == SeatStatus.Unavailable)) {
-                throw new IllegalArgumentException("Seat is already bought by another user. Please choose seats again!");
-            }
             deleteBooking(booking.getId(), userId);
+            throw new IllegalArgumentException("Some of the selected seats are already bought by another user. Please fill all the booking information again!");
         }
 
+
         if (booking.getSeatList().stream().anyMatch(seat -> seat.getSeat().getSeatStatus() != SeatStatus.Held)) {
-            if (booking.getSeatList().stream().anyMatch(seat -> seat.getSeat().getSeatStatus() != SeatStatus.Held)) {
-                throw new IllegalArgumentException("Seat is still not held. Please choose seats again!");
-            }
             deleteBooking(booking.getId(), userId);
+            throw new IllegalArgumentException("Seat is still not held. Please fill all the booking information again!");
         }
 
         booking.setBookingNo(generateBookingNo(user.getLastName(), user.getFirstName(), booking.getMovie().getName()));
@@ -906,6 +901,10 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingId)));
 
+        if (booking.getStartDateTime().isBefore(LocalDateTime.now().plusHours(1))) {
+            throw new IllegalArgumentException("You cannot cancel a booking within 1 hour of the start time.");
+        }
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
 
@@ -920,6 +919,12 @@ public class BookingServiceImpl implements BookingService {
         bookingRepository.save(booking);
 
         try {
+            Notification notification = new Notification();
+            notification.setUser(user);
+            notification.setMessage("Your booking for %s is canceled. Booking Number: %s".formatted(booking.getMovie().getName(), booking.getBookingNo()));
+            notification.setDateCreated(LocalDateTime.now());
+            notificationRepository.save(notification);
+
             emailService.sendCancelMailMessage(user.getEmail());
             System.out.printf("Notification sent to %s%n", user.getEmail());
         } catch (Exception e) {
@@ -932,6 +937,10 @@ public class BookingServiceImpl implements BookingService {
     public void deleteBooking(Integer bookingId, Integer userId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingId)));
+
+        if (booking.getStartDateTime().isBefore(LocalDateTime.now().plusHours(1))) {
+            throw new IllegalArgumentException("You cannot delete a booking within 1 hour of the start time.");
+        }
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
@@ -951,6 +960,12 @@ public class BookingServiceImpl implements BookingService {
         bookingRepository.delete(booking);
 
         try {
+            Notification notification = new Notification();
+            notification.setUser(user);
+            notification.setMessage("Your booking for %s is deleted. Booking Number: %s".formatted(booking.getMovie().getName(), booking.getBookingNo()));
+            notification.setDateCreated(LocalDateTime.now());
+            notificationRepository.save(notification);
+
             emailService.sendDeleteMailMessage(user.getEmail());
         } catch (Exception e) {
             System.out.println("Failed to send email notification. Please try again later.");

@@ -41,9 +41,6 @@ public class Ticket {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "ticket")
     private List<BookingTicket> ticketList;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ticket")
-    private List<BookingDraftTicket> ticketDraftList;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ticket_type_id")
     private TicketType ticketType;

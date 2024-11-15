@@ -1,13 +1,13 @@
 package com.spring.controller;
 
 import com.spring.config.JwtUtil;
-import com.spring.dto.request.BookingRequest;
+import com.spring.dto.request.booking.BookingRequest;
 import com.spring.dto.request.booking.*;
 import com.spring.dto.request.movieRespond.MovieRespondRequest;
 import com.spring.dto.request.view.ViewCinemaRequest;
 import com.spring.dto.request.view.ViewCouponRequest;
 import com.spring.dto.request.view.ViewFoodAndDrinkRequest;
-import com.spring.dto.response.BookingResponse;
+import com.spring.dto.response.booking.BookingResponse;
 import com.spring.dto.response.SearchMovieByGenreResponse;
 import com.spring.dto.response.SearchMovieByNameResponse;
 import com.spring.dto.response.booking.*;

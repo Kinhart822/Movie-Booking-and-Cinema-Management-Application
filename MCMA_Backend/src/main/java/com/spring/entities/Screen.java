@@ -56,7 +56,4 @@ public class Screen {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "screen")
     private List<Booking> bookings;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "screen")
-    private List<BookingDraft> bookingDrafts;
 }

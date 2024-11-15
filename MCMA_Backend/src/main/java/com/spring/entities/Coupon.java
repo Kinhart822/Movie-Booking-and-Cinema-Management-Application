@@ -70,7 +70,4 @@ public class Coupon {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "coupon")
     private List<BookingCoupon> coupons;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "coupon")
-    private List<BookingDraftCoupon> draftCoupons;
 }

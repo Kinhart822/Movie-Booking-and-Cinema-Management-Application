@@ -73,9 +73,6 @@ public class User implements UserDetails {
     private List<Booking> bookings;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<BookingDraft> bookingDrafts;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Notification> notifications;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")

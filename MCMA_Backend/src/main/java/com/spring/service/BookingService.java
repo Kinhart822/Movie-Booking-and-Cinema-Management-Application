@@ -1,8 +1,8 @@
 package com.spring.service;
 
-import com.spring.dto.request.BookingRequest;
+import com.spring.dto.request.booking.BookingRequest;
 import com.spring.dto.request.booking.*;
-import com.spring.dto.response.BookingResponse;
+import com.spring.dto.response.booking.BookingResponse;
 import com.spring.dto.response.booking.*;
 
 import java.util.List;

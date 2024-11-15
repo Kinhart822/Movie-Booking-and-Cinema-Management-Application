@@ -61,7 +61,4 @@ public class Food {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "food")
     private List<BookingFood> foodList;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "food")
-    private List<BookingDraftFood> foodDraftList;
 }

@@ -1,4 +1,4 @@
-package com.spring.dto.request;
+package com.spring.dto.request.booking;
 
 import com.spring.enums.PaymentMethod;
 import com.spring.enums.SizeFoodOrDrink;

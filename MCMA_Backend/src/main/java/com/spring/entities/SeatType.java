@@ -51,7 +51,4 @@ public class SeatType {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "seatType")
     private List<BookingSeat> seatTypeList;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "seatType")
-    private List<BookingDraftSeat> draftSeatTypeList;
 }
