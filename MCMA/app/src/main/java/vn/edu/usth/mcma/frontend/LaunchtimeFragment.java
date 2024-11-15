@@ -1,6 +1,5 @@
 package vn.edu.usth.mcma.frontend;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -40,8 +39,8 @@ public class LaunchtimeFragment extends Fragment {
             }
         });
 
-        LinearLayout to_home_activity = v.findViewById(R.id.home_side_navigation);
-        to_home_activity.setOnClickListener(new View.OnClickListener() {
+        LinearLayout to_home_fragment = v.findViewById(R.id.home_side_navigation);
+        to_home_fragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(getActivity() instanceof MainActivity){
@@ -50,12 +49,32 @@ public class LaunchtimeFragment extends Fragment {
             }
         });
 
-        LinearLayout to_showtimes_page = v.findViewById(R.id.showtimes_side_navigation);
-        to_showtimes_page.setOnClickListener(new View.OnClickListener() {
+        LinearLayout to_showtimes_fragment = v.findViewById(R.id.showtimes_side_navigation);
+        to_showtimes_fragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(getActivity() instanceof MainActivity){
                     ((MainActivity) getActivity()).close_to_showtimes_page();
+                }
+            }
+        });
+
+        LinearLayout to_store_fragment = v.findViewById(R.id.store_side_navigation);
+        to_store_fragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getActivity() instanceof MainActivity){
+                    ((MainActivity) getActivity()).close_to_store_page();
+                }
+            }
+        });
+
+        LinearLayout to_personal_fragment = v.findViewById(R.id.personal_side_navigation);
+        to_personal_fragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getActivity() instanceof MainActivity){
+                    ((MainActivity) getActivity()).close_to_personal_page();
                 }
             }
         });

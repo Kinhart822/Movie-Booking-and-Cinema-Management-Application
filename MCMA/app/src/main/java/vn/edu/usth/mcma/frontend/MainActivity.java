@@ -124,4 +124,11 @@ public class MainActivity extends AppCompatActivity {
     public void close_to_showtimes_page() {
         mviewPager.setCurrentItem(1, true);
     }
+
+    public void close_to_store_page() {
+        mviewPager.setCurrentItem(2, true);
+    }
+    public void close_to_personal_page() {
+        mviewPager.setCurrentItem(3, true);
+    }
 }

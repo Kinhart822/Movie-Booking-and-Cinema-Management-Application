@@ -224,6 +224,7 @@
 
                 <!-- Store -->
                 <LinearLayout
+                    android:id="@+id/store_side_navigation"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:orientation="horizontal">
@@ -251,7 +252,7 @@
 
                 <!-- Personal Information -->
                 <LinearLayout
-                    android:id="@+id/to_result_page"
+                    android:id="@+id/personal_side_navigation"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:orientation="horizontal">
