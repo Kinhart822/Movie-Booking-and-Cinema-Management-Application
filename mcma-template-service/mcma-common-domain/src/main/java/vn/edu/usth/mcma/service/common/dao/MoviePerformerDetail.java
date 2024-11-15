@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 
 @Entity
 @Table(name = "movie_performer_detail")
@@ -21,13 +22,12 @@ public class MoviePerformerDetail extends AbstractAuditing implements Serializab
     private Long id;
     @Column
     private String name;
+    @Column
     private Integer typeId;
+    @Column
     private Integer sex;
-    private 
-    @Column
-    private String description;
-    @Column
-    private String imageUrl;
+    @Column(name = "dob")
+    private Instant dateOfBirth;
     @Column
     private Integer status;
 }

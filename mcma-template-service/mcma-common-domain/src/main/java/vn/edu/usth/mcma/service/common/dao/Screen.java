@@ -7,13 +7,13 @@ import java.io.Serial;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "food")
+@Table(name = "screen")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Food extends AbstractAuditing implements Serializable {
+public class Screen extends AbstractAuditing implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @Id
@@ -24,13 +24,7 @@ public class Food extends AbstractAuditing implements Serializable {
     @Column
     private String name;
     @Column
-    private String description;
-    @Column
-    private String imageUrl;
-    @Column
-    private String size;
-    @Column
-    private Integer price;
+    private Integer typeId;
     @Column
     private Integer status;
 }

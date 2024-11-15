@@ -127,8 +127,8 @@ create table if not exists mcma.movie_performer_detail
         primary key,
     name               varchar(50)                       null,
     type_id            tinyint                           null comment '1: director; 2: actor',
-    sex                bit                               null comment '0: male; 1: female',
-    dob                date                              null,
+    sex                bit                               null comment '0: female; 1: male',
+    dob                timestamp                         null,
     status             tinyint                           null comment '-1, 1',
     created_by         bigint unsigned                   null,
     last_modified_by   bigint unsigned                   null,
@@ -252,18 +252,18 @@ create table if not exists mcma.user
 (
     id                 bigint unsigned auto_increment
         primary key,
-    sex                bit             null comment '0: female; 1: male',
-    dob                date            null,
-    email              varchar(255)    not null,
-    phone              varchar(255)    not null,
-    password           varchar(255)    not null,
-    address            text            null,
-    user_type          smallint        null,
-    status             tinyint         null comment '-1, 1',
-    created_by         bigint unsigned null,
-    last_modified_by   bigint unsigned null,
-    created_date       timestamp       null,
-    last_modified_date timestamp       null
+    sex                bit                               null comment '0: female; 1: male',
+    dob                timestamp                         null,
+    email              varchar(255)                      not null,
+    phone              varchar(255)                      not null,
+    password           varchar(255)                      not null,
+    address            text                              null,
+    user_type          smallint                          null,
+    status             tinyint                           null comment '-1, 1',
+    created_by         bigint unsigned                   null,
+    last_modified_by   bigint unsigned                   null,
+    created_date       timestamp default utc_timestamp() null,
+    last_modified_date timestamp default utc_timestamp() null
 );
 create table if not exists mcma.user_coupon
 (

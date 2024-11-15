@@ -7,30 +7,20 @@ import java.io.Serial;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "food")
+@Table(name = "notification")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Food extends AbstractAuditing implements Serializable {
+public class Notification extends AbstractAuditing implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private Long cinemaId;
-    @Column
-    private String name;
-    @Column
-    private String description;
-    @Column
-    private String imageUrl;
-    @Column
-    private String size;
-    @Column
-    private Integer price;
+    private String content;
     @Column
     private Integer status;
 }
