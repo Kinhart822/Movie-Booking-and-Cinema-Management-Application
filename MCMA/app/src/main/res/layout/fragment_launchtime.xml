@@ -3,203 +3,209 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/launchtime_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/launchtime_fragment"
     tools:context=".frontend.LaunchtimeFragment">
 
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/home_nav"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="start">
+        android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <!-- Header -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:background="@color/DarkBlue"
+            android:padding="8dp">
 
+            <ImageButton
+                android:id="@+id/menu_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/menu" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="USTH Cinema"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <ImageButton
+                android:id="@+id/notification_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/notification" />
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+    <!-- Navigation Drawer -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/home_nav"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/colorAccentLight">
+
+        <!-- Header Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!-- Logo Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="@color/colorAccentLight"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="150dp"
+                    android:src="@drawable/usthlogo"
+                    android:layout_gravity="center" />
+            </LinearLayout>
+
+            <!-- Navigation Items -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@color/colorAccentLight">
 
+                <!-- Home -->
                 <LinearLayout
+                    android:id="@+id/home_side_navigation"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:background="@color/colorAccentLight"
-                    android:orientation="vertical">
+                    android:layout_height="70dp"
+                    android:orientation="horizontal">
 
-                    <LinearLayout
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/home"
+                        android:layout_marginLeft="25dp" />
+
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
-                        android:background="@color/colorAccentLight"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="200dp"
-                            android:layout_height="150dp"
-                            android:src="@drawable/usthlogo"
-                            android:layout_gravity="center"/>
-
-                    </LinearLayout>
+                        android:layout_height="match_parent"
+                        android:text="Home"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:gravity="center" />
                 </LinearLayout>
 
-                <!-- Task Section -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/black" />
+
+                <!-- Showtimes -->
+                <LinearLayout
+                    android:id="@+id/showtimes_side_navigation"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/videoclip"
+                        android:layout_marginLeft="25dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Showtimes"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/black" />
+
+                <!-- Store -->
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:background="@color/colorAccentLight">
+                    android:layout_height="70dp"
+                    android:orientation="horizontal">
 
-                    <LinearLayout
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/shop"
+                        android:layout_marginLeft="25dp" />
+
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="70dp"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/home"
-                            android:layout_marginLeft="25dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="Home"
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            android:gravity="center" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/black" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="70dp"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/videoclip"
-                            android:layout_marginLeft="25dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="Showtimes"
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            android:gravity="center" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/black" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="70dp"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/shop"
-                            android:layout_marginLeft="25dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="Store"
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            android:gravity="center" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/black" />
-
-                    <LinearLayout
-                        android:id="@+id/to_result_page"
-                        android:layout_width="match_parent"
-                        android:layout_height="70dp"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/profile"
-                            android:layout_marginLeft="25dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="Personal information"
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            android:gravity="center" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/black" />
+                        android:layout_height="match_parent"
+                        android:text="Store"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:gravity="center" />
                 </LinearLayout>
-            </LinearLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.navigation.NavigationView>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ffffff"
-        android:scrollbars="none">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/black" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+                <!-- Personal Information -->
+                <LinearLayout
+                    android:id="@+id/to_result_page"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/DarkBlue"
-                android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/profile"
+                        android:layout_marginLeft="25dp" />
 
-                <ImageButton
-                    android:id="@+id/menu_button"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/menu" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Personal information"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:gravity="center" />
+                </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="39dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:textSize="26sp" />
-
-                <ImageButton
-                    android:id="@+id/notification_button"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginTop="6.5dp"
-                    android:layout_marginRight="5.7dp"
-                    android:background="@drawable/notification" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/black" />
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
-</androidx.drawerlayout.widget.DrawerLayout>
+    </com.google.android.material.navigation.NavigationView>
 
+</androidx.drawerlayout.widget.DrawerLayout>

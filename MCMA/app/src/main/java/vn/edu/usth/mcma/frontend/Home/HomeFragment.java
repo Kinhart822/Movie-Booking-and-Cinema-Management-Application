@@ -43,6 +43,36 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
 
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
+        ImageButton mImageButton = v.findViewById(R.id.menu_button);
+
+        mDrawerLayout = v.findViewById(R.id.home_fragment);
+
+        mImageButton.setOnClickListener(view -> {
+            if (mDrawerLayout != null && !mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                mDrawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
+        LinearLayout to_home_activity = v.findViewById(R.id.home_side_navigation);
+        to_home_activity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getActivity() instanceof MainActivity){
+                    ((MainActivity) getActivity()).close_to_home_page();
+                }
+            }
+        });
+
+        LinearLayout to_showtimes_page = v.findViewById(R.id.showtimes_side_navigation);
+        to_showtimes_page.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getActivity() instanceof MainActivity){
+                    ((MainActivity) getActivity()).close_to_showtimes_page();
+                }
+            }
+        });
+
         searchView = v.findViewById(R.id.searchView);
         searchView.clearFocus();
 
@@ -82,15 +112,6 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
             }
         });
 
-        DrawerLayout mDrawerLayout = v.findViewById(R.id.home_fragment);
-
-        ImageButton mImageButton = v.findViewById(R.id.menu_button);
-        mImageButton.setOnClickListener(view -> {
-            if (mDrawerLayout != null && !mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-                mDrawerLayout.openDrawer(GravityCompat.START);
-            }
-        });
-
         ImageButton notication_buttonn = v.findViewById(R.id.notification_button);
         notication_buttonn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,26 +120,6 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
                 startActivity(i);
             }
         });
-
-        LinearLayout to_home_page = v.findViewById(R.id.home_side_navigation);
-        to_home_page.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.MainActivity.class);
-                startActivity(i);;
-            }
-        });
-
-        LinearLayout to_showtimes_page = v.findViewById(R.id.showtimes_side_navigation);
-        to_showtimes_page.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_showtimes_page();
-                }
-            }
-        });
-
 
         // Hiện list film Now Showing mặc định khi khởi chạy
         updateFilmList("nowshowing");
@@ -176,6 +177,12 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
         }
 
         adapter.notifyDataSetChanged();
+    }
+
+    public void closeDrawer() {
+        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        }
     }
 
     @Override

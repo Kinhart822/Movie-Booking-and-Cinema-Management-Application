@@ -12,11 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import vn.edu.usth.mcma.R;
 
 
 public class LaunchtimeFragment extends Fragment {
+
+    private DrawerLayout mDrawerLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -26,13 +29,33 @@ public class LaunchtimeFragment extends Fragment {
 
         ImageButton mImageView = v.findViewById(R.id.menu_button);
 
-        DrawerLayout mDrawerLayout = v.findViewById(R.id.launchtime_fragment);
+        mDrawerLayout = v.findViewById(R.id.launchtime_fragment);
 
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mDrawerLayout != null && !mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
                     mDrawerLayout.openDrawer(GravityCompat.START);
+                }
+            }
+        });
+
+        LinearLayout to_home_activity = v.findViewById(R.id.home_side_navigation);
+        to_home_activity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getActivity() instanceof MainActivity){
+                    ((MainActivity) getActivity()).close_to_home_page();
+                }
+            }
+        });
+
+        LinearLayout to_showtimes_page = v.findViewById(R.id.showtimes_side_navigation);
+        to_showtimes_page.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getActivity() instanceof MainActivity){
+                    ((MainActivity) getActivity()).close_to_showtimes_page();
                 }
             }
         });

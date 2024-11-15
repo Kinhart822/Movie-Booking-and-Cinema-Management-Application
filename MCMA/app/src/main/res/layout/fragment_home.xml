@@ -8,284 +8,276 @@
     android:id="@+id/home_fragment"
     tools:context=".frontend.Home.HomeFragment">
 
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/home_nav"
+    <!-- Main Content -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="start">
+        android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:background="@color/colorAccentLight"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="200dp"
-                        android:layout_height="150dp"
-                        android:src="@drawable/usthlogo"
-                        android:layout_gravity="center"/>
-
-                </LinearLayout>
-
-                <!-- Task (?) -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:background="@color/colorAccentLight">
-
-                    <LinearLayout
-                        android:id="@+id/home_side_navigation"
-                        android:layout_width="match_parent"
-                        android:layout_height="70dp"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/home"
-                            android:layout_marginLeft="25dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="Home"
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            android:gravity="center" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/black" />
-
-                    <LinearLayout
-                        android:id="@+id/showtimes_side_navigation"
-                        android:layout_width="match_parent"
-                        android:layout_height="70dp"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/videoclip"
-                            android:layout_marginLeft="25dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="Showtimes"
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            android:gravity="center" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/black" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="70dp"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/shop"
-                            android:layout_marginLeft="25dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="Store"
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            android:gravity="center" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/black" />
-
-                    <LinearLayout
-                        android:id="@+id/to_result_page"
-                        android:layout_width="match_parent"
-                        android:layout_height="70dp"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/profile"
-                            android:layout_marginLeft="25dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="Personal information"
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            android:gravity="center" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/black" />
-                </LinearLayout>
-            </LinearLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.navigation.NavigationView>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ffffff"
-        android:scrollbars="none">
-
+        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="50dp"
+            android:background="@color/DarkBlue"
+            android:orientation="horizontal"
+            android:padding="8dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/DarkBlue"
-                android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/menu_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/menu" />
 
-                <ImageButton
-                    android:id="@+id/menu_button"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/menu" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="USTH Cinema"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="39dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:textSize="26sp" />
+            <ImageButton
+                android:id="@+id/notification_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/notification" />
+        </LinearLayout>
 
-
-                <ImageButton
-                    android:id="@+id/notification_button"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginTop="6.5dp"
-                    android:layout_marginRight="5.7dp"
-                    android:background="@drawable/notification" />
-            </LinearLayout>
+        <!-- Scrollable Content -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:padding="10dp">
+                android:orientation="vertical">
 
-                <SearchView
-                    android:id="@+id/searchView"
+                <!-- Search View -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:iconifiedByDefault="false"
-                    android:background="@drawable/edit_group_box"
-                    app:searchIcon="@drawable/social_media"
-                    android:layout_margin="8dp"/>
-            </LinearLayout>
+                    android:padding="10dp">
 
-            <!-- Thay bằng thể loại (Tất các ảnh làm bằng recycle view) -->
+                    <SearchView
+                        android:id="@+id/searchView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:iconifiedByDefault="false"
+                        android:background="@drawable/edit_group_box"
+                        app:searchIcon="@drawable/social_media" />
+                </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:orientation="horizontal"
-                android:layout_marginTop="0dp"
-                android:layout_weight="0.5">
-
+                <!-- View Flipper -->
                 <ViewFlipper
                     android:id="@+id/view_flipper"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="285dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_weight="1" />
-            </LinearLayout>
+                    android:layout_margin="8dp" />
 
-<!--Làm tab layout cho now showing và coming soon (Hiển thị các phim bằng cách làm recycle view) -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="15dp"
-                android:background="#ffffff"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/button_nowshowing"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="10dp"
-                    android:backgroundTint="@color/DarkBlue"
-                    android:text="Now Showing"
-                    android:textAlignment="center"
-                    android:textColor="#ffffff"
-                    android:textStyle="bold"/>
-
-                <Button
-                    android:id="@+id/button_comingsoon"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="10dp"
-                    android:backgroundTint="@color/DarkBlue"
-                    android:text="Coming soon"
-                    android:textAlignment="center"
-                    android:textColor="#ffffff"
-                    android:textStyle="bold"/>
-
-            </LinearLayout>
-
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="15dp">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerviewhome"
+                <!-- Tab Layout -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false" />
+                    android:orientation="horizontal"
+                    android:background="#ffffff"
+                    android:padding="10dp">
 
-            </androidx.core.widget.NestedScrollView>
+                    <Button
+                        android:id="@+id/button_nowshowing"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/DarkBlue"
+                        android:text="Now Showing"
+                        android:textColor="#ffffff"
+                        android:textStyle="bold" />
 
+                    <Button
+                        android:layout_marginLeft="10dp"
+                        android:id="@+id/button_comingsoon"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/DarkBlue"
+                        android:text="Coming Soon"
+                        android:textColor="#ffffff"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- RecyclerView -->
+                <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="15dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerviewhome"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false" />
+                </androidx.core.widget.NestedScrollView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:orientation="vertical">
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <!-- Navigation Drawer -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/home_nav"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/colorAccentLight">
+
+        <!-- Header Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!-- Logo Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
+                android:background="@color/colorAccentLight"
                 android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="150dp"
+                    android:src="@drawable/usthlogo"
+                    android:layout_gravity="center" />
             </LinearLayout>
 
-        </LinearLayout>
+            <!-- Navigation Items -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@color/colorAccentLight">
 
-    </ScrollView>
+                <!-- Home -->
+                <LinearLayout
+                    android:id="@+id/home_side_navigation"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/home"
+                        android:layout_marginLeft="25dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Home"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/black" />
+
+                <!-- Showtimes -->
+                <LinearLayout
+                    android:id="@+id/showtimes_side_navigation"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/videoclip"
+                        android:layout_marginLeft="25dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Showtimes"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/black" />
+
+                <!-- Store -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/shop"
+                        android:layout_marginLeft="25dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Store"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/black" />
+
+                <!-- Personal Information -->
+                <LinearLayout
+                    android:id="@+id/to_result_page"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/profile"
+                        android:layout_marginLeft="25dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Personal information"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/black" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>
