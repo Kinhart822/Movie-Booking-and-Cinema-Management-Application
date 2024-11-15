@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dc9b1d10-f7fc-4f25-8267-0cae6282ff9e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../mcma-database-scripts/db_generator.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../mcma-database-scripts/db_generator.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/48a1a7cf-b7ae-4028-b7fe-05c14b0dcea7.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/48a1a7cf-b7ae-4028-b7fe-05c14b0dcea7.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcma-common-domain/src/main/java/vn/edu/usth/mcma/service/common/dao/Food.java" beforeDir="false" afterPath="$PROJECT_DIR$/mcma-common-domain/src/main/java/vn/edu/usth/mcma/service/common/dao/Food.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcma-common-domain/src/main/java/vn/edu/usth/mcma/service/common/dao/MoviePerformerDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/mcma-common-domain/src/main/java/vn/edu/usth/mcma/service/common/dao/MoviePerformerDetail.java" afterDir="false" />
-    </list>
+    <list default="true" id="dc9b1d10-f7fc-4f25-8267-0cae6282ff9e" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -88,7 +82,7 @@
       <workItem from="1731491482228" duration="902000" />
       <workItem from="1731592930199" duration="400000" />
       <workItem from="1731593350350" duration="2530000" />
-      <workItem from="1731634740111" duration="1963000" />
+      <workItem from="1731634740111" duration="2425000" />
     </task>
     <servers />
   </component>
