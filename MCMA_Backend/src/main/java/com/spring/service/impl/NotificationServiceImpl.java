@@ -36,11 +36,11 @@ public class NotificationServiceImpl implements NotificationService {
 
             String elapsedTime;
             if (days > 0) {
-                elapsedTime = days + " days ago";
+                elapsedTime = "%d days ago".formatted(days);
             } else if (hours > 0) {
-                elapsedTime = hours + " hours ago";
+                elapsedTime = "%d hours ago".formatted(hours);
             } else {
-                elapsedTime = minutes + " minutes ago";
+                elapsedTime = "%d minutes ago".formatted(minutes);
             }
             elapsedTimes.add(elapsedTime);
         }
