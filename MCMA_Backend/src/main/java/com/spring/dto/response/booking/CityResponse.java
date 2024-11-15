@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CityResponse {
+    private String movieName;
     private Integer cityId;
     private String cityName;
     private List<String> cinemaNameList;

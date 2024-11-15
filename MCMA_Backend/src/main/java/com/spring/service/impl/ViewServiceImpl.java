@@ -77,6 +77,7 @@ public class ViewServiceImpl implements ViewService {
 
         for (Screen screen : screenList) {
             ScreenResponse screenResponse = new ScreenResponse(
+                    screen.getCinema().getName(),
                     screen.getId(),
                     screen.getName(),
                     screen.getScreenType().getName(),
@@ -110,6 +111,9 @@ public class ViewServiceImpl implements ViewService {
 
         for (MovieSchedule schedule : movieSchedules) {
             ScheduleResponse scheduleResponse = new ScheduleResponse(
+                    schedule.getMovie().getName(),
+                    schedule.getCinema().getName(),
+                    schedule.getScreen().getName(),
                     schedule.getId(),
                     schedule.getStartTime().format(formatterDate),
                     schedule.getStartTime().format(formatterTime)
@@ -160,6 +164,7 @@ public class ViewServiceImpl implements ViewService {
         }
 
         ListFoodAndDrinkToOrderingResponse response = new ListFoodAndDrinkToOrderingResponse(
+                cinema.getName(),
                 foodIds,
                 foodNameList,
                 imageUrlFoodList,

@@ -10,6 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScreenResponse {
+    private String cinemaName;
     private Integer screenId;
     private String screenName;
     private String screenType;

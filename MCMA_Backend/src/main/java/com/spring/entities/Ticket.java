@@ -29,7 +29,7 @@ public class Ticket {
     @Column(name = "Last_Modified_By")
     @Enumerated(EnumType.ORDINAL)
     private Type lastModifiedBy;
-
+    
     @Column(name = "Date_Created", updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateCreated;

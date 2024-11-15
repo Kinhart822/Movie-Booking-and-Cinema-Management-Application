@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SeatResponse {
+    private  String screenName;
     private List<Integer> seatIds;
     private List<String> unAvailableSeats;
     private List<String> unAvailableSeatsTypeList;

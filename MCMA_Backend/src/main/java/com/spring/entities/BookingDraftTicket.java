@@ -23,4 +23,7 @@ public class BookingDraftTicket {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ticket_id")
     private Ticket ticket;
+
+    @Column(name = "quantity")
+    private Integer quantity;
 }

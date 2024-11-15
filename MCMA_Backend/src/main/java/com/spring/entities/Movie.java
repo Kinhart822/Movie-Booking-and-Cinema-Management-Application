@@ -35,6 +35,9 @@ public class Movie {
     @Column(name = "Image_Url", length = 1000)
     private String imageUrl;
 
+    @Column(name = "Background_Image_Url", length = 1000)
+    private String backgroundImageUrl;
+
     @Column(name = "Trailer_Link")
     private String trailerLink;
 

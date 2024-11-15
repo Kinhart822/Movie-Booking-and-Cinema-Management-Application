@@ -1,4 +1,4 @@
-package com.spring.dto.response.booking;
+package com.spring.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +23,7 @@ public class BookingResponse {
     private List<String> seatName;
     private List<String> foodNameList;
     private List<String> drinkNameList;
+
     private Double totalPrice;
     private String status;
 }

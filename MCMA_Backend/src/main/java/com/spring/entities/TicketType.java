@@ -45,7 +45,4 @@ public class TicketType {
     @Column(name = "Date_Updated")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateUpdated;
-
-    @OneToOne(mappedBy = "ticketType")
-    private Ticket ticket;
 }

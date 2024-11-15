@@ -12,6 +12,12 @@ import java.util.Set;
 @Repository
 public interface CouponRepository extends JpaRepository<Coupon, Integer> {
 
+    @Query("SELECT c FROM Coupon c JOIN c.movieSet m WHERE m.id = :movieId AND c.id = :couponId")
+    Coupon findCouponByMovieIdAndCouponId(@Param("movieId") Integer movieId, @Param("couponId")Integer couponId);
+
+    @Query("SELECT c FROM Coupon c JOIN c.userSet uc WHERE uc.id = :userId AND c.id = :couponId")
+    Coupon findCouponByUserIdAndCouponId(@Param("userId") Integer userId, @Param("couponId")Integer couponId);
+
     @Query("SELECT c.id FROM Coupon c JOIN c.movieSet m WHERE m.id = :movieId")
     List<Integer> findCouponIdsByMovieId(@Param("movieId") Integer movieId);
 

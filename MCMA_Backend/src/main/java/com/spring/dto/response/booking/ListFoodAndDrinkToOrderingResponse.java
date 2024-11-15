@@ -13,6 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ListFoodAndDrinkToOrderingResponse {
+    private String cinemaName;
+
     private List<Integer> foodIds;
     private List<String> foodNameList;
     private List<String> imageUrlFoodList;

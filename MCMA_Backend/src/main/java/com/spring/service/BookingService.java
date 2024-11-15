@@ -1,57 +1,32 @@
 package com.spring.service;
 
+import com.spring.dto.request.BookingRequest;
 import com.spring.dto.request.booking.*;
+import com.spring.dto.response.BookingResponse;
 import com.spring.dto.response.booking.*;
-import com.spring.dto.response.booking.bookingSelected.*;
 
 import java.util.List;
 
 public interface BookingService {
+    // TODO: Get Information for a Booking process
     List<MovieResponse> getAllMovies();
-
-    SelectedMovieResponse selectMovie(MovieRequest movieRequest, Integer userId);
-
-    List<CityResponse> getAllCitiesBySelectedMovie(Integer userId);
-
-    SelectedCityResponse selectCity(CityRequest cityRequest, Integer userId);
-
-    List<CinemaResponse> getAllCinemasBySelectedCity(Integer userId);
-
-    SelectedCinemaResponse selectCinema(CinemaRequest cinemaRequest, Integer userId);
-
-    List<ScreenResponse> getAllScreensBySelectedCinema(Integer userId);
-
-    SelectedScreenResponse selectScreen(ScreenRequest screenRequest, Integer userId);
-
-    List<ScheduleResponse> getAllSchedulesBySelectedMovieAndSelectedCinemaAndSelectedScreen(Integer userId);
-
-    SelectedScheduleResponse selectSchedule(ScheduleRequest scheduleRequest, Integer userId);
-
+    List<CityResponse> getAllCitiesBySelectedMovie(MovieRequest movieRequest);
+    List<CinemaResponse> getAllCinemasBySelectedCity(CityRequest cityRequest);
+    List<ScreenResponse> getAllScreensBySelectedCinema(CinemaRequest cinemaRequest);
+    List<ScheduleResponse> getAllSchedulesBySelectedMovieAndSelectedCinemaAndSelectedScreen(
+            MovieRequest movieRequest,
+            CinemaRequest cinemaRequest,
+            ScreenRequest screenRequest
+    );
     List<TicketResponse> getAllTickets();
-
-    SelectedTicketResponse selectTickets(TicketRequest ticketRequest, Integer userId);
-
-    List<SeatResponse> getAllSeatsBySelectedScreen(Integer userId);
-
-    SelectedSeatsResponse selectSeats(SeatRequest seatRequest, Integer userId);
-
-    List<ListFoodAndDrinkToOrderingResponse> getAllFoodsAndDrinksByCinema(Integer userId);
-
-    SelectedFoodResponse selectFood(FoodDrinkRequest foodDrinkRequest, Integer userId);
-
-    SelectedDrinkResponse selectDrinks(FoodDrinkRequest foodDrinkRequest, Integer userId);
-
+    List<SeatResponse> getAllSeatsBySelectedScreen(ScreenRequest screenRequest);
+    List<ListFoodAndDrinkToOrderingResponse> getAllFoodsAndDrinksByCinema(CinemaRequest cinemaRequest);
     List<CouponResponse> getAllCouponsByUser(Integer userId);
+    List<CouponResponse> getAllCouponsByMovie(MovieRequest movieRequest);
 
-    List<CouponResponse> getAllCouponsByMovie(Integer movieId);
-
-    CalculateResponse calculateTotalPrice(CouponRequest couponRequest, Integer userId);
-
-    void editBooking(EditBookingRequest editBookingRequest, Integer userId);
-
-    BookingResponse completeBooking(CompleteRequest completeRequest, Integer userId);
-
-    void deleteBookingDraft(Integer bookingDraftId);
+    // TODO: Process Booking
+    SendBookingResponse processingBooking(Integer userId, BookingRequest bookingRequest);
+    BookingResponse completeBooking(Integer userId, BookingRequest bookingRequest);
 
     void cancelBooking(Integer bookingId, Integer userId);
 

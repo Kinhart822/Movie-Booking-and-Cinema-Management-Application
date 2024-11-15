@@ -14,4 +14,5 @@ public class SelectedScreenResponse {
     private String screenName;
     private String screenType;
     private String screenDescription;
+    private Double screenPrice;
 }

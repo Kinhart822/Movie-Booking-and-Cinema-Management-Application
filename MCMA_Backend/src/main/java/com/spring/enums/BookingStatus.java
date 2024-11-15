@@ -7,6 +7,7 @@ import lombok.ToString;
 @ToString
 public enum BookingStatus {
     Confirmed,
+    In_Processing,
     Pending_Payment,
     Completed,
     CANCELLED

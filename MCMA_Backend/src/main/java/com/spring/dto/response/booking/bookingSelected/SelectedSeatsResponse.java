@@ -14,4 +14,6 @@ import java.util.List;
 public class SelectedSeatsResponse {
     private List<String> selectedSeats;
     private List<String> selectedSeatTypeList;
+    private List<Double> seatPriceList;
+    private Double totalPrice;
 }

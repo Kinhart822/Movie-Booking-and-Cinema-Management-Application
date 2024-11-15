@@ -34,6 +34,9 @@ public class BookingDraft {
     @Enumerated(EnumType.ORDINAL)
     private PaymentMethod paymentMethod;
 
+    @Column(name = "Total_Price_Before_Using_Coupons")
+    private Double totalPriceBeforeUsingCoupons;
+
     @Column(name = "Total_Price")
     private Double totalPrice;
 

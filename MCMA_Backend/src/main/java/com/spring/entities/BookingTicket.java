@@ -20,7 +20,10 @@ public class BookingTicket {
     @JoinColumn(name = "booking_id")
     private Booking booking;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "ticket_id")
     private Ticket ticket;
+
+    @Column(name = "quantity")
+    private Integer quantity;
 }

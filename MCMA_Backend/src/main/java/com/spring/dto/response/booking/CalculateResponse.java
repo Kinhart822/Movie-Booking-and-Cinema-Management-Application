@@ -12,5 +12,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CalculateResponse {
-    private double totalPrice;
+    private List<String> nameCoupons;
+    private List<String> descriptionList;
+    private List<Double> discountList;
+    private List<Double> discountLimitList;
+    private List<Double> minSpendReqList;
+    private List<String> dateAvailableList;
+    private Double totalPrice;
 }

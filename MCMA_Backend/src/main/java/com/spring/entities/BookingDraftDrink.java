@@ -28,4 +28,7 @@ public class BookingDraftDrink {
     @Enumerated(EnumType.STRING)
     @Column(name = "size")
     private SizeFoodOrDrink sizeDrink;
+
+    @Column(name = "quantity")
+    private Integer quantity;
 }

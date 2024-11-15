@@ -18,4 +18,6 @@ public class SelectedFoodResponse {
     private List<String> imageUrlList;
     private List<String> descriptionList;
     private List<SizeFoodOrDrink> sizeFoodList;
+    private List<Integer> quantityList;
+    private Double totalPrice;
 }
