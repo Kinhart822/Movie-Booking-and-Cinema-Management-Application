@@ -111,9 +111,9 @@ public class UserController {
         return ResponseEntity.ok(ticketResponses);
     }
 
-    @GetMapping("/booking/allSeatsByScreen")
-    public ResponseEntity<List<SeatResponse>> getAllSeatsByScreen(@RequestBody ScreenRequest screenRequest) {
-        List<SeatResponse> seatResponses = bookingService.getAllSeatsBySelectedScreen(screenRequest);
+    @GetMapping("/booking/allSeatsByScreen/{screenId}")
+    public ResponseEntity<List<SeatResponse>> getAllSeatsByScreen(@PathVariable Integer screenId) {
+        List<SeatResponse> seatResponses = bookingService.getAllSeatsBySelectedScreen(screenId);
         return ResponseEntity.ok(seatResponses);
     }
 

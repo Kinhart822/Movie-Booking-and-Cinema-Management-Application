@@ -19,7 +19,7 @@ public interface BookingService {
             ScreenRequest screenRequest
     );
     List<TicketResponse> getAllTickets();
-    List<SeatResponse> getAllSeatsBySelectedScreen(ScreenRequest screenRequest);
+    List<SeatResponse> getAllSeatsBySelectedScreen(Integer screenId);
     List<ListFoodAndDrinkToOrderingResponse> getAllFoodsAndDrinksByCinema(CinemaRequest cinemaRequest);
     List<CouponResponse> getAllCouponsByUser(Integer userId);
     List<CouponResponse> getAllCouponsByMovie(MovieRequest movieRequest);

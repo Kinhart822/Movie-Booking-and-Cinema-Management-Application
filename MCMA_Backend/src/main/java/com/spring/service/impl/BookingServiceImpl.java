@@ -347,27 +347,27 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<SeatResponse> getAllSeatsBySelectedScreen(ScreenRequest screenRequest) {
-        Screen screen = screenRepository.findById(screenRequest.getScreenId())
+    public List<SeatResponse> getAllSeatsBySelectedScreen(Integer screenId) {
+        Screen screen = screenRepository.findById(screenId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid screen"));
 
-        List<Seat> availableSeats = new ArrayList<>();
-        availableSeats.addAll(seatRepository.findBySeatStatusAndScreenId(SeatStatus.Available, screen.getId()));
-        availableSeats.addAll(seatRepository.findBySeatStatusAndScreenId(SeatStatus.Held, screen.getId()));
-        if (availableSeats.isEmpty()) {
+        List<Seat> availableSeats = seatRepository.findBySeatStatusAndScreenId(SeatStatus.Available, screen.getId());
+        if (availableSeats == null || availableSeats.isEmpty()) {
             throw new IllegalArgumentException("No available seats found for given screen.");
         }
 
         List<Seat> unAvailableSeats = seatRepository.findBySeatStatusAndScreenId(SeatStatus.Unavailable, screen.getId());
-        if (unAvailableSeats == null || unAvailableSeats.isEmpty()) {
-            throw new IllegalArgumentException("No unavailable seats found for given screen.");
-        }
+
+        List<Seat> heldSeats = seatRepository.findBySeatStatusAndScreenId(SeatStatus.Held, screen.getId());
 
         List<Integer> seatIds = new ArrayList<>();
         List<String> unAvailableSeatNames = new ArrayList<>();
         List<String> unAvailableSeatsTypeList = new ArrayList<>();
         List<String> availableSeatNames = new ArrayList<>();
         List<String> availableSeatsTypeList = new ArrayList<>();
+        List<String> heldSeatNames = new ArrayList<>();
+        List<String> heldSeatsTypeList = new ArrayList<>();
+
 
         for (Seat seat : availableSeats) {
             seatIds.add(seat.getId());
@@ -380,13 +380,20 @@ public class BookingServiceImpl implements BookingService {
             unAvailableSeatsTypeList.add(seat.getSeatType().getName());
         }
 
+        for (Seat seat : heldSeats) {
+            heldSeatNames.add(seat.getName());
+            heldSeatsTypeList.add(seat.getSeatType().getName());
+        }
+
         SeatResponse seatResponse = new SeatResponse(
                 screen.getName(),
                 seatIds,
                 unAvailableSeatNames,
                 unAvailableSeatsTypeList,
                 availableSeatNames,
-                availableSeatsTypeList
+                availableSeatsTypeList,
+                heldSeatNames,
+                heldSeatsTypeList
         );
 
         List<SeatResponse> seatResponses = new ArrayList<>();
@@ -640,6 +647,9 @@ public class BookingServiceImpl implements BookingService {
         if (selectedSeats.stream().anyMatch(seat -> seat.getSeatStatus() == SeatStatus.Unavailable) ) {
             throw new IllegalArgumentException("Selected seats are already unavailable, please select a different seat.");
         }
+        if (selectedSeats.stream().anyMatch(seat -> seat.getSeatStatus() == SeatStatus.Held) ) {
+            throw new IllegalArgumentException("Selected seats are already held, please select a different seat.");
+        }
 
         if (bookingRequest.getSeatIds() != null && !bookingRequest.getSeatIds().isEmpty()) {
             Map<Integer, BookingSeat> seatMap = new HashMap<>();
@@ -813,6 +823,10 @@ public class BookingServiceImpl implements BookingService {
                 booking.getStatus().toString()
         );
     }
+
+    // TODO:  Cần thêm 1 số tính năng :
+    //  + Đặt thời gian giữ ghế tạm thời (ví dụ: 5–10 phút). Nếu người dùng không hoàn thành thanh toán trong
+    //          khoảng thời gian này, ghế sẽ được chuyển lại thành trạng thái "Available".
 
     @Override
     public BookingResponse completeBooking(Integer userId, BookingRequest bookingRequest) {
