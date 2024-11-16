@@ -1,18 +1,19 @@
-package vn.edu.usth.mcma.frontend.Store.UI;
+package vn.edu.usth.mcma.frontend.Store.Adapters;
 
-import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 import java.util.Locale;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.Store.Models.ComboItem;
 
 public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHolder> {
     private List<ComboItem> comboItems;

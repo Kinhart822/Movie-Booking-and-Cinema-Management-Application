@@ -1,11 +1,9 @@
 package vn.edu.usth.mcma.frontend.Store.Utils;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
 import java.util.Locale;
 
-import vn.edu.usth.mcma.frontend.Store.UI.ComboItem;
+import vn.edu.usth.mcma.frontend.Store.Models.ComboItem;
 
 public class PriceCalculator {
     public static class PriceResult {

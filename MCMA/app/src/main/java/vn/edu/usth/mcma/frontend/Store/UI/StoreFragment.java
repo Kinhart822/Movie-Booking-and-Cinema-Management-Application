@@ -1,11 +1,13 @@
 package vn.edu.usth.mcma.frontend.Store.UI;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,92 +21,148 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.Store.Adapters.ComboAdapter;
+import vn.edu.usth.mcma.frontend.Store.Adapters.TheaterAdapter;
+import vn.edu.usth.mcma.frontend.Store.Models.ComboItem;
+import vn.edu.usth.mcma.frontend.Store.Models.Theater;
+import vn.edu.usth.mcma.frontend.Store.Utils.PriceCalculator;
 
 public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterClickListener {
-    /*private Button theaterButton; */
     private ImageView noDataImage;
     private TextView noDataText;
     private Theater selectedTheater;
-    private RecyclerView theaterRecyclerView;
+    private RecyclerView comboRecyclerView;
     private FrameLayout noDataContainer;
-    private TheaterAdapter adapter;
-
+    private Button buttonTheater;
+    private TextView totalPriceText;
+    private Button checkoutButton;
+    private ComboAdapter comboAdapter;
+    private View comboMenuContainer;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_store, container, false);
         initializeViews(view);
-        /* setupTheaterButton(); */
-        setupRecyclerView();
+
+        // Set default theater (Tất cả các rạp)
+        selectedTheater = getTheaterList().get(0);
+        updateTheaterButton();
+
+        buttonTheater.setOnClickListener(v -> showTheaterSelectionDialog());
+        setupComboList();
+        setupCheckoutButton();
+
+        // Show default view for "Tất cả các rạp"
+        updateViewForTheater(selectedTheater);
+
         return view;
     }
 
     @SuppressLint("WrongViewCast")
     private void initializeViews(View view) {
-        /*
-        theaterButton = view.findViewById(R.id.theater_button);
-        noDataImage = view.findViewById(R.id.no_data_image);
-        noDataText = view.findViewById(R.id.no_data_text); */
-
-        theaterRecyclerView = view.findViewById(R.id.theater_recycler_view);
         noDataContainer = view.findViewById(R.id.no_data_container);
-    }
-
-    /*
-    private void setupTheaterButton() {
-        theaterButton.setOnClickListener(v -> showTheaterSelectionDialog());
+        buttonTheater = view.findViewById(R.id.theater_button);
+        comboRecyclerView = view.findViewById(R.id.combo_recycler_view);
+        totalPriceText = view.findViewById(R.id.total_price_text);
+        checkoutButton = view.findViewById(R.id.checkout_button);
+        comboMenuContainer = view.findViewById(R.id.combo_menu_container);
+        noDataImage = view.findViewById(R.id.no_data_image);
+        noDataText = view.findViewById(R.id.no_data_text);
     }
 
     private void showTheaterSelectionDialog() {
-        TheaterSelectionDialog dialog = TheaterSelectionDialog.newInstance();
-        dialog.setTheaterSelectedListener(theater -> {
-            if (theater != null) {
-                selectedTheater = theater;
-                theaterButton.setText(theater.getName());
-                startComboMenuActivity(theater);
-            }
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_theater_selection_dialog, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setView(dialogView);
+
+        TextView cancelBtn = dialogView.findViewById(R.id.cancel_button);
+        Button confirmBtn = dialogView.findViewById(R.id.confirm_button);
+        RecyclerView theaterDialogRecyclerView = dialogView.findViewById(R.id.theater_recycler_view);
+
+        TheaterAdapter dialogAdapter = new TheaterAdapter(getTheaterList());
+        dialogAdapter.setOnTheaterClickListener(theater -> {
+            selectedTheater = theater;
+            dialogAdapter.setCurrentSelection(theater);
         });
-        dialog.show(getChildFragmentManager(), "theater_selection");
+
+        // Set current selection in dialog
+        dialogAdapter.setCurrentSelection(selectedTheater);
+
+        theaterDialogRecyclerView.setAdapter(dialogAdapter);
+        theaterDialogRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        AlertDialog dialog = builder.create();
+
+        cancelBtn.setOnClickListener(v -> dialog.dismiss());
+        confirmBtn.setOnClickListener(v -> {
+            if (selectedTheater != null) {
+                updateTheaterButton();
+                updateViewForTheater(selectedTheater);
+            }
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
-    */
 
-    private void setupRecyclerView() {
-        adapter = new TheaterAdapter(getTheaterList());
-        adapter.setOnTheaterClickListener(this);
-        theaterRecyclerView.setAdapter(adapter);
-        theaterRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+    private void updateTheaterButton() {
+        buttonTheater.setText(selectedTheater.getName());
     }
 
-    @Override
-    public void onTheaterClick(Theater theater) {
-        // Update UI based on selection
-        adapter.setCurrentSelection(theater);
-
+    private void updateViewForTheater(Theater theater) {
         if ("1".equals(theater.getId())) { // "Tất cả các rạp"
             showNoDataView();
         } else {
             hideNoDataView();
-            startComboMenuActivity(theater);
+            setupComboList();
         }
     }
 
+    private void setupComboList() {
+        List<ComboItem> comboItems = getComboItems();
+        comboAdapter = new ComboAdapter(comboItems);
+        comboAdapter.setTotalPriceChangedListener(this::updateTotalPrice);
+        comboRecyclerView.setAdapter(comboAdapter);
+        comboRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+    }
+
+    private void updateTotalPrice(double total) {
+        PriceCalculator.PriceResult result = PriceCalculator.calculateTotalPrice(comboAdapter.getComboItems());
+        String formattedPrice = PriceCalculator.formatPrice(result.getTotal());
+        totalPriceText.setText(String.format("Tổng tiền (đã bao gồm phụ thu): %s", formattedPrice));
+        checkoutButton.setEnabled(result.getTotal() > 0);
+    }
+
+    private void setupCheckoutButton() {
+        checkoutButton.setOnClickListener(v -> {
+            // Handle checkout logic here
+        });
+    }
+
+    private List<ComboItem> getComboItems() {
+        // Sample data - replace with actual data from your backend
+        List<ComboItem> items = new ArrayList<>();
+        items.add(new ComboItem("Combo 1", "url1", 80000));
+        items.add(new ComboItem("Combo 2", "url2", 120000));
+        return items;
+    }
+
     private void showNoDataView() {
-        theaterRecyclerView.setVisibility(View.GONE);
+        comboMenuContainer.setVisibility(View.GONE);
         noDataContainer.setVisibility(View.VISIBLE);
     }
 
     private void hideNoDataView() {
         noDataContainer.setVisibility(View.GONE);
-        theaterRecyclerView.setVisibility(View.VISIBLE);
+        comboMenuContainer.setVisibility(View.VISIBLE);
     }
 
-
-    private void startComboMenuActivity(Theater theater) {
-        Intent intent = new Intent(requireActivity(), ComboMenuActivity.class);
-        intent.putExtra("theater_id", theater.getId());
-        intent.putExtra("theater_name", theater.getName());
-        startActivity(intent);
+    @Override
+    public void onTheaterClick(Theater theater) {
+        selectedTheater = theater;
+        updateTheaterButton();
+        updateViewForTheater(theater);
     }
 
     private List<Theater> getTheaterList() {

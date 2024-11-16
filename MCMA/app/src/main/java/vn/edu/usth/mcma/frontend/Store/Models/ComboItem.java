@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.Store.UI;
+package vn.edu.usth.mcma.frontend.Store.Models;
 
 public class ComboItem {
     private String name;
