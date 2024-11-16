@@ -9,10 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.MainActivity;
 import vn.edu.usth.mcma.frontend.Store.Adapters.ComboAdapter;
 import vn.edu.usth.mcma.frontend.Store.Adapters.TheaterAdapter;
 import vn.edu.usth.mcma.frontend.Store.Models.ComboItem;
@@ -38,12 +43,75 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
     private Button checkoutButton;
     private ComboAdapter comboAdapter;
     private View comboMenuContainer;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_store, container, false);
         initializeViews(view);
+
+        ImageButton mImageView = view.findViewById(R.id.menu_button);
+
+        mDrawerLayout = view.findViewById(R.id.store_fragment);
+
+        mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mDrawerLayout != null && !mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+                    mDrawerLayout.openDrawer(GravityCompat.START);
+                }
+            }
+        });
+
+        LinearLayout to_home_fragment = view.findViewById(R.id.home_side_navigation);
+        to_home_fragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getActivity() instanceof MainActivity){
+                    ((MainActivity) getActivity()).close_to_home_page();
+                }
+            }
+        });
+
+        LinearLayout to_showtimes_fragment = view.findViewById(R.id.showtimes_side_navigation);
+        to_showtimes_fragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getActivity() instanceof MainActivity){
+                    ((MainActivity) getActivity()).close_to_showtimes_page();
+                }
+            }
+        });
+
+        LinearLayout to_store_fragment = view.findViewById(R.id.store_side_navigation);
+        to_store_fragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getActivity() instanceof MainActivity){
+                    ((MainActivity) getActivity()).close_to_store_page();
+                }
+            }
+        });
+
+        LinearLayout to_personal_fragment = view.findViewById(R.id.personal_side_navigation);
+        to_personal_fragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getActivity() instanceof MainActivity){
+                    ((MainActivity) getActivity()).close_to_personal_page();
+                }
+            }
+        });
+
+        ImageButton notication_buttonn = view.findViewById(R.id.notification_button);
+        notication_buttonn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Notification.Notification_Activity.class );
+                startActivity(i);
+            }
+        });
 
         // Set default theater (Tất cả các rạp)
         selectedTheater = getTheaterList().get(0);
