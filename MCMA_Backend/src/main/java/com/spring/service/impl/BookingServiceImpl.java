@@ -351,10 +351,13 @@ public class BookingServiceImpl implements BookingService {
         Screen screen = screenRepository.findById(screenRequest.getScreenId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid screen"));
 
-        List<Seat> availableSeats = seatRepository.findBySeatStatusAndScreenId(SeatStatus.Available, screen.getId());
-        if (availableSeats == null || availableSeats.isEmpty()) {
+        List<Seat> availableSeats = new ArrayList<>();
+        availableSeats.addAll(seatRepository.findBySeatStatusAndScreenId(SeatStatus.Available, screen.getId()));
+        availableSeats.addAll(seatRepository.findBySeatStatusAndScreenId(SeatStatus.Held, screen.getId()));
+        if (availableSeats.isEmpty()) {
             throw new IllegalArgumentException("No available seats found for given screen.");
         }
+
         List<Seat> unAvailableSeats = seatRepository.findBySeatStatusAndScreenId(SeatStatus.Unavailable, screen.getId());
         if (unAvailableSeats == null || unAvailableSeats.isEmpty()) {
             throw new IllegalArgumentException("No unavailable seats found for given screen.");
