@@ -2,7 +2,7 @@ package vn.edu.usth.mcma.frontend.Showtimes.Models;
 
 import java.util.Set;
 
-public class ShowtimeTheater {
+public class Theater {
     private String id;
     private String name;
     private String address;
@@ -10,7 +10,7 @@ public class ShowtimeTheater {
     private int imageResId;
     private Set<TheaterType> availableTypes;
 
-    public ShowtimeTheater(String id, String name, String address, String city, int imageResId, Set<TheaterType> availableTypes) {
+    public Theater(String id, String name, String address, String city, int imageResId, Set<TheaterType> availableTypes) {
         this.id = id;
         this.name = name;
         this.address = address;

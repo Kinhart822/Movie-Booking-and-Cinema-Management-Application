@@ -1,9 +1,8 @@
 package vn.edu.usth.mcma.frontend.Showtimes.UI;
 
+import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,19 +13,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.Showtimes.Adapters.MovieScheduleAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.TheaterType;
+import vn.edu.usth.mcma.frontend.Showtimes.Adapters.MovieScheduleAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.TheaterDataProvider;
 
 public class TheaterScheduleActivity extends AppCompatActivity
-        implements MovieScheduleAdapter.    OnShowtimeClickListener {
+        implements MovieScheduleAdapter.OnShowtimeClickListener {
     private RecyclerView movieRecyclerView;
     private MovieScheduleAdapter movieAdapter;
     private TheaterType currentType;
@@ -38,8 +36,22 @@ public class TheaterScheduleActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_theater_schedule);
 
+        // Get theater details from intent
+        String theaterName = getIntent().getStringExtra("THEATER_NAME");
+        String theaterAddress = getIntent().getStringExtra("THEATER_ADDRESS");
         currentType = TheaterType.valueOf(
                 getIntent().getStringExtra("THEATER_TYPE"));
+
+        // Set theater details in toolbar
+        TextView nameTextView = findViewById(R.id.theater_name);
+        TextView addressTextView = findViewById(R.id.theater_address);
+        nameTextView.setText(theaterName);
+        addressTextView.setText(theaterAddress);
+
+        // Setup back button
+        ImageButton backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(v -> finish());
+
 
         setupViews();
         setupDateButtons();
@@ -54,7 +66,6 @@ public class TheaterScheduleActivity extends AppCompatActivity
     }
 
     private void setupDateButtons() {
-        // Similar to original implementation but with selected state handling
         LinearLayout daysContainer = findViewById(R.id.days_container);
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dayFormat = new SimpleDateFormat("E\ndd/MM", Locale.getDefault());
@@ -63,6 +74,19 @@ public class TheaterScheduleActivity extends AppCompatActivity
             Button dayButton = new Button(this);
             dayButton.setText(dayFormat.format(calendar.getTime()));
 
+            // Set button style
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(8, 0, 8, 0);
+            dayButton.setLayoutParams(params);
+
+            // Set background selector
+            dayButton.setBackground(getDrawable(R.drawable.date_button_selector));
+            dayButton.setTextColor(Color.WHITE);
+
+            // Set initial selection
             if (i == 0) {
                 dayButton.setSelected(true);
                 selectedDateButton = dayButton;

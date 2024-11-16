@@ -11,7 +11,7 @@ import java.util.Set;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.ShowtimeTheater;
+import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.TheaterType;
 
 public class TheaterDataProvider {
@@ -91,9 +91,9 @@ public class TheaterDataProvider {
             "Dune"
     };
 
-    public static List<ShowtimeTheater> getTheatersForCity(String city, TheaterType type) {
+    public static List<Theater> getTheatersForCity(String city, TheaterType type) {
         List<TheaterInfo> allTheaters = CITY_THEATERS.getOrDefault(city, new ArrayList<>());
-        List<ShowtimeTheater> showtimeTheaters = new ArrayList<>();
+        List<Theater> theaters = new ArrayList<>();
 
         int maxTheaters = (type == TheaterType.FIRST_CLASS) ?
                 Math.min(3, allTheaters.size()) : allTheaters.size();
@@ -106,7 +106,7 @@ public class TheaterDataProvider {
                 types.add(TheaterType.FIRST_CLASS);
             }
 
-            showtimeTheaters.add(new ShowtimeTheater(
+            theaters.add(new Theater(
                     "theater_" + city.toLowerCase() + "_" + i,
                     info.name,
                     info.address,
@@ -116,7 +116,7 @@ public class TheaterDataProvider {
             ));
         }
 
-        return showtimeTheaters;
+        return theaters;
     }
 
     public static List<Movie> getMoviesForTheater(TheaterType type, String date) {

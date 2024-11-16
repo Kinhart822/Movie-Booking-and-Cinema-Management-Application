@@ -13,10 +13,16 @@
         android:theme="@style/Theme.MCMA"
         tools:targetApi="31">
         <activity
-            android:name=".frontend.Store.UI.ComboMenuActivity"
+            android:name=".frontend.Login.Register_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.Showtimes.TheaterScheduleActivity"
+            android:name=".frontend.Login.ForgotPassword_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Login.ResetPassword_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Showtimes.UI.TheaterScheduleActivity"
             android:exported="false" />
         <activity
             android:name=".frontend.EditUpdateAccountInformation"

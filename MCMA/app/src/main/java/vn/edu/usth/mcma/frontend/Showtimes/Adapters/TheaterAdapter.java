@@ -13,16 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.ShowtimeTheater;
+import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.TheaterType;
 
-public class ShowtimeTheaterAdapter extends RecyclerView.Adapter<ShowtimeTheaterAdapter.TheaterViewHolder> {
-    private List<ShowtimeTheater> showtimeTheaters;
+public class TheaterAdapter extends RecyclerView.Adapter<TheaterAdapter.TheaterViewHolder> {
+    private List<Theater> theaters;
     private TheaterType currentType;
     private OnTheaterClickListener listener;
 
-    public ShowtimeTheaterAdapter(OnTheaterClickListener listener) {
-        this.showtimeTheaters = new ArrayList<>();
+    public TheaterAdapter(OnTheaterClickListener listener) {
+        this.theaters = new ArrayList<>();
         this.listener = listener;
         this.currentType = TheaterType.REGULAR;
     }
@@ -37,17 +37,17 @@ public class ShowtimeTheaterAdapter extends RecyclerView.Adapter<ShowtimeTheater
 
     @Override
     public void onBindViewHolder(@NonNull TheaterViewHolder holder, int position) {
-        ShowtimeTheater showtimeTheater = showtimeTheaters.get(position);
-        holder.bind(showtimeTheater);
+        Theater theater = theaters.get(position);
+        holder.bind(theater);
     }
 
     @Override
     public int getItemCount() {
-        return showtimeTheaters.size();
+        return theaters.size();
     }
 
-    public void setTheaters(List<ShowtimeTheater> showtimeTheaters) {
-        this.showtimeTheaters = showtimeTheaters;
+    public void setTheaters(List<Theater> theaters) {
+        this.theaters = theaters;
         notifyDataSetChanged();
     }
 
@@ -70,19 +70,19 @@ public class ShowtimeTheaterAdapter extends RecyclerView.Adapter<ShowtimeTheater
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
-                    listener.onTheaterClick(showtimeTheaters.get(position));
+                    listener.onTheaterClick(theaters.get(position));
                 }
             });
         }
 
-        void bind(ShowtimeTheater showtimeTheater) {
-            theaterName.setText(showtimeTheater.getName());
-            theaterAddress.setText(showtimeTheater.getAddress());
-            theaterImage.setImageResource(showtimeTheater.getImageResId());
+        void bind(Theater theater) {
+            theaterName.setText(theater.getName());
+            theaterAddress.setText(theater.getAddress());
+            theaterImage.setImageResource(theater.getImageResId());
         }
     }
 
     public interface OnTheaterClickListener {
-        void onTheaterClick(ShowtimeTheater showtimeTheater);
+        void onTheaterClick(Theater theater);
     }
 }

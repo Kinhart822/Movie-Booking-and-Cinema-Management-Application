@@ -15,15 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.ShowtimeTheater;
+import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.TheaterType;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.TheaterDataProvider;
-import vn.edu.usth.mcma.frontend.Showtimes.Adapters.ShowtimeTheaterAdapter;
+import vn.edu.usth.mcma.frontend.Showtimes.Adapters.TheaterAdapter;
 
-public class LaunchtimeFragment extends Fragment implements ShowtimeTheaterAdapter.OnTheaterClickListener {
+public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnTheaterClickListener {
     private TheaterType currentType = TheaterType.REGULAR;
     private RecyclerView theaterRecyclerView;
-    private ShowtimeTheaterAdapter showtimeTheaterAdapter;
+    private TheaterAdapter theaterAdapter;
     private Button typeButton;
     private String currentCity = "TPHCM";
 
@@ -35,7 +35,7 @@ public class LaunchtimeFragment extends Fragment implements ShowtimeTheaterAdapt
         // Initialize views and adapters
         setupViews(v);
         setupTypeButton();
-        setupCityButtons();
+        setupCityButtons(v); // Pass 'v' to avoid calling getView() prematurely
         updateTheaterList();
 
         return v;
@@ -43,8 +43,8 @@ public class LaunchtimeFragment extends Fragment implements ShowtimeTheaterAdapt
 
     private void setupViews(View v) {
         theaterRecyclerView = v.findViewById(R.id.theater_recycler_view);
-        showtimeTheaterAdapter = new ShowtimeTheaterAdapter(this); // Fixed: Remove casting
-        theaterRecyclerView.setAdapter(showtimeTheaterAdapter);
+        theaterAdapter = new TheaterAdapter(this);
+        theaterRecyclerView.setAdapter(theaterAdapter);
         theaterRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         typeButton = v.findViewById(R.id.type_button);
     }
@@ -61,8 +61,8 @@ public class LaunchtimeFragment extends Fragment implements ShowtimeTheaterAdapt
         }
     }
 
-    private void setupCityButtons() {
-        LinearLayout cityContainer = getView().findViewById(R.id.city_container);
+    private void setupCityButtons(View v) { // Use 'v' instead of getView()
+        LinearLayout cityContainer = v.findViewById(R.id.city_container);
         if (cityContainer != null) {
             cityContainer.removeAllViews();
             List<String> cities = TheaterDataProvider.getCities();
@@ -78,7 +78,7 @@ public class LaunchtimeFragment extends Fragment implements ShowtimeTheaterAdapt
                 // Add margin between buttons
                 ((LinearLayout.LayoutParams) cityButton.getLayoutParams()).setMargins(8, 0, 8, 0);
 
-                cityButton.setOnClickListener(v -> {
+                cityButton.setOnClickListener(v1 -> {
                     currentCity = city;
                     updateTheaterList();
                     // Update button states
@@ -96,19 +96,19 @@ public class LaunchtimeFragment extends Fragment implements ShowtimeTheaterAdapt
     }
 
     private void updateTheaterList() {
-        List<ShowtimeTheater> showtimeTheaters = TheaterDataProvider.getTheatersForCity(currentCity, currentType);
-        if (showtimeTheaterAdapter != null) {
-            showtimeTheaterAdapter.setTheaters(showtimeTheaters);
-            showtimeTheaterAdapter.setTheaterType(currentType);
+        List<Theater> theaters = TheaterDataProvider.getTheatersForCity(currentCity, currentType);
+        if (theaterAdapter != null) {
+            theaterAdapter.setTheaters(theaters);
+            theaterAdapter.setTheaterType(currentType);
         }
     }
 
     @Override
-    public void onTheaterClick(ShowtimeTheater showtimeTheater) {
+    public void onTheaterClick(Theater theater) {
         Intent intent = new Intent(requireContext(), TheaterScheduleActivity.class);
-        intent.putExtra("THEATER_NAME", showtimeTheater.getName());
+        intent.putExtra("THEATER_NAME", theater.getName());
+        intent.putExtra("THEATER_ADDRESS", theater.getAddress());
         intent.putExtra("THEATER_TYPE", currentType.name());
         startActivity(intent);
     }
 }
-

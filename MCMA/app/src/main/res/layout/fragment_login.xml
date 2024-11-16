@@ -1,118 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/login_fragment"
-    tools:context=".frontend.LoginFragment">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/LightBlue"
-        android:orientation="vertical"
-        android:gravity="center">
-
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="24dp">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="230dp"
-                android:gravity="center"
-                android:text="Log in"
-                android:textSize="33sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <EditText
-                android:id="@+id/editTextEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:padding="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-            <EditText
-                android:id="@+id/editTextPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:hint="Password"
-                android:inputType="textPassword"
-                android:padding="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextEmail" />
-
-            <Button
-                android:id="@+id/login_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="52dp"
-                android:layout_marginEnd="32dp"
-                android:backgroundTint="@color/colorLightBlue"
-                android:padding="10dp"
-                android:text="Log in"
-                android:textColor="@color/colorAccentDark"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
-
-            <RelativeLayout
-                android:id="@+id/submit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="220dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/login_button">
-
-                <TextView
-                    android:id="@+id/editTextView3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginBottom="8dp"
-                    android:text="Don't have an account?"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/text_login"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginLeft="10dp"
-                    android:text="@string/forgotpassword_underlined"
-                    android:textColor="#4287f5"
-                    android:textSize="16sp" />
-
-            </RelativeLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
-
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:id="@+id/login_fragment" tools:context=".frontend.Login.LoginFragment">
+    <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="1" android:background="@color/LightBlue" android:padding="24dp">
+        <TextView android:id="@+id/textView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="230dp" android:gravity="center" android:text="Log in" android:textSize="33sp" android:textStyle="bold" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"/>
+        <EditText android:id="@+id/editText" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="48dp" android:hint="Email" android:inputType="textEmailAddress" android:padding="16dp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.0" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/textView"/>
+        <EditText android:id="@+id/editText2" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="28dp" android:hint="Password" android:inputType="textPassword" android:padding="16dp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.0" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/editText"/>
+        <Button android:id="@+id/login_button" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="32dp" android:layout_marginTop="52dp" android:layout_marginEnd="32dp" android:backgroundTint="@color/colorLightBlue" android:padding="10dp" android:text="Log in" android:textColor="@color/colorAccentDark" android:textSize="20sp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.0" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/editText2"/>
+        <RelativeLayout android:id="@+id/submit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_marginTop="220dp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.0" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/login_button">
+            <TextView android:id="@+id/create_account" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentStart="true" android:layout_marginBottom="8dp" android:text="Don't have an account?" android:textColor="@color/black" android:textSize="16sp"/>
+            <TextView android:id="@+id/forgot_password" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:layout_marginLeft="10dp" android:text="@string/forgotpassword_underlined" android:textColor="#4287f5" android:textSize="16sp" tools:ignore="InvalidId"/>
+        </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

@@ -1,34 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="@color/very_dark_grey"
     android:padding="16dp"
-    android:id="@+id/personal_fragment"
-    tools:context=".frontend.PersonalFragment">
-
-    <!-- Top Bar with X button and Account Information title -->
+    android:id="@+id/personal_fragment">
+    <!--  Top Bar with X button and Account Information title  -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:paddingBottom="16dp">
-
-        <!-- X button to close the page -->
-        <ImageView
-            android:id="@+id/account_information_close"
+        <!--  X button to close the page  -->
+        <ImageButton
+            android:id="@+id/close_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_close"
+            android:background="@color/black"
             android:layout_alignParentStart="true"
             android:layout_marginEnd="16dp"
             android:contentDescription="Close"
-            app:tint="@android:color/white" />
-
-        <!-- Account Information title -->
+            app:tint="@android:color/white"/>
+        <!--  Account Information title  -->
         <TextView
             android:id="@+id/tvAccountInformation"
             android:layout_width="wrap_content"
@@ -39,18 +34,16 @@
             android:textColor="@android:color/white"
             android:layout_centerHorizontal="true"
             android:layout_alignParentTop="true"
-            android:gravity="center" />
+            android:gravity="center"/>
     </RelativeLayout>
-
-    <!-- Details Section -->
+    <!--  Details Section  -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/rounded_corners_background"
         android:padding="16dp">
-
-        <!-- Details Row -->
+        <!--  Details Row  -->
         <LinearLayout
             android:id="@+id/account_information_details"
             android:layout_width="match_parent"
@@ -58,23 +51,20 @@
             android:orientation="horizontal"
             android:paddingVertical="12dp"
             android:gravity="center_vertical">
-
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Details"
                 android:textSize="16sp"
-                android:textColor="@android:color/white" />
-
+                android:textColor="@android:color/white"/>
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_arrow_right"
-                app:tint="@android:color/white" />
+                app:tint="@android:color/white"/>
         </LinearLayout>
-
-        <!-- Edit / Update Row -->
+        <!--  Edit / Update Row  -->
         <LinearLayout
             android:id="@+id/account_information_edit_update"
             android:layout_width="match_parent"
@@ -82,23 +72,20 @@
             android:orientation="horizontal"
             android:paddingVertical="12dp"
             android:gravity="center_vertical">
-
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Edit / Update"
                 android:textSize="16sp"
-                android:textColor="@android:color/white" />
-
+                android:textColor="@android:color/white"/>
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_arrow_right"
-                app:tint="@android:color/white" />
+                app:tint="@android:color/white"/>
         </LinearLayout>
-
-        <!-- Change Password Row -->
+        <!--  Change Password Row  -->
         <LinearLayout
             android:id="@+id/account_information_change_password"
             android:layout_width="match_parent"
@@ -106,23 +93,20 @@
             android:orientation="horizontal"
             android:paddingVertical="12dp"
             android:gravity="center_vertical">
-
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Change Password"
                 android:textSize="16sp"
-                android:textColor="@android:color/white" />
-
+                android:textColor="@android:color/white"/>
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_arrow_right"
-                app:tint="@android:color/white" />
+                app:tint="@android:color/white"/>
         </LinearLayout>
-
-        <!-- Payment History Row -->
+        <!--  Payment History Row  -->
         <LinearLayout
             android:id="@+id/account_information_payment_history"
             android:layout_width="match_parent"
@@ -130,23 +114,20 @@
             android:orientation="horizontal"
             android:paddingVertical="12dp"
             android:gravity="center_vertical">
-
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Payment History"
                 android:textSize="16sp"
-                android:textColor="@android:color/white" />
-
+                android:textColor="@android:color/white"/>
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_arrow_right"
-                app:tint="@android:color/white" />
+                app:tint="@android:color/white"/>
         </LinearLayout>
-
-        <!-- Log Out Row -->
+        <!--  Log Out Row  -->
         <LinearLayout
             android:id="@+id/account_information_log_out"
             android:layout_width="match_parent"
@@ -154,22 +135,19 @@
             android:orientation="horizontal"
             android:paddingVertical="12dp"
             android:gravity="center_vertical">
-
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Log Out"
                 android:textSize="16sp"
-                android:textColor="@android:color/white" />
-
+                android:textColor="@android:color/white"/>
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="Log Out"
                 android:src="@drawable/ic_arrow_right"
-                app:tint="@android:color/white" />
+                app:tint="@android:color/white"/>
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

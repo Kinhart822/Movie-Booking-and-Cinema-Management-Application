@@ -9,8 +9,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.UI.LaunchtimeFragment;
 import vn.edu.usth.mcma.frontend.Store.UI.StoreFragment;
 
-public class Fragment_home_changing extends FragmentStateAdapter {
-    public Fragment_home_changing(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+public class Fragment_changing extends FragmentStateAdapter {
+    public Fragment_changing(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
         super(fragmentManager, lifecycle);
     }
 

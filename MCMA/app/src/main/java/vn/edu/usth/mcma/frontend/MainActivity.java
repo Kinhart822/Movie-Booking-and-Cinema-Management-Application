@@ -14,6 +14,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.Login.LoginFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("Thing", MODE_PRIVATE);
+        // Mng muốn đăng nhập vào trang chủ lại nhiều lần thì thay name ở dòng 31 và thay giống name ở dòng 42 trong Login Fragment nhé
+        SharedPreferences sharedPreferences = getSharedPreferences("123", MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
 
         if (!isLoggedIn) {
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         mviewPager = findViewById(R.id.view_pager);
         bottomNavigationView = findViewById(R.id.home_bottom_navigation);
 
-        Fragment_home_changing adapter = new Fragment_home_changing(getSupportFragmentManager(), getLifecycle());
+        Fragment_changing adapter = new Fragment_changing(getSupportFragmentManager(), getLifecycle());
         mviewPager.setAdapter(adapter);
         mviewPager.setUserInputEnabled(false);
 
@@ -62,11 +64,9 @@ public class MainActivity extends AppCompatActivity {
                     case 2:
                         bottomNavigationView.getMenu().findItem(R.id.store_page).setChecked(true);
                         break;
-
                     case 3:
                         bottomNavigationView.getMenu().findItem(R.id.personal_page).setChecked(true);
                         break;
-
                 }
             }
 
@@ -80,19 +80,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.home_page) {
-                    mviewPager.setCurrentItem(0, true); // Switch to the first fragment
+                    mviewPager.setCurrentItem(0, true);
                     return true;
                 }
                 if (item.getItemId() == R.id.showtimes_page) {
-                    mviewPager.setCurrentItem(1, true); // Switch to the first fragment
+                    mviewPager.setCurrentItem(1, true);
                     return true;
                 }
                 if (item.getItemId() == R.id.store_page) {
-                    mviewPager.setCurrentItem(2, true); // Switch to the first fragment
+                    mviewPager.setCurrentItem(2, true);
                     return true;
                 }
                 if (item.getItemId() == R.id.personal_page) {
-                    mviewPager.setCurrentItem(3, true); // Switch to the first fragment
+                    mviewPager.setCurrentItem(3, true);
                     return true;
                 }
                 return false;
@@ -109,5 +109,21 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(android.R.id.content, loginFragment);
         transaction.commit();
+    }
+
+    // close icon to home page in personal
+    public void close_to_home_page(){
+        mviewPager.setCurrentItem(0,true);
+    }
+
+    public void close_to_showtimes_page() {
+        mviewPager.setCurrentItem(1, true);
+    }
+
+    public void close_to_store_page() {
+        mviewPager.setCurrentItem(2, true);
+    }
+    public void close_to_personal_page() {
+        mviewPager.setCurrentItem(3, true);
     }
 }

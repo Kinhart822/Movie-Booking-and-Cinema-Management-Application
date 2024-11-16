@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "vn.edu.usth.mcma"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "vn.edu.usth.mcma"
@@ -32,6 +32,8 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.recyclerview:recyclerview:1.3.2")
+    implementation ("androidx.cardview:cardview:1.0.0")
 
     implementation(libs.appcompat)
     implementation(libs.material)
