@@ -81,6 +81,9 @@ public class BookingServiceImpl implements BookingService {
     private BookingTicketRepository bookingTicketRepository;
 
     @Autowired
+    private BookingSeatRepository bookingSeatRepository;
+
+    @Autowired
     private EmailService emailService;
 
     @Override
@@ -639,8 +642,6 @@ public class BookingServiceImpl implements BookingService {
             Map<Integer, BookingSeat> seatMap = new HashMap<>();
 
             for (Seat seat : selectedSeats) {
-
-
                 BookingSeat bookingSeat = seatMap.computeIfAbsent(seat.getId(), id -> {
                     BookingSeat newBookingSeat = new BookingSeat();
                     newBookingSeat.setBooking(booking);
@@ -747,9 +748,9 @@ public class BookingServiceImpl implements BookingService {
                 throw new IllegalArgumentException("Coupon %d is not valid.".formatted(selectedMovieCoupon.getId()));
             }
 
-//            if (totalPrice < selectedMovieCoupon.getMinSpendReq()) {
-//                throw new IllegalArgumentException("Minimum spend requirement not met for coupon %d.".formatted(selectedMovieCoupon.getId()));
-//            }
+            if (totalPrice < selectedMovieCoupon.getMinSpendReq()) {
+                throw new IllegalArgumentException("Minimum spend requirement not met for coupon %d.".formatted(selectedMovieCoupon.getId()));
+            }
 
             discountAmount = updateTotalPrice * selectedMovieCoupon.getDiscount().doubleValue();
             discountAmount = Math.min(discountAmount, selectedMovieCoupon.getDiscountLimit());
@@ -771,9 +772,9 @@ public class BookingServiceImpl implements BookingService {
                 throw new IllegalArgumentException("Coupon %d is not valid.".formatted(selectedUserCoupon.getId()));
             }
 
-//            if (totalPrice < selectedUserCoupon.getMinSpendReq()) {
-//                throw new IllegalArgumentException("Minimum spend requirement not met for coupon %d.".formatted(selectedUserCoupon.getId()));
-//            }
+            if (totalPrice < selectedUserCoupon.getMinSpendReq()) {
+                throw new IllegalArgumentException("Minimum spend requirement not met for coupon %d.".formatted(selectedUserCoupon.getId()));
+            }
 
             discountAmount = updateTotalPrice * selectedUserCoupon.getDiscount().doubleValue();
             discountAmount = Math.min(discountAmount, selectedUserCoupon.getDiscountLimit());
@@ -823,13 +824,11 @@ public class BookingServiceImpl implements BookingService {
         }
 
         if (booking.getSeatList().stream().anyMatch(seat -> seat.getSeat().getSeatStatus() == SeatStatus.Unavailable)) {
-            deleteBooking(booking.getId(), userId);
             throw new IllegalArgumentException("Some of the selected seats are already bought by another user. Please fill all the booking information again!");
         }
 
 
         if (booking.getSeatList().stream().anyMatch(seat -> seat.getSeat().getSeatStatus() != SeatStatus.Held)) {
-            deleteBooking(booking.getId(), userId);
             throw new IllegalArgumentException("Seat is still not held. Please fill all the booking information again!");
         }
 
@@ -894,6 +893,71 @@ public class BookingServiceImpl implements BookingService {
                 booking.getTotalPrice(),
                 booking.getStatus().toString()
         );
+    }
+
+    @Override
+    public void updateBookingSeat(BookingRequest bookingRequest) {
+        Booking booking = bookingRepository.findById(bookingRequest.getBookingId())
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingRequest.getBookingId())));
+        if (bookingRequest.getSeatIds() == null || bookingRequest.getSeatIds().isEmpty()) return;
+
+        double oldTotalPrice = booking.getTotalPrice();
+        double oldTotalPriceSeat = booking.getSeatList().stream()
+                .mapToDouble(draftSeat -> draftSeat.getSeatType().getPrice())
+                .sum();
+
+        for (BookingSeat bookingSeat : booking.getSeatList()) {
+            bookingSeat.setSeat(null);
+            bookingSeatRepository.delete(bookingSeat);
+        }
+
+        int ticketCount = booking.getTickets().stream()
+                .mapToInt(BookingTicket::getQuantity)
+                .sum();
+        int seatCount = bookingRequest.getSeatIds().size();
+        if (seatCount != ticketCount) {
+            throw new IllegalArgumentException("The number of selected seats (%d) does not match the number of tickets (%d).".formatted(seatCount, ticketCount));
+        }
+
+        Set<Integer> seatIdSet = new HashSet<>(bookingRequest.getSeatIds());
+        if (seatIdSet.size() != bookingRequest.getSeatIds().size()) {
+            throw new IllegalArgumentException("Duplicate seat IDs detected in the request.");
+        }
+
+        List<Seat> selectedSeats = seatRepository.findAllById(bookingRequest.getSeatIds())
+                .stream()
+                .toList();
+        if (selectedSeats.size() != seatCount) {
+            throw new IllegalArgumentException("One or more selected seats are unavailable.");
+        }
+        if (selectedSeats.stream().anyMatch(seat -> seat.getScreen().getId() != booking.getScreen().getId())){
+            throw new IllegalArgumentException("The selected seats do not match the specified screen!");
+        }
+        if (selectedSeats.stream().anyMatch(seat -> seat.getSeatStatus() == SeatStatus.Unavailable) ) {
+            throw new IllegalArgumentException("Selected seats are already unavailable, please select a different seat.");
+        }
+
+        if (bookingRequest.getSeatIds() != null && !bookingRequest.getSeatIds().isEmpty()) {
+            Map<Integer, BookingSeat> seatMap = new HashMap<>();
+
+            for (Seat seat : selectedSeats) {
+                BookingSeat bookingSeat = seatMap.computeIfAbsent(seat.getId(), id -> {
+                    BookingSeat newBookingSeat = new BookingSeat();
+                    newBookingSeat.setBooking(booking);
+                    newBookingSeat.setSeat(seat);
+                    newBookingSeat.setSeatType(seat.getSeatType());
+                    return newBookingSeat;
+                });
+                seat.setSeatStatus(SeatStatus.Held);
+            }
+            booking.setSeatList(new ArrayList<>(seatMap.values()));
+        }
+        double newTotalSeatPrice = booking.getSeatList().stream()
+                .mapToDouble(draftSeat -> draftSeat.getSeatType().getPrice())
+                .sum();
+
+        double updatedTotalPrice = oldTotalPrice - oldTotalPriceSeat + newTotalSeatPrice;
+        booking.setTotalPrice(updatedTotalPrice);
     }
 
     @Override
