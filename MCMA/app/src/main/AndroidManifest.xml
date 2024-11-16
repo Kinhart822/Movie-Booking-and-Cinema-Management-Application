@@ -16,7 +16,7 @@
             android:name=".frontend.Store.UI.ComboMenuActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.TheaterScheduleActivity"
+            android:name=".frontend.Showtimes.TheaterScheduleActivity"
             android:exported="false" />
         <activity
             android:name=".frontend.EditUpdateAccountInformation"

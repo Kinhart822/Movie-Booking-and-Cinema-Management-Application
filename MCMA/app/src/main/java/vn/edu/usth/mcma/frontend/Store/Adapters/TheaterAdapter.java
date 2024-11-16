@@ -1,14 +1,17 @@
-package vn.edu.usth.mcma.frontend.Store.UI;
+package vn.edu.usth.mcma.frontend.Store.Adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.Store.Models.Theater;
 
 public class TheaterAdapter extends RecyclerView.Adapter<TheaterAdapter.TheaterViewHolder> {
     private final List<Theater> theaters;

@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import vn.edu.usth.mcma.frontend.Showtimes.UI.LaunchtimeFragment;
 import vn.edu.usth.mcma.frontend.Store.UI.StoreFragment;
 
 public class Fragment_home_changing extends FragmentStateAdapter {

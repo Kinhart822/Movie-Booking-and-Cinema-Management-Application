@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/launchtime_fragment"
-    tools:context=".frontend.LaunchtimeFragment">
+    tools:context=".frontend.Showtimes.UI.LaunchtimeFragment">
 
     <!-- Navigation drawer -->
     <com.google.android.material.navigation.NavigationView
@@ -149,138 +149,69 @@
     </com.google.android.material.navigation.NavigationView>
 
     <!-- Main content -->
-    <ScrollView
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffff"
-        android:scrollbars="none">
+        android:orientation="vertical"
+        android:background="#ffffff">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Book ticket by showtimeTheater"
+            android:textSize="25sp"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Theater Type Selection -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:padding="16dp">
 
-            <!-- Toolbar (Menu and Search button) -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:background="@color/DarkBlue">
-
-                <ImageButton
-                    android:id="@+id/menu_button"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/menu" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="39dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:textSize="26sp" />
-
-                <ImageButton
-                    android:id="@+id/searching_button"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:background="@drawable/searching" />
-            </LinearLayout>
-
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Book ticket by theater"
-                android:textSize="25sp"
-                android:textColor="@android:color/black"
-                android:gravity="center"
-                android:layout_marginTop="32dp"/>
+                android:text="Theater"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
 
-            <!-- New Section for Phòng chiếu and 1 loại Button -->
+            <Button
+                android:id="@+id/type_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1 loại"/>
+        </LinearLayout>
+
+        <!-- City Selection -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:layout_marginBottom="16dp">
+
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/city_container"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="16dp">
+                android:padding="8dp"/>
+        </HorizontalScrollView>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Theater"
-                    android:textSize="16sp"
-                    android:textColor="@android:color/black"
-                    android:layout_weight="1"/>
+        <!-- Theater List -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/theater_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:clipToPadding="false"/>
 
-                <Button
-                    android:id="@+id/type_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1 loại"
-                    android:background="@drawable/button_default_bg"
-                    android:textColor="@android:color/black"
-                    android:padding="10dp"/>
-            </LinearLayout>
-
-            <!-- City Selection Section inside HorizontalScrollView -->
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/btn_hcm"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="TPHCM"
-                        android:background="@drawable/button_selected_bg"
-                        android:textColor="@android:color/black"
-                        android:layout_marginEnd="8dp" />
-
-                    <Button
-                        android:id="@+id/btn_hanoi"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hà Nội"
-                        android:background="@drawable/button_default_bg"
-                        android:textColor="@android:color/black"
-                        android:layout_marginEnd="8dp" />
-
-                    <Button
-                        android:id="@+id/btn_hue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Huế"
-                        android:background="@drawable/button_default_bg"
-                        android:textColor="@android:color/black"
-                        android:layout_marginEnd="8dp" />
-
-                    <!-- Add more cities as needed -->
-                </LinearLayout>
-            </HorizontalScrollView>
-
-            <!-- RecycleView -->
-            <LinearLayout
-                android:id="@+id/theater_list_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="16dp">
-
-                <!-- Theater items will be dynamically added here -->
-
-            </LinearLayout>
-
-        </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
 </androidx.drawerlayout.widget.DrawerLayout>
