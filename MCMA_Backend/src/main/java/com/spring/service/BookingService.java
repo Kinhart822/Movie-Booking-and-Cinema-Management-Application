@@ -1,7 +1,6 @@
 package com.spring.service;
 
 import com.spring.dto.request.booking.BookingRequest;
-import com.spring.dto.request.booking.*;
 import com.spring.dto.response.booking.BookingResponse;
 import com.spring.dto.response.booking.*;
 
@@ -10,19 +9,19 @@ import java.util.List;
 public interface BookingService {
     // TODO: Get Information for a Booking process
     List<MovieResponse> getAllMovies();
-    List<CityResponse> getAllCitiesBySelectedMovie(MovieRequest movieRequest);
-    List<CinemaResponse> getAllCinemasBySelectedCity(CityRequest cityRequest);
-    List<ScreenResponse> getAllScreensBySelectedCinema(CinemaRequest cinemaRequest);
+    List<CityResponse> getAllCitiesBySelectedMovie(Integer movieId);
+    List<CinemaResponse> getAllCinemasBySelectedCity(Integer cityId);
+    List<ScreenResponse> getAllScreensBySelectedCinema(Integer cinemaId);
     List<ScheduleResponse> getAllSchedulesBySelectedMovieAndSelectedCinemaAndSelectedScreen(
-            MovieRequest movieRequest,
-            CinemaRequest cinemaRequest,
-            ScreenRequest screenRequest
+            Integer movieId,
+            Integer cinemaId,
+            Integer screenId
     );
     List<TicketResponse> getAllTickets();
     List<SeatResponse> getAllSeatsBySelectedScreen(Integer screenId);
-    List<ListFoodAndDrinkToOrderingResponse> getAllFoodsAndDrinksByCinema(CinemaRequest cinemaRequest);
+    List<ListFoodAndDrinkToOrderingResponse> getAllFoodsAndDrinksByCinema(Integer cinemaId);
     List<CouponResponse> getAllCouponsByUser(Integer userId);
-    List<CouponResponse> getAllCouponsByMovie(MovieRequest movieRequest);
+    List<CouponResponse> getAllCouponsByMovie(Integer movieId);
 
     // TODO: Process Booking
     SendBookingResponse processingBooking(Integer userId, BookingRequest bookingRequest);

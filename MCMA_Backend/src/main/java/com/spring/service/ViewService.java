@@ -1,8 +1,5 @@
 package com.spring.service;
 
-import com.spring.dto.request.view.ViewCinemaRequest;
-import com.spring.dto.request.view.ViewCouponRequest;
-import com.spring.dto.request.view.ViewFoodAndDrinkRequest;
 import com.spring.dto.response.booking.*;
 import com.spring.dto.response.view.*;
 
@@ -13,19 +10,19 @@ public interface ViewService {
 
     ViewCinemaResponse getAvailableCinemaList();
 
-    ViewCinemaResponse getCinemasByCity(ViewCinemaRequest viewCinemaRequest);
+    ViewCinemaResponse getCinemasByCity(Integer cityId);
 
     List<ScreenResponse> getAllScreens();
 
     List<ScheduleResponse> getAllSchedulesBySelectedMovieAndSelectedCinema(Integer movieId, Integer cinemaId);
 
-    List<ListFoodAndDrinkToOrderingResponse> getAllFoodsAndDrinksByCinema(ViewFoodAndDrinkRequest viewFoodAndDrinkRequest);
+    List<ListFoodAndDrinkToOrderingResponse> getAllFoodsAndDrinksByCinema(Integer cinemaId);
 
     List<CouponResponse> getAllCoupons();
 
     ViewCouponsResponse getAvailableCouponsForUser(Integer userId);
 
-    ViewCouponsResponse getAvailableCouponsByMovieId(ViewCouponRequest viewCouponRequest);
+    ViewCouponsResponse getAvailableCouponsByMovieId(Integer movieId);
 
     List<NowShowingResponse> getAvailableNowShowingMovies();
 

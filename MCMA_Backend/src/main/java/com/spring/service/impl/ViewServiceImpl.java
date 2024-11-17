@@ -1,8 +1,5 @@
 package com.spring.service.impl;
 
-import com.spring.dto.request.view.ViewCinemaRequest;
-import com.spring.dto.request.view.ViewCouponRequest;
-import com.spring.dto.request.view.ViewFoodAndDrinkRequest;
 import com.spring.dto.response.booking.*;
 import com.spring.dto.response.view.*;
 import com.spring.entities.*;
@@ -90,8 +87,8 @@ public class ViewServiceImpl implements ViewService {
     }
 
     @Override
-    public ViewCinemaResponse getCinemasByCity(ViewCinemaRequest viewCinemaRequest) {
-        List<Cinema> cinemaList = cinemaRepository.findByCityId(viewCinemaRequest.getCityId());
+    public ViewCinemaResponse getCinemasByCity(Integer cityId) {
+        List<Cinema> cinemaList = cinemaRepository.findByCityId(cityId);
         List<String> cinemaNameList = cinemaList.stream()
                 .map(Cinema::getName)
                 .toList();
@@ -125,10 +122,9 @@ public class ViewServiceImpl implements ViewService {
     }
 
     @Override
-    public List<ListFoodAndDrinkToOrderingResponse> getAllFoodsAndDrinksByCinema(ViewFoodAndDrinkRequest viewFoodAndDrinkRequest) {
-        Integer cinemaId = viewFoodAndDrinkRequest.getCinemaId();
+    public List<ListFoodAndDrinkToOrderingResponse> getAllFoodsAndDrinksByCinema(Integer cinemaId) {
         Cinema cinema = cinemaRepository.findById(cinemaId)
-                .orElseThrow(() -> new IllegalArgumentException("Cinema not found with id: " + cinemaId));
+                .orElseThrow(() -> new IllegalArgumentException("Cinema not found with id: %d".formatted(cinemaId)));
 
         // Fetch all foods and drinks associated with the cinema
         List<Food> foodList = foodRepository.findByCinema(cinema);
@@ -219,8 +215,8 @@ public class ViewServiceImpl implements ViewService {
     }
 
     @Override
-    public ViewCouponsResponse getAvailableCouponsByMovieId(ViewCouponRequest viewCouponRequest) {
-        List<Coupon> coupons = couponRepository.findAvailableCouponsByMovieId(viewCouponRequest.getMovieId());
+    public ViewCouponsResponse getAvailableCouponsByMovieId(Integer movieId) {
+        List<Coupon> coupons = couponRepository.findAvailableCouponsByMovieId(movieId);
         return mapCouponsToResponse(coupons);
     }
 

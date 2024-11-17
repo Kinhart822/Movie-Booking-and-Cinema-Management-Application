@@ -1,6 +1,6 @@
 package com.spring.service.impl;
 
-import com.spring.dto.request.movieRespond.MovieRespondRequest;
+import com.spring.dto.request.respond.MovieRespondRequest;
 import com.spring.dto.response.movieRespond.CommentResponse;
 import com.spring.dto.response.movieRespond.MovieRespondResponse;
 import com.spring.dto.response.movieRespond.RatingResponse;
@@ -37,6 +37,9 @@ public class MovieRespondServiceImpl implements MovieRespondService {
     @Autowired
     private BookingRepository bookingRepository;
 
+    @Autowired
+    private NotificationRepository notificationRepository;
+
     @Override
     public MovieRespondResponse createMovieRespond(Integer userId, MovieRespondRequest movieRespondRequest) {
         List<Booking> bookings = bookingRepository.findByUserIdAndMovieId(userId, movieRespondRequest.getMovieId());
@@ -67,20 +70,26 @@ public class MovieRespondServiceImpl implements MovieRespondService {
         if (movieRespondRequest.getComment() != null) {
             Comment newComment = new Comment();
             newComment.setContent(movieRespondRequest.getComment());
-            newComment.setMovieRespond(movieRespond);
             commentRepository.save(newComment);
+            newComment.setMovieRespond(movieRespond);
             movieRespond.setComment(newComment);
         }
 
         if (movieRespondRequest.getSelectedRatingStar() != null) {
             Rating newRating = new Rating();
             newRating.setRatingStar(movieRespondRequest.getSelectedRatingStar());
-            newRating.setMovieRespond(movieRespond);
             ratingRepository.save(newRating);
+            newRating.setMovieRespond(movieRespond);
             movieRespond.setRating(newRating);
         }
 
         movieRespondRepository.save(movieRespond);
+
+        Notification notification = new Notification();
+        notification.setUser(user);
+        notification.setMessage("Your respond for %s is confirmed!".formatted(movie.getName()));
+        notification.setDateCreated(LocalDateTime.now());
+        notificationRepository.save(notification);
 
         return MovieRespondResponse.builder()
                 .movieName(movie.getName())
@@ -91,6 +100,9 @@ public class MovieRespondServiceImpl implements MovieRespondService {
 
     @Override
     public MovieRespondResponse updateMovieRespond(Integer userId, MovieRespondRequest movieRespondRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
         Movie movie = movieRepository.findById(movieRespondRequest.getMovieId())
                 .orElseThrow(() -> new IllegalArgumentException("Movie not found"));
 
@@ -121,6 +133,12 @@ public class MovieRespondServiceImpl implements MovieRespondService {
 
         movieRespondRepository.save(existingMovieRespond);
 
+        Notification notification = new Notification();
+        notification.setUser(user);
+        notification.setMessage("Your respond for %s is updated!".formatted(movie.getName()));
+        notification.setDateCreated(LocalDateTime.now());
+        notificationRepository.save(notification);
+
         return MovieRespondResponse.builder()
                 .movieName(movie.getName())
                 .content(existingMovieRespond.getComment() != null ? existingMovieRespond.getComment().getContent() : null)
@@ -129,22 +147,34 @@ public class MovieRespondServiceImpl implements MovieRespondService {
     }
 
     @Override
-    public void deleteMovieRespond(Integer userId, MovieRespondRequest movieRespondRequest) {
-        MovieRespond existingMovieRespond = movieRespondRepository.findByUserIdAndMovieId(userId, movieRespondRequest.getMovieId());
+    public void deleteMovieRespond(Integer userId, Integer movieId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new IllegalArgumentException("Movie not found"));
+
+        MovieRespond existingMovieRespond = movieRespondRepository.findByUserIdAndMovieId(userId, movieId);
 
         if (existingMovieRespond == null) {
             throw new IllegalArgumentException("MovieRespond not found");
         }
 
         movieRespondRepository.delete(existingMovieRespond);
+
+        Notification notification = new Notification();
+        notification.setUser(user);
+        notification.setMessage("Your respond for %s is deleted!".formatted(movie.getName()));
+        notification.setDateCreated(LocalDateTime.now());
+        notificationRepository.save(notification);
     }
 
     @Override
-    public CommentResponse getMovieCommentByUserIdAndMovieId(Integer userId, MovieRespondRequest movieRespondRequest) {
-        Movie movie = movieRepository.findById(movieRespondRequest.getMovieId())
+    public CommentResponse getMovieCommentByUserIdAndMovieId(Integer userId, Integer movieId) {
+        Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new IllegalArgumentException("Movie not found"));
 
-        Comment comment = commentRepository.findByUserIdAndMovieId(userId, movieRespondRequest.getMovieId());
+        Comment comment = commentRepository.findByUserIdAndMovieId(userId, movie.getId());
 
         if (comment == null) {
             throw new IllegalArgumentException("Comment not found for given user and movie.");
@@ -157,14 +187,14 @@ public class MovieRespondServiceImpl implements MovieRespondService {
     }
 
     @Override
-    public RatingResponse getMovieRatingByUserIdAndMovieId(Integer userId, MovieRespondRequest movieRespondRequest) {
-        Movie movie = movieRepository.findById(movieRespondRequest.getMovieId())
+    public RatingResponse getMovieRatingByUserIdAndMovieId(Integer userId, Integer movieId) {
+        Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new IllegalArgumentException("Movie not found"));
 
-        Rating rating = ratingRepository.findByUserIdAndMovieId(userId, movieRespondRequest.getMovieId());
+        Rating rating = ratingRepository.findByUserIdAndMovieId(userId, movie.getId());
 
         if (rating == null) {
-            throw new IllegalArgumentException("Comment not found for given user and movie.");
+            throw new IllegalArgumentException("Rating not found for given user and movie.");
         }
 
         return RatingResponse.builder()
@@ -174,8 +204,8 @@ public class MovieRespondServiceImpl implements MovieRespondService {
     }
 
     @Override
-    public MovieRespondResponse getMovieRespondsByUserIdAndMovieId(Integer userId, MovieRespondRequest movieRespondRequest) {
-        MovieRespond movieRespond = movieRespondRepository.findByUserIdAndMovieId(userId, movieRespondRequest.getMovieId());
+    public MovieRespondResponse getMovieRespondsByUserIdAndMovieId(Integer userId, Integer movieId) {
+        MovieRespond movieRespond = movieRespondRepository.findByUserIdAndMovieId(userId, movieId);
 
         if (movieRespond == null) {
             throw new IllegalArgumentException("MovieRespond not found for given user and movie.");
@@ -205,8 +235,8 @@ public class MovieRespondServiceImpl implements MovieRespondService {
     }
 
     @Override
-    public List<CommentResponse> getMovieCommentsByMovieId(MovieRespondRequest movieRespondRequest) {
-        List<Comment> comments = commentRepository.findByMovieId(movieRespondRequest.getMovieId());
+    public List<CommentResponse> getMovieCommentsByMovieId(Integer movieId) {
+        List<Comment> comments = commentRepository.findByMovieId(movieId);
 
         if (comments == null) {
             throw new IllegalArgumentException("Comments not found for given user and movie.");
@@ -237,8 +267,8 @@ public class MovieRespondServiceImpl implements MovieRespondService {
     }
 
     @Override
-    public List<RatingResponse> getMovieRatingsByMovieId(MovieRespondRequest movieRespondRequest) {
-        List<Rating> ratings = ratingRepository.findByMovieId(movieRespondRequest.getMovieId());
+    public List<RatingResponse> getMovieRatingsByMovieId(Integer movieId) {
+        List<Rating> ratings = ratingRepository.findByMovieId(movieId);
 
         if (ratings == null) {
             throw new IllegalArgumentException("Ratings not found for given user and movie.");
@@ -270,8 +300,8 @@ public class MovieRespondServiceImpl implements MovieRespondService {
     }
 
     @Override
-    public List<MovieRespondResponse> getAllMovieRespondsByMovieId(MovieRespondRequest movieRespondRequest) {
-        List<MovieRespond> movieRespondList = movieRespondRepository.findByMovieId(movieRespondRequest.getMovieId());
+    public List<MovieRespondResponse> getAllMovieRespondsByMovieId(Integer movieId) {
+        List<MovieRespond> movieRespondList = movieRespondRepository.findByMovieId(movieId);
 
         if (movieRespondList == null) {
             throw new IllegalArgumentException("Movie Responds not found for given user and movie.");

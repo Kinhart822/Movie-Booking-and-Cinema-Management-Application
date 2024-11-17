@@ -185,11 +185,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<CityResponse> getAllCitiesBySelectedMovie(MovieRequest movieRequest) {
-        Movie movie = movieRepository.findById(movieRequest.getMovieId())
+    public List<CityResponse> getAllCitiesBySelectedMovie(Integer movieId) {
+        Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid movie"));
 
-        List<City> cities = cityRepository.findByMovieId(movieRequest.getMovieId());
+        List<City> cities = cityRepository.findByMovieId(movie.getId());
         if (cities == null || cities.isEmpty()) {
             throw new IllegalArgumentException("No cities found for given movie.");
         }
@@ -214,11 +214,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<CinemaResponse> getAllCinemasBySelectedCity(CityRequest cityRequest) {
-        City city = cityRepository.findById(cityRequest.getCityId())
+    public List<CinemaResponse> getAllCinemasBySelectedCity(Integer cityId) {
+        City city = cityRepository.findById(cityId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid city"));
 
-        List<Cinema> cinemaList = cinemaRepository.findByCityId(cityRequest.getCityId());
+        List<Cinema> cinemaList = cinemaRepository.findByCityId(city.getId());
         if (cinemaList == null || cinemaList.isEmpty()) {
             throw new IllegalArgumentException("No cinemas found for given city.");
         }
@@ -262,11 +262,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<ScreenResponse> getAllScreensBySelectedCinema(CinemaRequest cinemaRequest) {
-        Cinema cinema = cinemaRepository.findById(cinemaRequest.getCinemaId())
+    public List<ScreenResponse> getAllScreensBySelectedCinema(Integer cinemaId) {
+        Cinema cinema = cinemaRepository.findById(cinemaId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid cinema"));
 
-        List<Screen> screenList = screenRepository.findByCinemaId(cinemaRequest.getCinemaId());
+        List<Screen> screenList = screenRepository.findByCinemaId(cinema.getId());
         if (screenList == null || screenList.isEmpty()) {
             throw new IllegalArgumentException("No screens found for given cinema.");
         }
@@ -288,15 +288,15 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<ScheduleResponse> getAllSchedulesBySelectedMovieAndSelectedCinemaAndSelectedScreen(
-            MovieRequest movieRequest, CinemaRequest cinemaRequest, ScreenRequest screenRequest
+            Integer movieId, Integer cinemaId, Integer screenId
     ) {
-        Movie movie = movieRepository.findById(movieRequest.getMovieId())
+        Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid movie"));
 
-        Cinema cinema = cinemaRepository.findById(cinemaRequest.getCinemaId())
+        Cinema cinema = cinemaRepository.findById(cinemaId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid cinema"));
 
-        Screen screen = screenRepository.findById(screenRequest.getScreenId())
+        Screen screen = screenRepository.findById(screenId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid screen"));
 
         List<MovieSchedule> movieSchedules = movieScheduleRepository.findMovieSchedulesByMovieAndCinemaAndScreen(
@@ -403,8 +403,8 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<ListFoodAndDrinkToOrderingResponse> getAllFoodsAndDrinksByCinema(CinemaRequest cinemaRequest) {
-        Cinema cinema = cinemaRepository.findById(cinemaRequest.getCinemaId())
+    public List<ListFoodAndDrinkToOrderingResponse> getAllFoodsAndDrinksByCinema(Integer cinemaId) {
+        Cinema cinema = cinemaRepository.findById(cinemaId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid cinema"));
 
         List<Food> foods = foodRepository.findByCinema(cinema);
@@ -497,8 +497,8 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<CouponResponse> getAllCouponsByMovie(MovieRequest movieRequest) {
-        List<Coupon> availableMovieCouponIds = couponRepository.findAvailableCouponsByMovieId(movieRequest.getMovieId());
+    public List<CouponResponse> getAllCouponsByMovie(Integer movieId) {
+        List<Coupon> availableMovieCouponIds = couponRepository.findAvailableCouponsByMovieId(movieId);
         if (availableMovieCouponIds == null || availableMovieCouponIds.isEmpty()) {
             throw new IllegalArgumentException("No available coupons found for given movie.");
         }

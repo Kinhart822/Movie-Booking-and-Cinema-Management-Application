@@ -1,9 +1,7 @@
 package com.spring.controller;
 
 import com.spring.config.JwtUtil;
-import com.spring.dto.request.movieRespond.MovieRespondRequest;
-import com.spring.dto.request.view.ViewCinemaRequest;
-import com.spring.dto.request.view.ViewCouponRequest;
+import com.spring.dto.request.respond.MovieRespondRequest;
 import com.spring.dto.response.SearchMovieByGenreResponse;
 import com.spring.dto.response.SearchMovieByNameResponse;
 import com.spring.dto.response.movieRespond.CommentResponse;
@@ -77,22 +75,22 @@ public class AdminController {
         return ResponseEntity.ok(viewCinemaResponse);
     }
 
-    @GetMapping("/view/cinemaListByCity")
-    public ResponseEntity<ViewCinemaResponse> getCoupons(@RequestBody ViewCinemaRequest viewCinemaRequest) {
-        ViewCinemaResponse viewCinemaResponse = viewService.getCinemasByCity(viewCinemaRequest);
+    @GetMapping("/view/cinemaListByCity/{cityId}")
+    public ResponseEntity<ViewCinemaResponse> getCinemaListByCity(@PathVariable Integer cityId) {
+        ViewCinemaResponse viewCinemaResponse = viewService.getCinemasByCity(cityId);
         return ResponseEntity.ok(viewCinemaResponse);
     }
 
     @GetMapping("/view/coupons")
-    public ResponseEntity<ViewCouponsResponse> getCoupons(HttpServletRequest request) {
+    public ResponseEntity<ViewCouponsResponse> getCouponsByUser(HttpServletRequest request) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
         ViewCouponsResponse viewCouponsResponse = viewService.getAvailableCouponsForUser(userId);
         return ResponseEntity.ok(viewCouponsResponse);
     }
 
-    @GetMapping("/view/couponsByMovie")
-    public ResponseEntity<ViewCouponsResponse> getCoupons(@RequestBody ViewCouponRequest viewCouponRequest) {
-        ViewCouponsResponse viewCouponsResponse = viewService.getAvailableCouponsByMovieId(viewCouponRequest);
+    @GetMapping("/view/couponsByMovie/{movieId}")
+    public ResponseEntity<ViewCouponsResponse> getCouponsByMovie(@PathVariable Integer movieId) {
+        ViewCouponsResponse viewCouponsResponse = viewService.getAvailableCouponsByMovieId(movieId);
         return ResponseEntity.ok(viewCouponsResponse);
     }
 
@@ -115,21 +113,21 @@ public class AdminController {
         return ResponseEntity.ok(notificationResponse);
     }
 
-    @GetMapping("/view/viewCommentByMovie")
-    public ResponseEntity<List<CommentResponse>> viewCommentByMovie(@RequestBody MovieRespondRequest movieRespondRequest) {
-        List<CommentResponse> commentResponses = movieRespondService.getMovieCommentsByMovieId(movieRespondRequest);
+    @GetMapping("/view/viewCommentByMovie/{movieId}")
+    public ResponseEntity<List<CommentResponse>> viewCommentByMovie(@PathVariable Integer movieId) {
+        List<CommentResponse> commentResponses = movieRespondService.getMovieCommentsByMovieId(movieId);
         return ResponseEntity.ok(commentResponses);
     }
 
-    @GetMapping("/view/viewRatingByMovie")
-    public ResponseEntity<List<RatingResponse>> viewRatingByMovie(@RequestBody MovieRespondRequest movieRespondRequest) {
-        List<RatingResponse> ratingResponses = movieRespondService.getMovieRatingsByMovieId(movieRespondRequest);
+    @GetMapping("/view/viewRatingByMovie/{movieId}")
+    public ResponseEntity<List<RatingResponse>> viewRatingByMovie(@PathVariable Integer movieId) {
+        List<RatingResponse> ratingResponses = movieRespondService.getMovieRatingsByMovieId(movieId);
         return ResponseEntity.ok(ratingResponses);
     }
 
-    @GetMapping("/view/viewMovieRespondByMovie")
-    public ResponseEntity<List<MovieRespondResponse>> viewMovieRespondByMovie(@RequestBody MovieRespondRequest movieRespondRequest) {
-        List<MovieRespondResponse> movieRespondResponses = movieRespondService.getAllMovieRespondsByMovieId(movieRespondRequest);
+    @GetMapping("/view/viewMovieRespondByMovie/{movieId}")
+    public ResponseEntity<List<MovieRespondResponse>> viewMovieRespondByMovie(@PathVariable Integer movieId) {
+        List<MovieRespondResponse> movieRespondResponses = movieRespondService.getAllMovieRespondsByMovieId(movieId);
         return ResponseEntity.ok(movieRespondResponses);
     }
 }

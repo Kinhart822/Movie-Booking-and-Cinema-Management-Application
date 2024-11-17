@@ -17,6 +17,6 @@ public class Comment {
     @Column(name = "content")
     private String content;
 
-    @OneToOne(mappedBy = "comment")
+    @OneToOne(mappedBy = "comment", cascade = CascadeType.ALL)
     private MovieRespond movieRespond;
 }

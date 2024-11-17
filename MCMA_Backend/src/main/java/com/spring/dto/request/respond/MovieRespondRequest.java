@@ -1,4 +1,4 @@
-package com.spring.dto.request.movieRespond;
+package com.spring.dto.request.respond;
 
 import lombok.Getter;
 import lombok.Setter;

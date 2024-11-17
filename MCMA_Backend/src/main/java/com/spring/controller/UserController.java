@@ -2,11 +2,7 @@ package com.spring.controller;
 
 import com.spring.config.JwtUtil;
 import com.spring.dto.request.booking.BookingRequest;
-import com.spring.dto.request.booking.*;
-import com.spring.dto.request.movieRespond.MovieRespondRequest;
-import com.spring.dto.request.view.ViewCinemaRequest;
-import com.spring.dto.request.view.ViewCouponRequest;
-import com.spring.dto.request.view.ViewFoodAndDrinkRequest;
+import com.spring.dto.request.respond.MovieRespondRequest;
 import com.spring.dto.response.booking.BookingResponse;
 import com.spring.dto.response.SearchMovieByGenreResponse;
 import com.spring.dto.response.SearchMovieByNameResponse;
@@ -50,7 +46,7 @@ public class UserController {
     @GetMapping
     public ResponseEntity<String> sayHello(HttpServletRequest request) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        return ResponseEntity.ok("Hello, User! Your ID is: " + userId);
+        return ResponseEntity.ok("Hello, User! Your ID is: %d".formatted(userId));
     }
 
     // TODO: Search Movies
@@ -75,32 +71,32 @@ public class UserController {
         return ResponseEntity.ok(movieResponds);
     }
 
-    @GetMapping("/booking/allCitiesByMovie")
-    public ResponseEntity<List<CityResponse>> getAllCitiesByMovie(@RequestBody MovieRequest movieRequest) {
-        List<CityResponse> cityResponses = bookingService.getAllCitiesBySelectedMovie(movieRequest);
+    @GetMapping("/booking/allCitiesByMovie/{movieId}")
+    public ResponseEntity<List<CityResponse>> getAllCitiesByMovie(@PathVariable Integer movieId) {
+        List<CityResponse> cityResponses = bookingService.getAllCitiesBySelectedMovie(movieId);
         return ResponseEntity.ok(cityResponses);
     }
 
-    @GetMapping("/booking/allCinemasByCity")
-    public ResponseEntity<List<CinemaResponse>> getAllCinemasByCity(@RequestBody CityRequest cityRequest) {
-        List<CinemaResponse> movies = bookingService.getAllCinemasBySelectedCity(cityRequest);
+    @GetMapping("/booking/allCinemasByCity/{cityId}")
+    public ResponseEntity<List<CinemaResponse>> getAllCinemasByCity(@PathVariable Integer cityId) {
+        List<CinemaResponse> movies = bookingService.getAllCinemasBySelectedCity(cityId);
         return ResponseEntity.ok(movies);
     }
 
-    @GetMapping("/booking/allScreenByCinema")
-    public ResponseEntity<List<ScreenResponse>> getAllScreenByCinema(@RequestBody CinemaRequest cinemaRequest) {
-        List<ScreenResponse> screenResponses = bookingService.getAllScreensBySelectedCinema(cinemaRequest);
+    @GetMapping("/booking/allScreenByCinema/{cinemaId}")
+    public ResponseEntity<List<ScreenResponse>> getAllScreenByCinema(@PathVariable Integer cinemaId) {
+        List<ScreenResponse> screenResponses = bookingService.getAllScreensBySelectedCinema(cinemaId);
         return ResponseEntity.ok(screenResponses);
     }
 
     @GetMapping("/booking/allSchedulesByMovieAndCinemaAndScreen")
     public ResponseEntity<List<ScheduleResponse>> getAllScheduleByScreen(
-            @RequestBody MovieRequest movieRequest,
-            @RequestBody CinemaRequest cinemaRequest,
-            @RequestBody ScreenRequest screenRequest
+            @RequestParam(required = false, name = "movieId") Integer movieId,
+            @RequestParam(required = false, name = "cinemaId") Integer cinemaId,
+            @RequestParam(required = false, name = "screenId") Integer screenId
     ) {
         List<ScheduleResponse> scheduleResponses = bookingService.getAllSchedulesBySelectedMovieAndSelectedCinemaAndSelectedScreen(
-                movieRequest, cinemaRequest, screenRequest
+                movieId, cinemaId, screenId
         );
         return ResponseEntity.ok(scheduleResponses);
     }
@@ -117,9 +113,9 @@ public class UserController {
         return ResponseEntity.ok(seatResponses);
     }
 
-    @GetMapping("/booking/allFoodsAndDrinksByCinema")
-    public ResponseEntity<List<ListFoodAndDrinkToOrderingResponse>> getAllFoodsAndDrinksByCinema(@RequestBody CinemaRequest cinemaRequest) {
-        List<ListFoodAndDrinkToOrderingResponse> listFoodAndDrinkToOrderingResponses = bookingService.getAllFoodsAndDrinksByCinema(cinemaRequest);
+    @GetMapping("/booking/allFoodsAndDrinksByCinema/{cinemaId}")
+    public ResponseEntity<List<ListFoodAndDrinkToOrderingResponse>> getAllFoodsAndDrinksByCinema(@PathVariable Integer cinemaId) {
+        List<ListFoodAndDrinkToOrderingResponse> listFoodAndDrinkToOrderingResponses = bookingService.getAllFoodsAndDrinksByCinema(cinemaId);
         return ResponseEntity.ok(listFoodAndDrinkToOrderingResponses);
     }
 
@@ -130,9 +126,9 @@ public class UserController {
         return ResponseEntity.ok(couponResponses);
     }
 
-    @GetMapping("/booking/allCouponsByMovie")
-    public ResponseEntity<List<CouponResponse>> getAllCoupons(@RequestBody MovieRequest movieRequest) {
-        List<CouponResponse> couponResponses = bookingService.getAllCouponsByMovie(movieRequest);
+    @GetMapping("/booking/allCouponsByMovie/{movieId}")
+    public ResponseEntity<List<CouponResponse>> getAllCoupons(@PathVariable Integer movieId) {
+        List<CouponResponse> couponResponses = bookingService.getAllCouponsByMovie(movieId);
         return ResponseEntity.ok(couponResponses);
     }
 
@@ -185,10 +181,10 @@ public class UserController {
         return ResponseEntity.ok(movieRespondResponse);
     }
 
-    @DeleteMapping("/movieRespond/delete")
-    public ResponseEntity<String> deleteRespond(HttpServletRequest request, @RequestBody MovieRespondRequest movieRespondRequest) {
+    @DeleteMapping("/movieRespond/delete/{movieId}")
+    public ResponseEntity<String> deleteRespond(HttpServletRequest request, @PathVariable Integer movieId) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        movieRespondService.deleteMovieRespond(userId, movieRespondRequest);
+        movieRespondService.deleteMovieRespond(userId, movieId);
         return ResponseEntity.ok("Delete Movie Respond Successfully");
     }
 
@@ -205,9 +201,9 @@ public class UserController {
         return ResponseEntity.ok(viewCinemaResponse);
     }
 
-    @GetMapping("/view/cinemaListByCity")
-    public ResponseEntity<ViewCinemaResponse> getCinemasByCity(@RequestBody ViewCinemaRequest viewCinemaRequest) {
-        ViewCinemaResponse viewCinemaResponse = viewService.getCinemasByCity(viewCinemaRequest);
+    @GetMapping("/view/cinemaListByCity/{cityId}")
+    public ResponseEntity<ViewCinemaResponse> getCinemasByCity(@PathVariable Integer cityId) {
+        ViewCinemaResponse viewCinemaResponse = viewService.getCinemasByCity(cityId);
         return ResponseEntity.ok(viewCinemaResponse);
     }
 
@@ -226,9 +222,9 @@ public class UserController {
         return ResponseEntity.ok(screenResponses);
     }
 
-    @GetMapping("/view/getAllFoodsAndDrinksByCinema")
-    public ResponseEntity<List<ListFoodAndDrinkToOrderingResponse>> getAllFoodsAndDrinksByCinema(@RequestBody ViewFoodAndDrinkRequest viewFoodAndDrinkRequest) {
-        List<ListFoodAndDrinkToOrderingResponse> listFoodAndDrinkToOrderingResponse = viewService.getAllFoodsAndDrinksByCinema(viewFoodAndDrinkRequest);
+    @GetMapping("/view/getAllFoodsAndDrinksByCinema/{cinemaId}")
+    public ResponseEntity<List<ListFoodAndDrinkToOrderingResponse>> viewAllFoodsAndDrinksByCinema(@PathVariable Integer cinemaId) {
+        List<ListFoodAndDrinkToOrderingResponse> listFoodAndDrinkToOrderingResponse = viewService.getAllFoodsAndDrinksByCinema(cinemaId);
         return ResponseEntity.ok(listFoodAndDrinkToOrderingResponse);
     }
 
@@ -245,9 +241,9 @@ public class UserController {
         return ResponseEntity.ok(viewCouponsResponse);
     }
 
-    @GetMapping("/view/couponsByMovie")
-    public ResponseEntity<ViewCouponsResponse> getCoupons(@RequestBody ViewCouponRequest viewCouponRequest) {
-        ViewCouponsResponse viewCouponsResponse = viewService.getAvailableCouponsByMovieId(viewCouponRequest);
+    @GetMapping("/view/couponsByMovie/{movieId}")
+    public ResponseEntity<ViewCouponsResponse> getCouponsByMovie(@PathVariable Integer movieId) {
+        ViewCouponsResponse viewCouponsResponse = viewService.getAvailableCouponsByMovieId(movieId);
         return ResponseEntity.ok(viewCouponsResponse);
     }
 
@@ -276,10 +272,10 @@ public class UserController {
         return ResponseEntity.ok(notificationResponse);
     }
 
-    @GetMapping("/view/viewCommentByUserAndMovie")
-    public ResponseEntity<CommentResponse> viewCommentByUserAndMovie(HttpServletRequest request, @RequestBody MovieRespondRequest movieRespondRequest) {
+    @GetMapping("/view/viewCommentByUserAndMovie/{movieId}")
+    public ResponseEntity<CommentResponse> viewCommentByUserAndMovie(HttpServletRequest request, @PathVariable Integer movieId) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        CommentResponse commentResponse = movieRespondService.getMovieCommentByUserIdAndMovieId(userId, movieRespondRequest);
+        CommentResponse commentResponse = movieRespondService.getMovieCommentByUserIdAndMovieId(userId, movieId);
         return ResponseEntity.ok(commentResponse);
     }
 
@@ -290,16 +286,16 @@ public class UserController {
         return ResponseEntity.ok(commentResponses);
     }
 
-    @GetMapping("/view/viewCommentByMovie")
-    public ResponseEntity<List<CommentResponse>> viewCommentByMovie(@RequestBody MovieRespondRequest movieRespondRequest) {
-        List<CommentResponse> commentResponses = movieRespondService.getMovieCommentsByMovieId(movieRespondRequest);
+    @GetMapping("/view/viewCommentByMovie/{movieId}")
+    public ResponseEntity<List<CommentResponse>> viewCommentByMovie(@PathVariable Integer movieId) {
+        List<CommentResponse> commentResponses = movieRespondService.getMovieCommentsByMovieId(movieId);
         return ResponseEntity.ok(commentResponses);
     }
 
-    @GetMapping("/view/viewRatingByUserAndMovie")
-    public ResponseEntity<RatingResponse> viewRatingByUserAndMovie(HttpServletRequest request, @RequestBody MovieRespondRequest movieRespondRequest) {
+    @GetMapping("/view/viewRatingByUserAndMovie/{movieId}")
+    public ResponseEntity<RatingResponse> viewRatingByUserAndMovie(HttpServletRequest request, @PathVariable Integer movieId) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        RatingResponse ratingResponse = movieRespondService.getMovieRatingByUserIdAndMovieId(userId, movieRespondRequest);
+        RatingResponse ratingResponse = movieRespondService.getMovieRatingByUserIdAndMovieId(userId, movieId);
         return ResponseEntity.ok(ratingResponse);
     }
 
@@ -310,16 +306,16 @@ public class UserController {
         return ResponseEntity.ok(ratingResponses);
     }
 
-    @GetMapping("/view/viewRatingByMovie")
-    public ResponseEntity<List<RatingResponse>> viewRatingByMovie(@RequestBody MovieRespondRequest movieRespondRequest) {
-        List<RatingResponse> ratingResponses = movieRespondService.getMovieRatingsByMovieId(movieRespondRequest);
+    @GetMapping("/view/viewRatingByMovie/{movieId}")
+    public ResponseEntity<List<RatingResponse>> viewRatingByMovie(@PathVariable Integer movieId) {
+        List<RatingResponse> ratingResponses = movieRespondService.getMovieRatingsByMovieId(movieId);
         return ResponseEntity.ok(ratingResponses);
     }
 
-    @GetMapping("/view/viewMovieRespondByUserAndMovie")
-    public ResponseEntity<MovieRespondResponse> viewMovieRespondByUserAndMovie(HttpServletRequest request, @RequestBody MovieRespondRequest movieRespondRequest) {
+    @GetMapping("/view/viewMovieRespondByUserAndMovie/{movieId}")
+    public ResponseEntity<MovieRespondResponse> viewMovieRespondByUserAndMovie(HttpServletRequest request, @PathVariable Integer movieId) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        MovieRespondResponse movieRespondResponse = movieRespondService.getMovieRespondsByUserIdAndMovieId(userId, movieRespondRequest);
+        MovieRespondResponse movieRespondResponse = movieRespondService.getMovieRespondsByUserIdAndMovieId(userId, movieId);
         return ResponseEntity.ok(movieRespondResponse);
     }
 
@@ -330,9 +326,9 @@ public class UserController {
         return ResponseEntity.ok(movieRespondResponses);
     }
 
-    @GetMapping("/view/viewMovieRespondByMovie")
-    public ResponseEntity<List<MovieRespondResponse>> viewMovieRespondByMovie(@RequestBody MovieRespondRequest movieRespondRequest) {
-        List<MovieRespondResponse> movieRespondResponses = movieRespondService.getAllMovieRespondsByMovieId(movieRespondRequest);
+    @GetMapping("/view/viewMovieRespondByMovie/{movieId}")
+    public ResponseEntity<List<MovieRespondResponse>> viewMovieRespondByMovie(@PathVariable Integer movieId) {
+        List<MovieRespondResponse> movieRespondResponses = movieRespondService.getAllMovieRespondsByMovieId(movieId);
         return ResponseEntity.ok(movieRespondResponses);
     }
 }
