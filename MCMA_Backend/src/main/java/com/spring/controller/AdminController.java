@@ -1,7 +1,6 @@
 package com.spring.controller;
 
 import com.spring.config.JwtUtil;
-import com.spring.dto.request.respond.MovieRespondRequest;
 import com.spring.dto.response.SearchMovieByGenreResponse;
 import com.spring.dto.response.SearchMovieByNameResponse;
 import com.spring.dto.response.movieRespond.CommentResponse;

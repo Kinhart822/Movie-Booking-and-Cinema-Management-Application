@@ -1,7 +1,5 @@
 package com.spring.dto.response.view;
 
-import com.spring.enums.PerformerSex;
-import com.spring.enums.PerformerType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

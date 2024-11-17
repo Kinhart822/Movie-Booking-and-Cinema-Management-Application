@@ -1,6 +1,5 @@
 package com.spring.dto.response.booking;
 
-import com.spring.enums.SizeFoodOrDrink;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
