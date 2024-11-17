@@ -50,9 +50,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         List<Token> validTokensByUser = tokenRepository.findAllValidTokenByUser(user.getId());
 
         if (!validTokensByUser.isEmpty()) {
-            validTokensByUser.forEach(t -> {
-                t.setLoggedOut(true);
-            });
+            validTokensByUser.forEach(t -> t.setLoggedOut(true));
         } else {
             return;
         }
@@ -86,7 +84,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             Type userType = Type.valueOf(signUpRequest.getType());
             user.setUserType(userType);
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Incorrect Role: " + signUpRequest.getType());
+            throw new RuntimeException("Incorrect Role: %s".formatted(signUpRequest.getType()));
         }
         var saveUser = userRepository.save(user);
 
@@ -106,7 +104,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 signInRequest.getPassword()
         ));
         var user = userRepository.findByEmail(signInRequest.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid User: " + signInRequest.getEmail()));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid User: %s".formatted(signInRequest.getEmail())));
         List<Token> loggedOutTokens = tokenRepository.findAllLoggedOutTokensByUser(user.getId());
         if (!loggedOutTokens.isEmpty()) {
             tokenRepository.deleteAll(loggedOutTokens);

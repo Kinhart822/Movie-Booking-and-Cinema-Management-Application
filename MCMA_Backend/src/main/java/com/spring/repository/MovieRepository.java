@@ -8,12 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Integer> {
-    Optional<Movie> findByName(String name);
-
     @Query(nativeQuery = true, value = """
                 SELECT m.id,
                        m.name,
@@ -59,7 +56,7 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
                        mpd.performer_sex
                 FROM movie m
                 LEFT JOIN set_movie_rating_detail srd ON m.id = srd.movie_id
-                LEFT JOIN movie_rating_detail mrd ON srd.movie_rating_detail_id = mrd.id                
+                LEFT JOIN movie_rating_detail mrd ON srd.movie_rating_detail_id = mrd.id
                 LEFT JOIN set_movie_genre g ON m.id = g.movie_id
                 LEFT JOIN movie_genre mg ON g.movie_genre_id = mg.id
                 LEFT JOIN movie_genre_detail mgd ON mg.movie_genre_detail_id = mgd.id
@@ -68,7 +65,7 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
                 LEFT JOIN movie_performer_detail mpd ON mp.movie_performer_detail_id = mpd.id
                 WHERE mg.id = :movieGenreId
                 ORDER BY m.date_updated DESC
-            """)
+           \s""")
     List<Object[]> getAllMoviesByMovieGenreSet(@Param("movieGenreId") Integer movieGenreId);
 
     List<Movie> findByDatePublishBefore(Date date);

@@ -1,6 +1,5 @@
 package com.spring.repository;
 
-import com.spring.entities.MoviePerformer;
 import com.spring.entities.MovieRatingDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

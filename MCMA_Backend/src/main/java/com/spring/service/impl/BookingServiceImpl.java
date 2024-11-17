@@ -1122,6 +1122,14 @@ public class BookingServiceImpl implements BookingService {
                 seatRepository.saveAll(heldSeats);
 
                 bookingRepository.delete(existingBooking);
+
+                System.out.printf("Seats have been released for booking ID: %d due to incomplete payment within 5 minutes.%n", booking.getId());
+
+                Notification notification = new Notification();
+                notification.setUser(existingBooking.getUser());
+                notification.setMessage("Your booking has been canceled because booking was not completed within 5 minutes!");
+                notification.setDateCreated(LocalDateTime.now());
+                notificationRepository.save(notification);
             }
         }
     }
