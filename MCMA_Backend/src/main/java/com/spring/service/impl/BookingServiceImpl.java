@@ -641,13 +641,13 @@ public class BookingServiceImpl implements BookingService {
         if (selectedSeats.size() != seatCount) {
             throw new IllegalArgumentException("One or more selected seats are unavailable.");
         }
-        if (selectedSeats.stream().anyMatch(seat -> seat.getScreen().getId() != screen.getId())){
+        if (selectedSeats.stream().anyMatch(seat -> seat.getScreen().getId() != screen.getId())) {
             throw new IllegalArgumentException("The selected seats do not match the specified screen!");
         }
-        if (selectedSeats.stream().anyMatch(seat -> seat.getSeatStatus() == SeatStatus.Unavailable) ) {
+        if (selectedSeats.stream().anyMatch(seat -> seat.getSeatStatus() == SeatStatus.Unavailable)) {
             throw new IllegalArgumentException("Selected seats are already unavailable, please select a different seat.");
         }
-        if (selectedSeats.stream().anyMatch(seat -> seat.getSeatStatus() == SeatStatus.Held) ) {
+        if (selectedSeats.stream().anyMatch(seat -> seat.getSeatStatus() == SeatStatus.Held)) {
             throw new IllegalArgumentException("Selected seats are already held, please select a different seat.");
         }
 
@@ -683,7 +683,7 @@ public class BookingServiceImpl implements BookingService {
 
                 Food food = foodRepository.findById(foodId)
                         .orElseThrow(() -> new IllegalArgumentException("Food not found"));
-                if (food.getCinema().getId() != cinema.getId()){
+                if (food.getCinema().getId() != cinema.getId()) {
                     throw new IllegalArgumentException("The selected food does not match the specified cinema!");
                 }
 
@@ -719,7 +719,7 @@ public class BookingServiceImpl implements BookingService {
 
                 Drink drink = drinkRepository.findById(drinkId)
                         .orElseThrow(() -> new IllegalArgumentException("Drink not found"));
-                if (drink.getCinema().getId()!= cinema.getId()){
+                if (drink.getCinema().getId() != cinema.getId()) {
                     throw new IllegalArgumentException("The selected drink does not match the specified cinema!");
                 }
 
@@ -808,6 +808,9 @@ public class BookingServiceImpl implements BookingService {
         booking.setStatus(BookingStatus.In_Processing);
         bookingRepository.save(booking);
 
+            // Schedule seat release if payment is not completed
+        scheduleSeatReleaseTask(booking);
+
         return new SendBookingResponse(
                 booking.getId(),
                 booking.getMovie().getName(),
@@ -823,10 +826,6 @@ public class BookingServiceImpl implements BookingService {
                 booking.getStatus().toString()
         );
     }
-
-    // TODO:  Cần thêm 1 số tính năng :
-    //  + Đặt thời gian giữ ghế tạm thời (ví dụ: 5–10 phút). Nếu người dùng không hoàn thành thanh toán trong
-    //          khoảng thời gian này, ghế sẽ được chuyển lại thành trạng thái "Available".
 
     @Override
     public BookingResponse completeBooking(Integer userId, BookingRequest bookingRequest) {
@@ -947,10 +946,10 @@ public class BookingServiceImpl implements BookingService {
         if (selectedSeats.size() != seatCount) {
             throw new IllegalArgumentException("One or more selected seats are unavailable.");
         }
-        if (selectedSeats.stream().anyMatch(seat -> seat.getScreen().getId() != booking.getScreen().getId())){
+        if (selectedSeats.stream().anyMatch(seat -> seat.getScreen().getId() != booking.getScreen().getId())) {
             throw new IllegalArgumentException("The selected seats do not match the specified screen!");
         }
-        if (selectedSeats.stream().anyMatch(seat -> seat.getSeatStatus() == SeatStatus.Unavailable) ) {
+        if (selectedSeats.stream().anyMatch(seat -> seat.getSeatStatus() == SeatStatus.Unavailable)) {
             throw new IllegalArgumentException("Selected seats are already unavailable, please select a different seat.");
         }
 
@@ -1093,5 +1092,37 @@ public class BookingServiceImpl implements BookingService {
             case Medium -> 1.00;
             case Large -> 1.25;
         };
+    }
+
+        // TODO: Đặt thời gian giữ ghế tạm thời (ví dụ: 5–10 phút). Nếu người dùng không hoàn thành thanh toán trong
+        //              khoảng thời gian này, ghế sẽ được chuyển lại thành trạng thái "Available".
+    private void scheduleSeatReleaseTask(Booking booking) {
+        long delay = Duration.ofMinutes(5).toMillis();
+
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                holdSeatsTemporarily(booking);
+            }
+        };
+
+        Timer timer = new Timer();
+        timer.schedule(task, delay);
+    }
+
+    public void holdSeatsTemporarily(Booking booking) {
+        Booking existingBooking = bookingRepository.findById(booking.getId()).orElse(null);
+
+        if (existingBooking != null && existingBooking.getPaymentMethod() == null) {
+            if (existingBooking.getStatus() == BookingStatus.In_Processing) {
+                List<Seat> heldSeats = existingBooking.getSeatList().stream()
+                        .map(BookingSeat::getSeat)
+                        .toList();
+                heldSeats.forEach(seat -> seat.setSeatStatus(SeatStatus.Available));
+                seatRepository.saveAll(heldSeats);
+
+                bookingRepository.delete(existingBooking);
+            }
+        }
     }
 }
