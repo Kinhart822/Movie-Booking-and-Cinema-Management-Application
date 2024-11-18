@@ -6,9 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ResetPasswordRequest {
-    private String token;
-
+public class UpdatePasswordRequest {
     @Size(min = 6, message = "Password must be at least 6 characters long")
     private String newPassword;
 

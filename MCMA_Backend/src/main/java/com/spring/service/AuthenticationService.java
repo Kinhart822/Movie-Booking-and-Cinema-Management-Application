@@ -14,7 +14,9 @@ public interface AuthenticationService {
 
     String resetPassword(ResetPasswordRequest request);
 
-    void updateAccount(int userId, UpdateAccountRequest updateAccountRequest);
+    void updateAccount(Integer userId, UpdateAccountRequest updateAccountRequest);
 
-    void deleteAccount(int userId);
+    void changeNewPassword(Integer userId, UpdatePasswordRequest updatePasswordRequest);
+
+    void deleteAccount(Integer userId);
 }

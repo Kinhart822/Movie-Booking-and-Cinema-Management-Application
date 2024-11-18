@@ -183,7 +183,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void updateAccount(int userId, UpdateAccountRequest updateAccountRequest) {
+    public void updateAccount(Integer userId, UpdateAccountRequest updateAccountRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
@@ -214,7 +214,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void deleteAccount(int userId) {
+    public void changeNewPassword(Integer userId, UpdatePasswordRequest updatePasswordRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user"));
+
+        if (passwordEncoder.matches(updatePasswordRequest.getNewPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("New password cannot be the same as the old password");
+        }
+
+        if (!updatePasswordRequest.getNewPassword().equals(updatePasswordRequest.getConfirmPassword())) {
+            throw new IllegalArgumentException("Passwords do not match");
+        }
+
+        user.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
+        userRepository.save(user);
+    }
+
+    @Override
+    public void deleteAccount(Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 

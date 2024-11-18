@@ -1,8 +1,10 @@
 package com.spring.controller;
 
+import com.spring.config.JwtUtil;
 import com.spring.dto.request.*;
 import com.spring.dto.response.JwtAuthenticationResponse;
 import com.spring.service.AuthenticationService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Autowired
     private AuthenticationService authenticationService;
@@ -44,13 +48,21 @@ public class AuthenticationController {
     }
 
     @PutMapping("/update-account/{userId}")
-    public ResponseEntity<String> updateAccount(@PathVariable int userId, @RequestBody UpdateAccountRequest updateAccountRequest) {
+    public ResponseEntity<String> updateAccount(@PathVariable Integer userId, @RequestBody UpdateAccountRequest updateAccountRequest) {
         authenticationService.updateAccount(userId, updateAccountRequest);
         return ResponseEntity.ok("Account updated successfully");
     }
 
+    @Transactional
+    @RequestMapping(value = "/update-password", method = {RequestMethod.POST, RequestMethod.GET})
+    public ResponseEntity<String> updatePassword(HttpServletRequest request,  @RequestBody UpdatePasswordRequest updatePasswordRequest) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        authenticationService.changeNewPassword(userId, updatePasswordRequest);
+        return ResponseEntity.ok("Password updated successfully");
+    }
+
     @DeleteMapping("/delete-account/{userId}")
-    public ResponseEntity<String> deleteAccount(@PathVariable int userId) {
+    public ResponseEntity<String> deleteAccount(@PathVariable Integer userId) {
         authenticationService.deleteAccount(userId);
         return ResponseEntity.ok("Account deleted successfully");
     }
