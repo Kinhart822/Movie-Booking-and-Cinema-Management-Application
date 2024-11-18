@@ -18,7 +18,9 @@ public interface BookingService {
             Integer screenId
     );
     List<TicketResponse> getAllTickets();
-    List<SeatResponse> getAllSeatsBySelectedScreen(Integer screenId);
+    List<UnavailableSeatResponse> getAllUnavailableSeatsBySelectedScreen(Integer screenId);
+    List<HeldSeatResponse> getAllHeldSeatsBySelectedScreen(Integer screenId);
+    List<AvailableSeatResponse> getAllAvailableSeatsBySelectedScreen(Integer screenId);
     List<ListFoodAndDrinkToOrderingResponse> getAllFoodsAndDrinksByCinema(Integer cinemaId);
     List<CouponResponse> getAllCouponsByUser(Integer userId);
     List<CouponResponse> getAllCouponsByMovie(Integer movieId);
@@ -29,6 +31,6 @@ public interface BookingService {
 
     void updateBookingSeat(BookingRequest bookingRequest);
     void cancelBooking(Integer bookingId, Integer userId);
-
+    void revokeCancelBooking(Integer bookingId, Integer userId);
     void deleteBooking(Integer bookingId, Integer userId);
 }

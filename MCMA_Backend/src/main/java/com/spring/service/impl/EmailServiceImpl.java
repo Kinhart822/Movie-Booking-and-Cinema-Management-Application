@@ -27,27 +27,62 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendCancelMailMessage(String toEmail) {
-        String subject = "Cancel movie ticket(s) successfully";
-        String body = "Congratulations! You have successfully canceled your movie ticket(s). Thank you!";
+        String subject = "Cancel Booking Successfully!";
+        String message = """
+                Dear Customer,
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(toEmail);
-        message.setSubject(subject);
-        message.setText(body);
-        message.setFrom(fromEmail);
-        javaMailSender.send(message);
+                We are pleased to inform you that your booking has been successfully canceled.
+               
+                Thank you for choosing our service!
+
+                Best Regards,
+                Your Booking Team""";
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(toEmail);
+        mailMessage.setSubject(subject);
+        mailMessage.setText(message);
+        javaMailSender.send(mailMessage);
     }
 
     @Override
     public void sendDeleteMailMessage(String toEmail) {
-        String subject = "Delete movie ticket(s) successfully";
-        String body = "Congratulations! You have successfully deleted your movie ticket(s). Thank you!";
+        String subject = "Delete Booking Successfully";
+        String message = """
+                Dear Customer,
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(toEmail);
-        message.setSubject(subject);
-        message.setText(body);
-        message.setFrom(fromEmail);
-        javaMailSender.send(message);
+                We are pleased to inform you that your booking has been successfully deleted.
+               
+                Thank you for choosing our service!
+
+                Best Regards,
+                Your Booking Team""";
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(toEmail);
+        mailMessage.setSubject(subject);
+        mailMessage.setText(message);
+        javaMailSender.send(mailMessage);
+    }
+
+    @Override
+    public void sendReinstateMailMessage(String toEmail) {
+        String subject = "Booking Reinstated Successfully";
+        String message = """
+                Dear Customer,
+
+                We are pleased to inform you that your booking has been successfully reinstated.
+                You can now proceed to manage your booking or complete the payment if necessary.
+
+                Thank you for choosing our service!
+
+                Best Regards,
+                Your Booking Team""";
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(toEmail);
+        mailMessage.setSubject(subject);
+        mailMessage.setText(message);
+        javaMailSender.send(mailMessage);
     }
 }

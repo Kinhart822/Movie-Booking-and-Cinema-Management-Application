@@ -64,6 +64,15 @@ public class UserController {
         return ResponseEntity.ok(movieService.getAllMoviesByMovieGenreSet(movieGenreId));
     }
 
+    @GetMapping("/search-movie-by-movie-genre-name")
+    public ResponseEntity<List<SearchMovieByGenreResponse>> getAllMoviesByMovieGenreName(
+            @RequestParam(required = false, name = "name") String name,
+            @RequestParam(required = false, name = "limit", defaultValue = "10") Integer limit,
+            @RequestParam(required = false, name = "offset", defaultValue = "0") Integer offset
+    ) {
+        return ResponseEntity.ok(movieService.getAllMoviesByMovieGenreName(name, limit, offset));
+    }
+
     // TODO: Booking ticket(s)
     @GetMapping("/information/allMovies")
     public ResponseEntity<List<MovieResponse>> getAllMovies() {
@@ -107,10 +116,22 @@ public class UserController {
         return ResponseEntity.ok(ticketResponses);
     }
 
-    @GetMapping("/booking/allSeatsByScreen/{screenId}")
-    public ResponseEntity<List<SeatResponse>> getAllSeatsByScreen(@PathVariable Integer screenId) {
-        List<SeatResponse> seatResponses = bookingService.getAllSeatsBySelectedScreen(screenId);
-        return ResponseEntity.ok(seatResponses);
+    @GetMapping("/booking/allUnavailableSeatsByScreen/{screenId}")
+    public ResponseEntity<List<UnavailableSeatResponse>> getAllUnavailableSeatsByScreen(@PathVariable Integer screenId) {
+        List<UnavailableSeatResponse> unavailableSeatResponses = bookingService.getAllUnavailableSeatsBySelectedScreen(screenId);
+        return ResponseEntity.ok(unavailableSeatResponses);
+    }
+
+    @GetMapping("/booking/allHeldSeatsByScreen/{screenId}")
+    public ResponseEntity<List<HeldSeatResponse>> getAllHeldSeatsByScreen(@PathVariable Integer screenId) {
+        List<HeldSeatResponse> heldSeatResponses = bookingService.getAllHeldSeatsBySelectedScreen(screenId);
+        return ResponseEntity.ok(heldSeatResponses);
+    }
+
+    @GetMapping("/booking/allAvailableSeatsByScreen/{screenId}")
+    public ResponseEntity<List<AvailableSeatResponse>> getAllAvailableSeatsByScreen(@PathVariable Integer screenId) {
+        List<AvailableSeatResponse> availableSeatResponses = bookingService.getAllAvailableSeatsBySelectedScreen(screenId);
+        return ResponseEntity.ok(availableSeatResponses);
     }
 
     @GetMapping("/booking/allFoodsAndDrinksByCinema/{cinemaId}")
@@ -157,6 +178,13 @@ public class UserController {
         Integer userId = jwtUtil.getUserIdFromToken(request);
         bookingService.cancelBooking(bookingId, userId);
         return ResponseEntity.ok("Booking canceled successfully");
+    }
+
+    @PostMapping("/booking/revoke-cancel-booking/{bookingId}")
+    public ResponseEntity<String> revokeCancelBooking(HttpServletRequest request, @PathVariable Integer bookingId) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        bookingService.cancelBooking(bookingId, userId);
+        return ResponseEntity.ok("Booking reinstated successfully");
     }
 
     @DeleteMapping("booking/delete-booking/{bookingId}")
@@ -270,6 +298,19 @@ public class UserController {
         Integer userId = jwtUtil.getUserIdFromToken(request);
         NotificationResponse notificationResponse = notificationService.getNotificationsByUserId(userId);
         return ResponseEntity.ok(notificationResponse);
+    }
+
+    @GetMapping("/view/allBookings")
+    public ResponseEntity<List<BookingResponse>> getAllBookings() {
+        List<BookingResponse> bookingResponses = viewService.getAllBookings();
+        return ResponseEntity.ok(bookingResponses);
+    }
+
+    @GetMapping("/view/allBookingsByUser")
+    public ResponseEntity<List<BookingResponse>> getAllBookingsByUser(HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        List<BookingResponse> bookingResponses = viewService.getAllBookingsByUser(userId);
+        return ResponseEntity.ok(bookingResponses);
     }
 
     @GetMapping("/view/viewCommentByUserAndMovie/{movieId}")

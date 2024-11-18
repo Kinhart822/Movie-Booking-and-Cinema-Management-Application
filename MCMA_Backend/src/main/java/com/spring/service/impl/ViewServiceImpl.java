@@ -44,6 +44,9 @@ public class ViewServiceImpl implements ViewService {
     @Autowired
     private DrinkRepository drinkRepository;
 
+    @Autowired
+    private BookingRepository bookingRepository;
+
     @Override
     public ViewCityResponse getAvailableCities() {
         List<City> cities = cityRepository.findAll();
@@ -89,6 +92,9 @@ public class ViewServiceImpl implements ViewService {
     @Override
     public ViewCinemaResponse getCinemasByCity(Integer cityId) {
         List<Cinema> cinemaList = cinemaRepository.findByCityId(cityId);
+        if (cinemaList == null || cinemaList.isEmpty()) {
+            throw new IllegalArgumentException("No cinemas found for given city.");
+        }
         List<String> cinemaNameList = cinemaList.stream()
                 .map(Cinema::getName)
                 .toList();
@@ -101,6 +107,9 @@ public class ViewServiceImpl implements ViewService {
         List<MovieSchedule> movieSchedules = movieScheduleRepository.findMovieSchedulesByMovieIdAndCinemaId(
                 movieId, cinemaId
         );
+        if (movieSchedules == null || movieSchedules.isEmpty()) {
+            throw new IllegalArgumentException("No schedules found for given movie and cinema.");
+        }
         List<ScheduleResponse> scheduleResponses = new ArrayList<>();
 
         DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -279,6 +288,64 @@ public class ViewServiceImpl implements ViewService {
                             .toList());
             return response;
         }).toList();
+    }
+
+    @Override
+    public List<BookingResponse> getAllBookings() {
+        List<Booking> bookings = bookingRepository.findAll();
+        List<BookingResponse> bookingResponses = new ArrayList<>();
+
+        for (Booking book : bookings) {
+            BookingResponse bookResponse = new BookingResponse();
+            bookResponse.setBookingNo(book.getBookingNo());
+            bookResponse.setMovieName(book.getMovie().getName());
+            bookResponse.setImageUrlMovie(book.getMovie().getImageUrl());
+            bookResponse.setCityName(book.getCity().getName());
+            bookResponse.setCinemaName(book.getCinema().getName());
+            bookResponse.setStartDateTime(book.getStartDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm a")));
+            bookResponse.setEndDateTime(book.getEndDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm a")));
+            bookResponse.setScreenName(book.getScreen().getName());
+            bookResponse.setTicketTypeName(book.getTickets().stream().map(ticket -> ticket.getTicket().getTicketType().getName()).toList());
+            bookResponse.setSeatName(book.getSeatList().stream().map(seat -> "%s (%s)".formatted(seat.getSeat().getName(), seat.getSeatType().getName())).toList());
+            bookResponse.setFoodNameList(book.getFoodList().stream().map(food -> food.getFood().getName()).toList());
+            bookResponse.setDrinkNameList(book.getDrinks().stream().map(drink -> drink.getDrink().getName()).toList());
+            bookResponse.setStatus(book.getStatus().toString());
+            bookResponse.setTotalPrice(book.getTotalPrice());
+            bookingResponses.add(bookResponse);
+        }
+
+        return bookingResponses;
+    }
+
+    @Override
+    public List<BookingResponse> getAllBookingsByUser(Integer userId) {
+        List<Booking> bookings = bookingRepository.findByUserId(userId);
+        if (bookings.isEmpty()) {
+            throw new IllegalArgumentException("No bookings found for given user.");
+        }
+        List<BookingResponse> bookingResponses = new ArrayList<>();
+
+
+        for (Booking book : bookings) {
+            BookingResponse bookResponse = new BookingResponse();
+            bookResponse.setBookingNo(book.getBookingNo());
+            bookResponse.setMovieName(book.getMovie().getName());
+            bookResponse.setImageUrlMovie(book.getMovie().getImageUrl());
+            bookResponse.setCityName(book.getCity().getName());
+            bookResponse.setCinemaName(book.getCinema().getName());
+            bookResponse.setStartDateTime(book.getStartDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm a")));
+            bookResponse.setEndDateTime(book.getEndDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm a")));
+            bookResponse.setScreenName(book.getScreen().getName());
+            bookResponse.setTicketTypeName(book.getTickets().stream().map(ticket -> ticket.getTicket().getTicketType().getName()).toList());
+            bookResponse.setSeatName(book.getSeatList().stream().map(seat -> "%s (%s)".formatted(seat.getSeat().getName(), seat.getSeatType().getName())).toList());
+            bookResponse.setFoodNameList(book.getFoodList().stream().map(food -> food.getFood().getName()).toList());
+            bookResponse.setDrinkNameList(book.getDrinks().stream().map(drink -> drink.getDrink().getName()).toList());
+            bookResponse.setStatus(book.getStatus().toString());
+            bookResponse.setTotalPrice(book.getTotalPrice());
+            bookingResponses.add(bookResponse);
+        }
+
+        return bookingResponses;
     }
 
     private ViewCouponsResponse mapCouponsToResponse(List<Coupon> coupons) {

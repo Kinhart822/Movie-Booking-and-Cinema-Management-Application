@@ -53,6 +53,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/user").hasAuthority(Type.USER.name())
                         .requestMatchers("/api/v1/user/search-movie-by-name").permitAll()
                         .requestMatchers("/api/v1/user/search-movie-by-genre").permitAll()
+                        .requestMatchers("/api/v1/user/search-movie-by-movie-genre-name").permitAll()
                         .requestMatchers("/api/v1/user/booking/**").permitAll()
                         .requestMatchers("/api/v1/user/view/**").permitAll()
                         .anyRequest().authenticated()

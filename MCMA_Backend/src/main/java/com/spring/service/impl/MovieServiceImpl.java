@@ -61,4 +61,24 @@ public class MovieServiceImpl implements MovieService {
                 ))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<SearchMovieByGenreResponse> getAllMoviesByMovieGenreName(String name, Integer limit, Integer offset) {
+        List<Object[]> results = movieRepository.getAllMoviesByMovieGenreName(name, limit, offset);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return results.stream()
+                .map(result -> new SearchMovieByGenreResponse(
+                        (Integer) result[0],        // id
+                        (String) result[1],         // name
+                        (Integer) result[2],        // length
+                        (String) result[3],         // trailerLink
+                        result[4] != null ? dateFormat.format((Date) result[4]) : null, // datePublish
+                        (String) result[5],         // ratingName
+                        (String) result[6],         // ratingDescription
+                        (String) result[7],         // genreName
+                        (String) result[8],         // performerName
+                        result[9] != null ? String.valueOf(PerformerType.values()[(Byte) result[9]]) : null, // performerType
+                        result[10] != null ? String.valueOf(PerformerSex.values()[(Byte) result[10]]) : null // performerSex
+                ))
+                .collect(Collectors.toList());    }
 }

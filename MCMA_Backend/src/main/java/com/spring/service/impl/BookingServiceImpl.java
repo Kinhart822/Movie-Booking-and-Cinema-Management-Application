@@ -19,6 +19,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -347,7 +350,53 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<SeatResponse> getAllSeatsBySelectedScreen(Integer screenId) {
+    public List<UnavailableSeatResponse> getAllUnavailableSeatsBySelectedScreen(Integer screenId) {
+        Screen screen = screenRepository.findById(screenId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid screen"));
+
+        List<Seat> unAvailableSeats = seatRepository.findBySeatStatusAndScreenId(SeatStatus.Unavailable, screen.getId());
+        List<UnavailableSeatResponse> unavailableSeatResponses = new ArrayList<>();
+
+        for (Seat seat : unAvailableSeats) {
+            UnavailableSeatResponse unavailableSeatResponse = new UnavailableSeatResponse(
+                    screen.getName(),
+                    seat.getId(),
+                    seat.getName(),
+                    seat.getColumn(),
+                    seat.getRow(),
+                    seat.getSeatType().getName()
+            );
+            unavailableSeatResponses.add(unavailableSeatResponse);
+        }
+
+        return unavailableSeatResponses;
+    }
+
+    @Override
+    public List<HeldSeatResponse> getAllHeldSeatsBySelectedScreen(Integer screenId) {
+        Screen screen = screenRepository.findById(screenId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid screen"));
+
+        List<Seat> heldSeats = seatRepository.findBySeatStatusAndScreenId(SeatStatus.Held, screen.getId());
+        List<HeldSeatResponse> heldSeatResponses = new ArrayList<>();
+
+        for (Seat seat : heldSeats) {
+            HeldSeatResponse heldSeatResponse = new HeldSeatResponse(
+                    screen.getName(),
+                    seat.getId(),
+                    seat.getName(),
+                    seat.getColumn(),
+                    seat.getRow(),
+                    seat.getSeatType().getName()
+            );
+            heldSeatResponses.add(heldSeatResponse);
+        }
+
+        return heldSeatResponses;
+    }
+
+    @Override
+    public List<AvailableSeatResponse> getAllAvailableSeatsBySelectedScreen(Integer screenId) {
         Screen screen = screenRepository.findById(screenId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid screen"));
 
@@ -355,39 +404,17 @@ public class BookingServiceImpl implements BookingService {
         if (availableSeats == null || availableSeats.isEmpty()) {
             throw new IllegalArgumentException("No available seats found for given screen.");
         }
+        List<AvailableSeatResponse> seatResponses = new ArrayList<>();
 
-        List<Seat> unAvailableSeats = seatRepository.findBySeatStatusAndScreenId(SeatStatus.Unavailable, screen.getId());
-
-        List<Seat> heldSeats = seatRepository.findBySeatStatusAndScreenId(SeatStatus.Held, screen.getId());
-
-        List<String> unAvailableSeatNames = new ArrayList<>();
-        List<String> unAvailableSeatsTypeList = new ArrayList<>();
-        List<String> heldSeatNames = new ArrayList<>();
-        List<String> heldSeatsTypeList = new ArrayList<>();
-        List<SeatResponse> seatResponses = new ArrayList<>();
-
-        for (Seat seat : unAvailableSeats) {
-            unAvailableSeatNames.add(seat.getName());
-            unAvailableSeatsTypeList.add(seat.getSeatType().getName());
-        }
-
-        for (Seat seat : heldSeats) {
-            heldSeatNames.add(seat.getName());
-            heldSeatsTypeList.add(seat.getSeatType().getName());
-        }
 
         for (Seat seat : availableSeats) {
-            SeatResponse seatResponse = new SeatResponse(
+            AvailableSeatResponse seatResponse = new AvailableSeatResponse(
                     screen.getName(),
-                    unAvailableSeatNames,
-                    unAvailableSeatsTypeList,
                     seat.getId(),
                     seat.getName(),
                     seat.getColumn(),
                     seat.getRow(),
-                    seat.getSeatType().getName(),
-                    heldSeatNames,
-                    heldSeatsTypeList
+                    seat.getSeatType().getName()
             );
             seatResponses.add(seatResponse);
         }
@@ -801,7 +828,7 @@ public class BookingServiceImpl implements BookingService {
         booking.setStatus(BookingStatus.In_Processing);
         bookingRepository.save(booking);
 
-            // Schedule seat release if payment is not completed
+        // Schedule seat release if payment is not completed
         scheduleSeatReleaseTask(booking);
 
         return new SendBookingResponse(
@@ -890,6 +917,7 @@ public class BookingServiceImpl implements BookingService {
         return new BookingResponse(
                 booking.getBookingNo(),
                 booking.getMovie().getName(),
+                booking.getMovie().getImageUrl(),
                 booking.getCity().getName(),
                 booking.getCinema().getName(),
                 booking.getStartDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm a")),
@@ -974,10 +1002,6 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingId)));
 
-        if (booking.getStartDateTime().isBefore(LocalDateTime.now().plusHours(1))) {
-            throw new IllegalArgumentException("You cannot cancel a booking within 1 hour of the start time.");
-        }
-
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
 
@@ -994,7 +1018,7 @@ public class BookingServiceImpl implements BookingService {
         try {
             Notification notification = new Notification();
             notification.setUser(user);
-            notification.setMessage("Your booking for %s is canceled. Booking Number: %s".formatted(booking.getMovie().getName(), booking.getBookingNo()));
+            notification.setMessage("Booking Number: %s, Your booking for %s is canceled. You will have the money that you pay for the booking return to your wallet".formatted(booking.getBookingNo(), booking.getMovie().getName()));
             notification.setDateCreated(LocalDateTime.now());
             notificationRepository.save(notification);
 
@@ -1004,6 +1028,46 @@ public class BookingServiceImpl implements BookingService {
             System.out.println("Failed to send email notification. Please try again later.");
         }
 
+        // Schedule the booking deletion 10 minutes after cancellation
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.schedule(() -> deleteBooking(bookingId, userId), 10, TimeUnit.MINUTES);
+    }
+
+    @Override
+    public void revokeCancelBooking(Integer bookingId, Integer userId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingId)));
+
+        // Check if the booking has already been deleted or if the cancellation cannot be revoked
+        if (!booking.getStatus().equals(BookingStatus.CANCELLED)) {
+            throw new IllegalArgumentException("Cannot revoke the cancellation. Booking is not in the CANCELLED state or has already been deleted.");
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+
+        List<Seat> seatListChangeToHeld = new ArrayList<>();
+        for (BookingSeat seat : booking.getSeatList()) {
+            seat.getSeat().setSeatStatus(SeatStatus.Held);
+            seatListChangeToHeld.add(seat.getSeat());
+        }
+        seatRepository.saveAll(seatListChangeToHeld);
+
+        booking.setStatus(BookingStatus.Completed);
+        bookingRepository.save(booking);
+
+        try {
+            Notification notification = new Notification();
+            notification.setUser(user);
+            notification.setMessage("Your booking for %s has been successfully reinstated. Booking Number: %s".formatted(booking.getMovie().getName(), booking.getBookingNo()));
+            notification.setDateCreated(LocalDateTime.now());
+            notificationRepository.save(notification);
+
+            emailService.sendReinstateMailMessage(user.getEmail());
+            System.out.printf("Notification sent to %s%n", user.getEmail());
+        } catch (Exception e) {
+            System.out.println("Failed to send email notification. Please try again later.");
+        }
     }
 
     @Override
@@ -1087,8 +1151,6 @@ public class BookingServiceImpl implements BookingService {
         };
     }
 
-        // TODO: Đặt thời gian giữ ghế tạm thời (ví dụ: 5–10 phút). Nếu người dùng không hoàn thành thanh toán trong
-        //              khoảng thời gian này, ghế sẽ được chuyển lại thành trạng thái "Available".
     private void scheduleSeatReleaseTask(Booking booking) {
         long delay = Duration.ofMinutes(5).toMillis();
 

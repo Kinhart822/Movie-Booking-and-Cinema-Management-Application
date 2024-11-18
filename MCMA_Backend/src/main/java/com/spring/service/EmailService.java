@@ -4,4 +4,5 @@ public interface EmailService {
     void sendSimpleMailMessage(String toEmail, String subject, String body);
     void sendCancelMailMessage(String toEmail);
     void sendDeleteMailMessage(String toEmail);
+    void sendReinstateMailMessage(String toEmail);
 }

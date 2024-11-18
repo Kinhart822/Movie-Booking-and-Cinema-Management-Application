@@ -29,4 +29,8 @@ public interface ViewService {
     List<ComingSoonResponse> getAvailableComingSoonMovies();
 
     List<HighRatingMovieResponse> getHighRatingMovies();
+
+    List<BookingResponse> getAllBookings();
+
+    List<BookingResponse> getAllBookingsByUser(Integer userId);
 }

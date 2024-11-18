@@ -5,21 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SeatResponse {
+public class UnavailableSeatResponse {
     private  String screenName;
-    private List<String> unAvailableSeats;
-    private List<String> unAvailableSeatsTypeList;
     private Integer seatId;
-    private String availableSeat;
+    private String unAvailableSeat;
     private Integer seatColumn;
     private Integer seatRow;
-    private String availableSeatsType;
-    private List<String> heldSeats;
-    private List<String> heldSeatsTypeList;
+    private String unAvailableSeatsType;
 }
