@@ -127,10 +127,18 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                filterList(newText);
+                if (newText.trim().isEmpty()) {
+                    filteredItems.clear();
+                    filteredItems.addAll(items);
+                    adapter.notifyDataSetChanged();
+                } else {
+                    // Lọc phim theo từ khóa
+                    filterList(newText);
+                }
                 return true;
             }
         });
+
 
         ImageButton notication_buttonn = v.findViewById(R.id.notification_button);
         notication_buttonn.setOnClickListener(new View.OnClickListener() {
@@ -154,11 +162,11 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
             items.add(new FilmItem("Grace Morgan","(Horror)" ,R.drawable.movie1));
             items.add(new FilmItem("Isabella Lewis","(Comedy)", R.drawable.movie3));
             items.add(new FilmItem("Evelyn", "(Sci-Fi)" ,R.drawable.movie4));
-            items.add(new FilmItem("Jack", "Horror" ,R.drawable.movie5));
+            items.add(new FilmItem("Jack", "Action" ,R.drawable.movie5));
             items.add(new FilmItem("Tino", "Horror" ,R.drawable.movie7));
         } else if (type.equals("comingsoon")) {
             items.add(new FilmItem("Olivia Adams","Horror", R.drawable.movie12));
-            items.add(new FilmItem("Liam Johnson","Horror", R.drawable.movie6));
+            items.add(new FilmItem("Liam Johnson","Action", R.drawable.movie6));
             items.add(new FilmItem("Noah Brown","Horror", R.drawable.movie8));
         }
 
@@ -193,11 +201,14 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
         }
 
         if (filteredItems.isEmpty()) {
-            Toast.makeText(getContext(), "No results found", Toast.LENGTH_SHORT).show();
+            // Hiển thị tất cả phim Now Showing khi không tìm thấy phim
+            filteredItems.addAll(items);
+            Toast.makeText(getContext(), "No movies found in Now Showing", Toast.LENGTH_SHORT).show();
         }
 
         adapter.notifyDataSetChanged();
     }
+
 
     public void closeDrawer() {
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {

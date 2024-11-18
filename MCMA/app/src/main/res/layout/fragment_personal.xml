@@ -1,174 +1,242 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    android:id="@+id/root_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/very_dark_grey"
-    android:padding="16dp"
-    android:id="@+id/personal_fragment">
+    android:layout_height="match_parent">
 
-    <!-- Top Bar with X button and Account Information title -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:paddingBottom="16dp">
-
-        <!-- X button to close the page -->
-        <ImageButton
-            android:id="@+id/close_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_close"
-            android:background="@color/black"
-            android:layout_alignParentStart="true"
-            android:layout_marginEnd="16dp"
-            android:contentDescription="Close"
-            app:tint="@android:color/white" />
-
-        <!-- Account Information title -->
-        <TextView
-            android:id="@+id/tvAccountInformation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Account Information"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true"
-            android:gravity="center" />
-    </RelativeLayout>
-
-    <!-- Details Section -->
+    <!-- Original Layout -->
     <LinearLayout
+        android:id="@+id/main_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@drawable/rounded_corners_background"
-        android:padding="16dp">
+        android:background="@color/white">
 
-        <!-- Details Row -->
+        <!-- Full-width header -->
         <LinearLayout
-            android:id="@+id/account_information_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingVertical="12dp"
-            android:gravity="center_vertical">
+            android:background="@color/DarkBlue"
+            android:gravity="center_vertical"
+            android:padding="16dp">
+
+            <ImageButton
+                android:id="@+id/close_button"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/ic_close" />
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Details"
-                android:textSize="16sp"
-                android:textColor="@android:color/white" />
-
-            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_arrow_right"
-                app:tint="@android:color/white" />
+                android:text="Account Information"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:paddingLeft="25dp"
+                android:textColor="@color/white"/>
+
+
         </LinearLayout>
 
-        <!-- Edit / Update Row -->
-        <LinearLayout
-            android:id="@+id/account_information_edit_update"
+        <!-- Scrollable content with padding -->
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingVertical="12dp"
-            android:gravity="center_vertical">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
-            <TextView
-                android:layout_width="0dp"
+            <!-- Content container with padding -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Edit / Update"
-                android:textSize="16sp"
-                android:textColor="@android:color/white" />
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/white">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_arrow_right"
-                app:tint="@android:color/white" />
-        </LinearLayout>
+                <!-- Details Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/rounded_corners_background"
+                    android:layout_marginLeft="4dp">
 
-        <!-- Change Password Row -->
-        <LinearLayout
-            android:id="@+id/account_information_change_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingVertical="12dp"
-            android:gravity="center_vertical">
+                    <!-- Details Row -->
+                    <LinearLayout
+                        android:id="@+id/account_information_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="12dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/edit_group_box">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Change Password"
-                android:textSize="16sp"
-                android:textColor="@android:color/white" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Details"
+                            android:textSize="16sp"
+                            android:textColor="@color/black" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_arrow_right"
-                app:tint="@android:color/white" />
-        </LinearLayout>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_arrow_right"
+                            app:tint="@color/black" />
+                    </LinearLayout>
 
-        <!-- Payment History Row -->
-        <LinearLayout
-            android:id="@+id/account_information_payment_history"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingVertical="12dp"
-            android:gravity="center_vertical">
+                    <!-- Edit / Update Row -->
+                    <LinearLayout
+                        android:id="@+id/account_information_edit_update"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="12dp"
+                        android:layout_marginTop="15dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/edit_group_box">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Payment History"
-                android:textSize="16sp"
-                android:textColor="@android:color/white" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Edit / Update"
+                            android:textSize="16sp"
+                            android:textColor="@color/black" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_arrow_right"
-                app:tint="@android:color/white" />
-        </LinearLayout>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_arrow_right"
+                            app:tint="@color/black" />
+                    </LinearLayout>
 
-        <!-- Log Out Row -->
-        <LinearLayout
-            android:id="@+id/account_information_log_out"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingVertical="12dp"
-            android:gravity="center_vertical">
+                    <!-- Change Password Row -->
+                    <LinearLayout
+                        android:id="@+id/account_information_change_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="12dp"
+                        android:layout_marginTop="15dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/edit_group_box">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Log Out"
-                android:textSize="16sp"
-                android:textColor="@android:color/white" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Change Password"
+                            android:textSize="16sp"
+                            android:textColor="@color/black" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="Log Out"
-                android:src="@drawable/ic_arrow_right"
-                app:tint="@android:color/white" />
-        </LinearLayout>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_arrow_right"
+                            app:tint="@color/black" />
+                    </LinearLayout>
+
+                    <!-- Payment History Row -->
+                    <LinearLayout
+                        android:id="@+id/account_information_payment_history"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="12dp"
+                        android:layout_marginTop="15dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/edit_group_box">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Payment History"
+                            android:textSize="16sp"
+                            android:textColor="@color/black" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_arrow_right"
+                            app:tint="@color/black" />
+                    </LinearLayout>
+
+                    <!-- Log Out Row -->
+                    <LinearLayout
+                        android:id="@+id/account_information_log_out"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="12dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/edit_group_box"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Log Out"
+                            android:textSize="16sp"
+                            android:textColor="@color/black" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="Log Out"
+                            android:src="@drawable/ic_arrow_right"
+                            app:tint="@color/black" />
+                    </LinearLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:background="@color/light_gray"
+                        android:layout_marginTop="20dp"/>
+
+                    <!-- Delete Account Row -->
+                    <LinearLayout
+                        android:id="@+id/account_information_delete_account"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="12dp"
+                        android:layout_marginTop="15dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/edit_group_box">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Delete Account"
+                            android:textSize="16sp"
+                            android:textColor="@color/red" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="Delete Account"
+                            android:src="@drawable/ic_arrow_right"
+                            app:tint="@color/red" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
-</LinearLayout>
+    <!-- Fragment Container -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+</FrameLayout>
