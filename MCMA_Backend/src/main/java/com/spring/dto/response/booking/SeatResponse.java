@@ -13,11 +13,13 @@ import java.util.List;
 @NoArgsConstructor
 public class SeatResponse {
     private  String screenName;
-    private List<Integer> seatIds;
     private List<String> unAvailableSeats;
     private List<String> unAvailableSeatsTypeList;
-    private List<String> availableSeats;
-    private List<String> availableSeatsTypeList;
+    private Integer seatId;
+    private String availableSeat;
+    private Integer seatColumn;
+    private Integer seatRow;
+    private String availableSeatsType;
     private List<String> heldSeats;
     private List<String> heldSeatsTypeList;
 }

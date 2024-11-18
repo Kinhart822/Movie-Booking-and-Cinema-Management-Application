@@ -360,20 +360,11 @@ public class BookingServiceImpl implements BookingService {
 
         List<Seat> heldSeats = seatRepository.findBySeatStatusAndScreenId(SeatStatus.Held, screen.getId());
 
-        List<Integer> seatIds = new ArrayList<>();
         List<String> unAvailableSeatNames = new ArrayList<>();
         List<String> unAvailableSeatsTypeList = new ArrayList<>();
-        List<String> availableSeatNames = new ArrayList<>();
-        List<String> availableSeatsTypeList = new ArrayList<>();
         List<String> heldSeatNames = new ArrayList<>();
         List<String> heldSeatsTypeList = new ArrayList<>();
-
-
-        for (Seat seat : availableSeats) {
-            seatIds.add(seat.getId());
-            availableSeatNames.add(seat.getName());
-            availableSeatsTypeList.add(seat.getSeatType().getName());
-        }
+        List<SeatResponse> seatResponses = new ArrayList<>();
 
         for (Seat seat : unAvailableSeats) {
             unAvailableSeatNames.add(seat.getName());
@@ -385,19 +376,21 @@ public class BookingServiceImpl implements BookingService {
             heldSeatsTypeList.add(seat.getSeatType().getName());
         }
 
-        SeatResponse seatResponse = new SeatResponse(
-                screen.getName(),
-                seatIds,
-                unAvailableSeatNames,
-                unAvailableSeatsTypeList,
-                availableSeatNames,
-                availableSeatsTypeList,
-                heldSeatNames,
-                heldSeatsTypeList
-        );
-
-        List<SeatResponse> seatResponses = new ArrayList<>();
-        seatResponses.add(seatResponse);
+        for (Seat seat : availableSeats) {
+            SeatResponse seatResponse = new SeatResponse(
+                    screen.getName(),
+                    unAvailableSeatNames,
+                    unAvailableSeatsTypeList,
+                    seat.getId(),
+                    seat.getName(),
+                    seat.getColumn(),
+                    seat.getRow(),
+                    seat.getSeatType().getName(),
+                    heldSeatNames,
+                    heldSeatsTypeList
+            );
+            seatResponses.add(seatResponse);
+        }
 
         return seatResponses;
     }
