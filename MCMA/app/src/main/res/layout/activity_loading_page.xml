@@ -21,16 +21,16 @@
             tools:ignore="MissingConstraints">
 
             <ImageView
-                android:layout_width="128dp"
-                android:layout_height="128dp"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
                 android:contentDescription="Movie logo"
-                android:src="@drawable/ic_movie_logo" />
+                android:src="@drawable/cinema_logo" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Cinema Manager"
+                android:text="Spot Cinema+"
                 android:textColor="@color/black"
                 android:textSize="32sp"
                 android:textStyle="bold" />
