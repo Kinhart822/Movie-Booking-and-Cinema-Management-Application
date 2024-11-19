@@ -3,12 +3,11 @@ package vn.edu.usth.mcma.frontend.Notification;
 public class NotificationItem {
 
     String name;
+    String time;
 
-    int avatar;
-
-    public NotificationItem(String name, int avatar) {
+    public NotificationItem(String name, String time) {
         this.name = name;
-        this.avatar = avatar;
+        this.time = time;
     }
 
     public String getName() {
@@ -19,13 +18,11 @@ public class NotificationItem {
         this.name = name;
     }
 
-    public int getAvatar() {
-        return avatar;
+    public String getTime() {
+        return time;
     }
 
-    public void setAvatar(int avatar) {
-        this.avatar = avatar;
+    public void setTime(String time) {
+        this.time = time;
     }
-
-
 }

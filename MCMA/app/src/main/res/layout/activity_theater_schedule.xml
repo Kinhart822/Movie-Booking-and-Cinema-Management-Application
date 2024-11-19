@@ -9,7 +9,7 @@
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="@color/gold"
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
 
@@ -31,7 +31,7 @@
                 android:id="@+id/theater_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
+                android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
 
@@ -39,7 +39,7 @@
                 android:id="@+id/theater_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
+                android:textColor="@color/black"
                 android:textSize="14sp"
                 android:alpha="0.8"/>
         </LinearLayout>

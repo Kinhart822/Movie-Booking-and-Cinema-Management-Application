@@ -29,7 +29,9 @@
             android:id="@+id/theater_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tất cả các rạp" />
+            android:text="Tất cả các rạp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/gold"/>
     </LinearLayout>
 
     <TextView

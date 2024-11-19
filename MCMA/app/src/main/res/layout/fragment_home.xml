@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/home_fragment"
     tools:context=".frontend.Home.HomeFragment">
 
     <!-- Main Content -->
@@ -35,6 +34,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="SpotCinema+"
+                android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
@@ -68,8 +68,8 @@
                         android:id="@+id/searchView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:iconifiedByDefault="false"
                         android:background="@drawable/edit_group_box"
+                        android:iconifiedByDefault="false"
                         app:searchIcon="@drawable/social_media" />
                 </LinearLayout>
 
@@ -77,51 +77,45 @@
                 <ViewFlipper
                     android:id="@+id/view_flipper"
                     android:layout_width="match_parent"
-                    android:layout_height="285dp"
+                    android:layout_height="275dp"
                     android:layout_margin="8dp" />
 
                 <!-- Tab Layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:background="#ffffff"
+                    android:orientation="vertical"
                     android:padding="10dp">
 
-                    <Button
-                        android:id="@+id/button_nowshowing"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/gold"
-                        android:text="Now Showing"
-                        android:textColor="#ffffff"
-                        android:textStyle="bold" />
-
-                    <Button
-                        android:layout_marginLeft="10dp"
-                        android:id="@+id/button_comingsoon"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/gold"
-                        android:text="Coming Soon"
-                        android:textColor="#ffffff"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <!-- RecyclerView -->
-                <androidx.core.widget.NestedScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="15dp">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerviewhome"
+                    <com.google.android.material.appbar.AppBarLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false" />
-                </androidx.core.widget.NestedScrollView>
+                        android:background="@color/white">
+
+                        <com.google.android.material.tabs.TabLayout
+                            android:id="@+id/type_tablayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="12dp"
+                            android:background="@drawable/tab_rect"
+                            android:elevation="3dp"
+                            app:tabGravity="fill"
+                            app:tabIndicatorHeight="0dp"
+                            app:tabMode="fixed"
+                            app:tabRippleColor="@null"
+                            app:tabSelectedTextColor="@color/gold"
+                            app:tabTextAppearance="@style/TabLayout"
+                            app:tabTextColor="@color/black" />
+                    </com.google.android.material.appbar.AppBarLayout>
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/type_viewPager2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -155,131 +149,139 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="200dp"
+                    android:layout_width="220dp"
                     android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    android:paddingBottom="5dp"
                     android:src="@drawable/usthlogo"
-                    android:layout_gravity="center" />
+                    android:background="@drawable/border_drawerlayout" />
+
             </LinearLayout>
 
             <!-- Navigation Items -->
-            <LinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:background="@color/colorAccentLight">
+                android:layout_height="match_parent">
 
-                <!-- Home -->
                 <LinearLayout
-                    android:id="@+id/home_side_navigation"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:orientation="horizontal">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border_drawerlayout"
+                    android:orientation="vertical"
+                    android:layout_marginTop="80dp">
 
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/home"
-                        android:layout_marginLeft="25dp" />
-
-                    <TextView
+                    <!-- Home -->
+                    <LinearLayout
+                        android:id="@+id/home_side_navigation"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="Home"
-                        android:textColor="@color/black"
-                        android:textSize="20sp"
-                        android:gravity="center" />
-                </LinearLayout>
+                        android:layout_height="70dp"
+                        android:orientation="horizontal"
+                        android:layout_margin="2dp">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/black" />
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="25dp"
+                            android:src="@drawable/home" />
 
-                <!-- Showtimes -->
-                <LinearLayout
-                    android:id="@+id/showtimes_side_navigation"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="Home"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+                    </LinearLayout>
 
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/videoclip"
-                        android:layout_marginLeft="25dp" />
-
-                    <TextView
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="Showtimes"
-                        android:textColor="@color/black"
-                        android:textSize="20sp"
-                        android:gravity="center" />
-                </LinearLayout>
+                        android:layout_height="1dp"
+                        android:background="@color/black"
+                        android:layout_margin="2dp"/>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/black" />
-
-                <!-- Store -->
-                <LinearLayout
-                    android:id="@+id/store_side_navigation"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/shop"
-                        android:layout_marginLeft="25dp" />
-
-                    <TextView
+                    <!-- Showtimes -->
+                    <LinearLayout
+                        android:id="@+id/showtimes_side_navigation"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="Store"
-                        android:textColor="@color/black"
-                        android:textSize="20sp"
-                        android:gravity="center" />
-                </LinearLayout>
+                        android:layout_height="70dp"
+                        android:orientation="horizontal">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/black" />
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="25dp"
+                            android:src="@drawable/videoclip" />
 
-                <!-- Personal Information -->
-                <LinearLayout
-                    android:id="@+id/personal_side_navigation"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="Showtimes"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+                    </LinearLayout>
 
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/profile"
-                        android:layout_marginLeft="25dp" />
-
-                    <TextView
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="Personal information"
-                        android:textColor="@color/black"
-                        android:textSize="20sp"
-                        android:gravity="center" />
-                </LinearLayout>
+                        android:layout_height="1dp"
+                        android:background="@color/black" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/black" />
-            </LinearLayout>
+                    <!-- Store -->
+                    <LinearLayout
+                        android:id="@+id/store_side_navigation"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="25dp"
+                            android:src="@drawable/shop" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="Store"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/black" />
+
+                    <!-- Personal Information -->
+                    <LinearLayout
+                        android:id="@+id/personal_side_navigation"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="25dp"
+                            android:src="@drawable/profile" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="Personal information"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </ScrollView>
+
         </LinearLayout>
     </com.google.android.material.navigation.NavigationView>
 

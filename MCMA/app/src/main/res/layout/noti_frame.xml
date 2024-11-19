@@ -6,50 +6,45 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/black" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="120dp"
         android:background="@color/white"
-        android:orientation="horizontal"
-        android:layout_marginBottom="1dp"
-        >
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            app:cardCornerRadius="50dp"
-            android:layout_marginLeft="5dp">
-
-            <ImageView
-                android:id="@+id/user_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:adjustViewBounds="true"/>
-
-        </androidx.cardview.widget.CardView>
+        android:orientation="vertical"
+        android:layout_marginBottom="1dp">
 
         <LinearLayout
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:gravity="center_vertical"
-            android:layout_marginLeft="10dp">
+            android:layout_marginLeft="15dp">
 
             <TextView
-                android:id="@+id/user_name"
+                android:id="@+id/content"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                tools:text="name"
-                android:gravity="center_vertical"
+                android:layout_height="wrap_content"
+                tools:text="Content"
+                android:layout_marginTop="5dp"
+                android:paddingTop="8dp"
+                android:text="@string/name_underlined"
                 android:textSize="20sp"
-                android:textStyle="bold"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                tools:text="Time"
+                android:layout_marginTop="10dp"
+                android:textSize="12sp"
                 android:textColor="@color/black"/>
 
-
         </LinearLayout>
-
     </LinearLayout>
 
 </LinearLayout>

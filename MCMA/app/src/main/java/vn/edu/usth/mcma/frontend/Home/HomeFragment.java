@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,6 +17,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +32,15 @@ import vn.edu.usth.mcma.frontend.Notification.Notification_Activity;
 public class HomeFragment extends Fragment implements FilmViewInterface {
 
     private ViewFlipper v_flipper;
-    private List<FilmItem> items;
-    private List<FilmItem> filteredItems = new ArrayList<>();
+    private List<FilmItem> nowShowingFilms;
+    private List<FilmItem> comingSoonFilms;
+    private List<FilmItem> filteredFilms = new ArrayList<>();
     private FilmAdapter adapter;
-    private Button buttonnowshowing, buttoncomingsoon;
     private RecyclerView recyclerView;
     private SearchView searchView;
     private DrawerLayout mDrawerLayout;
+    private TabLayout tabLayout;
+    private ViewPager2 viewPager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,8 +49,9 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
         ImageButton mImageButton = v.findViewById(R.id.menu_button);
-
         mDrawerLayout = v.findViewById(R.id.home_fragment);
+        tabLayout = v.findViewById(R.id.type_tablayout);
+        viewPager = v.findViewById(R.id.type_viewPager2);
 
         mImageButton.setOnClickListener(view -> {
             if (mDrawerLayout != null && !mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -93,13 +99,10 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
             }
         });
 
-        searchView = v.findViewById(R.id.searchView);
-        searchView.clearFocus();
+//        searchView = v.findViewById(R.id.searchView);
+//        searchView.clearFocus();
 
-        buttoncomingsoon = v.findViewById(R.id.button_comingsoon);
-        buttonnowshowing = v.findViewById(R.id.button_nowshowing);
-
-        recyclerView = v.findViewById(R.id.recyclerviewhome);
+//        recyclerView = v.findViewById(R.id.recyclerviewhome);
 
         int images[] = {R.drawable.movie9, R.drawable.movie3, R.drawable.movie4};
         v_flipper = v.findViewById(R.id.view_flipper);
@@ -110,35 +113,32 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
             }
         }
 
-        buttonnowshowing.setOnClickListener(v1 -> updateFilmList("nowshowing"));
-        buttoncomingsoon.setOnClickListener(v1 -> updateFilmList("comingsoon"));
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+//        recyclerView.setLayoutManager(layoutManager);
+//        adapter = new FilmAdapter(requireContext(), filteredFilms, this);
+//        recyclerView.setAdapter(adapter);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        items = new ArrayList<>();
-        adapter = new FilmAdapter(requireContext(), filteredItems, this);
-        recyclerView.setAdapter(adapter);
+        // Setup TabLayout and ViewPager2
+        setupViewPagerAndTabs();
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (newText.trim().isEmpty()) {
-                    filteredItems.clear();
-                    filteredItems.addAll(items);
-                    adapter.notifyDataSetChanged();
-                } else {
-                    // Lọc phim theo từ khóa
-                    filterList(newText);
-                }
-                return true;
-            }
-        });
-
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                if (newText.trim().isEmpty()) {
+//                    filteredFilms.clear();
+//                    filteredFilms.addAll(nowShowingFilms); // Default to "Now Showing" when empty
+//                    adapter.notifyDataSetChanged();
+//                } else {
+//                    filterList(newText);
+//                }
+//                return true;
+//            }
+//        });
 
         ImageButton notication_buttonn = v.findViewById(R.id.notification_button);
         notication_buttonn.setOnClickListener(new View.OnClickListener() {
@@ -149,31 +149,26 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
             }
         });
 
-        // Hiện list film Now Showing mặc định khi khởi chạy
-        updateFilmList("nowshowing");
-
         return v;
     }
 
-    private void updateFilmList(String type) {
-        items.clear();
+    private void setupViewPagerAndTabs() {
+        // Create Fragment for each tab
+        FilmPagerAdapter adapter = new FilmPagerAdapter(this);
+        viewPager.setAdapter(adapter);
+        viewPager.setUserInputEnabled(false);
 
-        if (type.equals("nowshowing")) {
-            items.add(new FilmItem("Grace Morgan","(Horror)" ,R.drawable.movie1));
-            items.add(new FilmItem("Isabella Lewis","(Comedy)", R.drawable.movie3));
-            items.add(new FilmItem("Evelyn", "(Sci-Fi)" ,R.drawable.movie4));
-            items.add(new FilmItem("Jack", "Action" ,R.drawable.movie5));
-            items.add(new FilmItem("Tino", "Horror" ,R.drawable.movie7));
-        } else if (type.equals("comingsoon")) {
-            items.add(new FilmItem("Olivia Adams","Horror", R.drawable.movie12));
-            items.add(new FilmItem("Liam Johnson","Action", R.drawable.movie6));
-            items.add(new FilmItem("Noah Brown","Horror", R.drawable.movie8));
-        }
-
-        filteredItems.clear();
-        filteredItems.addAll(items);
-
-        adapter.notifyDataSetChanged();
+        // Link TabLayout and ViewPager2
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            switch (position) {
+                case 0:
+                    tab.setText("Now Showing");
+                    break;
+                case 1:
+                    tab.setText("Coming Soon");
+                    break;
+            }
+        }).attach();
     }
 
     private void flipperImages(int image) {
@@ -191,35 +186,34 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
         v_flipper.setOutAnimation(getContext(), android.R.anim.slide_out_right);
     }
 
-    private void filterList(String text) {
-        filteredItems.clear();
-        for (FilmItem item : items) {
-            if (item.getName().toLowerCase().contains(text.toLowerCase()) ||
-                    item.getCategory().toLowerCase().contains(text.toLowerCase())) {
-                filteredItems.add(item);
-            }
-        }
+//    private void filterList(String text) {
+//        List<FilmItem> sourceList = filteredFilms.size() > 0 ? filteredFilms : nowShowingFilms; // Check current list
+//        filteredFilms.clear();
+//        for (FilmItem item : sourceList) {
+//            if (item.getName().toLowerCase().contains(text.toLowerCase()) ||
+//                    item.getCategory().toLowerCase().contains(text.toLowerCase())) {
+//                filteredFilms.add(item);
+//            }
+//        }
+//
+//        if (filteredFilms.isEmpty()) {
+//            filteredFilms.addAll(nowShowingFilms);
+//            Toast.makeText(getContext(), "No movies found", Toast.LENGTH_SHORT).show();
+//        }
+//
+//        adapter.notifyDataSetChanged();
+//    }
 
-        if (filteredItems.isEmpty()) {
-            // Hiển thị tất cả phim Now Showing khi không tìm thấy phim
-            filteredItems.addAll(items);
-            Toast.makeText(getContext(), "No movies found in Now Showing", Toast.LENGTH_SHORT).show();
-        }
-
-        adapter.notifyDataSetChanged();
-    }
-
-
-    public void closeDrawer() {
-        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-        }
-    }
+//    public void closeDrawer() {
+//        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+//            mDrawerLayout.closeDrawer(GravityCompat.START);
+//        }
+//    }
 
     @Override
     public void onItemClick(int position) {
-        if (position < filteredItems.size()) {
-            FilmItem selectedFilm = filteredItems.get(position);
+        if (position < filteredFilms.size()) {
+            FilmItem selectedFilm = filteredFilms.get(position);
             Toast.makeText(getContext(), "Selected Film: " + selectedFilm.getName(), Toast.LENGTH_SHORT).show();
         }
     }

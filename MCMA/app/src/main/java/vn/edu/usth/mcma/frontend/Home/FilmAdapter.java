@@ -13,14 +13,13 @@ import vn.edu.usth.mcma.R;
 
 public class FilmAdapter extends RecyclerView.Adapter<FilmViewHolder> {
     private final FilmViewInterface filmViewInterface;
-
-    Context context;
-    List<FilmItem> items;
+    private final Context context;
+    private final List<FilmItem> items;
 
     public FilmAdapter(Context context, List<FilmItem> items, FilmViewInterface filmViewInterface) {
-        this.filmViewInterface = filmViewInterface;
         this.context = context;
         this.items = items;
+        this.filmViewInterface = filmViewInterface;
     }
 
     @NonNull
@@ -31,9 +30,10 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull FilmViewHolder holder, int position) {
-        holder.nameView.setText(items.get(position).getName());
-        holder.typeView.setText(items.get(position).getCategory());
-        holder.filmView.setImageResource(items.get(position).getFilm_image());
+        FilmItem item = items.get(position);
+        holder.nameView.setText(item.getName());
+        holder.typeView.setText(item.getCategory());
+        holder.filmView.setImageResource(item.getFilm_image());
     }
 
     @Override

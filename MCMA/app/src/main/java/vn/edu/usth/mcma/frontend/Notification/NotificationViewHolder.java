@@ -11,13 +11,15 @@ import vn.edu.usth.mcma.R;
 
 public class NotificationViewHolder extends RecyclerView.ViewHolder{
 
-    ImageView avatarView;
+//    ImageView avatarView;
     TextView nameView;
+    TextView timeView;
 
     public NotificationViewHolder(@NonNull View itemView) {
         super(itemView);
-        avatarView = itemView.findViewById(R.id.user_image);
-        nameView = itemView.findViewById(R.id.user_name);
+//        avatarView = itemView.findViewById(R.id.user_image);
+        nameView = itemView.findViewById(R.id.content);
+        timeView = itemView.findViewById(R.id.time);
     }
 
 }

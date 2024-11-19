@@ -4,11 +4,7 @@ import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.SearchView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,13 +26,14 @@ public class Notification_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerviewnotification);
+        recyclerView = findViewById(R.id.recyclerviewnotification);
 
-        List<NotificationItem> items = new ArrayList<NotificationItem>();
+        items = new ArrayList<>();
 
-        items.add(new NotificationItem("VTV24", R.drawable.user));
-        items.add(new NotificationItem("Netflix",  R.drawable.user));
-        items.add(new NotificationItem("Vu Duc Duy", R.drawable.user));
+        // Corrected time format to be strings
+        items.add(new NotificationItem("Hoang Anh just became a young actress to appear in Titanic as cameo", "18:20"));
+        items.add(new NotificationItem("Netflix", "15:20"));
+        items.add(new NotificationItem("Viet Anh has received MCMA award", "14:20"));
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new NotificationAdapter(this, items));

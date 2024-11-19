@@ -17,26 +17,25 @@
         <!-- Full-width header -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/DarkBlue"
-            android:gravity="center_vertical"
-            android:padding="16dp">
+            android:layout_height="50dp"
+            android:background="@color/gold"
+            android:gravity="center_vertical">
 
             <ImageButton
                 android:id="@+id/close_button"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginEnd="16dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="10dp"
                 android:background="@drawable/ic_close" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Account Information"
-                android:textSize="25sp"
-                android:textStyle="bold"
-                android:paddingLeft="25dp"
-                android:textColor="@color/white"/>
+                android:text="Information"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
 
 
         </LinearLayout>
@@ -156,7 +155,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Payment History"
+                            android:text="View Booking History"
                             android:textSize="16sp"
                             android:textColor="@color/black" />
 

@@ -84,7 +84,7 @@ public class TheaterScheduleActivity extends AppCompatActivity
 
             // Set background selector
             dayButton.setBackground(getDrawable(R.drawable.date_button_selector));
-            dayButton.setTextColor(Color.WHITE);
+            dayButton.setTextColor(Color.BLACK);
 
             // Set initial selection
             if (i == 0) {
