@@ -2,13 +2,12 @@ package vn.edu.usth.mcma.service.common.constants;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import vn.edu.usth.mcma.service.common.web.rest.response.IApiResponse;
 
 @Getter
 @AllArgsConstructor
-public enum ApiResponseCode implements IApiResponse {
-    SUCCESS("200", "SUCCESS");
-
+public enum ApiResponseCode {
+    SUCCESS("200", "SUCCESS"),
+    ENTITY_NOT_FOUND("404", "ENTITY_NOT_FOUND"),;
     private final String status;
     private final String message;
 }
