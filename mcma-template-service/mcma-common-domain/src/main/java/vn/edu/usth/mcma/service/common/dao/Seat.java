@@ -21,7 +21,7 @@ public class Seat extends AbstractAuditing implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     private SeatPK id;
-    @Column
+    @Column(columnDefinition = "TINYINT UNSIGNED")
     private Integer typeId;
     @Column
     private String name;

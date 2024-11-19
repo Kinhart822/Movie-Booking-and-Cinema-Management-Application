@@ -20,7 +20,7 @@ public class User extends AbstractAuditing implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+    @Column(columnDefinition = "TINYINT")
     private Integer sex;
     @Column(name = "dob")
     private Instant dateOfBirth;
@@ -32,7 +32,7 @@ public class User extends AbstractAuditing implements Serializable {
     private String password;
     @Column
     private String address;
-    @Column
+    @Column(columnDefinition = "SMALLINT")
     private Integer userType; //TODO: consider separate entity
     @Column(columnDefinition = "TINYINT")
     private Integer status;

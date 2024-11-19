@@ -13,7 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MovieCoupon extends AbstractAuditing implements Serializable {
+public class MovieCoupon implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @Id

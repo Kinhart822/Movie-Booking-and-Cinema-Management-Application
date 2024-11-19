@@ -22,9 +22,9 @@ public class MoviePerformerDetail extends AbstractAuditing implements Serializab
     private Long id;
     @Column
     private String name;
-    @Column
+    @Column(columnDefinition = "TINYINT UNSIGNED")
     private Integer typeId;
-    @Column
+    @Column(columnDefinition = "TINYINT")
     private Integer sex;
     @Column(name = "dob")
     private Instant dateOfBirth;

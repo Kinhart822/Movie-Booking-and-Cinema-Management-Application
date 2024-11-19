@@ -82,7 +82,7 @@ create table if not exists mcma.movie
     image_url          text                              null,
     length             int                               null,
     publish_date       timestamp                         null,
-    rating_id          tinyint                           null,
+    rating_id          bigint unsigned                   null,
     trailer_url        text                              null,
     status             tinyint                           null comment '-1, 1',
     created_by         bigint unsigned                   null,
@@ -126,8 +126,8 @@ create table if not exists mcma.movie_performer_detail
     id                 bigint unsigned auto_increment
         primary key,
     name               varchar(50)                       null,
-    type_id            tinyint                           null comment '1: director; 2: actor',
-    sex                bit                               null comment '0: female; 1: male',
+    type_id            tinyint unsigned                  null comment '1: director; 2: actor',
+    sex                tinyint                           null comment '0: female; 1: male',
     dob                timestamp                         null,
     status             tinyint                           null comment '-1, 1',
     created_by         bigint unsigned                   null,
@@ -137,9 +137,13 @@ create table if not exists mcma.movie_performer_detail
 );
 create table if not exists mcma.movie_performer_type
 (
-    id     bigint unsigned not null primary key,
-    name   varchar(50)     null,
-    status tinyint         null comment '-1, 1'
+    id                 bigint unsigned                   not null primary key,
+    name               varchar(50)                       null,
+    status             tinyint                           null comment '-1, 1',
+    created_by         bigint unsigned                   null,
+    last_modified_by   bigint unsigned                   null,
+    created_date       timestamp default utc_timestamp() null,
+    last_modified_date timestamp default utc_timestamp() null
 );
 create table if not exists mcma.movie_rating_detail
 (
@@ -197,7 +201,7 @@ create table if not exists mcma.screen
         primary key,
     cinema_id          bigint unsigned                   not null,
     name               varchar(20)                       null,
-    type_id            tinyint                           null,
+    type_id            tinyint unsigned                  null,
     status             tinyint                           null comment '-1, 1',
     created_by         bigint unsigned                   null,
     last_modified_by   bigint unsigned                   null,
@@ -221,7 +225,7 @@ create table if not exists mcma.seat
     screen_id          bigint unsigned                   not null,
     row                tinyint unsigned                  not null,
     col                tinyint unsigned                  not null,
-    type_id            tinyint                           null,
+    type_id            tinyint unsigned                  null,
     name               varchar(5)                        null,
     created_by         bigint unsigned                   null,
     last_modified_by   bigint unsigned                   null,
@@ -253,7 +257,7 @@ create table if not exists mcma.user
 (
     id                 bigint unsigned auto_increment
         primary key,
-    sex                bit                               null comment '0: female; 1: male',
+    sex                tinyint                           null comment '0: female; 1: male',
     dob                timestamp                         null,
     email              varchar(255)                      not null,
     phone              varchar(255)                      not null,

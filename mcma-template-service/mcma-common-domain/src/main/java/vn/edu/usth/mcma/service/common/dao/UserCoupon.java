@@ -15,7 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserCoupon extends AbstractAuditing implements Serializable {
+public class UserCoupon implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @EmbeddedId

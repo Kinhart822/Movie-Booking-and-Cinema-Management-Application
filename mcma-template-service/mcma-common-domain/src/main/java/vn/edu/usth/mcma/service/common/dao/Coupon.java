@@ -24,7 +24,7 @@ public class Coupon extends AbstractAuditing implements Serializable {
     private String name;
     @Column
     private String description;
-    @Column
+    @Column(columnDefinition = "DECIMAL(3,2)")
     private Float discount;
     @Column(name = "min_spend_req")
     private Integer minimumSpendRequired;

@@ -18,8 +18,8 @@ public class SeatPK implements Serializable {
     private static final long serialVersionUID = 1L;
     @Column
     private Long screenId;
-    @Column
+    @Column(columnDefinition = "TINYINT UNSIGNED")
     private Integer row;
-    @Column(name = "col")
+    @Column(name = "col", columnDefinition = "TINYINT UNSIGNED")
     private Integer column;
 }

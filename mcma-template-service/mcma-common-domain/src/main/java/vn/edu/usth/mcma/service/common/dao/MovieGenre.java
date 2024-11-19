@@ -15,7 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MovieGenre extends AbstractAuditing implements Serializable {
+public class MovieGenre implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @EmbeddedId

@@ -23,7 +23,7 @@ public class Screen extends AbstractAuditing implements Serializable {
     private Long cinemaId;
     @Column
     private String name;
-    @Column
+    @Column(columnDefinition = "TINYINT UNSIGNED")
     private Integer typeId;
     @Column(columnDefinition = "TINYINT")
     private Integer status;

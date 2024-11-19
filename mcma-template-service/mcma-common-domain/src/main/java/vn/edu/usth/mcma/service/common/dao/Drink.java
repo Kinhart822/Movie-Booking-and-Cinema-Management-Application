@@ -29,7 +29,7 @@ public class Drink extends AbstractAuditing implements Serializable {
     private String imageUrl;
     @Column
     private String size;
-    @Column
+    @Column(columnDefinition = "SMALLINT")
     private Integer volume;
     @Column
     private Integer price;
