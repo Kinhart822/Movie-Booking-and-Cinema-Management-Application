@@ -1,6 +1,8 @@
 package vn.edu.usth.mcma.service.admin.service;
 
 import constants.EntityStatus;
+import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.service.admin.dto.CinemaRequest;
 import vn.edu.usth.mcma.service.admin.repository.CinemaRepository;
 import vn.edu.usth.mcma.service.common.CommonResponse;
@@ -9,6 +11,8 @@ import vn.edu.usth.mcma.service.common.dao.Cinema;
 
 import java.util.List;
 
+@Transactional
+@Service
 public class CinemaService extends CommonService<Cinema, Long> {
     private final CinemaRepository cinemaRepository;
     public CinemaService(CinemaRepository cinemaRepository) {
