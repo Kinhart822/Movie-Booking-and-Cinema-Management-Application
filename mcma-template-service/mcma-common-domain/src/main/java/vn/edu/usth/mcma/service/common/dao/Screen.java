@@ -25,6 +25,6 @@ public class Screen extends AbstractAuditing implements Serializable {
     private String name;
     @Column
     private Integer typeId;
-    @Column
+    @Column(columnDefinition = "TINYINT")
     private Integer status;
 }

@@ -25,6 +25,6 @@ public class MovieGenreDetail extends AbstractAuditing implements Serializable {
     private String description;
     @Column
     private String imageUrl;
-    @Column
+    @Column(columnDefinition = "TINYINT")
     private Integer status;
 }

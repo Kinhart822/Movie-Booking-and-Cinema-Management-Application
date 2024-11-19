@@ -21,6 +21,6 @@ public class City extends AbstractAuditing implements Serializable {
     private Long id;
     @Column
     private String name;
-    @Column
+    @Column(columnDefinition = "TINYINT")
     private Integer status;
 }

@@ -137,8 +137,9 @@ create table if not exists mcma.movie_performer_detail
 );
 create table if not exists mcma.movie_performer_type
 (
-    id   bigint unsigned not null primary key,
-    name varchar(50)     null
+    id     bigint unsigned not null primary key,
+    name   varchar(50)     null,
+    status tinyint         null comment '-1, 1'
 );
 create table if not exists mcma.movie_rating_detail
 (

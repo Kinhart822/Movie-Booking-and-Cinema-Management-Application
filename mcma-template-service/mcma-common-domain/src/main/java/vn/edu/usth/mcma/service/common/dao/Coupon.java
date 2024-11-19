@@ -34,6 +34,6 @@ public class Coupon extends AbstractAuditing implements Serializable {
     private Instant availableDate;
     @Column
     private Instant expiredDate;
-    @Column
+    @Column(columnDefinition = "TINYINT")
     private Integer status;
 }

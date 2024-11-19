@@ -28,6 +28,6 @@ public class MoviePerformerDetail extends AbstractAuditing implements Serializab
     private Integer sex;
     @Column(name = "dob")
     private Instant dateOfBirth;
-    @Column
+    @Column(columnDefinition = "TINYINT")
     private Integer status;
 }

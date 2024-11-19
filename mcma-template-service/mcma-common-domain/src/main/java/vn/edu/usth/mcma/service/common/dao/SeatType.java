@@ -23,6 +23,6 @@ public class SeatType extends AbstractAuditing implements Serializable {
     private String name;
     @Column
     private String description;
-    @Column
+    @Column(columnDefinition = "TINYINT")
     private Integer status;
 }

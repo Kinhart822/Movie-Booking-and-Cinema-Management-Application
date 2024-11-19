@@ -21,4 +21,6 @@ public class MoviePerformerType extends AbstractAuditing implements Serializable
     private Long id;
     @Column
     private String name;
+    @Column(columnDefinition = "TINYINT")
+    private Integer status;
 }

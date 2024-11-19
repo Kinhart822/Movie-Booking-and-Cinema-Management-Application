@@ -21,6 +21,6 @@ public class Notification extends AbstractAuditing implements Serializable {
     private Long id;
     @Column
     private String content;
-    @Column
+    @Column(columnDefinition = "TINYINT")
     private Integer status;
 }

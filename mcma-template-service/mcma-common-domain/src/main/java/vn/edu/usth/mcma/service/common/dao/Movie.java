@@ -32,6 +32,6 @@ public class Movie extends AbstractAuditing implements Serializable {
     private Long ratingId;
     @Column
     private String trailerUrl;
-    @Column
+    @Column(columnDefinition = "TINYINT")
     private Integer status;
 }

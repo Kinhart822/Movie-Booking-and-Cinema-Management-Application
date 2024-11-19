@@ -24,10 +24,16 @@ public class User extends AbstractAuditing implements Serializable {
     private Integer sex;
     @Column(name = "dob")
     private Instant dateOfBirth;
+    @Column
     private String email;
+    @Column
     private String phone;
+    @Column
     private String password;
+    @Column
     private String address;
+    @Column
     private Integer userType; //TODO: consider separate entity
+    @Column(columnDefinition = "TINYINT")
     private Integer status;
 }

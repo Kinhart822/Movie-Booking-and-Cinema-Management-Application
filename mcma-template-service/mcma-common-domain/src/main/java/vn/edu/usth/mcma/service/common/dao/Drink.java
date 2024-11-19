@@ -33,6 +33,6 @@ public class Drink extends AbstractAuditing implements Serializable {
     private Integer volume;
     @Column
     private Integer price;
-    @Column
+    @Column(columnDefinition = "TINYINT")
     private Integer status;
 }

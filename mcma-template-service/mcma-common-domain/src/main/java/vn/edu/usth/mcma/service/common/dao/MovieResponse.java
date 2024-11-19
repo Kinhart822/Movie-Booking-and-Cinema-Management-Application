@@ -27,6 +27,6 @@ public class MovieResponse extends AbstractAuditing implements Serializable {
     private Integer userVote;
     @Column
     private String userComment;
-    @Column
+    @Column(columnDefinition = "TINYINT")
     private Integer status;
 }

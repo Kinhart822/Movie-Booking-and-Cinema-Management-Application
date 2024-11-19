@@ -23,6 +23,6 @@ public class Cinema extends AbstractAuditing implements Serializable {
     private Long cityId;
     @Column
     private String name;
-    @Column
+    @Column(columnDefinition = "TINYINT")
     private Integer status;
 }

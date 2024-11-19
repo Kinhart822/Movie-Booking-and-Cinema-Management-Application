@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.service.common.dao;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -20,6 +21,8 @@ public class Seat extends AbstractAuditing implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     private SeatPK id;
+    @Column
     private Integer typeId;
+    @Column
     private String name;
 }

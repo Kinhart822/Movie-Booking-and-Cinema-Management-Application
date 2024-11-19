@@ -31,6 +31,6 @@ public class Food extends AbstractAuditing implements Serializable {
     private String size;
     @Column
     private Integer price;
-    @Column
+    @Column(columnDefinition = "TINYINT")
     private Integer status;
 }
