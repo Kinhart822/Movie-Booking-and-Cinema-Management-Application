@@ -13,18 +13,6 @@ create table if not exists mcma.cinema
     created_date       timestamp default utc_timestamp() null,
     last_modified_date timestamp default utc_timestamp() null
 );
-create table if not exists mcma.cinema_drink
-(
-    cinema_id bigint unsigned not null,
-    drink_id  bigint unsigned not null,
-    primary key (cinema_id, drink_id)
-);
-create table if not exists mcma.cinema_food
-(
-    cinema_id bigint unsigned not null,
-    food_id   bigint unsigned not null,
-    primary key (cinema_id, food_id)
-);
 create table if not exists mcma.city
 (
     id                 bigint unsigned auto_increment
@@ -35,6 +23,18 @@ create table if not exists mcma.city
     last_modified_by   bigint unsigned                   null,
     created_date       timestamp default utc_timestamp() null,
     last_modified_date timestamp default utc_timestamp() null
+);
+create table if not exists mcma.city_drink
+(
+    city_id bigint unsigned not null,
+    drink_id  bigint unsigned not null,
+    primary key (city_id, drink_id)
+);
+create table if not exists mcma.city_food
+(
+    city_id bigint unsigned not null,
+    food_id   bigint unsigned not null,
+    primary key (city_id, food_id)
 );
 create table if not exists mcma.coupon
 (

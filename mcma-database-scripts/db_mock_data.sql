@@ -35,7 +35,7 @@ values (1, 'Hanoi Cinema 1', 1, 1, 1),
        (4, 'Hai Phong Cinema 1', 1, 1, 1),
        (4, 'Hai Phong Cinema 2', 1, 1, 1),
        (4, 'Hai Phong Cinema 3', 1, 1, 1);
-insert into mcma.cinema_drink (cinema_id, drink_id)
+insert into mcma.city_drink (city_id, drink_id)
 values (1, 1),
        (1, 2),
        (1, 3),
@@ -64,7 +64,7 @@ values (1, 1),
        (4, 5),
        (4, 6),
        (4, 7);
-insert into mcma.cinema_food (cinema_id, food_id)
+insert into mcma.city_food (city_id, food_id)
 values (1, 1),
        (1, 2),
        (1, 3),

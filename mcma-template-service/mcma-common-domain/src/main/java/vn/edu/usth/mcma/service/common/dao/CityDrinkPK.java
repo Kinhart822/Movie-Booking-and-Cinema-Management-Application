@@ -13,11 +13,11 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-public class CinemaDrinkPK implements Serializable {
+public class CityDrinkPK implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @Column
-    private Long cinemaId;
+    private Long cityId;
     @Column
     private Long drinkId;
 }
