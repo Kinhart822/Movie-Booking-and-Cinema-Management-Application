@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend;
+package vn.edu.usth.mcma.frontend.Personal;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.MainActivity;
 
 public class PersonalFragment extends Fragment {
 
@@ -29,8 +30,8 @@ public class PersonalFragment extends Fragment {
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_home_page();
+                if(getActivity() instanceof vn.edu.usth.mcma.frontend.MainActivity){
+                    ((vn.edu.usth.mcma.frontend.MainActivity) getActivity()).close_to_home_page();
                 }
             }
         });
@@ -44,6 +45,15 @@ public class PersonalFragment extends Fragment {
                 fragmentTransaction.replace(android.R.id.content, loginFragment);
                 fragmentTransaction.commit();
 
+            }
+        });
+
+        LinearLayout to_edit_update = v.findViewById(R.id.account_information_edit_update);
+        to_edit_update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Personal.Edit_Update_Account_Info_Activity.class);
+                startActivity(i);
             }
         });
 
