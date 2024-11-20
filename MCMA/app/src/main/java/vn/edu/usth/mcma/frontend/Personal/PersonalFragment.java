@@ -57,6 +57,9 @@ public class PersonalFragment extends Fragment {
             }
         });
 
+
+
         return v;
     }
+
 }

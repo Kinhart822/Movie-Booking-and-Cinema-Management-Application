@@ -11,18 +11,19 @@ import androidx.core.view.WindowInsetsCompat;
 
 import vn.edu.usth.mcma.R;
 
-public class Edit_Update_Account_Info_Activity extends AppCompatActivity {
+public class Account_Information_Activity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_edit_update_account_info);
+        setContentView(R.layout.activity_account_information);
 
-        ImageButton backButton = findViewById(R.id.edit_back_button);
+        ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(view -> {
             onBackPressed();
         });
+
 
     }
 

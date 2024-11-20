@@ -64,6 +64,7 @@
             android:backgroundTint="@color/gray_text"
             android:padding="10dp"
             android:text="Login"
+            android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
