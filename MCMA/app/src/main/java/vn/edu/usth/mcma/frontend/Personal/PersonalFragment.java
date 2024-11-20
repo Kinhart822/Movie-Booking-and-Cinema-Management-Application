@@ -63,7 +63,7 @@ public class PersonalFragment extends Fragment {
             }
         });
 
-        LinearLayout to_booking_history = v.findViewById(R.id.account_information_payment_history);
+        LinearLayout to_booking_history = v.findViewById(R.id.account_information_booking_history);
         to_booking_history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

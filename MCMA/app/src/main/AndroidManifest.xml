@@ -40,9 +40,6 @@
             android:name=".frontend.Showtimes.UI.TheaterScheduleActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.EditUpdateAccountInformation"
-            android:exported="false" />
-        <activity
             android:name=".frontend.MainActivity"
             android:exported="false" />
         <activity

@@ -30,7 +30,6 @@ public class Notification_Activity extends AppCompatActivity {
 
         items = new ArrayList<>();
 
-        // Corrected time format to be strings
         items.add(new NotificationItem("Hoang Anh just became a young actress to appear in Titanic as cameo", "18:20"));
         items.add(new NotificationItem("Netflix", "15:20"));
         items.add(new NotificationItem("Viet Anh has received MCMA award", "14:20"));

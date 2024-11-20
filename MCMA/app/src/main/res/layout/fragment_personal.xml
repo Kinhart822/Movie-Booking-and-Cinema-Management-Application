@@ -142,7 +142,7 @@
 
                     <!-- Payment History Row -->
                     <LinearLayout
-                        android:id="@+id/account_information_payment_history"
+                        android:id="@+id/account_information_booking_history"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
