@@ -16,7 +16,6 @@ import java.io.Serializable;
 public class MovieCoupon implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    @Id
     @EmbeddedId
     private MovieCouponPK id;
 }
