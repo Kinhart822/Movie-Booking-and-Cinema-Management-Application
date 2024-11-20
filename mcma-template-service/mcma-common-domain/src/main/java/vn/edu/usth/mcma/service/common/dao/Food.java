@@ -20,8 +20,6 @@ public class Food extends AbstractAuditing implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private Long cinemaId;
-    @Column
     private String name;
     @Column
     private String description;
