@@ -16,7 +16,7 @@
         android:padding="8dp">
 
         <ImageButton
-            android:id="@+id/edit_back_button"
+            android:id="@+id/detail_back_button"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:background="@drawable/left" />
@@ -24,7 +24,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="105dp"
+            android:layout_marginLeft="85dp"
             android:text="Account Information"
             android:textSize="20sp"
             android:textStyle="bold"

@@ -36,6 +36,42 @@ public class PersonalFragment extends Fragment {
             }
         });
 
+        LinearLayout to_edit_update = v.findViewById(R.id.account_information_edit_update);
+        to_edit_update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Personal.Edit_Update_Account_Info_Activity.class);
+                startActivity(i);
+            }
+        });
+
+        LinearLayout to_detail = v.findViewById(R.id.account_information_details);
+        to_detail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(requireContext(),vn.edu.usth.mcma.frontend.Personal.Account_Information_Activity.class );
+                startActivity(i);
+            }
+        });
+
+        LinearLayout to_changepass_account = v.findViewById(R.id.account_information_change_password);
+        to_changepass_account.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(requireContext(),vn.edu.usth.mcma.frontend.Personal.Change_Password_Account_Info_Activity.class );
+                startActivity(i);
+            }
+        });
+
+        LinearLayout to_booking_history = v.findViewById(R.id.account_information_payment_history);
+        to_booking_history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(requireContext(),vn.edu.usth.mcma.frontend.Personal.Booking_History_Activity.class );
+                startActivity(i);
+            }
+        });
+
         LinearLayout logout_button = v.findViewById(R.id.account_information_log_out);
         logout_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,17 +83,6 @@ public class PersonalFragment extends Fragment {
 
             }
         });
-
-        LinearLayout to_edit_update = v.findViewById(R.id.account_information_edit_update);
-        to_edit_update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Personal.Edit_Update_Account_Info_Activity.class);
-                startActivity(i);
-            }
-        });
-
-
 
         return v;
     }

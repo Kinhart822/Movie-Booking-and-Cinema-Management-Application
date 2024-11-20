@@ -11,20 +11,18 @@ import androidx.core.view.WindowInsetsCompat;
 
 import vn.edu.usth.mcma.R;
 
-public class Account_Information_Activity extends AppCompatActivity {
+public class Booking_History_Activity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_account_information);
+        setContentView(R.layout.activity_booking_history);
 
-        ImageButton backButton = findViewById(R.id.detail_back_button);
+        ImageButton backButton = findViewById(R.id.booking_history_back_button);
         backButton.setOnClickListener(view -> {
             onBackPressed();
         });
-
-
     }
 
     @Override
