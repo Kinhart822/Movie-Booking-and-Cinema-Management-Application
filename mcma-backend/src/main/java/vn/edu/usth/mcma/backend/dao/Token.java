@@ -24,5 +24,5 @@ public class Token implements Serializable {
     @Column
     private boolean isLoggedOut;
     @Column
-    private String token;
+    private String value;
 }

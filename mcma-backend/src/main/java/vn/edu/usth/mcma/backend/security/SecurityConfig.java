@@ -1,12 +1,9 @@
-package com.spring.config;
+package vn.edu.usth.mcma.backend.security;
 
-import com.spring.enums.Type;
-import com.spring.filter.JwtAuthenticationFilter;
-import com.spring.service.UserService;
+import constants.UserType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -26,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import vn.edu.usth.mcma.backend.service.UserService;
 
 import java.io.IOException;
 
@@ -34,14 +32,9 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private CustomLogoutHandler logoutHandler;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final UserService userService;
+    private final CustomLogoutHandler logoutHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -49,8 +42,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/api/v1/admin").hasAuthority(Type.ADMIN.name())
-                        .requestMatchers("/api/v1/user").hasAuthority(Type.USER.name())
+                        .requestMatchers("/api/v1/admin").hasAuthority(UserType.ADMIN.name())
+                        .requestMatchers("/api/v1/user").hasAuthority(UserType.USER.name())
                         .requestMatchers("/api/v1/user/search-movie-by-name").permitAll()
                         .requestMatchers("/api/v1/user/search-movie-by-genre").permitAll()
                         .requestMatchers("/api/v1/user/search-movie-by-movie-genre-name").permitAll()
@@ -107,7 +100,7 @@ public class SecurityConfig {
         };
     }
 
-    private void customLogoutSuccessHandler(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+    private void customLogoutSuccessHandler(HttpServletRequest hsRequest, HttpServletResponse response, Authentication authentication) throws IOException {
         SecurityContextHolder.clearContext();
 
         response.setStatus(HttpStatus.OK.value());

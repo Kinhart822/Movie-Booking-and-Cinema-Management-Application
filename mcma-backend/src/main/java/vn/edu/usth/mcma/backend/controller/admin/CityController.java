@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.backend.controller.admin;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.dto.CityRequest;
@@ -10,13 +11,13 @@ import vn.edu.usth.mcma.backend.dao.City;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/admin")
 @RequiredArgsConstructor
 public class CityController {
     private final CityService cityService;
     @PostMapping("/city")
-    public CommonResponse createCity(@RequestBody CityRequest request) {
-        return cityService.createCity(request);
+    public CommonResponse createCity(@RequestBody CityRequest request, HttpServletRequest hsRequest) {
+        return cityService.createCity(request, hsRequest);
     }
     @GetMapping("/city")
     public List<City> findAll() {
@@ -27,11 +28,11 @@ public class CityController {
         return cityService.findById(id);
     }
     @PutMapping("/city/{id}")
-    public CommonResponse updateCity(@PathVariable Long id, @RequestBody CityRequest request) {
-        return cityService.updateCity(id, request);
+    public CommonResponse updateCity(@PathVariable Long id, @RequestBody CityRequest request, HttpServletRequest hsRequest) {
+        return cityService.updateCity(id, request, hsRequest);
     }
     @DeleteMapping("/city/{id}")
-    public CommonResponse deleteCity(@PathVariable Long id) {
-        return cityService.deleteCity(id);
+    public CommonResponse deleteCity(@PathVariable Long id, HttpServletRequest hsRequest) {
+        return cityService.deleteCity(id, hsRequest);
     }
 }

@@ -1,4 +1,4 @@
-package com.spring.dto.validator;
+package vn.edu.usth.mcma.backend.dto.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

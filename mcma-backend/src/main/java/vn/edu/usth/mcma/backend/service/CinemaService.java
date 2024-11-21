@@ -1,8 +1,10 @@
 package vn.edu.usth.mcma.backend.service;
 
 import constants.EntityStatus;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.dto.CinemaRequest;
 import vn.edu.usth.mcma.backend.repository.CinemaRepository;
 import vn.edu.usth.mcma.backend.dto.CommonResponse;
@@ -14,36 +16,41 @@ import java.util.List;
 @Service
 public class CinemaService extends AbstractService<Cinema, Long> {
     private final CinemaRepository cinemaRepository;
-    public CinemaService(CinemaRepository cinemaRepository) {
+    private final JwtUtil jwtUtil;
+
+    public CinemaService(CinemaRepository cinemaRepository, JwtUtil jwtUtil) {
         super(cinemaRepository);
         this.cinemaRepository = cinemaRepository;
+        this.jwtUtil = jwtUtil;
     }
-    public CommonResponse createCinema(CinemaRequest request) {
+    public CommonResponse createCinema(CinemaRequest request, HttpServletRequest hsRequest) {
+        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         Cinema cinema = new Cinema();
         cinema.setCityId(request.getCityId());
         cinema.setName(request.getName());
         cinema.setStatus(EntityStatus.CREATED.getStatus());
-        //TODO
-//        cinema.setCreatedBy();
-//        cinema.setLastModifiedBy();
+        cinema.setCreatedBy(userId);
+        cinema.setLastModifiedBy(userId);
         cinemaRepository.save(cinema);
         return CommonResponse.successResponse();
     }
     public List<Cinema> findAll() {
         return cinemaRepository.findAll();
     }
-    public CommonResponse updateCinema(Long id, CinemaRequest request) {
+    public CommonResponse updateCinema(Long id, CinemaRequest request, HttpServletRequest hsRequest) {
+        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         Cinema cinema = findById(id);
         // changing cityId is not allowed think about it :)
         cinema.setName(request.getName());
-        //TODO
-//        cinema.setLastModifiedBy();
+        cinema.setLastModifiedBy(userId);
         cinemaRepository.save(cinema);
         return CommonResponse.successResponse();
     }
-    public CommonResponse deleteCinema(Long id) {
+    public CommonResponse deleteCinema(Long id, HttpServletRequest hsRequest) {
+        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         Cinema cinema = findById(id);
         cinema.setStatus(EntityStatus.DELETED.getStatus());
+        cinema.setLastModifiedBy(userId);
         cinemaRepository.save(cinema);
         return CommonResponse.successResponse();
     }

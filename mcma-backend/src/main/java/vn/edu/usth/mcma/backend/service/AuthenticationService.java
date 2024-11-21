@@ -1,48 +1,36 @@
-package com.spring.service.impl;
+package vn.edu.usth.mcma.backend.service;
 
-import com.spring.dto.request.*;
-import com.spring.entities.Token;
-import com.spring.entities.User;
-import com.spring.enums.Type;
-import com.spring.dto.response.JwtAuthenticationResponse;
-import com.spring.repository.TokenRepository;
-import com.spring.repository.UserRepository;
-import com.spring.service.AuthenticationService;
-import com.spring.service.JwtService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import vn.edu.usth.mcma.backend.dao.Token;
+import vn.edu.usth.mcma.backend.dao.User;
+import vn.edu.usth.mcma.backend.dto.*;
+import vn.edu.usth.mcma.backend.repository.TokenRepository;
+import vn.edu.usth.mcma.backend.repository.UserRepository;
+import vn.edu.usth.mcma.backend.security.JwtService;
 
 import java.util.Date;
 import java.util.List;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
-public class AuthenticationServiceImpl implements AuthenticationService {
+public class AuthenticationService {
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    private final TokenRepository tokenRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    private TokenRepository tokenRepository;
-
-    private void saveUserToken(String jwt, User user) {
+    private void saveUserToken(String value, User user) {
         Token saveToken = new Token();
-        saveToken.setToken(jwt);
+        saveToken.setValue(value);
         saveToken.setLoggedOut(false);
-        saveToken.setUser(user);
+        saveToken.setUserId(user.getId());
         tokenRepository.save(saveToken);
     }
 
@@ -54,11 +42,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         } else {
             return;
         }
-
         tokenRepository.saveAll(validTokensByUser);
     }
 
-    @Override
     public JwtAuthenticationResponse signUp(SignUpRequest signUpRequest) {
         if (!signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())) {
             throw new IllegalArgumentException("Password and confirm password do not match");
@@ -97,7 +83,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return jwtAuthenticationResponse;
     }
 
-    @Override
     public JwtAuthenticationResponse signIn(SignInRequest signInRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 signInRequest.getEmail(),
@@ -158,7 +143,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
     }
 
-    @Override
     public String resetPassword(ResetPasswordRequest request) {
         String email = jwtService.extractUsername(request.getToken());
         User user = userRepository.findByEmail(email)
@@ -171,18 +155,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
             throw new IllegalArgumentException("New password cannot be the same as the old password");
         }
-
         if (!request.getNewPassword().equals(request.getConfirmPassword())) {
             throw new IllegalArgumentException("Passwords do not match");
         }
-
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
 
         return "Password has been reset successfully. You can log in again!";
     }
 
-    @Override
     public void updateAccount(Integer userId, UpdateAccountRequest updateAccountRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -214,18 +195,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void changeNewPassword(Integer userId, UpdatePasswordRequest updatePasswordRequest) {
+    public void changeNewPassword(Long userId, UpdatePasswordRequest updatePasswordRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user"));
-
         if (passwordEncoder.matches(updatePasswordRequest.getNewPassword(), user.getPassword())) {
             throw new IllegalArgumentException("New password cannot be the same as the old password");
         }
-
         if (!updatePasswordRequest.getNewPassword().equals(updatePasswordRequest.getConfirmPassword())) {
             throw new IllegalArgumentException("Passwords do not match");
         }
-
         user.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
         userRepository.save(user);
     }

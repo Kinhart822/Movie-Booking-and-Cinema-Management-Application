@@ -1,16 +1,16 @@
-package com.spring.service.impl;
+package vn.edu.usth.mcma.backend.security;
 
-import com.spring.repository.TokenRepository;
-import com.spring.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import vn.edu.usth.mcma.backend.repository.TokenRepository;
 
 import java.security.Key;
 import java.util.Date;
@@ -19,17 +19,16 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
-public class JwtServiceImpl implements JwtService {
+@RequiredArgsConstructor
+@Transactional
+public class JwtService {
     @Value("${security.jwt.secret-key}")
     private String secretKey;
-
     @Value("${security.jwt.expiration-time}")
     private long jwtExpiration;
 
-    @Autowired
-    private TokenRepository tokenRepository;
+    private final TokenRepository tokenRepository;
 
-    @Override
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -39,7 +38,6 @@ public class JwtServiceImpl implements JwtService {
         return claimsResolver.apply(claims);
     }
 
-    @Override
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
@@ -48,7 +46,6 @@ public class JwtServiceImpl implements JwtService {
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 
-    @Override
     public String generateRefreshToken(UserDetails userDetails) {
         return generateRefreshToken(new HashMap<>(), userDetails);
     }
@@ -57,7 +54,6 @@ public class JwtServiceImpl implements JwtService {
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 
-    @Override
     public String generateResetToken(UserDetails userDetails) {
         return generateResetToken(new HashMap<>(), userDetails);
     }
@@ -66,35 +62,20 @@ public class JwtServiceImpl implements JwtService {
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 
-    private String buildToken(
-            Map<String, Object> extraClaims,
-            UserDetails userDetails,
-            long expiration
-    ) {
-        return Jwts
-                .builder()
-                .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                .compact();
+    private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
+        return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername()).setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis() + expiration)).signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
     }
 
     public long getExpirationTime() {
         return jwtExpiration;
     }
 
-    @Override
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
+    public boolean isTokenValid(String value, UserDetails userDetails) {
+        final String username = extractUsername(value);
 
-        boolean isValidToken = tokenRepository.findByToken(token)
-                .map(t -> !t.isLoggedOut()).orElse(false);
+        boolean isValidToken = tokenRepository.findByValue(value).map(t -> !t.isLoggedOut()).orElse(false);
 
-        return username.equals(userDetails.getUsername()) &&
-                !isTokenExpired(token)
-                && isValidToken;
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(value) && isValidToken;
     }
 
     private boolean isTokenExpired(String token) {
@@ -106,12 +87,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        return Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token).getBody();
     }
 
     private Key getSignInKey() {

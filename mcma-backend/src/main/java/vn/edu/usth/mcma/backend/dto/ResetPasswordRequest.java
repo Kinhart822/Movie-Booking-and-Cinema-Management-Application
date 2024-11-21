@@ -1,4 +1,4 @@
-package com.spring.dto.request;
+package vn.edu.usth.mcma.backend.dto;
 
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

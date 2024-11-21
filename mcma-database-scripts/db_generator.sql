@@ -261,7 +261,7 @@ create table if not exists mcma.token
         primary key,
     user_id       bigint unsigned null,
     is_logged_out bit             null,
-    token         text            null
+    value         text            null
 );
 create table if not exists mcma.user
 (

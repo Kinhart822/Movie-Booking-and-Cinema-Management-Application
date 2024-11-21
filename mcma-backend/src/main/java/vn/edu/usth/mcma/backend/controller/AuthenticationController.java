@@ -1,25 +1,21 @@
-package com.spring.controller;
+package vn.edu.usth.mcma.backend.controller;
 
-import com.spring.config.JwtUtil;
-import com.spring.dto.request.*;
-import com.spring.dto.response.JwtAuthenticationResponse;
-import com.spring.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.usth.mcma.backend.dto.*;
+import vn.edu.usth.mcma.backend.security.JwtUtil;
+import vn.edu.usth.mcma.backend.service.AuthenticationService;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    private AuthenticationService authenticationService;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/signUp")
     public ResponseEntity<JwtAuthenticationResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
@@ -55,8 +51,8 @@ public class AuthenticationController {
 
     @Transactional
     @RequestMapping(value = "/update-password", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResponseEntity<String> updatePassword(HttpServletRequest request,  @RequestBody UpdatePasswordRequest updatePasswordRequest) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+    public ResponseEntity<String> updatePassword(HttpServletRequest hsRequest,  @RequestBody UpdatePasswordRequest updatePasswordRequest) {
+        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         authenticationService.changeNewPassword(userId, updatePasswordRequest);
         return ResponseEntity.ok("Password updated successfully");
     }

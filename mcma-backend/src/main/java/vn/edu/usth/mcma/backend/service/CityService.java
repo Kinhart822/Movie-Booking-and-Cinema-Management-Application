@@ -1,8 +1,10 @@
 package vn.edu.usth.mcma.backend.service;
 
 import constants.EntityStatus;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.dto.CityRequest;
 import vn.edu.usth.mcma.backend.repository.CityRepository;
 import vn.edu.usth.mcma.backend.dto.CommonResponse;
@@ -15,34 +17,39 @@ import java.util.List;
 @Service
 public class CityService extends AbstractService<City, Long> {
     private final CityRepository cityRepository;
-    public CityService(CityRepository cityRepository) {
+    private final JwtUtil jwtUtil;
+
+    public CityService(CityRepository cityRepository, JwtUtil jwtUtil) {
         super(cityRepository);
         this.cityRepository = cityRepository;
+        this.jwtUtil = jwtUtil;
     }
-    public CommonResponse createCity(CityRequest request) {
+    public CommonResponse createCity(CityRequest request, HttpServletRequest hsRequest) {
+        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         City city = new City();
         city.setName(request.getName());
         city.setStatus(EntityStatus.CREATED.getStatus());
-        //TODO
-//        city.setCreatedBy();
-//        city.setLastModifiedBy();
+        city.setCreatedBy(userId);
+        city.setLastModifiedBy(userId);
         cityRepository.save(city);
         return CommonResponse.successResponse();
     }
     public List<City> findAll() {
         return cityRepository.findAll();
     }
-    public CommonResponse updateCity(Long id, CityRequest request) {
+    public CommonResponse updateCity(Long id, CityRequest request, HttpServletRequest hsRequest) {
+        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         City city = findById(id);
         city.setName(request.getName());
-        //TODO
-//        city.setLastModifiedBy();
+        city.setLastModifiedBy(userId);
         cityRepository.save(city);
         return CommonResponse.successResponse();
     }
-    public CommonResponse deleteCity(Long id) {
+    public CommonResponse deleteCity(Long id, HttpServletRequest hsRequest) {
+        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         City city = findById(id);
         city.setStatus(EntityStatus.DELETED.getStatus());
+        city.setLastModifiedBy(userId);
         cityRepository.save(city);
         return CommonResponse.successResponse();
     }
