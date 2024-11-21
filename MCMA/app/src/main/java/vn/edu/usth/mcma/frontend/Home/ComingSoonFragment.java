@@ -26,13 +26,13 @@ public class ComingSoonFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         // Tạo danh sách phim Coming Soon
-        List<FilmItem> items = new ArrayList<FilmItem>();
-        items.add(new FilmItem("Olivia Adams", "Horror", R.drawable.movie12));
-        items.add(new FilmItem("Liam Johnson", "Action", R.drawable.movie6));
-        items.add(new FilmItem("Noah Brown", "Horror", R.drawable.movie8));
+        List<ComingSoon_Item> items = new ArrayList<ComingSoon_Item>();
+        items.add(new ComingSoon_Item("Olivia Adams", "Horror", "135 minutes","T16",R.drawable.movie12));
+        items.add(new ComingSoon_Item("Liam Johnson", "Action","120 minutes","T18" ,R.drawable.movie6));
+        items.add(new ComingSoon_Item("Noah Brown", "Horror","90 minutes","P" ,R.drawable.movie8));
 
-        FilmAdapter adapter = new FilmAdapter(requireContext(), items, position -> {
-            FilmItem selectedFilm = items.get(position);
+        ComingSoon_Adapter adapter = new ComingSoon_Adapter(requireContext(), items, position -> {
+            ComingSoon_Item selectedFilm = items.get(position);
             Toast.makeText(requireContext(), "Selected Film: " + selectedFilm.getName(), Toast.LENGTH_SHORT).show();
         });
         recyclerView.setAdapter(adapter);

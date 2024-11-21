@@ -9,16 +9,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import vn.edu.usth.mcma.R;
 
 public class BookingHistory_ViewHolder extends RecyclerView.ViewHolder {
-    TextView timeView;
-    TextView siteView;
-    TextView item_nameView;
-    TextView quantityView;
+    TextView numView;
+    TextView movieView;
+    TextView start_dateView;
+    TextView end_dateView;
+    TextView statusView;
 
     public BookingHistory_ViewHolder(@NonNull View itemView) {
         super(itemView);
-        timeView = itemView.findViewById(R.id.booking_time);
-        siteView = itemView.findViewById(R.id.booking_site);
-        item_nameView = itemView.findViewById(R.id.booking_item);
-        quantityView = itemView.findViewById(R.id.booking_quantity);
+        numView = itemView.findViewById(R.id.booking_number_input);
+        movieView = itemView.findViewById(R.id.booking_movie_input);
+        start_dateView = itemView.findViewById(R.id.booking_startdate_input);
+        end_dateView = itemView.findViewById(R.id.booking_enddate_input);
+        statusView = itemView.findViewById(R.id.booking_status_input);
     }
 }

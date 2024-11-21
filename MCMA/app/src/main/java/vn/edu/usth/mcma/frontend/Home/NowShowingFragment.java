@@ -30,16 +30,16 @@ public class NowShowingFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         // Tạo danh sách phim "Now Showing"
-        List<FilmItem> items = new ArrayList<>();
-        items.add(new FilmItem("Grace Morgan", "(Horror)", R.drawable.movie1));
-        items.add(new FilmItem("Isabella Lewis", "(Comedy)", R.drawable.movie3));
-        items.add(new FilmItem("Evelyn", "(Sci-Fi)", R.drawable.movie4));
-        items.add(new FilmItem("Jack", "(Action)", R.drawable.movie5));
-        items.add(new FilmItem("Tino", "(Horror)", R.drawable.movie7));
+        List<NowShowing_Item> items = new ArrayList<>();
+        items.add(new NowShowing_Item("Grace Morgan", "(Horror)","85 minutes","P" ,R.drawable.movie1));
+        items.add(new NowShowing_Item("Isabella Lewis", "(Comedy)","100 minutes","P" ,R.drawable.movie3));
+        items.add(new NowShowing_Item("Evelyn", "(Sci-Fi)", "94 minutes","T13" ,R.drawable.movie4));
+        items.add(new NowShowing_Item("Jack", "(Action)","114 minutes", "P" ,R.drawable.movie5));
+        items.add(new NowShowing_Item("Tino", "(Horror)","125 minutes","P" ,R.drawable.movie7));
 
         // Thiết lập Adapter và sự kiện click
-        FilmAdapter adapter = new FilmAdapter(requireContext(), items, position -> {
-            FilmItem selectedFilm = items.get(position);
+        NowShowing_Adapter adapter = new NowShowing_Adapter(requireContext(), items, position -> {
+            NowShowing_Item selectedFilm = items.get(position);
             Toast.makeText(requireContext(), "Selected Film: " + selectedFilm.getName(), Toast.LENGTH_SHORT).show();
         });
         recyclerView.setAdapter(adapter);

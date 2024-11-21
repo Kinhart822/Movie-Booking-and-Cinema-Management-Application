@@ -6,9 +6,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/cinema_icon2"
+        android:icon="@mipmap/cinema_icon3"
         android:label="MCMA"
-        android:roundIcon="@mipmap/cinema_icon2_round"
+        android:roundIcon="@mipmap/cinema_icon3_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MCMA"
         tools:targetApi="31">

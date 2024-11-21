@@ -24,6 +24,8 @@
         app:labelVisibilityMode="labeled"
         app:itemIconTint="@color/home_changing_color"
         app:itemTextColor="@color/home_changing_color"
+        app:itemBackground="@drawable/bottom_nav_item_background"
         app:menu="@menu/home_changing"/>
+
 
 </RelativeLayout>

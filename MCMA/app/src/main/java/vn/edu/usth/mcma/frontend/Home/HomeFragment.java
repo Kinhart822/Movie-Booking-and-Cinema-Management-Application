@@ -15,7 +15,6 @@ import android.widget.ViewFlipper;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -27,15 +26,14 @@ import java.util.List;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.MainActivity;
-import vn.edu.usth.mcma.frontend.Notification.Notification_Activity;
 
 public class HomeFragment extends Fragment implements FilmViewInterface {
 
     private ViewFlipper v_flipper;
-    private List<FilmItem> nowShowingFilms;
-    private List<FilmItem> comingSoonFilms;
-    private List<FilmItem> filteredFilms = new ArrayList<>();
-    private FilmAdapter adapter;
+    private List<ComingSoon_Item> nowShowingFilms;
+    private List<ComingSoon_Item> comingSoonFilms;
+    private List<ComingSoon_Item> filteredFilms = new ArrayList<>();
+    private ComingSoon_Adapter adapter;
     private RecyclerView recyclerView;
     private SearchView searchView;
     private DrawerLayout mDrawerLayout;
@@ -115,7 +113,7 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
 
 //        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 //        recyclerView.setLayoutManager(layoutManager);
-//        adapter = new FilmAdapter(requireContext(), filteredFilms, this);
+//        adapter = new ComingSoon_Adapter(requireContext(), filteredFilms, this);
 //        recyclerView.setAdapter(adapter);
 
         // Setup TabLayout and ViewPager2
@@ -187,9 +185,9 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
     }
 
 //    private void filterList(String text) {
-//        List<FilmItem> sourceList = filteredFilms.size() > 0 ? filteredFilms : nowShowingFilms; // Check current list
+//        List<ComingSoon_Item> sourceList = filteredFilms.size() > 0 ? filteredFilms : nowShowingFilms; // Check current list
 //        filteredFilms.clear();
-//        for (FilmItem item : sourceList) {
+//        for (ComingSoon_Item item : sourceList) {
 //            if (item.getName().toLowerCase().contains(text.toLowerCase()) ||
 //                    item.getCategory().toLowerCase().contains(text.toLowerCase())) {
 //                filteredFilms.add(item);
@@ -213,7 +211,7 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
     @Override
     public void onItemClick(int position) {
         if (position < filteredFilms.size()) {
-            FilmItem selectedFilm = filteredFilms.get(position);
+            ComingSoon_Item selectedFilm = filteredFilms.get(position);
             Toast.makeText(getContext(), "Selected Film: " + selectedFilm.getName(), Toast.LENGTH_SHORT).show();
         }
     }

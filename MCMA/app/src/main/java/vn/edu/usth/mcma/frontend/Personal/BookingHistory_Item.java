@@ -1,47 +1,57 @@
 package vn.edu.usth.mcma.frontend.Personal;
 
 public class BookingHistory_Item {
-    String time;
-    String site;
-    String item_name;
-    String quantity;
+    String booking_num;
+    String booking_movie;
+    String booking_startdate;
+    String booking_enddate;
+    String booking_status;
 
-    public BookingHistory_Item(String time, String site, String item_name, String quantity) {
-        this.time = time;
-        this.site = site;
-        this.item_name = item_name;
-        this.quantity = quantity;
+    public BookingHistory_Item(String booking_num, String booking_movie, String booking_startdate, String booking_enddate, String booking_status) {
+        this.booking_num = booking_num;
+        this.booking_movie = booking_movie;
+        this.booking_startdate = booking_startdate;
+        this.booking_enddate = booking_enddate;
+        this.booking_status = booking_status;
     }
 
-    public String getTime() {
-        return time;
+    public String getBooking_num() {
+        return booking_num;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setBooking_num(String booking_num) {
+        this.booking_num = booking_num;
     }
 
-    public String getSite() {
-        return site;
+    public String getBooking_movie() {
+        return booking_movie;
     }
 
-    public void setSite(String site) {
-        this.site = site;
+    public void setBooking_movie(String booking_movie) {
+        this.booking_movie = booking_movie;
     }
 
-    public String getItem_name() {
-        return item_name;
+    public String getBooking_startdate() {
+        return booking_startdate;
     }
 
-    public void setItem_name(String item_name) {
-        this.item_name = item_name;
+    public void setBooking_startdate(String booking_startdate) {
+        this.booking_startdate = booking_startdate;
     }
 
-    public String getQuantity() {
-        return quantity;
+    public String getBooking_enddate() {
+        return booking_enddate;
     }
 
-    public void setQuantity(String quantity) {
-        this.quantity = quantity;
+    public void setBooking_enddate(String booking_enddate) {
+        this.booking_enddate = booking_enddate;
+    }
+
+    public String getBooking_status() {
+        return booking_status;
+    }
+
+    public void setBooking_status(String booking_status) {
+        this.booking_status = booking_status;
     }
 }

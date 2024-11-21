@@ -30,11 +30,11 @@ public class Booking_History_Activity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerviewbooking_history);
         items = new ArrayList<>();
 
-        items.add(new BookingHistory_Item("18h20","A", "Coca", "5"));
-        items.add(new BookingHistory_Item("18h20","A", "Coca", "5"));
-        items.add(new BookingHistory_Item("18h20","A", "Coca", "5"));
-        items.add(new BookingHistory_Item("18h20","A", "Coca", "5"));
-        items.add(new BookingHistory_Item("18h20","A", "Coca", "5"));
+        items.add(new BookingHistory_Item("5","Spider Man - Across The Spider Verse part 2", "07/11", "08/11", "Pending"));
+        items.add(new BookingHistory_Item("5","Spider Man - Across The Spider Verse part 2", "07/11", "08/11", "Pending"));
+        items.add(new BookingHistory_Item("5","Spider Man - Across The Spider Verse part 2", "07/11", "08/11", "Pending"));
+        items.add(new BookingHistory_Item("5","Spider Man - Across The Spider Verse part 2", "07/11", "08/11", "Pending"));
+        items.add(new BookingHistory_Item("5","Spider Man - Across The Spider Verse part 2", "07/11", "08/11", "Pending"));
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new BookingHistory_Adapter(this, items));

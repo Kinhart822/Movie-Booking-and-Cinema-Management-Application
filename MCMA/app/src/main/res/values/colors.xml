@@ -16,6 +16,7 @@
     <color name="bottom_navigator_after">#85FAF0</color>
 
     <color name="green">#00ff00</color>
+    <color name="darkgreen">#21b81c</color>
     <color name="colorPrimary">#3b5998</color>
     <color name="colorPrimaryLight">#8b9dc3</color>
     <color name="colorAccentDark">#dfe3ee</color>
@@ -26,7 +27,7 @@
 
 
     <color name="DarkBlue">#4a67d9</color>
-    <color name="LightBlue">#c4d5ff</color>
+    <color name="LightBlue">#03adfc</color>
 
     <color name="backgroundColor">#000000</color>
     <color name="selectedDayColor">#4CAF50</color>

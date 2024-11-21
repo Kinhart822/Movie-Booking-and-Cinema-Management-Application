@@ -31,10 +31,11 @@ public class BookingHistory_Adapter extends RecyclerView.Adapter<BookingHistory_
 
     @Override
     public void onBindViewHolder(@NonNull BookingHistory_ViewHolder holder, int position) {
-        holder.timeView.setText(items.get(position).getTime());
-        holder.siteView.setText(items.get(position).getSite());
-        holder.item_nameView.setText(items.get(position).getItem_name());
-        holder.quantityView.setText(items.get(position).getQuantity());
+        holder.numView.setText(items.get(position).getBooking_num());
+        holder.movieView.setText(items.get(position).getBooking_movie());
+        holder.start_dateView.setText(items.get(position).getBooking_startdate());
+        holder.end_dateView.setText(items.get(position).getBooking_enddate());
+        holder.statusView.setText(items.get(position).getBooking_status());
 
     }
 

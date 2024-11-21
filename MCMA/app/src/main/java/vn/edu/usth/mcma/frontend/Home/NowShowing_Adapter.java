@@ -11,12 +11,12 @@ import java.util.List;
 
 import vn.edu.usth.mcma.R;
 
-public class FilmAdapter extends RecyclerView.Adapter<FilmViewHolder> {
+public class NowShowing_Adapter extends RecyclerView.Adapter<NowShowing_ViewHolder> {
     private final FilmViewInterface filmViewInterface;
     private final Context context;
-    private final List<FilmItem> items;
+    private final List<NowShowing_Item> items;
 
-    public FilmAdapter(Context context, List<FilmItem> items, FilmViewInterface filmViewInterface) {
+    public NowShowing_Adapter(Context context, List<NowShowing_Item> items, FilmViewInterface filmViewInterface) {
         this.context = context;
         this.items = items;
         this.filmViewInterface = filmViewInterface;
@@ -24,15 +24,17 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmViewHolder> {
 
     @NonNull
     @Override
-    public FilmViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new FilmViewHolder(LayoutInflater.from(context).inflate(R.layout.film_frame, parent, false), filmViewInterface);
+    public NowShowing_ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new NowShowing_ViewHolder(LayoutInflater.from(context).inflate(R.layout.now_showing_film_frame, parent, false), filmViewInterface);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FilmViewHolder holder, int position) {
-        FilmItem item = items.get(position);
+    public void onBindViewHolder(@NonNull NowShowing_ViewHolder holder, int position) {
+        NowShowing_Item item = items.get(position);
         holder.nameView.setText(item.getName());
         holder.typeView.setText(item.getCategory());
+        holder.timeView.setText(item.getTime());
+        holder.age_limitView.setText(item.getAge_limit());
         holder.filmView.setImageResource(item.getFilm_image());
     }
 
