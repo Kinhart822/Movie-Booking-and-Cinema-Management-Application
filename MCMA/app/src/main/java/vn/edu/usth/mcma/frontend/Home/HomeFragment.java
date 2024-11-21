@@ -147,6 +147,15 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
             }
         });
 
+        LinearLayout to_search_activity = v.findViewById(R.id.search_bar);
+        to_search_activity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Search.Search_Activity.class );
+                startActivity(i);
+            }
+        });
+
         return v;
     }
 

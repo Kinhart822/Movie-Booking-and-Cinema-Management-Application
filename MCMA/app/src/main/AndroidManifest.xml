@@ -43,7 +43,7 @@
             android:name=".frontend.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.Search_Activity"
+            android:name=".frontend.Search.Search_Activity"
             android:exported="false" />
         <activity
             android:name=".frontend.AddMovie"

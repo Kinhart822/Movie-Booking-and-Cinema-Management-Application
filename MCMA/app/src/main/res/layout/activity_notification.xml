@@ -19,7 +19,7 @@
             android:layout_height="50dp"
             android:orientation="horizontal"
             android:gravity="center"
-            android:background="@color/gold">
+            android:background="@color/LightBlue">
 
             <ImageButton
                 android:id="@+id/back_button"

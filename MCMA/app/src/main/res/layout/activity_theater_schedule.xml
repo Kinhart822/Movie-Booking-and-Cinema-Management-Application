@@ -9,7 +9,7 @@
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/gold"
+        android:background="@color/LightBlue"
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
 
