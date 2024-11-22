@@ -96,12 +96,7 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
                 }
             }
         });
-
-//        searchView = v.findViewById(R.id.searchView);
-//        searchView.clearFocus();
-
-//        recyclerView = v.findViewById(R.id.recyclerviewhome);
-
+        
         int images[] = {R.drawable.movie9, R.drawable.movie3, R.drawable.movie4};
         v_flipper = v.findViewById(R.id.view_flipper);
 
@@ -111,32 +106,8 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
             }
         }
 
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-//        recyclerView.setLayoutManager(layoutManager);
-//        adapter = new ComingSoon_Adapter(requireContext(), filteredFilms, this);
-//        recyclerView.setAdapter(adapter);
-
         // Setup TabLayout and ViewPager2
         setupViewPagerAndTabs();
-
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                if (newText.trim().isEmpty()) {
-//                    filteredFilms.clear();
-//                    filteredFilms.addAll(nowShowingFilms); // Default to "Now Showing" when empty
-//                    adapter.notifyDataSetChanged();
-//                } else {
-//                    filterList(newText);
-//                }
-//                return true;
-//            }
-//        });
 
         ImageButton notication_buttonn = v.findViewById(R.id.notification_button);
         notication_buttonn.setOnClickListener(new View.OnClickListener() {
@@ -192,30 +163,6 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
         v_flipper.setInAnimation(getContext(), android.R.anim.slide_in_left);
         v_flipper.setOutAnimation(getContext(), android.R.anim.slide_out_right);
     }
-
-//    private void filterList(String text) {
-//        List<ComingSoon_Item> sourceList = filteredFilms.size() > 0 ? filteredFilms : nowShowingFilms; // Check current list
-//        filteredFilms.clear();
-//        for (ComingSoon_Item item : sourceList) {
-//            if (item.getName().toLowerCase().contains(text.toLowerCase()) ||
-//                    item.getCategory().toLowerCase().contains(text.toLowerCase())) {
-//                filteredFilms.add(item);
-//            }
-//        }
-//
-//        if (filteredFilms.isEmpty()) {
-//            filteredFilms.addAll(nowShowingFilms);
-//            Toast.makeText(getContext(), "No movies found", Toast.LENGTH_SHORT).show();
-//        }
-//
-//        adapter.notifyDataSetChanged();
-//    }
-
-//    public void closeDrawer() {
-//        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-//            mDrawerLayout.closeDrawer(GravityCompat.START);
-//        }
-//    }
 
     @Override
     public void onItemClick(int position) {
