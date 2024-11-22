@@ -1,15 +1,18 @@
 package vn.edu.usth.mcma.backend.service;
 
+import constants.ApiResponseCode;
+import constants.EntityStatus;
+import constants.UserType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dao.Token;
 import vn.edu.usth.mcma.backend.dao.User;
 import vn.edu.usth.mcma.backend.dto.*;
+import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.TokenRepository;
 import vn.edu.usth.mcma.backend.repository.UserRepository;
 import vn.edu.usth.mcma.backend.security.JwtService;
@@ -29,122 +32,100 @@ public class AuthenticationService {
     private final TokenRepository tokenRepository;
     private final UserService userService;
 
-    private void saveUserToken(String value, User user) {
-        Token saveToken = new Token();
-        saveToken.setValue(value);
-        saveToken.setLoggedOut(false);
-        saveToken.setUserId(user.getId());
-        tokenRepository.save(saveToken);
+    private void saveUserToken(String value, String email) {
+        Token token = new Token();
+        token.setValue(value);
+        token.setLoggedOut(false);
+        token.setUserId(userService.findUserByEmail(email).getId());
+        tokenRepository.save(token);
     }
 
-    private void revokeAllTokenByUser(User user) {
-        List<Token> validTokensByUser = tokenRepository.findAllValidTokenByUser(user.getId());
-
+    private void revokeAllTokenByEmail(String email) {
+        List<Token> validTokensByUser = tokenRepository.findAllLoggedInByEmail(email);
         if (!validTokensByUser.isEmpty()) {
             validTokensByUser.forEach(t -> t.setLoggedOut(true));
-        } else {
-            return;
+            tokenRepository.saveAll(validTokensByUser);
         }
-        tokenRepository.saveAll(validTokensByUser);
     }
 
-    public JwtAuthenticationResponse signUp(SignUpRequest signUpRequest) {
-        if (!signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())) {
-            throw new IllegalArgumentException("Password and confirm password do not match");
+    public String signUp(SignUpRequest signUpRequest, Integer type) {
+        if (type != UserType.ADMIN.getValue() && type != UserType.USER.getValue()) {
+            throw new BusinessException(ApiResponseCode.ILLEGAL_TYPE);
         }
-        List<User> existingUsers = userRepository.findUserByEmail(signUpRequest.getEmail());
-        if (!existingUsers.isEmpty()) {
-            throw new IllegalArgumentException("Email already exists");
+        String email = signUpRequest.getEmail();
+        if (userService.checkEmailExistence(email)) {
+            throw new BusinessException(ApiResponseCode.EMAIL_EXISTED);
         }
         User user = new User();
         user.setFirstName(signUpRequest.getFirstName());
         user.setLastName(signUpRequest.getLastName());
-        user.setGender(signUpRequest.getGender());
-        user.setPhoneNumber(signUpRequest.getPhone());
+        user.setSex(signUpRequest.getSex());
         user.setDateOfBirth(signUpRequest.getDateOfBirth());
-        user.setDateCreated(new Date());
-        user.setDateUpdated(new Date());
-        user.setAddress(signUpRequest.getAddress());
-        user.setEmail(signUpRequest.getEmail());
+        user.setEmail(email);
+        user.setPhone(signUpRequest.getPhone());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-        try {
-            Type userType = Type.valueOf(signUpRequest.getType());
-            user.setUserType(userType);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Incorrect Role: %s".formatted(signUpRequest.getType()));
-        }
-        var saveUser = userRepository.save(user);
-
-        var jwt = jwtService.generateToken(user);
-        saveUserToken(jwt, saveUser);
-
-        JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
-        jwtAuthenticationResponse.setToken(jwt);
-
-        return jwtAuthenticationResponse;
+        user.setAddress(signUpRequest.getAddress());
+        user.setUserType(type);
+        user.setStatus(EntityStatus.CREATED.getStatus());
+        Instant now = Instant.now();
+        user.setCreatedDate(now);
+        user.setLastModifiedDate(now);
+        user = userRepository.save(user);
+        email = user.getEmail();//email of the saved entity, not from request
+        String token = jwtService.generateToken(email);
+        saveUserToken(token, email);
+        return "User created successfully";
     }
 
     public JwtAuthenticationResponse signIn(SignInRequest signInRequest) {
+        String email = signInRequest.getEmail();
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                signInRequest.getEmail(),
+                email,
                 signInRequest.getPassword()
         ));
-        var user = userRepository.findByEmail(signInRequest.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid User: %s".formatted(signInRequest.getEmail())));
-        List<Token> loggedOutTokens = tokenRepository.findAllLoggedOutTokensByUser(user.getId());
+        List<Token> loggedOutTokens = tokenRepository.findAllLoggedOutByEmail(email);
         if (!loggedOutTokens.isEmpty()) {
             tokenRepository.deleteAll(loggedOutTokens);
         }
-        var jwt = jwtService.generateToken(user);
-        revokeAllTokenByUser(user);
-        saveUserToken(jwt, user);
+        String token = jwtService.generateToken(email);
+        revokeAllTokenByEmail(email);
+        saveUserToken(token, email);
 
-        JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
-        jwtAuthenticationResponse.setToken(jwt);
-        jwtAuthenticationResponse.setUserId(user.getId());
-
-        return jwtAuthenticationResponse;
+        JwtAuthenticationResponse response = new JwtAuthenticationResponse();
+        response.setToken(token);
+        response.setUserId(userService.findUserByEmail(email).getId());
+        return response;
     }
 
     public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
-        String userEmail = jwtService.extractUsername(refreshTokenRequest.getToken());
-        User user = userRepository.findByEmail(userEmail).orElseThrow();
-        if (jwtService.isTokenValid(refreshTokenRequest.getToken(), user)) {
-            var jwt = jwtService.generateRefreshToken(user);
-            revokeAllTokenByUser(user);
-            saveUserToken(jwt, user);
-
-            JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
-            jwtAuthenticationResponse.setToken(jwt);
-
-            return jwtAuthenticationResponse;
+        String email = jwtService.extractUsername(refreshTokenRequest.getToken());
+        if (!jwtService.isTokenValid(refreshTokenRequest.getToken(), email)) {
+            throw new BusinessException(ApiResponseCode.INVALID_TOKEN);
         }
-        return null;
+        String token = jwtService.generateToken(email);
+        revokeAllTokenByEmail(email);
+        saveUserToken(token, email);
+
+        JwtAuthenticationResponse response = new JwtAuthenticationResponse();
+        response.setToken(token);
+        return response;
     }
 
     public JwtAuthenticationResponse forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
-        JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
-        try {
-            UserDetails userDetails = userService.userDetailsService().loadUserByUsername(forgotPasswordRequest.getEmail());
-            String resetToken = jwtService.generateResetToken(userDetails);
-            saveUserToken(resetToken, userDetails);
+        JwtAuthenticationResponse response = new JwtAuthenticationResponse();
+        String email = forgotPasswordRequest.getEmail();
+        String token = jwtService.generateToken(email);
+        this.saveUserToken(token, email);
 
-            jwtAuthenticationResponse.setToken(resetToken);
-
-            jwtAuthenticationResponse.setMessage("Success!");
-            return jwtAuthenticationResponse;
-        } catch (Exception e) {
-            jwtAuthenticationResponse.setError("An error occurred while processing your request.");
-            return jwtAuthenticationResponse;
-        }
+        response.setToken(token);
+        response.setMessage("Success!");
+        return response;
     }
 
     public String resetPassword(ResetPasswordRequest request) {
         String email = jwtService.extractUsername(request.getToken());
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user"));
-        UserDetails userDetails = userService.userDetailsService().loadUserByUsername(email);
-        if (!jwtService.isTokenValid(request.getToken(), userDetails)) {
+        User user = userService.findUserByEmail(email);
+        if (!jwtService.isTokenValid(request.getToken(), email)) {
             throw new IllegalArgumentException("Invalid or expired token");
         }
         if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
@@ -152,14 +133,11 @@ public class AuthenticationService {
         }
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
-
         return "Password has been reset successfully. You can log in again!";
     }
 
     public void updateAccount(Long userId, UpdateAccountRequest updateAccountRequest) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
+        User user = userService.findById(userId);
         if (updateAccountRequest.getEmail() != null) {
             user.setEmail(updateAccountRequest.getEmail());
         }
@@ -172,22 +150,22 @@ public class AuthenticationService {
         if (updateAccountRequest.getPhone() != null) {
             user.setPhone(updateAccountRequest.getPhone());
         }
-        if (updateAccountRequest.getDateOfBirth()!= null) {
+        if (updateAccountRequest.getDateOfBirth() != null) {
             user.setDateOfBirth(updateAccountRequest.getDateOfBirth());
         }
-        if (updateAccountRequest.getSex()!= null) {
+        if (updateAccountRequest.getSex() != null) {
             user.setSex(updateAccountRequest.getSex());
         }
         if (updateAccountRequest.getAddress() != null) {
             user.setAddress(updateAccountRequest.getAddress());
         }
         user.setLastModifiedDate(Instant.now());
+        user.setLastModifiedBy(userId);
         userRepository.save(user);
     }
 
     public void changeNewPassword(Long userId, UpdatePasswordRequest updatePasswordRequest) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user"));
+        User user = userService.findById(userId);
         if (passwordEncoder.matches(updatePasswordRequest.getNewPassword(), user.getPassword())) {
             throw new IllegalArgumentException("New password cannot be the same as the old password");
         }
@@ -196,12 +174,12 @@ public class AuthenticationService {
     }
 
     public void deleteAccount(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User user = userService.findById(userId);
 
         List<Token> allTokens = tokenRepository.findAllByUser(userId);
         tokenRepository.deleteAll(allTokens);
 
         userRepository.delete(user);
+        //TODO: set status
     }
 }

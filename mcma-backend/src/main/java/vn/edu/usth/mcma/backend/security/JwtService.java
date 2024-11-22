@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.repository.TokenRepository;
+import vn.edu.usth.mcma.backend.service.UserService;
 
 import java.security.Key;
 import java.util.Date;
@@ -22,6 +23,7 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 @Transactional
 public class JwtService {
+    private final UserService userService;
     @Value("${security.jwt.secret-key}")
     private String secretKey;
     @Value("${security.jwt.expiration-time}")
@@ -38,43 +40,26 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(String email) {
+        return buildToken(email);
     }
 
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return buildToken(extraClaims, userDetails, jwtExpiration);
+    private String buildToken(String email) {
+        UserDetails userDetails = userService.makeUserDetailsByEmail(email);
+        return Jwts
+                .builder()
+                .setClaims(new HashMap<>())
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
-    public String generateRefreshToken(UserDetails userDetails) {
-        return generateRefreshToken(new HashMap<>(), userDetails);
-    }
-
-    public String generateRefreshToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return buildToken(extraClaims, userDetails, jwtExpiration);
-    }
-
-    public String generateResetToken(UserDetails userDetails) {
-        return generateResetToken(new HashMap<>(), userDetails);
-    }
-
-    public String generateResetToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return buildToken(extraClaims, userDetails, jwtExpiration);
-    }
-
-    private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
-        return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername()).setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis() + expiration)).signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
-    }
-
-    public long getExpirationTime() {
-        return jwtExpiration;
-    }
-
-    public boolean isTokenValid(String value, UserDetails userDetails) {
+    public boolean isTokenValid(String value, String email) {
+        UserDetails userDetails = userService.makeUserDetailsByEmail(email);
         final String username = extractUsername(value);
-
         boolean isValidToken = tokenRepository.findByValue(value).map(t -> !t.isLoggedOut()).orElse(false);
-
         return username.equals(userDetails.getUsername()) && !isTokenExpired(value) && isValidToken;
     }
 

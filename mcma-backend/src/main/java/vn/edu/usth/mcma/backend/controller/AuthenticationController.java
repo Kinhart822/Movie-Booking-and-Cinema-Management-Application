@@ -16,12 +16,12 @@ public class AuthenticationController {
     private final JwtUtil jwtUtil;
     private final AuthenticationService authenticationService;
 
-    @PostMapping("/signUp")
-    public ResponseEntity<JwtAuthenticationResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
-        return ResponseEntity.ok(authenticationService.signUp(signUpRequest));
+    @PostMapping("/sign-up")
+    public ResponseEntity<String> signUp(@RequestParam(name = "type") Integer type, @RequestBody SignUpRequest signUpRequest) {
+        return ResponseEntity.ok(authenticationService.signUp(signUpRequest, type));
     }
 
-    @PostMapping("/signIn")
+    @PostMapping("/sign-in")
     public ResponseEntity<JwtAuthenticationResponse> signIn(@RequestBody SignInRequest signInRequest) {
         return ResponseEntity.ok(authenticationService.signIn(signInRequest));
     }

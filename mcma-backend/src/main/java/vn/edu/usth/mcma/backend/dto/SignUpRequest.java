@@ -24,9 +24,7 @@ public class SignUpRequest {
     private String phone;
     @NotNull(message = "dateOfBirth must be not null")
     private Instant dateOfBirth;
-    private Integer gender;
-    @NotNull(message = "type must be not null")
-    private Integer type;
+    private Integer sex;
     @NotNull(message = "address must be not null")
     private String address;
     @NotBlank
