@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dao.Token;
@@ -13,6 +14,7 @@ import vn.edu.usth.mcma.backend.repository.TokenRepository;
 import vn.edu.usth.mcma.backend.repository.UserRepository;
 import vn.edu.usth.mcma.backend.security.JwtService;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final TokenRepository tokenRepository;
+    private final UserService userService;
 
     private void saveUserToken(String value, User user) {
         Token saveToken = new Token();
@@ -49,12 +52,10 @@ public class AuthenticationService {
         if (!signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())) {
             throw new IllegalArgumentException("Password and confirm password do not match");
         }
-
         List<User> existingUsers = userRepository.findUserByEmail(signUpRequest.getEmail());
         if (!existingUsers.isEmpty()) {
             throw new IllegalArgumentException("Email already exists");
         }
-
         User user = new User();
         user.setFirstName(signUpRequest.getFirstName());
         user.setLastName(signUpRequest.getLastName());
@@ -94,7 +95,6 @@ public class AuthenticationService {
         if (!loggedOutTokens.isEmpty()) {
             tokenRepository.deleteAll(loggedOutTokens);
         }
-
         var jwt = jwtService.generateToken(user);
         revokeAllTokenByUser(user);
         saveUserToken(jwt, user);
@@ -106,7 +106,6 @@ public class AuthenticationService {
         return jwtAuthenticationResponse;
     }
 
-    @Override
     public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
         String userEmail = jwtService.extractUsername(refreshTokenRequest.getToken());
         User user = userRepository.findByEmail(userEmail).orElseThrow();
@@ -123,15 +122,12 @@ public class AuthenticationService {
         return null;
     }
 
-    @Override
     public JwtAuthenticationResponse forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
         JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
         try {
-            User user = userRepository.findByEmail(forgotPasswordRequest.getEmail())
-                    .orElseThrow(() -> new IllegalArgumentException("User not found with this email"));
-
-            String resetToken = jwtService.generateResetToken(user);
-            saveUserToken(resetToken, user);
+            UserDetails userDetails = userService.userDetailsService().loadUserByUsername(forgotPasswordRequest.getEmail());
+            String resetToken = jwtService.generateResetToken(userDetails);
+            saveUserToken(resetToken, userDetails);
 
             jwtAuthenticationResponse.setToken(resetToken);
 
@@ -147,16 +143,12 @@ public class AuthenticationService {
         String email = jwtService.extractUsername(request.getToken());
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user"));
-
-        if (!jwtService.isTokenValid(request.getToken(), user)) {
+        UserDetails userDetails = userService.userDetailsService().loadUserByUsername(email);
+        if (!jwtService.isTokenValid(request.getToken(), userDetails)) {
             throw new IllegalArgumentException("Invalid or expired token");
         }
-
         if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
             throw new IllegalArgumentException("New password cannot be the same as the old password");
-        }
-        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
-            throw new IllegalArgumentException("Passwords do not match");
         }
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
@@ -164,7 +156,7 @@ public class AuthenticationService {
         return "Password has been reset successfully. You can log in again!";
     }
 
-    public void updateAccount(Integer userId, UpdateAccountRequest updateAccountRequest) {
+    public void updateAccount(Long userId, UpdateAccountRequest updateAccountRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
@@ -178,38 +170,32 @@ public class AuthenticationService {
             user.setLastName(updateAccountRequest.getLastName());
         }
         if (updateAccountRequest.getPhone() != null) {
-            user.setPhoneNumber(updateAccountRequest.getPhone());
+            user.setPhone(updateAccountRequest.getPhone());
         }
         if (updateAccountRequest.getDateOfBirth()!= null) {
             user.setDateOfBirth(updateAccountRequest.getDateOfBirth());
         }
-        if (updateAccountRequest.getGender()!= null) {
-            user.setGender(updateAccountRequest.getGender());
+        if (updateAccountRequest.getSex()!= null) {
+            user.setSex(updateAccountRequest.getSex());
         }
         if (updateAccountRequest.getAddress() != null) {
             user.setAddress(updateAccountRequest.getAddress());
         }
-        user.setDateUpdated(new Date());
-
+        user.setLastModifiedDate(Instant.now());
         userRepository.save(user);
     }
 
-    @Override
     public void changeNewPassword(Long userId, UpdatePasswordRequest updatePasswordRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user"));
         if (passwordEncoder.matches(updatePasswordRequest.getNewPassword(), user.getPassword())) {
             throw new IllegalArgumentException("New password cannot be the same as the old password");
         }
-        if (!updatePasswordRequest.getNewPassword().equals(updatePasswordRequest.getConfirmPassword())) {
-            throw new IllegalArgumentException("Passwords do not match");
-        }
         user.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
         userRepository.save(user);
     }
 
-    @Override
-    public void deleteAccount(Integer userId) {
+    public void deleteAccount(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 

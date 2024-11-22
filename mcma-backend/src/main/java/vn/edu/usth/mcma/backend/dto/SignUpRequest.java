@@ -16,7 +16,6 @@ import java.util.Date;
 @Getter
 @Setter
 public class SignUpRequest {
-
     @NotBlank(message = "firstName must be not blank")
     private String firstName;
     @NotNull(message = "lastName must be not null")

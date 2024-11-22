@@ -10,6 +10,7 @@ import vn.edu.usth.mcma.backend.repository.CityRepository;
 import vn.edu.usth.mcma.backend.dto.CommonResponse;
 import vn.edu.usth.mcma.backend.dao.City;
 
+import java.time.Instant;
 import java.util.List;
 
 
@@ -42,6 +43,7 @@ public class CityService extends AbstractService<City, Long> {
         City city = findById(id);
         city.setName(request.getName());
         city.setLastModifiedBy(userId);
+        city.setLastModifiedDate(Instant.now());
         cityRepository.save(city);
         return CommonResponse.successResponse();
     }
@@ -50,6 +52,7 @@ public class CityService extends AbstractService<City, Long> {
         City city = findById(id);
         city.setStatus(EntityStatus.DELETED.getStatus());
         city.setLastModifiedBy(userId);
+        city.setLastModifiedDate(Instant.now());
         cityRepository.save(city);
         return CommonResponse.successResponse();
     }

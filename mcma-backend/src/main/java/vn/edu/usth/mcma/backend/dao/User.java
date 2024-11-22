@@ -20,6 +20,10 @@ public class User extends AbstractAuditing implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column
+    private String firstName;
+    @Column
+    private String lastName;
     @Column(columnDefinition = "TINYINT")
     private Integer sex;
     @Column(name = "dob")

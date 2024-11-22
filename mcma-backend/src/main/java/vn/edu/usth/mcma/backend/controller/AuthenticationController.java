@@ -3,7 +3,6 @@ package vn.edu.usth.mcma.backend.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.dto.*;
@@ -44,7 +43,7 @@ public class AuthenticationController {
     }
 
     @PutMapping("/update-account/{userId}")
-    public ResponseEntity<String> updateAccount(@PathVariable Integer userId, @RequestBody UpdateAccountRequest updateAccountRequest) {
+    public ResponseEntity<String> updateAccount(@PathVariable Long userId, @RequestBody UpdateAccountRequest updateAccountRequest) {
         authenticationService.updateAccount(userId, updateAccountRequest);
         return ResponseEntity.ok("Account updated successfully");
     }
@@ -58,7 +57,7 @@ public class AuthenticationController {
     }
 
     @DeleteMapping("/delete-account/{userId}")
-    public ResponseEntity<String> deleteAccount(@PathVariable Integer userId) {
+    public ResponseEntity<String> deleteAccount(@PathVariable Long userId) {
         authenticationService.deleteAccount(userId);
         return ResponseEntity.ok("Account deleted successfully");
     }

@@ -12,7 +12,6 @@ public class SignInRequest {
     @NotBlank
     @Email
     private String email;
-
     @NotBlank
     @Size(min = 6, message = "Password must be at least 6 characters long and not blank")
     private String password;

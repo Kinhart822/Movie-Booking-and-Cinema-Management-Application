@@ -10,6 +10,7 @@ import vn.edu.usth.mcma.backend.repository.CinemaRepository;
 import vn.edu.usth.mcma.backend.dto.CommonResponse;
 import vn.edu.usth.mcma.backend.dao.Cinema;
 
+import java.time.Instant;
 import java.util.List;
 
 @Transactional
@@ -43,6 +44,7 @@ public class CinemaService extends AbstractService<Cinema, Long> {
         // changing cityId is not allowed think about it :)
         cinema.setName(request.getName());
         cinema.setLastModifiedBy(userId);
+        cinema.setLastModifiedDate(Instant.now());
         cinemaRepository.save(cinema);
         return CommonResponse.successResponse();
     }
@@ -51,6 +53,7 @@ public class CinemaService extends AbstractService<Cinema, Long> {
         Cinema cinema = findById(id);
         cinema.setStatus(EntityStatus.DELETED.getStatus());
         cinema.setLastModifiedBy(userId);
+        cinema.setLastModifiedDate(Instant.now());
         cinemaRepository.save(cinema);
         return CommonResponse.successResponse();
     }
