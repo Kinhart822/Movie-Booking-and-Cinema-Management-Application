@@ -7,44 +7,44 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.dto.*;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
-import vn.edu.usth.mcma.backend.service.AuthenticationService;
+import vn.edu.usth.mcma.backend.service.AuthService;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
-public class AuthenticationController {
+public class AuthController {
     private final JwtUtil jwtUtil;
-    private final AuthenticationService authenticationService;
+    private final AuthService authService;
 
     @PostMapping("/sign-up")
     public ResponseEntity<String> signUp(@RequestParam(name = "type") Integer type, @RequestBody SignUpRequest signUpRequest) {
-        return ResponseEntity.ok(authenticationService.signUp(signUpRequest, type));
+        return ResponseEntity.ok(authService.signUp(signUpRequest, type));
     }
 
     @PostMapping("/sign-in")
     public ResponseEntity<JwtAuthenticationResponse> signIn(@RequestBody SignInRequest signInRequest) {
-        return ResponseEntity.ok(authenticationService.signIn(signInRequest));
+        return ResponseEntity.ok(authService.signIn(signInRequest));
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<JwtAuthenticationResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest) {
-        return ResponseEntity.ok(authenticationService.refreshToken(refreshTokenRequest));
+        return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest));
     }
 
     @PostMapping("/forgot-password")
     public ResponseEntity<JwtAuthenticationResponse> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
-        return ResponseEntity.ok(authenticationService.forgotPassword(forgotPasswordRequest));
+        return ResponseEntity.ok(authService.forgotPassword(forgotPasswordRequest));
     }
 
     @Transactional
     @RequestMapping(value = "/reset-password", method = {RequestMethod.POST, RequestMethod.GET})
     public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
-        return ResponseEntity.ok(authenticationService.resetPassword(resetPasswordRequest));
+        return ResponseEntity.ok(authService.resetPassword(resetPasswordRequest));
     }
 
     @PutMapping("/update-account/{userId}")
     public ResponseEntity<String> updateAccount(@PathVariable Long userId, @RequestBody UpdateAccountRequest updateAccountRequest) {
-        authenticationService.updateAccount(userId, updateAccountRequest);
+        authService.updateAccount(userId, updateAccountRequest);
         return ResponseEntity.ok("Account updated successfully");
     }
 
@@ -52,13 +52,13 @@ public class AuthenticationController {
     @RequestMapping(value = "/update-password", method = {RequestMethod.POST, RequestMethod.GET})
     public ResponseEntity<String> updatePassword(HttpServletRequest hsRequest,  @RequestBody UpdatePasswordRequest updatePasswordRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
-        authenticationService.changeNewPassword(userId, updatePasswordRequest);
+        authService.changeNewPassword(userId, updatePasswordRequest);
         return ResponseEntity.ok("Password updated successfully");
     }
 
     @DeleteMapping("/delete-account/{userId}")
     public ResponseEntity<String> deleteAccount(@PathVariable Long userId) {
-        authenticationService.deleteAccount(userId);
+        authService.deleteAccount(userId);
         return ResponseEntity.ok("Account deleted successfully");
     }
 }

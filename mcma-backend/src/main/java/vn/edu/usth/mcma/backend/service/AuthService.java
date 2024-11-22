@@ -18,13 +18,12 @@ import vn.edu.usth.mcma.backend.repository.UserRepository;
 import vn.edu.usth.mcma.backend.security.JwtService;
 
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 
 @Transactional
 @Service
 @RequiredArgsConstructor
-public class AuthenticationService {
+public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
