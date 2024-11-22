@@ -51,7 +51,7 @@ public class ResetPassword_Activity extends AppCompatActivity {
                     transaction.commit();
                 }
                 else{
-                    Toast.makeText(this, "Make sure you entered the same password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Please enter the same password", Toast.LENGTH_SHORT).show();
                 }
             }
             else{

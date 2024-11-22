@@ -137,135 +137,126 @@
             <!-- Logo Section -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
                 android:background="@color/colorAccentLight"
                 android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="200dp"
-                    android:layout_height="150dp"
-                    android:src="@drawable/usthlogo"
-                    android:layout_gravity="center" />
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/logo_usth" />
             </LinearLayout>
 
             <!-- Navigation Items -->
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:background="@color/colorAccentLight">
+                android:layout_width="270dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
 
                 <!-- Home -->
                 <LinearLayout
                     android:id="@+id/home_side_navigation"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:orientation="horizontal">
+                    android:layout_margin="2dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/edit_group_box">
 
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/home"
-                        android:layout_marginLeft="25dp" />
+                        android:layout_marginLeft="25dp"
+                        android:src="@drawable/home" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:gravity="center"
                         android:text="Home"
                         android:textColor="@color/black"
-                        android:textSize="20sp"
-                        android:gravity="center" />
+                        android:textSize="20sp" />
                 </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/black" />
 
                 <!-- Showtimes -->
                 <LinearLayout
                     android:id="@+id/showtimes_side_navigation"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/edit_group_box">
 
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/videoclip"
-                        android:layout_marginLeft="25dp" />
+                        android:layout_marginLeft="25dp"
+                        android:src="@drawable/videoclip" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:gravity="center"
                         android:text="Showtimes"
                         android:textColor="@color/black"
-                        android:textSize="20sp"
-                        android:gravity="center" />
+                        android:textSize="20sp" />
                 </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/black" />
 
                 <!-- Store -->
                 <LinearLayout
                     android:id="@+id/store_side_navigation"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/edit_group_box">
 
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/shop"
-                        android:layout_marginLeft="25dp" />
+                        android:layout_marginLeft="25dp"
+                        android:src="@drawable/shop" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:gravity="center"
                         android:text="Store"
                         android:textColor="@color/black"
-                        android:textSize="20sp"
-                        android:gravity="center" />
+                        android:textSize="20sp" />
                 </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/black" />
 
                 <!-- Personal Information -->
                 <LinearLayout
                     android:id="@+id/personal_side_navigation"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/edit_group_box">
 
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/profile"
-                        android:layout_marginLeft="25dp" />
+                        android:layout_marginLeft="25dp"
+                        android:src="@drawable/profile" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:gravity="center"
                         android:text="Personal information"
                         android:textColor="@color/black"
-                        android:textSize="20sp"
-                        android:gravity="center" />
+                        android:textSize="20sp" />
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/black" />
             </LinearLayout>
         </LinearLayout>
     </com.google.android.material.navigation.NavigationView>

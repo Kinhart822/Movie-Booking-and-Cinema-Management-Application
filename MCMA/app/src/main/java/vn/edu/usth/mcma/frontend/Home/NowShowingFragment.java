@@ -19,17 +19,14 @@ import vn.edu.usth.mcma.R;
 public class NowShowingFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate layout
         View v = inflater.inflate(R.layout.fragment_now_showing, container, false);
 
-        // Khởi tạo RecyclerView
         RecyclerView recyclerView = v.findViewById(R.id.recyclerview_now_showing);
 
         // Sử dụng LinearLayoutManager theo hướng ngang
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        // Tạo danh sách phim "Now Showing"
         List<NowShowing_Item> items = new ArrayList<>();
         items.add(new NowShowing_Item("Grace Morgan", "Horror","85 minutes","P" ,R.drawable.movie1));
         items.add(new NowShowing_Item("Isabella Lewis", "Comedy","100 minutes","P" ,R.drawable.movie3));
@@ -37,7 +34,6 @@ public class NowShowingFragment extends Fragment {
         items.add(new NowShowing_Item("Jack", "Action","114 minutes", "P" ,R.drawable.movie5));
         items.add(new NowShowing_Item("Tino", "Horror","125 minutes","P" ,R.drawable.movie7));
 
-        // Thiết lập Adapter và sự kiện click
         NowShowing_Adapter adapter = new NowShowing_Adapter(requireContext(), items, position -> {
             NowShowing_Item selectedFilm = items.get(position);
             Toast.makeText(requireContext(), "Selected Film: " + selectedFilm.getName(), Toast.LENGTH_SHORT).show();

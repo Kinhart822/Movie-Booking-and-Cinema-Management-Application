@@ -23,6 +23,6 @@ public class FilmPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 2;  // Có 2 tab: Now Showing và Coming Soon
+        return 2;
     }
 }

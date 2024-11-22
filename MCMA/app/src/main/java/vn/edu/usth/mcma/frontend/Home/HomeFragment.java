@@ -96,7 +96,7 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
                 }
             }
         });
-        
+
         int images[] = {R.drawable.movie9, R.drawable.movie3, R.drawable.movie4};
         v_flipper = v.findViewById(R.id.view_flipper);
 

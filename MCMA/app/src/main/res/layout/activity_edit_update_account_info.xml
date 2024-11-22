@@ -96,7 +96,7 @@
 
             <!-- Mobile Field -->
             <EditText
-                android:id="@+id/phoneNumberMobile"
+                android:id="@+id/etPN"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Phone Number"
