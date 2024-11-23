@@ -2,16 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:padding="16dp"
-    android:background="?attr/selectableItemBackground">
+    android:background="@color/black">
 
     <TextView
         android:id="@+id/theater_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textColor="@color/white"/>
 
     <ImageView
         android:layout_marginLeft="64dp"
@@ -20,5 +22,5 @@
         android:layout_height="24dp"
         android:src="@drawable/ic_check"
         android:visibility="gone"
-        android:tint="@color/green_primary"/>
+        app:tint="@color/green_primary"/>
 </LinearLayout>

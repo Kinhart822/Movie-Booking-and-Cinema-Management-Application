@@ -6,6 +6,7 @@
     android:id="@+id/store_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".frontend.Store.UI.StoreFragment">
 
     <com.google.android.material.navigation.NavigationView
@@ -164,7 +165,8 @@
                 android:layout_weight="1"
                 android:text="Cửa hàng"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/white"/>
 
             <Button
                 android:id="@+id/theater_button"
@@ -203,48 +205,65 @@
             </LinearLayout>
         </FrameLayout>
 
-        <!-- Combo menu container -->
-        <LinearLayout
-            android:id="@+id/combo_menu_container"
+        <!-- Concession Title -->
+        <TextView
+            android:id="@+id/concession_header"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:text="Concession"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:padding="12dp"
+            android:gravity="center"
+            android:background="@drawable/rounded_dark_background"
+            android:layout_margin="16dp"/>
 
-            <TextView
-                android:id="@+id/combo_menu_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Concession"
-                android:textSize="20sp"
-                android:layout_margin="16dp"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/combo_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
+        <!-- Combo menu container -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
             <LinearLayout
+                android:id="@+id/combo_menu_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/total_price_text"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/combo_recycler_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Tổng tiền (đã bao gồm phụ thu):"
-                    android:textSize="16sp"/>
-
-                <Button
-                    android:id="@+id/checkout_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Hoàn tất thanh toán"
-                    android:enabled="false"
-                    android:layout_marginTop="8dp"/>
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
             </LinearLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <!--
+            <TextView
+                android:id="@+id/total_price_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tổng tiền (đã bao gồm phụ thu):"
+                android:textSize="16sp"
+                android:textColor="@color/white"/>
+
+            <Button
+                android:id="@+id/checkout_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hoàn tất thanh toán"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:padding="12dp"
+                android:background="@drawable/rounded_dark_background"
+                android:layout_margin="16dp"/>
+                -->
         </LinearLayout>
     </LinearLayout>
 

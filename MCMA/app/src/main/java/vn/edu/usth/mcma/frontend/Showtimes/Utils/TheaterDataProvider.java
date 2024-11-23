@@ -35,46 +35,40 @@ public class TheaterDataProvider {
                 new TheaterInfo("Beta Cinemas Mỹ Đình", "Tòa nhà C3, Mỹ Đình 1, Nam Từ Liêm", R.drawable.theater_image1)
         ));
         put("Huế", Arrays.asList(
-                new TheaterInfo("CGV Aeon Mall Tân Phú", "30 Bờ Bao Tân Thắng, P. Sơn Kỳ, Q. Tân Phú", R.drawable.theater_image1),
-                new TheaterInfo("BHD Star Bitexco", "L3-Bitexco Icon 68, 2 Hải Triều, Q.1", R.drawable.theater_image1),
-                new TheaterInfo("Lotte Cinema Cantavil", "L7-Cantavil Premier, Xa lộ Hà Nội, Q.2", R.drawable.theater_image1),
-                new TheaterInfo("CGV Vincom Thủ Đức", "216 Võ Văn Ngân, P. Bình Thọ, Q. Thủ Đức", R.drawable.theater_image1),
-                new TheaterInfo("Galaxy Nguyễn Du", "116 Nguyễn Du, Q.1", R.drawable.theater_image1)
+                new TheaterInfo("CGV Vincom Huế", "50 Hùng Vương, Phú Nhuận", R.drawable.theater_image1),
+                new TheaterInfo("Lotte Cinema Huế", "Tầng 4 Big C Huế, 181 Bà Triệu", R.drawable.theater_image1),
+                new TheaterInfo("Cinestar Huế", "25 Hai Bà Trưng, Vĩnh Ninh", R.drawable.theater_image1),
+                new TheaterInfo("Beta Cinemas Huế", "Tầng 5 Vincom Huế, 50 Hùng Vương", R.drawable.theater_image1)
         ));
         put("Đà Nẵng", Arrays.asList(
-                new TheaterInfo("CGV Aeon Mall Tân Phú", "30 Bờ Bao Tân Thắng, P. Sơn Kỳ, Q. Tân Phú", R.drawable.theater_image1),
-                new TheaterInfo("BHD Star Bitexco", "L3-Bitexco Icon 68, 2 Hải Triều, Q.1", R.drawable.theater_image1),
-                new TheaterInfo("Lotte Cinema Cantavil", "L7-Cantavil Premier, Xa lộ Hà Nội, Q.2", R.drawable.theater_image1),
-                new TheaterInfo("CGV Vincom Thủ Đức", "216 Võ Văn Ngân, P. Bình Thọ, Q. Thủ Đức", R.drawable.theater_image1),
-                new TheaterInfo("Galaxy Nguyễn Du", "116 Nguyễn Du, Q.1", R.drawable.theater_image1)
+                new TheaterInfo("CGV Vincom Đà Nẵng", "910B Ngô Quyền, Sơn Trà", R.drawable.theater_image1),
+                new TheaterInfo("Lotte Cinema Đà Nẵng", "Tầng 5 Lotte Mart, 6 Nại Nam", R.drawable.theater_image1),
+                new TheaterInfo("Galaxy Cinema Đà Nẵng", "Tầng 3 Vĩnh Trung Plaza, 255-257 Hùng Vương", R.drawable.theater_image1),
+                new TheaterInfo("BHD Star Discovery", "Discovery Complex, Trần Phú", R.drawable.theater_image1)
         ));
         put("Cần Thơ", Arrays.asList(
-                new TheaterInfo("CGV Aeon Mall Tân Phú", "30 Bờ Bao Tân Thắng, P. Sơn Kỳ, Q. Tân Phú", R.drawable.theater_image1),
-                new TheaterInfo("BHD Star Bitexco", "L3-Bitexco Icon 68, 2 Hải Triều, Q.1", R.drawable.theater_image1),
-                new TheaterInfo("Lotte Cinema Cantavil", "L7-Cantavil Premier, Xa lộ Hà Nội, Q.2", R.drawable.theater_image1),
-                new TheaterInfo("CGV Vincom Thủ Đức", "216 Võ Văn Ngân, P. Bình Thọ, Q. Thủ Đức", R.drawable.theater_image1),
-                new TheaterInfo("Galaxy Nguyễn Du", "116 Nguyễn Du, Q.1", R.drawable.theater_image1)
+                new TheaterInfo("CGV Vincom Xuân Khánh", "209 Đường 30/4, Xuân Khánh", R.drawable.theater_image1),
+                new TheaterInfo("Lotte Cinema Cần Thơ", "Tầng 5 Lotte Mart, 84 Mậu Thân", R.drawable.theater_image1),
+                new TheaterInfo("CGV Vincom Hùng Vương", "1 Hùng Vương, P. Thới Bình", R.drawable.theater_image1),
+                new TheaterInfo("CineStar Cần Thơ", "131 Trần Hưng Đạo, Ninh Kiều", R.drawable.theater_image1)
         ));
         put("Nha Trang", Arrays.asList(
-                new TheaterInfo("CGV Aeon Mall Tân Phú", "30 Bờ Bao Tân Thắng, P. Sơn Kỳ, Q. Tân Phú", R.drawable.theater_image1),
-                new TheaterInfo("BHD Star Bitexco", "L3-Bitexco Icon 68, 2 Hải Triều, Q.1", R.drawable.theater_image1),
-                new TheaterInfo("Lotte Cinema Cantavil", "L7-Cantavil Premier, Xa lộ Hà Nội, Q.2", R.drawable.theater_image1),
-                new TheaterInfo("CGV Vincom Thủ Đức", "216 Võ Văn Ngân, P. Bình Thọ, Q. Thủ Đức", R.drawable.theater_image1),
-                new TheaterInfo("Galaxy Nguyễn Du", "116 Nguyễn Du, Q.1", R.drawable.theater_image1)
+                new TheaterInfo("Lotte Cinema Nha Trang", "58 Trần Phú, Lộc Thọ", R.drawable.theater_image1),
+                new TheaterInfo("CGV Vincom Nha Trang", "44 Lê Thánh Tôn, Lộc Thọ", R.drawable.theater_image1),
+                new TheaterInfo("Galaxy Nha Trang", "Tầng 3 Big C Nha Trang, 60 Trần Phú", R.drawable.theater_image1),
+                new TheaterInfo("Beta Cinemas Nha Trang", "32 Trần Phú, Vĩnh Nguyên", R.drawable.theater_image1)
         ));
         put("Đà Lạt", Arrays.asList(
-                new TheaterInfo("CGV Aeon Mall Tân Phú", "30 Bờ Bao Tân Thắng, P. Sơn Kỳ, Q. Tân Phú", R.drawable.theater_image1),
-                new TheaterInfo("BHD Star Bitexco", "L3-Bitexco Icon 68, 2 Hải Triều, Q.1", R.drawable.theater_image1),
-                new TheaterInfo("Lotte Cinema Cantavil", "L7-Cantavil Premier, Xa lộ Hà Nội, Q.2", R.drawable.theater_image1),
-                new TheaterInfo("CGV Vincom Thủ Đức", "216 Võ Văn Ngân, P. Bình Thọ, Q. Thủ Đức", R.drawable.theater_image1),
-                new TheaterInfo("Galaxy Nguyễn Du", "116 Nguyễn Du, Q.1", R.drawable.theater_image1)
+                new TheaterInfo("CGV Vincom Đà Lạt", "200 Lê Hồng Phong, P.4", R.drawable.theater_image1),
+                new TheaterInfo("Lotte Cinema Đà Lạt", "1 Tràng Tiền, P.11", R.drawable.theater_image1),
+                new TheaterInfo("Galaxy Đà Lạt", "Tầng 3 Coopmart, 2 Trần Quý Cáp", R.drawable.theater_image1),
+                new TheaterInfo("Beta Cinemas Đà Lạt", "135 Phan Đình Phùng, P.2", R.drawable.theater_image1)
         ));
         put("Vũng Tàu", Arrays.asList(
-                new TheaterInfo("CGV Aeon Mall Tân Phú", "30 Bờ Bao Tân Thắng, P. Sơn Kỳ, Q. Tân Phú", R.drawable.theater_image1),
-                new TheaterInfo("BHD Star Bitexco", "L3-Bitexco Icon 68, 2 Hải Triều, Q.1", R.drawable.theater_image1),
-                new TheaterInfo("Lotte Cinema Cantavil", "L7-Cantavil Premier, Xa lộ Hà Nội, Q.2", R.drawable.theater_image1),
-                new TheaterInfo("CGV Vincom Thủ Đức", "216 Võ Văn Ngân, P. Bình Thọ, Q. Thủ Đức", R.drawable.theater_image1),
-                new TheaterInfo("Galaxy Nguyễn Du", "116 Nguyễn Du, Q.1", R.drawable.theater_image1)
+                new TheaterInfo("CGV Lotte Mart Vũng Tàu", "1517 đường 3/2, P.11", R.drawable.theater_image1),
+                new TheaterInfo("Lotte Cinema Bãi Sau", "168 Thùy Vân, P.8", R.drawable.theater_image1),
+                new TheaterInfo("Galaxy Vũng Tàu", "8 Lê Hồng Phong, P.4", R.drawable.theater_image1),
+                new TheaterInfo("CineStar Vũng Tàu", "202 Lê Lai, P. Thắng Tam", R.drawable.theater_image1)
         ));
     }};
 
@@ -148,7 +142,7 @@ public class TheaterDataProvider {
         return movies;
     }
 
-    private static List<String> generateShowtimes() {
+    public static List<String> generateShowtimes() {
         List<String> showtimes = new ArrayList<>();
         int startHour = 10; // 10 AM
         int endHour = 22;   // 10 PM

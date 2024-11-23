@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.frontend.Store.Adapters;
 
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,13 +67,14 @@ public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHol
 
     // Calculates the total price based on the quantities of ComboItems
     private void calculateTotalPrice() {
+        /*
         double total = 0;
         for (ComboItem item : comboItems) {
             total += item.getPrice() * item.getQuantity();
         }
         if (listener != null) {
             listener.onTotalPriceChanged(total);
-        }
+        } */
     }
 
     // ViewHolder class for ComboItem
@@ -82,6 +84,7 @@ public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHol
         private TextView quantityText;
         private ImageView plusButton;
         private ImageView minusButton;
+        private ImageView comboImage;
 
         ComboViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -90,7 +93,7 @@ public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHol
             quantityText = itemView.findViewById(R.id.combo_quantity);
             plusButton = itemView.findViewById(R.id.plus_button);
             minusButton = itemView.findViewById(R.id.minus_button);
-
+            comboImage = itemView.findViewById(R.id.combo_image);
             // Setting up button click listeners to adjust quantity
             plusButton.setOnClickListener(v -> updateQuantity(getAdapterPosition(), 1));
             minusButton.setOnClickListener(v -> updateQuantity(getAdapterPosition(), -1));
@@ -101,6 +104,15 @@ public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHol
             nameText.setText(item.getName());
             priceText.setText(String.format(Locale.getDefault(), "%,.0fđ", item.getPrice()));
             quantityText.setText(String.valueOf(item.getQuantity()));
+
+            // Load image from drawable resource
+            try {
+                int resourceId = Integer.parseInt(item.getImageUrl());
+                comboImage.setImageResource(resourceId);
+            } catch (NumberFormatException | Resources.NotFoundException e) {
+                // Handle error - set a default image or leave blank
+                comboImage.setImageResource(R.drawable.default_combo_image);  // Replace with your default image
+            }
         }
     }
 }

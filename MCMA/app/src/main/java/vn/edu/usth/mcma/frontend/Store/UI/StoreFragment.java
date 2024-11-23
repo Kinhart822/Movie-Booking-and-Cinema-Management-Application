@@ -64,8 +64,9 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
         noDataContainer = view.findViewById(R.id.no_data_container);
         buttonTheater = view.findViewById(R.id.theater_button);
         comboRecyclerView = view.findViewById(R.id.combo_recycler_view);
+        /*
         totalPriceText = view.findViewById(R.id.total_price_text);
-        checkoutButton = view.findViewById(R.id.checkout_button);
+        checkoutButton = view.findViewById(R.id.checkout_button); */
         comboMenuContainer = view.findViewById(R.id.combo_menu_container);
         noDataImage = view.findViewById(R.id.no_data_image);
         noDataText = view.findViewById(R.id.no_data_text);
@@ -128,23 +129,30 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
     }
 
     private void updateTotalPrice(double total) {
+        /*
         PriceCalculator.PriceResult result = PriceCalculator.calculateTotalPrice(comboAdapter.getComboItems());
         String formattedPrice = PriceCalculator.formatPrice(result.getTotal());
         totalPriceText.setText(String.format("Tổng tiền (đã bao gồm phụ thu): %s", formattedPrice));
-        checkoutButton.setEnabled(result.getTotal() > 0);
+        checkoutButton.setEnabled(result.getTotal() > 0); */
     }
 
     private void setupCheckoutButton() {
-        checkoutButton.setOnClickListener(v -> {
+        /* checkoutButton.setOnClickListener(v -> {
             // Handle checkout logic here
-        });
+        }); */
     }
 
     private List<ComboItem> getComboItems() {
         // Sample data - replace with actual data from your backend
         List<ComboItem> items = new ArrayList<>();
-        items.add(new ComboItem("Combo 1", "url1", 80000));
-        items.add(new ComboItem("Combo 2", "url2", 120000));
+        items.add(new ComboItem("OL Combo1 Sweet32oz - Pepsi22oz", String.valueOf(R.drawable.combo_image_1), 80000));
+        items.add(new ComboItem("OL Combo2 Sweet32oz - Pepsi22oz", String.valueOf(R.drawable.combo_image_1), 107000));
+        items.add(new ComboItem("OL Combo Special Bap nam Ga (Sweet)", String.valueOf(R.drawable.combo_image_1), 135000));
+        items.add(new ComboItem("OL Special Combo1 Khoai Lac (Sweet)", String.valueOf(R.drawable.combo_image_1), 135000));
+        items.add(new ComboItem("OL Combo Special Bap nam XX loc xoay (Sweet)", String.valueOf(R.drawable.combo_image_1), 135000));
+        items.add(new ComboItem("OL Special Combo2 Bap nam Ga Lac (Sweet)", String.valueOf(R.drawable.combo_image_1), 162900));
+        items.add(new ComboItem("OL Special Combo2 Khoai Lac (Sweet)", String.valueOf(R.drawable.combo_image_1), 162900));
+        items.add(new ComboItem("OL Special Combo2 Bap nam XX loc xoay (Sweet)", String.valueOf(R.drawable.combo_image_1), 162900));
         return items;
     }
 

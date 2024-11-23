@@ -1,5 +1,7 @@
 package vn.edu.usth.mcma.frontend.Showtimes.Adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import java.util.List;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.TheaterType;
+import vn.edu.usth.mcma.frontend.Showtimes.UI.MovieDetailsActivity;
 
 public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdapter.MovieViewHolder> {
     private List<Movie> movies;
@@ -57,6 +60,7 @@ public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdap
         notifyDataSetChanged();
     }
 
+
     class MovieViewHolder extends RecyclerView.ViewHolder {
         private TextView movieTitle;
         private TextView viewDetails;
@@ -88,6 +92,12 @@ public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdap
 
                 timeContainer.addView(timeButton);
             }
+
+            viewDetails.setOnClickListener(v -> {
+                Intent intent = new Intent(itemView.getContext(), MovieDetailsActivity.class);
+                intent.putExtra("MOVIE_TITLE", movie.getTitle());
+                itemView.getContext().startActivity(intent);
+            });
         }
     }
 
