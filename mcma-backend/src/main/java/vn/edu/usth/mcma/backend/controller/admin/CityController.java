@@ -2,6 +2,8 @@ package vn.edu.usth.mcma.backend.controller.admin;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.dto.CityRequest;
 import vn.edu.usth.mcma.backend.service.CityService;
@@ -20,8 +22,8 @@ public class CityController {
         return cityService.createCity(request, hsRequest);
     }
     @GetMapping("/city")
-    public List<City> findAll() {
-        return cityService.findAll();
+    public List<City> findAll(@RequestParam String query, @PageableDefault Pageable pageable) {
+        return cityService.findAll(query, pageable);
     }
     @GetMapping("/city/{id}")
     public City findById(@PathVariable Long id) {

@@ -3,6 +3,7 @@ package vn.edu.usth.mcma.backend.service;
 import constants.EntityStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.dto.CityRequest;
@@ -33,10 +34,10 @@ public class CityService extends AbstractService<City, Long> {
         city.setCreatedBy(userId);
         city.setLastModifiedBy(userId);
         cityRepository.save(city);
-        return CommonResponse.successResponse();
+        return this.successResponse();
     }
-    public List<City> findAll() {
-        return cityRepository.findAll();
+    public List<City> findAll(String query, Pageable pageable) {
+        return cityRepository.findAllByNameContaining(query, pageable);
     }
     public CommonResponse updateCity(Long id, CityRequest request, HttpServletRequest hsRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
@@ -45,7 +46,7 @@ public class CityService extends AbstractService<City, Long> {
         city.setLastModifiedBy(userId);
         city.setLastModifiedDate(Instant.now());
         cityRepository.save(city);
-        return CommonResponse.successResponse();
+        return this.successResponse();
     }
     public CommonResponse deleteCity(Long id, HttpServletRequest hsRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
@@ -54,6 +55,6 @@ public class CityService extends AbstractService<City, Long> {
         city.setLastModifiedBy(userId);
         city.setLastModifiedDate(Instant.now());
         cityRepository.save(city);
-        return CommonResponse.successResponse();
+        return this.successResponse();
     }
 }

@@ -26,14 +26,14 @@ create table if not exists mcma.city
 );
 create table if not exists mcma.city_drink
 (
-    city_id bigint unsigned not null,
-    drink_id  bigint unsigned not null,
+    city_id  bigint unsigned not null,
+    drink_id bigint unsigned not null,
     primary key (city_id, drink_id)
 );
 create table if not exists mcma.city_food
 (
     city_id bigint unsigned not null,
-    food_id   bigint unsigned not null,
+    food_id bigint unsigned not null,
     primary key (city_id, food_id)
 );
 create table if not exists mcma.coupon
@@ -267,6 +267,8 @@ create table if not exists mcma.user
 (
     id                 bigint unsigned auto_increment
         primary key,
+    first_name         varchar(50)                       null,
+    last_name          varchar(50)                       null,
     sex                tinyint                           null comment '0: female; 1: male',
     dob                timestamp                         null,
     email              varchar(255)                      not null,

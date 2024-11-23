@@ -13,14 +13,6 @@ import constants.ApiResponseCode;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommonResponse {
-
     private String status;
     private String message;
-
-    public static CommonResponse successResponse() {
-        CommonResponse commonResponse = new CommonResponse();
-        commonResponse.setStatus(ApiResponseCode.SUCCESS.getStatus());
-        commonResponse.setMessage(ApiResponseCode.SUCCESS.getMessage());
-        return commonResponse;
-    }
 }

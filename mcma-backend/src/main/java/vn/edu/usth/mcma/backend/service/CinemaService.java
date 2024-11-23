@@ -3,6 +3,7 @@ package vn.edu.usth.mcma.backend.service;
 import constants.EntityStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.dto.CinemaRequest;
@@ -33,10 +34,10 @@ public class CinemaService extends AbstractService<Cinema, Long> {
         cinema.setCreatedBy(userId);
         cinema.setLastModifiedBy(userId);
         cinemaRepository.save(cinema);
-        return CommonResponse.successResponse();
+        return this.successResponse();
     }
-    public List<Cinema> findAll() {
-        return cinemaRepository.findAll();
+    public List<Cinema> findAll(String query, Pageable pageable) {
+        return cinemaRepository.findAllByNameContaining(query, pageable);
     }
     public CommonResponse updateCinema(Long id, CinemaRequest request, HttpServletRequest hsRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
@@ -46,7 +47,7 @@ public class CinemaService extends AbstractService<Cinema, Long> {
         cinema.setLastModifiedBy(userId);
         cinema.setLastModifiedDate(Instant.now());
         cinemaRepository.save(cinema);
-        return CommonResponse.successResponse();
+        return this.successResponse();
     }
     public CommonResponse deleteCinema(Long id, HttpServletRequest hsRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
@@ -55,6 +56,6 @@ public class CinemaService extends AbstractService<Cinema, Long> {
         cinema.setLastModifiedBy(userId);
         cinema.setLastModifiedDate(Instant.now());
         cinemaRepository.save(cinema);
-        return CommonResponse.successResponse();
+        return this.successResponse();
     }
 }

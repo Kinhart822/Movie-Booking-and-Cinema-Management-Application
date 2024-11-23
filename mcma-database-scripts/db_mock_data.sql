@@ -127,6 +127,3 @@ values ('Buttery Popcorn', 'Buttery popcorn', 'http://example.com/images/popcorn
        ('Caramel Popcorn', 'Caramel popcorn', 'http://example.com/images/popcorn.jpg', 'M', 65000, 1, 1, 1),
        ('Nachos', 'Crispy nachos with cheese dip', 'http://example.com/images/nachos.jpg', null, 40000, 1, 1, 1),
        ('Hotdog', 'Juicy hotdog in a bun', 'http://example.com/images/hotdog.jpg', null, 35000, 1, 1, 1);
-insert into mcma.user (sex, dob, email, phone, password, address, user_type, status, created_by, last_modified_by)
-values (1, '2004-04-11 00:00:00', 'at@gmail.com', '0976289114', 'abcd1234', 'Cau Giay, Hanoi, Vietnam', 1, 1, null,
-        null);
