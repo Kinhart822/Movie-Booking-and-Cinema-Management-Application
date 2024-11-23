@@ -5,7 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white">
 
-    <!-- Header section remains unchanged -->
     <LinearLayout
         android:id="@+id/headerLayout"
         android:layout_width="match_parent"
@@ -36,15 +35,14 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/headerLayout"
-        android:layout_above="@id/btnUpdate">
+        android:layout_below="@id/headerLayout">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
-            <!-- Email Field - Changed to TextView -->
+
             <TextView
                 android:id="@+id/tvEmail"
                 android:layout_width="match_parent"
@@ -55,7 +53,6 @@
                 android:textColor="@color/black"
                 android:layout_marginTop="12dp" />
 
-            <!-- Last Name and First Name Fields -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -88,7 +85,6 @@
                     android:padding="12dp" />
             </LinearLayout>
 
-            <!-- Mobile Field - Changed to TextView -->
             <TextView
                 android:id="@+id/tvPhoneNumber"
                 android:layout_width="match_parent"
@@ -99,7 +95,6 @@
                 android:padding="12dp"
                 android:layout_marginTop="12dp" />
 
-            <!-- Date of Birth Field - Changed to TextView -->
             <TextView
                 android:id="@+id/tvDOB"
                 android:layout_width="match_parent"
@@ -110,7 +105,6 @@
                 android:padding="12dp"
                 android:layout_marginTop="12dp" />
 
-            <!-- Address Field - Changed to TextView -->
             <TextView
                 android:id="@+id/tvAddress"
                 android:layout_width="match_parent"
@@ -121,7 +115,6 @@
                 android:padding="12dp"
                 android:layout_marginTop="12dp" />
 
-            <!-- Gender Selection - Changed to TextView -->
             <TextView
                 android:id="@+id/tvGender"
                 android:layout_width="match_parent"
@@ -136,17 +129,16 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Update Button remains unchanged -->
-    <Button
-        android:id="@+id/btnUpdate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Update"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/gray_text"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="16dp"
-        android:padding="16dp" />
+<!--    <Button-->
+<!--        android:id="@+id/btnUpdate"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Update"-->
+<!--        android:textAllCaps="false"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:backgroundTint="@color/gray_text"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_margin="16dp"-->
+<!--        android:padding="16dp" />-->
 
 </RelativeLayout>

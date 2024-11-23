@@ -32,15 +32,11 @@
             android:gravity="center_vertical" />
     </LinearLayout>
 
-
-
-    <!-- Scrollable content -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="5dp">
 
-        <!-- RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerviewbooking_history"
                 android:layout_width="match_parent"

@@ -37,8 +37,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/headerLayout"
-        android:layout_above="@id/btnUpdate">
+        android:layout_below="@id/headerLayout">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -144,6 +143,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_gravity="center"
+                    android:layout_marginRight="12dp"
                     android:background="@color/white"
                     android:entries="@array/gender_array" />
 
@@ -151,9 +151,8 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Update Button fixed at the bottom of the screen -->
     <Button
-        android:id="@+id/btnUpdate"
+        android:id="@+id/btnUpdateInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Update"

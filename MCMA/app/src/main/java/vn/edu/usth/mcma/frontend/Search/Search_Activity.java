@@ -71,7 +71,6 @@ public class Search_Activity extends AppCompatActivity implements SearchViewInte
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(view -> onBackPressed());
 
-        // Thiết lập button
         setupCategoryButton(findViewById(R.id.btn_all), "All");
         setupCategoryButton(findViewById(R.id.btn_action), "Action");
         setupCategoryButton(findViewById(R.id.btn_adventure), "Adventure");

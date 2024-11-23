@@ -25,7 +25,6 @@ public class ComingSoonFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        // Tạo danh sách phim Coming Soon
         List<ComingSoon_Item> items = new ArrayList<ComingSoon_Item>();
         items.add(new ComingSoon_Item("Olivia Adams", "Horror", "135 minutes","T16",R.drawable.movie12));
         items.add(new ComingSoon_Item("Liam Johnson", "Action","120 minutes","T18" ,R.drawable.movie6));

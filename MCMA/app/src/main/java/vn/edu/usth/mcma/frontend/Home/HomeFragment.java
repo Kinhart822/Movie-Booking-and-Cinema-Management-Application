@@ -131,12 +131,10 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
     }
 
     private void setupViewPagerAndTabs() {
-        // Create Fragment for each tab
         FilmPagerAdapter adapter = new FilmPagerAdapter(this);
         viewPager.setAdapter(adapter);
         viewPager.setUserInputEnabled(false);
 
-        // Link TabLayout and ViewPager2
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             switch (position) {
                 case 0:

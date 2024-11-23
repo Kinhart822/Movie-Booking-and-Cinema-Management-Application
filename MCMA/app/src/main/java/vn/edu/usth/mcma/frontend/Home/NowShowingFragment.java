@@ -23,7 +23,6 @@ public class NowShowingFragment extends Fragment {
 
         RecyclerView recyclerView = v.findViewById(R.id.recyclerview_now_showing);
 
-        // Sử dụng LinearLayoutManager theo hướng ngang
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
