@@ -123,18 +123,20 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
     private void setupComboList() {
         List<ComboItem> comboItems = getComboItems();
         comboAdapter = new ComboAdapter(comboItems);
-        comboAdapter.setTotalPriceChangedListener(this::updateTotalPrice);
+        /* comboAdapter.setTotalPriceChangedListener(this::updateTotalPrice); */
         comboRecyclerView.setAdapter(comboAdapter);
         comboRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
     }
-
+    /*
     private void updateTotalPrice(double total) {
-        /*
+
         PriceCalculator.PriceResult result = PriceCalculator.calculateTotalPrice(comboAdapter.getComboItems());
         String formattedPrice = PriceCalculator.formatPrice(result.getTotal());
         totalPriceText.setText(String.format("Tổng tiền (đã bao gồm phụ thu): %s", formattedPrice));
-        checkoutButton.setEnabled(result.getTotal() > 0); */
+        checkoutButton.setEnabled(result.getTotal() > 0);
     }
+    */
+
 
     private void setupCheckoutButton() {
         /* checkoutButton.setOnClickListener(v -> {

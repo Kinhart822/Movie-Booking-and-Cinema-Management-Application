@@ -1,6 +1,9 @@
 package vn.edu.usth.mcma.frontend.Showtimes.UI;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,6 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -40,6 +44,11 @@ public class MovieBookingActivity extends AppCompatActivity {
     private TheaterShowtimesAdapter theaterAdapter;
     private String selectedDate;
     private Button selectedDateButton;
+    private Button selectedCityButton;
+    private String selectedCity;
+    private LinearLayout citiesContainer;
+    private View citiesSection;
+    private View theatersSection;
     private String movieTitle;
 
     @Override
@@ -47,12 +56,23 @@ public class MovieBookingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_booking);
 
+        citiesSection = findViewById(R.id.cities_section);
+        theatersSection = findViewById(R.id.theaters_section);
+        citiesContainer = findViewById(R.id.cities_container);
+
         movieTitle = getIntent().getStringExtra("MOVIE_TITLE");
+        selectedCity = TheaterDataProvider.getCities().get(0); // Default to first city
 
         setupToolbarAndBanner();
         setupMovieInfo();
         setupDateButtons();
+        setupCityButtons();
         setupTheatersList();
+
+        citiesSection.setVisibility(View.VISIBLE);
+        theatersSection.setVisibility(View.VISIBLE);
+        // Initialize with default data
+        updateTheatersList();
     }
 
     private void setupToolbarAndBanner() {
@@ -101,6 +121,8 @@ public class MovieBookingActivity extends AppCompatActivity {
         SimpleDateFormat dayFormat = new SimpleDateFormat("E\ndd/MM", Locale.getDefault());
         Calendar calendar = Calendar.getInstance();
 
+        ColorStateList textColorStateList = ContextCompat.getColorStateList(this, R.color.button_text_selector);
+
         for (int i = 0; i < 7; i++) {
             Button dateButton = new Button(this);
             dateButton.setText(dayFormat.format(calendar.getTime()));
@@ -111,9 +133,12 @@ public class MovieBookingActivity extends AppCompatActivity {
             );
             params.setMargins(8, 0, 8, 0);
             dateButton.setLayoutParams(params);
-
             dateButton.setBackground(getDrawable(R.drawable.date_button_selector));
+            dateButton.setTextColor(textColorStateList);
+            dateButton.setAllCaps(false);
+            dateButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
 
+            // Select first date by default
             if (i == 0) {
                 dateButton.setSelected(true);
                 selectedDateButton = dateButton;
@@ -135,6 +160,52 @@ public class MovieBookingActivity extends AppCompatActivity {
         }
     }
 
+    private void setupCityButtons() {
+        citiesContainer.removeAllViews();
+        List<String> cities = TheaterDataProvider.getCities();
+
+        ColorStateList textColorStateList = ContextCompat.getColorStateList(this, R.color.button_text_selector);
+
+        for (String city : cities) {
+            Button cityButton = new Button(this);
+            cityButton.setText(city);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(8, 0, 8, 0);
+            cityButton.setLayoutParams(params);
+            cityButton.setBackground(getDrawable(R.drawable.date_button_selector));
+            cityButton.setTextColor(textColorStateList);
+            cityButton.setAllCaps(false);
+            cityButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+
+            if (city.equals(selectedCity)) {
+                cityButton.setSelected(true);
+                selectedCityButton = cityButton;
+            }
+
+            cityButton.setOnClickListener(v -> {
+                if (selectedCityButton != null) {
+                    selectedCityButton.setSelected(false);
+                }
+                cityButton.setSelected(true);
+                selectedCityButton = cityButton;
+                selectedCity = city;
+                updateTheatersList();
+            });
+
+            citiesContainer.addView(cityButton);
+        }
+    }
+
+    private void updateTheatersList() {
+        List<Theater> cityTheaters = TheaterDataProvider.getTheatersForCity(selectedCity, TheaterType.REGULAR);
+        theaterAdapter.setTheaters(cityTheaters, selectedDate);
+    }
+
+
     private void setupTheatersList() {
         theatersRecyclerView = findViewById(R.id.theaters_recycler_view);
         theaterAdapter = new TheaterShowtimesAdapter(new TheaterShowtimesAdapter.OnShowtimeClickListener() {
@@ -144,20 +215,9 @@ public class MovieBookingActivity extends AppCompatActivity {
                 Toast.makeText(MovieBookingActivity.this,
                         "Selected: " + theater.getName() + " at " + showtime,
                         Toast.LENGTH_SHORT).show();
-                // Start booking confirmation activity
             }
         });
         theatersRecyclerView.setAdapter(theaterAdapter);
         theatersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        updateTheatersList();
-    }
-
-    private void updateTheatersList() {
-        // Get all theaters across all cities that show this movie
-        List<Theater> allTheaters = new ArrayList<>();
-        for (String city : TheaterDataProvider.getCities()) {
-            allTheaters.addAll(TheaterDataProvider.getTheatersForCity(city, TheaterType.REGULAR));
-        }
-        theaterAdapter.setTheaters(allTheaters, selectedDate);
     }
 }
