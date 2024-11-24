@@ -33,11 +33,17 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("123", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("TOLogin", MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+        long expirationTime = sharedPreferences.getLong("expirationTime", 0);
 
-        if (!isLoggedIn) {
+        if (!isLoggedIn || System.currentTimeMillis() > expirationTime) {
             // If not logged in
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.remove("auth_token");  // Only remove the auth token
+            editor.remove("isLoggedIn");
+            editor.remove("expirationTime");
+            editor.apply();
             navigateToLoginFragment();
             return;
         }
