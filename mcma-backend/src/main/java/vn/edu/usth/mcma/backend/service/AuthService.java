@@ -50,7 +50,8 @@ public class AuthService {
         }
     }
 
-    public String signUp(SignUpRequest signUpRequest, Integer type) {
+    public String signUp(SignUpRequest signUpRequest) {
+        Integer type = signUpRequest.getType();
         if (type != UserType.ADMIN.getValue() && type != UserType.USER.getValue()) {
             throw new BusinessException(ApiResponseCode.ILLEGAL_TYPE);
         }
@@ -119,26 +120,52 @@ public class AuthService {
         return response;
     }
 
-    public JwtAuthResponse forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
-        JwtAuthResponse response = new JwtAuthResponse();
-        String email = forgotPasswordRequest.getEmail();
-        String token = jwtService.generateToken(email);
-        this.saveUserToken(token, email);
+//    public JwtAuthResponse forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
+//        JwtAuthResponse response = new JwtAuthResponse();
+//        String email = forgotPasswordRequest.getEmail();
+//        String token = jwtService.generateToken(email);
+//        this.saveUserToken(token, email);
+//
+//        response.setAccessToken(token);
+//        response.setMessage("Success!");
+//        return response;
+//    }
 
-        response.setAccessToken(token);
-        response.setMessage("Success!");
-        return response;
-    }
-
-    public CommonResponse resetPasswordRequest(Integer type, ResetPasswordRequest request) {
+    public CommonResponse resetPasswordRequest(ResetPasswordRequest request) {
+        Integer type = request.getType();
         if (type != UserType.ADMIN.getValue() && type != UserType.USER.getValue()) {
             throw new BusinessException(ApiResponseCode.ILLEGAL_TYPE);
         }
-        Optional<User> user = userService.requestPasswordReset(request.getEmail(), type);
+        Optional<User> user = userService.resetPasswordRequest(request.getEmail(), type);
         if (user.isEmpty()) {
             throw new BusinessException(ApiResponseCode.EMAIL_NOT_FOUND);
         }
         emailService.sendResetPasswordMail(user.get());
+        return CommonResponse
+                .builder()
+                .status(ApiResponseCode.SUCCESS.getStatus())
+                .message(ApiResponseCode.SUCCESS.getMessage())
+                .build();
+    }
+    public Map<String, Boolean> resetPasswordCheck(ResetPasswordCheck check) {
+        Integer type = check.getType();
+        if (type != UserType.ADMIN.getValue() && type != UserType.USER.getValue()) {
+            throw new BusinessException(ApiResponseCode.ILLEGAL_TYPE);
+        }
+        Map<String, Boolean> response = new HashMap<>();
+        Optional<User> user = userService.resetPasswordCheck(check.getResetKey(), type);
+        response.put("isValid", user.isPresent());
+        return response;
+    }
+    public CommonResponse resetPasswordFinish(ResetPasswordFinish finish) {
+        Integer type = finish.getType();
+        if (type != UserType.ADMIN.getValue() && type != UserType.USER.getValue()) {
+            throw new BusinessException(ApiResponseCode.ILLEGAL_TYPE);
+        }
+        Optional<User> user = userService.resetPasswordFinish(finish.getResetKey(), type, finish.getNewPassword());
+        if (user.isEmpty()) {
+            throw new BusinessException(ApiResponseCode.RESET_KEY_NOT_FOUND);
+        }
         return CommonResponse
                 .builder()
                 .status(ApiResponseCode.SUCCESS.getStatus())

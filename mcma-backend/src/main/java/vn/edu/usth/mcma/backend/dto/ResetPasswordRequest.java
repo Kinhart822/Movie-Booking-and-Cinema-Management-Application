@@ -9,4 +9,5 @@ public class ResetPasswordRequest {
     @Email
     @NotBlank
     private String email;
+    private Integer type;
 }

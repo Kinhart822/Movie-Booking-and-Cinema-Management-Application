@@ -13,7 +13,8 @@ public enum ApiResponseCode {
     BAD_CREDENTIALS("401", "BAD_CREDENTIALS"),
     ILLEGAL_TYPE("403", "ILLEGAL_TYPE"),
     INVALID_TOKEN("400", "INVALID_TOKEN"),
-    BAD_REQUEST("400", "BAD_REQUEST"),;
+    BAD_REQUEST("400", "BAD_REQUEST"),
+    RESET_KEY_NOT_FOUND("404", "RESET_KEY_NOT_FOUND"),;
     private final String status;
     private final String message;
 }

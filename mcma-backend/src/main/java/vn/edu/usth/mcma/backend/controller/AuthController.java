@@ -11,25 +11,27 @@ import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.service.AuthService;
 import vn.edu.usth.mcma.backend.service.UserService;
 
+import java.util.Map;
+
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class AuthController {
     private final JwtUtil jwtUtil;
     private final AuthService authService;
     private final UserService userService;
 
-    @PostMapping("/sign-up")
-    public ResponseEntity<String> signUp(@RequestParam(name = "type") Integer type, @RequestBody SignUpRequest signUpRequest) {
-        return ResponseEntity.ok(authService.signUp(signUpRequest, type));
+    @PostMapping("/auth/sign-up")
+    public ResponseEntity<String> signUp(@RequestBody SignUpRequest signUpRequest) {
+        return ResponseEntity.ok(authService.signUp(signUpRequest));
     }
 
-    @PostMapping("/sign-in")
+    @PostMapping("/auth/sign-in")
     public ResponseEntity<JwtAuthResponse> signIn(@RequestBody SignInRequest signInRequest) {
         return ResponseEntity.ok(authService.signIn(signInRequest));
     }
 
-    @PostMapping("/refresh")
+    @PostMapping("/auth/refresh")
     public ResponseEntity<JwtAuthResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest) {
         return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest));
     }
@@ -44,14 +46,20 @@ public class AuthController {
 //    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
 //        return ResponseEntity.ok(authService.resetPassword(resetPasswordRequest));
 //    }
-    @PostMapping("/reset-password/request")
-    public ResponseEntity<CommonResponse> resetPasswordRequest (
-            @RequestParam(name = "type") Integer type,
-            @RequestBody @Valid ResetPasswordRequest request) {
-        return ResponseEntity.ok(authService.resetPasswordRequest(type, request));
+    @PostMapping("/auth/reset-password/request")
+    public ResponseEntity<CommonResponse> resetPasswordRequest(@RequestBody @Valid ResetPasswordRequest request) {
+        return ResponseEntity.ok(authService.resetPasswordRequest(request));
+    }
+    @GetMapping("/auth/reset-password/check")
+    public ResponseEntity<Map<String, Boolean>> resetPasswordCheck(@RequestBody ResetPasswordCheck check) {
+        return ResponseEntity.ok(authService.resetPasswordCheck(check));
+    }
+    @PostMapping("/auth/reset-password/finish")
+    public ResponseEntity<CommonResponse> resetPasswordFinish(@RequestBody @Valid ResetPasswordFinish finish) {
+        return ResponseEntity.ok(authService.resetPasswordFinish(finish));
     }
 
-    @PutMapping("/update-account/{userId}")
+    @PutMapping("/auth/update-account/{userId}")
     public ResponseEntity<String> updateAccount(@PathVariable Long userId, @RequestBody UpdateAccountRequest updateAccountRequest) {
         authService.updateAccount(userId, updateAccountRequest);
         return ResponseEntity.ok("Account updated successfully");
