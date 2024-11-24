@@ -276,6 +276,8 @@ create table if not exists mcma.user
     password           varchar(255)                      not null,
     address            text                              null,
     user_type          smallint                          null,
+    reset_key          varchar(6)                        null,
+    reset_date         timestamp                         null,
     status             tinyint                           null comment '-1, 1',
     created_by         bigint unsigned                   null,
     last_modified_by   bigint unsigned                   null,

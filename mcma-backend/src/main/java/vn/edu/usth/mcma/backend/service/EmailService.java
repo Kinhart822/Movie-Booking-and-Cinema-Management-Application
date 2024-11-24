@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import vn.edu.usth.mcma.backend.dao.User;
 
 @Transactional
 @Service
@@ -20,8 +21,15 @@ public class EmailService {
         javaMailSender.send(message);
     }
 
-    public void send() {
-
+    public void sendResetPasswordMail(User user) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(user.getEmail());
+        message.setSubject("MCMA: Reset Password");
+        message.setText(String.format("""
+                Lmao!
+                OTP: %s
+                """, user.getResetKey()));
+        javaMailSender.send(message);
     }
 
     public void sendCancelMailMessage(String toEmail) {

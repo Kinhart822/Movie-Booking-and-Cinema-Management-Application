@@ -2,12 +2,14 @@ package vn.edu.usth.mcma.backend.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.dto.*;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.service.AuthService;
+import vn.edu.usth.mcma.backend.service.UserService;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -15,6 +17,7 @@ import vn.edu.usth.mcma.backend.service.AuthService;
 public class AuthController {
     private final JwtUtil jwtUtil;
     private final AuthService authService;
+    private final UserService userService;
 
     @PostMapping("/sign-up")
     public ResponseEntity<String> signUp(@RequestParam(name = "type") Integer type, @RequestBody SignUpRequest signUpRequest) {
@@ -31,15 +34,21 @@ public class AuthController {
         return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest));
     }
 
-    @PostMapping("/forgot-password")
-    public ResponseEntity<JwtAuthResponse> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
-        return ResponseEntity.ok(authService.forgotPassword(forgotPasswordRequest));
-    }
-
-    @Transactional
-    @RequestMapping(value = "/reset-password", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
-        return ResponseEntity.ok(authService.resetPassword(resetPasswordRequest));
+//    @PostMapping("/forgot-password")
+//    public ResponseEntity<JwtAuthResponse> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+//        return ResponseEntity.ok(authService.forgotPassword(forgotPasswordRequest));
+//    }
+//
+//    @Transactional
+//    @RequestMapping(value = "/reset-password", method = {RequestMethod.POST, RequestMethod.GET})
+//    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+//        return ResponseEntity.ok(authService.resetPassword(resetPasswordRequest));
+//    }
+    @PostMapping("/reset-password/request")
+    public ResponseEntity<CommonResponse> resetPasswordRequest (
+            @RequestParam(name = "type") Integer type,
+            @RequestBody @Valid ResetPasswordRequest request) {
+        return ResponseEntity.ok(authService.resetPasswordRequest(type, request));
     }
 
     @PutMapping("/update-account/{userId}")

@@ -44,7 +44,7 @@ class Http {
                 const responseData = response.data;
                 if (responseData.status && parseInt(responseData.status) !== 200) {
                     const error = response;
-                    if (responseData.message !== 'PASSWORD_INCORRECT' &&
+                    if (responseData.message !== 'BAD_CREDENTIALS' &&
                         responseData.message !== 'EMAIL_NOT_FOUND'
                     ) {
                         toastError(error);

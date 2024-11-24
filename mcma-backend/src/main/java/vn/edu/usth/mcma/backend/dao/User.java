@@ -37,7 +37,11 @@ public class User extends AbstractAuditing implements Serializable {
     @Column
     private String address;
     @Column(columnDefinition = "SMALLINT")
-    private Integer userType; //TODO: consider separate entity
+    private Integer userType;
+    @Column
+    private String resetKey;
+    @Column
+    private Instant resetDate;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
 }

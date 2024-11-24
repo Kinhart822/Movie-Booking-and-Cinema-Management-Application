@@ -1,13 +1,12 @@
 package vn.edu.usth.mcma.backend.dto;
 
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class ResetPasswordRequest {
-    private String token;
-    @Size(min = 6, message = "Password must be at least 6 characters long")
-    private String newPassword;
+    @Email
+    @NotBlank
+    private String email;
 }

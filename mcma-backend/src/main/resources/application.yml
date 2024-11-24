@@ -33,3 +33,5 @@ security:
   jwt:
     secret-key: ${JWT_SECRET_KEY}
     expiration-time: ${JWT_EXPIRATION_TIME}
+
+reset-key-timeout: ${RESET_KEY_TIMEOUT}

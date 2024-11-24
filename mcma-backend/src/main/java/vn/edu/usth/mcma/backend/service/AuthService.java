@@ -6,6 +6,7 @@ import constants.UserType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import vn.edu.usth.mcma.backend.security.JwtService;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -27,6 +29,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final EmailService emailService;
     private final JwtService jwtService;
     private final TokenRepository tokenRepository;
     private final UserService userService;
@@ -78,10 +81,16 @@ public class AuthService {
 
     public JwtAuthResponse signIn(SignInRequest signInRequest) {
         String email = signInRequest.getEmail();
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                email,
-                signInRequest.getPassword()
-        ));
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    email,
+                    signInRequest.getPassword()
+            ));
+        } catch (BadCredentialsException e){
+            throw new BusinessException(ApiResponseCode.BAD_CREDENTIALS);
+        } catch (Exception e) {
+            throw new BusinessException(ApiResponseCode.BAD_REQUEST);
+        }
         List<Token> loggedOutTokens = tokenRepository.findAllLoggedOutByEmail(email);
         if (!loggedOutTokens.isEmpty()) {
             tokenRepository.deleteAll(loggedOutTokens);
@@ -89,7 +98,7 @@ public class AuthService {
         String token = jwtService.generateToken(email);
         revokeAllTokenByEmail(email);
         saveUserToken(token, email);
-
+        //todo
         JwtAuthResponse response = new JwtAuthResponse();
         response.setAccessToken(token);
         response.setUserId(userService.findUserByEmail(email).getId());
@@ -121,18 +130,20 @@ public class AuthService {
         return response;
     }
 
-    public String resetPassword(ResetPasswordRequest request) {
-        String email = jwtService.extractUsername(request.getToken());
-        User user = userService.findUserByEmail(email);
-        if (!jwtService.isTokenValid(request.getToken(), email)) {
-            throw new IllegalArgumentException("Invalid or expired token");
+    public CommonResponse resetPasswordRequest(Integer type, ResetPasswordRequest request) {
+        if (type != UserType.ADMIN.getValue() && type != UserType.USER.getValue()) {
+            throw new BusinessException(ApiResponseCode.ILLEGAL_TYPE);
         }
-        if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("New password cannot be the same as the old password");
+        Optional<User> user = userService.requestPasswordReset(request.getEmail(), type);
+        if (user.isEmpty()) {
+            throw new BusinessException(ApiResponseCode.EMAIL_NOT_FOUND);
         }
-        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-        userRepository.save(user);
-        return "Password has been reset successfully. You can log in again!";
+        emailService.sendResetPasswordMail(user.get());
+        return CommonResponse
+                .builder()
+                .status(ApiResponseCode.SUCCESS.getStatus())
+                .message(ApiResponseCode.SUCCESS.getMessage())
+                .build();
     }
 
     public void updateAccount(Long userId, UpdateAccountRequest updateAccountRequest) {
