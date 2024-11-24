@@ -1,0 +1,6 @@
+<!-- res/drawable/rectangle_button_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/colorLightBlue"/> <!-- Màu nền của button -->
+    <corners android:radius="0dp"/> <!-- Đặt giá trị bo góc, dùng 0dp để giữ góc vuông -->
+    <stroke android:width="2dp" android:color="#FFFFFF"/> <!-- Viền của button, có thể bỏ nếu không cần -->
+</shape>
