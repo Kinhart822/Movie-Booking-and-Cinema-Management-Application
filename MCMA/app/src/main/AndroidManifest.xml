@@ -2,27 +2,61 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@mipmap/cinema_icon3"
+        android:label="MCMA"
+        android:roundIcon="@mipmap/cinema_icon3_round"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/Theme.MCMA"
         tools:targetApi="31">
         <activity
-            android:name=".frontend.FrontEndActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:name=".frontend.Personal.Booking_History_Activity"
+            android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".frontend.Personal.Change_Password_Account_Info_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Personal.Account_Information_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Personal.Edit_Update_Account_Info_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Notification.Notification_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Login.ResetPassword_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Login.ForgotPassword_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Login.Register_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Showtimes.UI.TheaterScheduleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Search.Search_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.AddMovie"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.CinemaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.LoadingPageActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

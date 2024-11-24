@@ -2,4 +2,53 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="blue">#0765ff</color>
+    <color name="grey">#f0f2f5</color>
+    <color name="dark_grey">#CCC</color>
+    <color name="better_grey">#e2e5ea</color>
+    <color name="blue_dot">#294fd1</color>
+    <color name="very_dark_grey">#181818</color>
+    <color name="red">#FF0000</color>
+    <color name="light_gray">#716F6F</color>
+    <color name="gold">#ccac00</color>
+
+    <color name="bottom_navigator_before">#9BA6AB</color>
+    <color name="bottom_navigator_after">#85FAF0</color>
+
+    <color name="green">#00ff00</color>
+    <color name="darkgreen">#21b81c</color>
+    <color name="colorPrimary">#3b5998</color>
+    <color name="colorPrimaryLight">#8b9dc3</color>
+    <color name="colorAccentDark">#dfe3ee</color>
+    <color name="colorAccent">#f7f7f7</color>
+    <color name="colorAccentLight">#ffffff</color>
+    <color name="colorLightBlue">#6098eb</color>
+    <color name="colorNeonBlue">#4dc0e3</color>
+
+
+    <color name="DarkBlue">#4a67d9</color>
+    <color name="LightBlue">#03adfc</color>
+
+    <color name="backgroundColor">#000000</color>
+    <color name="selectedDayColor">#4CAF50</color>
+    <color name="unselectedDayColor">#333333</color>
+    <color name="selectedTimeColor">#4CAF50</color>
+    <color name="unselectedTimeColor">#555555</color>
+    <color name="linkColor">#03A9F4</color>
+    <color name="dividerColor">#777777</color>
+
+    <color name="green_primary">#4CAF50</color>
+    <color name="green_dark">#388E3C</color>
+    <color name="gray_background">#F5F5F5</color>
+    <color name="gray_text">#757575</color>
+    <color name="black_text">#212121</color>
+    <color name="button_disabled">#BDBDBD</color>
+
+    <color name="primaryColor">#3F51B5</color>
+    <color name="disabledColor">#9E9E9E</color>
+
+    <!-- Button text selectors -->
+    <color name="button_text_selector">#2196F3</color>  <!-- Blue -->
+    <color name="date_text_selector">#000000</color>    <!-- Black -->
+
 </resources>
