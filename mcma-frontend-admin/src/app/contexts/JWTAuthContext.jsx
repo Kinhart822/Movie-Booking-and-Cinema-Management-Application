@@ -1,6 +1,5 @@
 import { createContext, useEffect, useReducer } from "react";
 import { jwtDecode } from "jwt-decode";
-import axios from "axios";
 // GLOBAL CUSTOM COMPONENTS
 import Loading from "app/components/MatxLoading";
 
@@ -17,7 +16,7 @@ const isValidToken = (accessToken) => {
   // const currentTime = Date.now() / 1000;
   // return decodedToken.exp > currentTime;
 
-  return decodedToken?.id ? true : false;
+  return !!decodedToken?.id;
 };
 
 const setSession = (accessToken) => {
@@ -62,7 +61,7 @@ export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const login = async (email, password) => {
-    const { data } = await axios.post("/api/auth/login", { email, password });
+    const { data } = await axios.post("/auth/sign-in", { email, password });
     const { accessToken, user } = data;
 
     setSession(accessToken);
@@ -70,7 +69,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (email, username, password) => {
-    const { data } = await axios.post("/api/auth/register", { email, username, password });
+    const { data } = await axios.post("/auth/sign-up", { email, username, password });
     const { accessToken, user } = data;
 
     setSession(accessToken);

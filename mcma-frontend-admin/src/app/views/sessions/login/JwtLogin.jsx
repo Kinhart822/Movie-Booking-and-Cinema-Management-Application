@@ -147,7 +147,7 @@ export default function JwtLogin() {
                           sx={{ padding: 0 }}
                         />
 
-                        <Paragraph>Remember Me</Paragraph>
+                        <Paragraph>Remember Me  (not implemented)</Paragraph>
                       </FlexBox>
 
                       <NavLink
