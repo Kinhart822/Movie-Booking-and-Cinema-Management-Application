@@ -1,31 +1,29 @@
-package com.spring.service.impl;
+package vn.edu.usth.mcma.backend.service;
 
-import com.spring.service.EmailService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+@Transactional
 @Service
-public class EmailServiceImpl implements EmailService {
-    @Autowired
-    private JavaMailSender javaMailSender;
+@RequiredArgsConstructor
+public class EmailService {
+    private final JavaMailSender javaMailSender;
 
-    @Value("${spring.mail.username}")
-    private String fromEmail;
-
-    @Override
-    public void sendSimpleMailMessage(String toEmail, String subject, String body) {
+    public void sendSimpleMailMessage(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(toEmail);
+        message.setTo(to);
         message.setSubject(subject);
-        message.setText(body);
-        message.setFrom(fromEmail);
+        message.setText(text);
         javaMailSender.send(message);
     }
 
-    @Override
+    public void send() {
+
+    }
+
     public void sendCancelMailMessage(String toEmail) {
         String subject = "Cancel Booking Successfully!";
         String message = """
@@ -45,7 +43,6 @@ public class EmailServiceImpl implements EmailService {
         javaMailSender.send(mailMessage);
     }
 
-    @Override
     public void sendDeleteMailMessage(String toEmail) {
         String subject = "Delete Booking Successfully";
         String message = """
@@ -65,7 +62,6 @@ public class EmailServiceImpl implements EmailService {
         javaMailSender.send(mailMessage);
     }
 
-    @Override
     public void sendReinstateMailMessage(String toEmail) {
         String subject = "Booking Reinstated Successfully";
         String message = """
