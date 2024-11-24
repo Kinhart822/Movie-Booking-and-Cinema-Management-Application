@@ -1,14 +1,12 @@
 package vn.edu.usth.mcma.frontend.Login;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,23 +16,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.AddMovie;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Request.SignInRequest;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.JwtAuthenticationResponse;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.AuthenticationApi;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
-import vn.edu.usth.mcma.frontend.LoadingPageActivity;
 import vn.edu.usth.mcma.frontend.MainActivity;
 
 public class LoginFragment extends Fragment {
-    private AuthenticationApi authenticationApi;
+
     private EditText editTextEmail, editTextPassword;
     private Button buttonLogin;
 
@@ -48,68 +34,24 @@ public class LoginFragment extends Fragment {
         editTextPassword = view.findViewById(R.id.editText2);
         buttonLogin = view.findViewById(R.id.login_button);
 
-        RetrofitService retrofitService = new RetrofitService(requireActivity());
-        authenticationApi = retrofitService.getRetrofit().create(AuthenticationApi.class);
-
         buttonLogin.setOnClickListener(v -> {
             String email = editTextEmail.getText().toString();
             String password = editTextPassword.getText().toString();
 
-//            if (validateLogin(email, password)) {
-//
-//                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("123", getContext().MODE_PRIVATE);
-//                SharedPreferences.Editor editor = sharedPreferences.edit();
-//                editor.putBoolean("isLoggedIn", true);
-//                editor.apply();
-//
-//                Intent intent = new Intent(getActivity(), MainActivity.class);
-//                startActivity(intent);
-//                getActivity().finish();
-//            } else {
-//
-//                Toast.makeText(getActivity(), "Enter email or phone number to log in", Toast.LENGTH_SHORT).show();
-//            }
+            if (validateLogin(email, password)) {
 
-            // Create the SignInRequest object
-            SignInRequest signInRequest = new SignInRequest();
-            signInRequest.setEmail(email);
-            signInRequest.setPassword(password);
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("123", getContext().MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("isLoggedIn", true);
+                editor.apply();
 
-            authenticationApi.signIn(signInRequest).enqueue(new Callback<JwtAuthenticationResponse>() {
-                @Override
-                public void onResponse(Call<JwtAuthenticationResponse> call, Response<JwtAuthenticationResponse> response) {
-                    if (response.isSuccessful()){
-                        Toast.makeText(getActivity(), "Login successful!", Toast.LENGTH_SHORT).show();
-                        String token = response.body().getToken();
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            } else {
 
-                        // Assuming this is where you receive the token after successful login
-                        SharedPreferences sharedTokenPreferences = getActivity().getSharedPreferences("AuthPrefs", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editorToken = sharedTokenPreferences.edit();
-                        editorToken.putString("auth_token", token);
-                        editorToken.apply();
-                        // Lưu trạng thái đăng nhập và thời gian hết hạn trong SharedPreferences
-                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("TOLogin", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean("isLoggedIn", true);
-                        // Tính thời gian hết hạn từ thời điểm hiện tại
-                        long expirationTime = System.currentTimeMillis() + 1440000; // 1440000ms = 24 phút
-                        editor.putLong("expirationTime", expirationTime);
-                        editor.apply();
-                        // Điều hướng
-                        Intent intent = new Intent(getActivity(), MainActivity.class);
-                        startActivity(intent);
-                        getActivity().finish();
-                    } else {
-                        Toast.makeText(getActivity(), "Wrong email or password", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<JwtAuthenticationResponse> call, Throwable t) {
-                    Toast.makeText(getActivity(), "Login failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-
-                }
-            });
+                Toast.makeText(getActivity(), "Enter email or phone number to log in", Toast.LENGTH_SHORT).show();
+            }
         });
 
         TextView create_account = view.findViewById(R.id.create_account);
