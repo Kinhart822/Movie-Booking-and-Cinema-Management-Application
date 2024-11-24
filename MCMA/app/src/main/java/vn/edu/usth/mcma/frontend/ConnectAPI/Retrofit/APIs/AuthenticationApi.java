@@ -2,6 +2,7 @@ package vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Request.ForgotPasswordRequest;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Request.ResetPasswordRequest;
@@ -21,4 +22,7 @@ public interface AuthenticationApi {
 
     @POST("/api/v1/auth/reset-password")
     Call<String> resetPassword(@Body ResetPasswordRequest resetPasswordRequest);
+
+    @GET("api/v1/logout")
+    Call<Void> logout();
 }

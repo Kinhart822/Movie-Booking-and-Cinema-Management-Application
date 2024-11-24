@@ -12,8 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.AuthenticationApi;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 import vn.edu.usth.mcma.frontend.MainActivity;
 
 public class PersonalFragment extends Fragment {
@@ -74,10 +80,36 @@ public class PersonalFragment extends Fragment {
         logout_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment loginFragment = new vn.edu.usth.mcma.frontend.Login.LoginFragment();
-                FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(android.R.id.content, loginFragment);
-                fragmentTransaction.commit();
+
+                RetrofitService retrofitService = new RetrofitService(requireActivity());
+                AuthenticationApi authenticationApi = retrofitService.getRetrofit().create(AuthenticationApi.class);
+                authenticationApi.logout().enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            // Logout successful, navigate to LoginFragment
+                            Toast.makeText(getContext(), "Logged out successfully", Toast.LENGTH_SHORT).show();
+
+                            Fragment loginFragment = new vn.edu.usth.mcma.frontend.Login.LoginFragment();
+                            FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                            fragmentTransaction.replace(android.R.id.content, loginFragment);
+                            fragmentTransaction.commit();
+                        } else {
+                            // Handle failure response
+                            Toast.makeText(getContext(), "Failed to log out. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(getContext(), "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+//                Fragment loginFragment = new vn.edu.usth.mcma.frontend.Login.LoginFragment();
+//                FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
+//                fragmentTransaction.replace(android.R.id.content, loginFragment);
+//                fragmentTransaction.commit();
 
             }
         });
