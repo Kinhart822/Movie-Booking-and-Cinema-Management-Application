@@ -76,7 +76,7 @@ public class AuthService {
         return "User created successfully";
     }
 
-    public JwtAuthenticationResponse signIn(SignInRequest signInRequest) {
+    public JwtAuthResponse signIn(SignInRequest signInRequest) {
         String email = signInRequest.getEmail();
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 email,
@@ -90,13 +90,13 @@ public class AuthService {
         revokeAllTokenByEmail(email);
         saveUserToken(token, email);
 
-        JwtAuthenticationResponse response = new JwtAuthenticationResponse();
-        response.setToken(token);
+        JwtAuthResponse response = new JwtAuthResponse();
+        response.setAccessToken(token);
         response.setUserId(userService.findUserByEmail(email).getId());
         return response;
     }
 
-    public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+    public JwtAuthResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
         String email = jwtService.extractUsername(refreshTokenRequest.getToken());
         if (!jwtService.isTokenValid(refreshTokenRequest.getToken(), email)) {
             throw new BusinessException(ApiResponseCode.INVALID_TOKEN);
@@ -105,18 +105,18 @@ public class AuthService {
         revokeAllTokenByEmail(email);
         saveUserToken(token, email);
 
-        JwtAuthenticationResponse response = new JwtAuthenticationResponse();
-        response.setToken(token);
+        JwtAuthResponse response = new JwtAuthResponse();
+        response.setAccessToken(token);
         return response;
     }
 
-    public JwtAuthenticationResponse forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
-        JwtAuthenticationResponse response = new JwtAuthenticationResponse();
+    public JwtAuthResponse forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
+        JwtAuthResponse response = new JwtAuthResponse();
         String email = forgotPasswordRequest.getEmail();
         String token = jwtService.generateToken(email);
         this.saveUserToken(token, email);
 
-        response.setToken(token);
+        response.setAccessToken(token);
         response.setMessage("Success!");
         return response;
     }

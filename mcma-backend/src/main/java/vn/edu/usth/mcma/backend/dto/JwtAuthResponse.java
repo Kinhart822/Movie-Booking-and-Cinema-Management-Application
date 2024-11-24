@@ -5,8 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class JwtAuthenticationResponse {
-    private String token;
+public class JwtAuthResponse {
+    private String accessToken;
     private String message;
 //    private String error; u used it once
     private Long userId;
