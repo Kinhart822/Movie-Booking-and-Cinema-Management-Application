@@ -70,6 +70,15 @@ public class PersonalFragment extends Fragment {
             }
         });
 
+        LinearLayout to_feedback = v.findViewById(R.id.account_information_feedback);
+        to_feedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(requireContext(),vn.edu.usth.mcma.frontend.Personal.RatingBar_Activity.class);
+                startActivity(i);
+            }
+        });
+
         LinearLayout logout_button = v.findViewById(R.id.account_information_log_out);
         logout_button.setOnClickListener(new View.OnClickListener() {
             @Override
