@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.backend.dao;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,15 +34,19 @@ public class User extends AbstractAuditing implements Serializable {
     @Column
     private String phone;
     @Column
+    @JsonIgnore
     private String password;
     @Column
     private String address;
     @Column(columnDefinition = "SMALLINT")
     private Integer userType;
     @Column
+    @JsonIgnore
     private String resetKey;
     @Column
+    @JsonIgnore
     private Instant resetDate;
     @Column(columnDefinition = "TINYINT")
+    @JsonIgnore
     private Integer status;
 }

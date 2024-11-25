@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.usth.mcma.backend.dao.User;
 import vn.edu.usth.mcma.backend.dto.*;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.service.AuthService;
@@ -20,6 +21,11 @@ public class AuthController {
     private final JwtUtil jwtUtil;
     private final AuthService authService;
     private final UserService userService;
+
+    @GetMapping("/auth/profile")
+    public ResponseEntity<User> getProfile(HttpServletRequest request) {
+        return ResponseEntity.ok(userService.findById(jwtUtil.getUserIdFromToken(request)));
+    }
 
     @PostMapping("/auth/sign-up")
     public ResponseEntity<String> signUp(@RequestBody SignUpRequest signUpRequest) {

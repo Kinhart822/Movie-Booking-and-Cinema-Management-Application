@@ -2,6 +2,7 @@ import { createContext, useEffect, useReducer } from "react";
 import { jwtDecode } from "jwt-decode";
 // GLOBAL CUSTOM COMPONENTS
 import Loading from "app/components/MatxLoading";
+import {getProfile, loginUser} from "app/api/auth/auth.service.ts";
 
 const initialState = {
   user: null,
@@ -53,20 +54,32 @@ const reducer = (state, action) => {
 };
 
 const AuthContext = createContext({
-  ...initialState,
-  method: "JWT"
+    ...initialState,
+    method: "JWT",
+    login: () => Promise.resolve(),
+    updateUser: () => Promise.resolve(),
+    logout: () => {},
+    register: () => Promise.resolve(),
 });
 
 export const AuthProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+    const [state, dispatch] = useReducer(reducer, initialState);
 
-  const login = async (email, password) => {
-    const { data } = await axios.post("/auth/sign-in", { email, password });
-    const { accessToken, user } = data;
-
-    setSession(accessToken);
-    dispatch({ type: "LOGIN", payload: { user } });
-  };
+    const login = async payload => {
+        const response = await loginUser(payload);
+        const { accessToken } = response;
+        setSession(accessToken);
+        let user = null
+        if (accessToken) {
+            user = await getProfile();
+            dispatch({
+                type: 'LOGIN',
+                payload: {
+                    user,
+                },
+            })
+        }
+    }
 
   const register = async (email, username, password) => {
     const { data } = await axios.post("/auth/sign-up", { email, username, password });

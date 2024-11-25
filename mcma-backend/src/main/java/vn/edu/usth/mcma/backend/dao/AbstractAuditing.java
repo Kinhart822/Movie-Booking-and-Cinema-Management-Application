@@ -28,19 +28,15 @@ public class AbstractAuditing implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @CreatedBy
-//    @Column(nullable = false, updatable = false) TODO jwt
-    @JsonIgnore
+    @Column(updatable = false)
     private Long createdBy;
     @LastModifiedBy
     @Column
-    @JsonIgnore
     private Long lastModifiedBy;
     @CreatedDate
     @Column(updatable = false)
-    @JsonIgnore
     private Instant createdDate;
     @LastModifiedDate
     @Column
-    @JsonIgnore
     private Instant lastModifiedDate;
 }
