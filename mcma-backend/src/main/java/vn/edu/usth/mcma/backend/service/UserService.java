@@ -29,12 +29,10 @@ public class UserService extends AbstractService<User, Long> {
     private static int resetKeyTimeout;
     private final RandomStringGenerator numericGenerator = new RandomStringGenerator.Builder().withinRange('0', '9').get();
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository, @Lazy PasswordEncoder passwordEncoder) {
         super(userRepository);
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
     public boolean checkEmailExistence(String email) {
         return userRepository.existsByEmailIgnoreCase(email);
@@ -78,12 +76,12 @@ public class UserService extends AbstractService<User, Long> {
                 .filter(u -> u.getResetDate().isAfter(Instant.now().minusSeconds(resetKeyTimeout)));
     }
 
-    public Optional<User> resetPasswordFinish(String resetKey, Integer type, String newPassword) {
+    public Optional<User> resetPasswordFinish(String resetKey, Integer type, String encodedPassword) {
         return userRepository
                 .findOneByResetKeyAndUserType(resetKey, type)
                 .filter(u -> u.getResetDate().isAfter(Instant.now().minusSeconds(resetKeyTimeout)))
                 .map (u -> {
-                    u.setPassword(passwordEncoder.encode(newPassword));
+                    u.setPassword(encodedPassword);
                     u.setResetKey(null);
                     u.setResetDate(null);
                     return u;

@@ -164,7 +164,7 @@ public class AuthService {
         if (type != UserType.ADMIN.getValue() && type != UserType.USER.getValue()) {
             throw new BusinessException(ApiResponseCode.ILLEGAL_TYPE);
         }
-        Optional<User> user = userService.resetPasswordFinish(finish.getResetKey(), type, finish.getNewPassword());
+        Optional<User> user = userService.resetPasswordFinish(finish.getResetKey(), type, passwordEncoder.encode(finish.getNewPassword()));
         if (user.isEmpty()) {
             throw new BusinessException(ApiResponseCode.RESET_KEY_NOT_FOUND);
         }
