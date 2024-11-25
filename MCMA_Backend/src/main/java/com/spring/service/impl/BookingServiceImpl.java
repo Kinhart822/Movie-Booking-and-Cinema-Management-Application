@@ -1005,32 +1005,36 @@ public class BookingServiceImpl implements BookingService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
 
-        List<Seat> seatListChangeToAvailable = new ArrayList<>();
-        for (BookingSeat seat : booking.getSeatList()) {
-            seat.getSeat().setSeatStatus(SeatStatus.Available);
-            seatListChangeToAvailable.add(seat.getSeat());
+        if (booking.getStatus() == BookingStatus.Pending_Payment) {
+            if (booking.getPaymentMethod() == PaymentMethod.Cash) {
+                List<Seat> seatListChangeToAvailable = new ArrayList<>();
+                for (BookingSeat seat : booking.getSeatList()) {
+                    seat.getSeat().setSeatStatus(SeatStatus.Available);
+                    seatListChangeToAvailable.add(seat.getSeat());
+                }
+                seatRepository.saveAll(seatListChangeToAvailable);
+
+                booking.setStatus(BookingStatus.CANCELLED);
+                bookingRepository.save(booking);
+
+                try {
+                    Notification notification = new Notification();
+                    notification.setUser(user);
+                    notification.setMessage("Booking Number: %s, Your booking for %s is canceled. You will have the money that you pay for the booking return to your wallet".formatted(booking.getBookingNo(), booking.getMovie().getName()));
+                    notification.setDateCreated(LocalDateTime.now());
+                    notificationRepository.save(notification);
+
+                    emailService.sendCancelMailMessage(user.getEmail());
+                    System.out.printf("Notification sent to %s%n", user.getEmail());
+                } catch (Exception e) {
+                    System.out.println("Failed to send email notification. Please try again later.");
+                }
+
+                // Schedule the booking deletion 10 minutes after cancellation
+                ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+                scheduler.schedule(() -> deleteBooking(bookingId, userId), 10, TimeUnit.MINUTES);
+            }
         }
-        seatRepository.saveAll(seatListChangeToAvailable);
-
-        booking.setStatus(BookingStatus.CANCELLED);
-        bookingRepository.save(booking);
-
-        try {
-            Notification notification = new Notification();
-            notification.setUser(user);
-            notification.setMessage("Booking Number: %s, Your booking for %s is canceled. You will have the money that you pay for the booking return to your wallet".formatted(booking.getBookingNo(), booking.getMovie().getName()));
-            notification.setDateCreated(LocalDateTime.now());
-            notificationRepository.save(notification);
-
-            emailService.sendCancelMailMessage(user.getEmail());
-            System.out.printf("Notification sent to %s%n", user.getEmail());
-        } catch (Exception e) {
-            System.out.println("Failed to send email notification. Please try again later.");
-        }
-
-        // Schedule the booking deletion 10 minutes after cancellation
-        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.schedule(() -> deleteBooking(bookingId, userId), 10, TimeUnit.MINUTES);
     }
 
     @Override

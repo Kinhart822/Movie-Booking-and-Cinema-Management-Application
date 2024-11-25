@@ -3,6 +3,7 @@ package com.spring.controller;
 import com.spring.config.JwtUtil;
 import com.spring.dto.request.*;
 import com.spring.dto.response.JwtAuthenticationResponse;
+import com.spring.dto.response.UserResponse;
 import com.spring.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -55,10 +58,21 @@ public class AuthenticationController {
 
     @Transactional
     @RequestMapping(value = "/update-password", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResponseEntity<String> updatePassword(HttpServletRequest request,  @RequestBody UpdatePasswordRequest updatePasswordRequest) {
+    public ResponseEntity<String> updatePassword(HttpServletRequest request, @RequestBody UpdatePasswordRequest updatePasswordRequest) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
         authenticationService.changeNewPassword(userId, updatePasswordRequest);
         return ResponseEntity.ok("Password updated successfully");
+    }
+
+    @GetMapping(value = "/getUserInformation")
+    public ResponseEntity<UserResponse> getUserInformation(HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        return ResponseEntity.ok(authenticationService.getUserInformation(userId));
+    }
+
+    @GetMapping(value = "/getAllUserInformation")
+    public ResponseEntity<List<UserResponse>> getAllUserInformation() {
+        return ResponseEntity.ok(authenticationService.getAllUsers());
     }
 
     @DeleteMapping("/delete-account/{userId}")

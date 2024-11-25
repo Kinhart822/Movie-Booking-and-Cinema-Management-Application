@@ -1,6 +1,7 @@
 package com.spring.service.impl;
 
 import com.spring.dto.request.*;
+import com.spring.dto.response.UserResponse;
 import com.spring.entities.Token;
 import com.spring.entities.User;
 import com.spring.enums.Type;
@@ -199,10 +200,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (updateAccountRequest.getPhone() != null) {
             user.setPhoneNumber(updateAccountRequest.getPhone());
         }
-        if (updateAccountRequest.getDateOfBirth()!= null) {
+        if (updateAccountRequest.getDateOfBirth() != null) {
             user.setDateOfBirth(updateAccountRequest.getDateOfBirth());
         }
-        if (updateAccountRequest.getGender()!= null) {
+        if (updateAccountRequest.getGender() != null) {
             user.setGender(updateAccountRequest.getGender());
         }
         if (updateAccountRequest.getAddress() != null) {
@@ -228,6 +229,39 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         user.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
         userRepository.save(user);
+    }
+
+    @Override
+    public UserResponse getUserInformation(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        return new UserResponse(
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getEmail(),
+                        user.getPhoneNumber(),
+                        user.getGender().toString(),
+                        user.getAddress(),
+                        user.getDateOfBirth().toString(),
+                        user.getUserType().toString()
+                );
+    }
+
+    @Override
+    public List<UserResponse> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(user -> new UserResponse(
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getEmail(),
+                        user.getPhoneNumber(),
+                        user.getGender().toString(),
+                        user.getAddress(),
+                        user.getDateOfBirth().toString(),
+                        user.getUserType().toString()
+                ))
+                .toList();
     }
 
     @Override
