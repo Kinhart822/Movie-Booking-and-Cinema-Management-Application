@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,46 +30,48 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
+        // Chỗ này tránh click lỗi sẽ nhảy sang layout khác
+        view.setOnClickListener(v -> {
+
+        });
+
         editTextEmail = view.findViewById(R.id.editText);
         editTextPassword = view.findViewById(R.id.editText2);
         buttonLogin = view.findViewById(R.id.login_button);
+        ImageView imageView = view.findViewById(R.id.imageView);
 
         buttonLogin.setOnClickListener(v -> {
             String email = editTextEmail.getText().toString();
             String password = editTextPassword.getText().toString();
 
             if (validateLogin(email, password)) {
-
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("123", getContext().MODE_PRIVATE);
+                SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Aloo", getContext().MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("isLoggedIn", true);
                 editor.apply();
 
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
-                getActivity().finish();
+                requireActivity().finish();
             } else {
-
                 Toast.makeText(getActivity(), "Enter email or phone number to log in", Toast.LENGTH_SHORT).show();
             }
         });
 
         TextView create_account = view.findViewById(R.id.create_account);
-        create_account.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Login.Register_Activity.class );
-                startActivity(i);
-            }
+        create_account.setOnClickListener(view1 -> {
+            Intent intent = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Login.Register_Activity.class);
+            startActivity(intent);
         });
 
         TextView forgot_password = view.findViewById(R.id.forgot_password);
-        forgot_password.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Login.ForgotPassword_Activity.class );
-                startActivity(i);
-            }
+        forgot_password.setOnClickListener(view12 -> {
+            Intent intent = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Login.ForgotPassword_Activity.class);
+            startActivity(intent);
+        });
+
+        imageView.setOnClickListener(v -> {
+
         });
 
         return view;

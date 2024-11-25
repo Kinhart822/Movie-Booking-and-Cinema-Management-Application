@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("123", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("Aloo", MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
 
         if (!isLoggedIn) {
@@ -108,14 +108,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void navigateToLoginFragment() {
-        // Chuyển hướng đến LoginFragment
         Fragment loginFragment = new LoginFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(android.R.id.content, loginFragment);
         transaction.commit();
     }
 
-    // close icon to home page in personal
+    // Chỗ này để chuyển sang fragment khác vẫn giữ nguyên bottom navigation
     public void close_to_home_page(){
         mviewPager.setCurrentItem(0,true);
     }
