@@ -5,7 +5,6 @@ import constants.EntityStatus;
 import constants.UserType;
 import jakarta.transaction.Transactional;
 import org.apache.commons.text.RandomStringGenerator;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,13 +19,15 @@ import vn.edu.usth.mcma.backend.repository.UserRepository;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+
+import static vn.edu.usth.mcma.backend.config.AppConfig.dotenv;
 
 @Service
 @Transactional
 public class UserService extends AbstractService<User, Long> {
-    @Value("${reset-key-timeout}")
-    private static int resetKeyTimeout;
+    private static final int resetKeyTimeout = Integer.parseInt(Objects.requireNonNull(dotenv().get("RESET_KEY_TIMEOUT")));
     private final RandomStringGenerator numericGenerator = new RandomStringGenerator.Builder().withinRange('0', '9').get();
     private final UserRepository userRepository;
 
