@@ -97,6 +97,16 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
             }
         });
 
+        LinearLayout to_feedback_fragment = v.findViewById(R.id.feedback_side_navigation);
+        to_feedback_fragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getActivity() instanceof MainActivity){
+                    ((MainActivity) getActivity()).close_to_feedback_page();
+                }
+            }
+        });
+
         int images[] = {R.drawable.movie9, R.drawable.movie3, R.drawable.movie4};
         v_flipper = v.findViewById(R.id.view_flipper);
 

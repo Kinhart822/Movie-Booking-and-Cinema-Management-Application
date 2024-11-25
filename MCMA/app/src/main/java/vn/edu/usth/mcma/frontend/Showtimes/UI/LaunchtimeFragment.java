@@ -86,6 +86,16 @@ public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnThe
             }
         });
 
+        LinearLayout to_feedback_fragment = v.findViewById(R.id.feedback_side_navigation);
+        to_feedback_fragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getActivity() instanceof MainActivity){
+                    ((MainActivity) getActivity()).close_to_feedback_page();
+                }
+            }
+        });
+
         LinearLayout to_personal_fragment = v.findViewById(R.id.personal_side_navigation);
         to_personal_fragment.setOnClickListener(new View.OnClickListener() {
             @Override
