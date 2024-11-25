@@ -11,10 +11,13 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +26,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import vn.edu.usth.mcma.backend.service.UserService;
 
 import java.io.IOException;
@@ -39,7 +45,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
+                .cors(corsCustomizer())
+                .csrf(csrfCustomizer())
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/admin").hasAuthority(UserType.ADMIN.name())
@@ -63,6 +70,24 @@ public class SecurityConfig {
         return http.build();
     }
 
+    // Customize CORS configuration
+    private Customizer<CorsConfigurer<HttpSecurity>> corsCustomizer() {
+        return (cors) -> cors
+                .configurationSource(request -> {
+                    var corsConfig = new CorsConfiguration();
+                    corsConfig.addAllowedOrigin("http://localhost:5173"); // Frontend origin
+                    corsConfig.addAllowedMethod("*"); // All HTTP methods
+                    corsConfig.addAllowedHeader("*"); // All headers allowed
+                    corsConfig.setAllowCredentials(true); // Allow credentials
+                    corsConfig.setMaxAge(1800L); // Preflight request cache duration (30 minutes)
+                    return corsConfig;
+                });
+    }
+
+    // Customize CSRF configuration
+    private Customizer<CsrfConfigurer<HttpSecurity>> csrfCustomizer() {
+        return AbstractHttpConfigurer::disable;  // Disable CSRF protection
+    }
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();

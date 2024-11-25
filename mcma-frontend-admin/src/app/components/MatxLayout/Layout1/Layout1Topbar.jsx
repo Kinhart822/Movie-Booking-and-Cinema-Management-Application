@@ -125,22 +125,22 @@ const Layout1Topbar = () => {
         </Box>
 
         <Box display="flex" alignItems="center">
-          <MatxSearchBox />
+          {/*<MatxSearchBox />*/}
 
-          <NotificationProvider>
-            <NotificationBar />
-          </NotificationProvider>
+          {/*<NotificationProvider>*/}
+          {/*  <NotificationBar />*/}
+          {/*</NotificationProvider>*/}
 
-          <ShoppingCart />
+          {/*<ShoppingCart />*/}
 
           <MatxMenu
             menuButton={
               <UserMenu>
                 <Span>
-                  Hi <strong>{user.name}</strong>
+                  Hi, <strong>{user?.email?.split('@')[0]}</strong>
                 </Span>
 
-                <Avatar src={user.avatar} sx={{ cursor: "pointer" }} />
+                <Avatar src={user?.avatar} sx={{ cursor: "pointer" }} />
               </UserMenu>
             }>
             <StyledItem>

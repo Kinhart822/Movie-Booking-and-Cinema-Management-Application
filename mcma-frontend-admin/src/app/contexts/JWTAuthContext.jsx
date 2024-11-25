@@ -3,6 +3,7 @@ import { jwtDecode } from "jwt-decode";
 // GLOBAL CUSTOM COMPONENTS
 import Loading from "app/components/MatxLoading";
 import {getProfile, loginUser} from "app/api/auth/auth.service.ts";
+import axios from "axios";
 
 const initialState = {
   user: null,

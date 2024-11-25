@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
+import StepperForm from "../material-kit/forms/StepperForm.jsx";
+import {Paragraph} from "../../components/Typography.jsx";
+import CustomStepperForm from "../material-kit/forms/CustomStepperForm.jsx";
 
 // STYLED COMPONENTS
 const StyledRoot = styled("div")(() => ({
@@ -31,48 +34,18 @@ const ContentBox = styled("div")(({ theme }) => ({
 }));
 
 export default function ForgotPassword() {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("admin@example.com");
-
-  const handleFormSubmit = () => {
-    console.log(email);
-  };
 
   return (
-    <StyledRoot>
-      <Card className="card">
-        <div className="img-wrapper">
-          <img width="300" src="/assets/images/illustrations/dreamer.svg" alt="Illustration" />
-        </div>
+      <StyledRoot>
+        <Card className="card">
+          <div className="img-wrapper">
+            <img width="300" src="/assets/images/illustrations/dreamer.svg" alt="Illustration"/>
+          </div>
 
-        <ContentBox>
-          <form onSubmit={handleFormSubmit}>
-            <TextField
-              type="email"
-              name="email"
-              size="small"
-              label="Email"
-              value={email}
-              variant="outlined"
-              onChange={(e) => setEmail(e.target.value)}
-              sx={{ mb: 3, width: "100%" }}
-            />
-
-            <Button fullWidth variant="contained" color="primary" type="submit">
-              Reset Password
-            </Button>
-
-            <Button
-              fullWidth
-              color="primary"
-              variant="outlined"
-              onClick={() => navigate(-1)}
-              sx={{ mt: 2 }}>
-              Go Back
-            </Button>
-          </form>
-        </ContentBox>
-      </Card>
-    </StyledRoot>
+          <ContentBox>
+            <CustomStepperForm />
+          </ContentBox>
+        </Card>
+      </StyledRoot>
   );
 }

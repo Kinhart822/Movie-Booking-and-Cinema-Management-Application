@@ -1,10 +1,15 @@
+export interface ISuccessResponse {
+    status?: string;
+    message?: string;
+    isValid?: boolean;
+}
 export interface IErrorResponse {
     status?: string;
     message?: string;
     description?: string;
 }
 export interface IUserProfile {
-    id?: number,
+    id?: number;
     firstName?: string;
     lastName?: string;
     sex?: number;

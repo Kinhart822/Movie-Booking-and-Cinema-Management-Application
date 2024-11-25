@@ -18,7 +18,7 @@ class Http {
 
     initHttp() {
         const http = axios.create({
-            baseURL: process.env.REACT_APP_API_URL,
+            baseURL: 'http://localhost:8080/api/v1',
             headers: headers as any,
             paramsSerializer: (params: any) => queryString.stringify(params),
             timeout: 5 * 60 * 1000,

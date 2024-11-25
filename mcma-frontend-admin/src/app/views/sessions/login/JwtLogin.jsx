@@ -4,7 +4,6 @@ import * as Yup from "yup";
 
 import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
-import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid2";
 import styled from "@mui/material/styles/styled";
@@ -53,8 +52,8 @@ const StyledRoot = styled("div")(() => ({
 
 // initial login credentials
 const initialValues = {
-  email: "jason@ui-lib.com",
-  password: "dummyPass",
+  email: "",
+  password: "",
   remember: true
 };
 
@@ -73,8 +72,12 @@ export default function JwtLogin() {
   const { login } = useAuth();
 
   const handleFormSubmit = async (values) => {
+    const payload = {
+      email: values.email,
+      password: values.password,
+    }
     try {
-      await login(values.email, values.password);
+      await login(payload);
       navigate("/");
     } catch (e) {
       console.error(e);
@@ -137,26 +140,6 @@ export default function JwtLogin() {
                       sx={{ mb: 1.5 }}
                     />
 
-                    <FlexBox justifyContent="space-between">
-                      <FlexBox gap={1}>
-                        <Checkbox
-                          size="small"
-                          name="remember"
-                          onChange={handleChange}
-                          checked={values.remember}
-                          sx={{ padding: 0 }}
-                        />
-
-                        <Paragraph>Remember Me  (not implemented)</Paragraph>
-                      </FlexBox>
-
-                      <NavLink
-                        to="/session/forgot-password"
-                        style={{ color: theme.palette.primary.main }}>
-                        Forgot password?
-                      </NavLink>
-                    </FlexBox>
-
                     <LoadingButton
                       type="submit"
                       color="primary"
@@ -166,14 +149,22 @@ export default function JwtLogin() {
                       Login
                     </LoadingButton>
 
-                    <Paragraph>
-                      Don't have an account?
+                    <FlexBox justifyContent="space-between">
                       <NavLink
-                        to="/session/signup"
-                        style={{ color: theme.palette.primary.main, marginLeft: 5 }}>
-                        Register
+                          to="/session/forgot-password"
+                          style={{ color: theme.palette.primary.main }}>
+                        Forgot password?
                       </NavLink>
-                    </Paragraph>
+                      <Paragraph>
+                        Don't have an account?
+                        <NavLink
+                            to="/session/signup"
+                            style={{ color: theme.palette.primary.main, marginLeft: 5 }}>
+                          Register
+                        </NavLink>
+                      </Paragraph>
+                    </FlexBox>
+
                   </form>
                 )}
               </Formik>

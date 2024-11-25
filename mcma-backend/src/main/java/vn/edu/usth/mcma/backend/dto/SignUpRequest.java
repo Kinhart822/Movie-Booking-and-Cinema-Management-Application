@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,8 +14,7 @@ import vn.edu.usth.mcma.backend.dto.validator.PhoneNumber;
 import java.time.Instant;
 import java.util.Date;
 
-@Getter
-@Setter
+@Data
 public class SignUpRequest {
     @NotBlank(message = "firstName must be not blank")
     private String firstName;

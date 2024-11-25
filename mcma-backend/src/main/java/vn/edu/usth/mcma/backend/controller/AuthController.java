@@ -42,16 +42,6 @@ public class AuthController {
         return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest));
     }
 
-//    @PostMapping("/forgot-password")
-//    public ResponseEntity<JwtAuthResponse> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
-//        return ResponseEntity.ok(authService.forgotPassword(forgotPasswordRequest));
-//    }
-//
-//    @Transactional
-//    @RequestMapping(value = "/reset-password", method = {RequestMethod.POST, RequestMethod.GET})
-//    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
-//        return ResponseEntity.ok(authService.resetPassword(resetPasswordRequest));
-//    }
     @PostMapping("/auth/reset-password/request")
     public ResponseEntity<CommonResponse> resetPasswordRequest(@RequestBody @Valid ResetPasswordRequest request) {
         return ResponseEntity.ok(authService.resetPasswordRequest(request));
