@@ -168,7 +168,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/account_information_feedback"
+                        android:id="@+id/information_view_feedback"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -181,7 +181,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Feedback"
+                            android:text="View Feedback"
                             android:textSize="16sp"
                             android:textColor="@color/black" />
 

@@ -1,6 +1,5 @@
 package vn.edu.usth.mcma.frontend.Personal;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -14,7 +13,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.MainActivity;
 
 public class PersonalFragment extends Fragment {
 
@@ -70,11 +68,11 @@ public class PersonalFragment extends Fragment {
             }
         });
 
-        LinearLayout to_feedback = v.findViewById(R.id.account_information_feedback);
+        LinearLayout to_feedback = v.findViewById(R.id.information_view_feedback);
         to_feedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(requireContext(),vn.edu.usth.mcma.frontend.Personal.RatingBar_Activity.class);
+                Intent i = new Intent(requireContext(), ViewFeedback_Activity.class);
                 startActivity(i);
             }
         });
