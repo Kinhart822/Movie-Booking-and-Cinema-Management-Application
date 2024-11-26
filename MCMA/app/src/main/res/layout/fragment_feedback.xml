@@ -57,69 +57,23 @@
                 android:id="@+id/tvRatingLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rate this:"
+                android:text="Movie list"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:layout_marginBottom="8dp" />
+        </LinearLayout>
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="0dp">
 
-            <RatingBar
-                android:id="@+id/ratingBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:numStars="5"
-                android:stepSize="0.5"
-                android:rating="5"
-                android:progressTint="@color/gold"
-                android:backgroundTint="@color/LightBlue"
-                android:layout_marginBottom="16dp" />
-
-            <TextView
-                android:id="@+id/tvRatingScale"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:text="Excellent!"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/black" />
-
-            <!-- Comment Section -->
-            <TextView
-                android:id="@+id/tvCommentLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Leave a feedback:"
-                android:textColor="@color/black"
-                android:layout_marginTop="15dp"
-                android:textSize="18sp"
-                android:layout_marginBottom="8dp" />
-
-            <EditText
-                android:id="@+id/etComment"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview_feedbackmovie"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Type your comment here"
-                android:gravity="top"
-                android:lines="10"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/tab_rect"
-                android:padding="10dp" />
+                android:nestedScrollingEnabled="false" />
 
-            <!-- Submit Button -->
-            <Button
-                android:id="@+id/btnSubmit"
-                android:layout_width="129dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center"
-                android:backgroundTint="@color/gray_text"
-                android:gravity="center"
-                android:text="Submit"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-        </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
@@ -286,4 +240,6 @@
             </LinearLayout>
         </LinearLayout>
     </com.google.android.material.navigation.NavigationView>
+
+
 </androidx.drawerlayout.widget.DrawerLayout>

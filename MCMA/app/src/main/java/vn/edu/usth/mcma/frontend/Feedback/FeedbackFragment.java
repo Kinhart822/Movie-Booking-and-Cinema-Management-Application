@@ -16,16 +16,21 @@ import android.widget.Toast;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.MainActivity;
 
+
 public class FeedbackFragment extends Fragment {
-    private EditText editFeedback;
-    private Button buttonSubmit;
-    private RatingBar ratingBar;
-    private TextView ratingScale;
     private DrawerLayout mDrawerLayout;
+    private RecyclerView recyclerView;
+    private RatingMovie_Adapter adapter;
+    private List<RatingMovie_Item> items;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,10 +42,15 @@ public class FeedbackFragment extends Fragment {
 
         mDrawerLayout = v.findViewById(R.id.feedback_fragment);
 
-        ratingBar = v.findViewById(R.id.ratingBar);
-        ratingScale = v.findViewById(R.id.tvRatingScale);
-        editFeedback = v.findViewById(R.id.etComment);
-        buttonSubmit = v.findViewById(R.id.btnSubmit);
+        recyclerView = v.findViewById(R.id.recyclerview_feedbackmovie);
+        items = new ArrayList<>();
+
+        items.add(new RatingMovie_Item("Wolverine", "Action", R.drawable.movie1));
+        items.add(new RatingMovie_Item("IronMan", "Drama", R.drawable.movie13));
+        items.add(new RatingMovie_Item("Wicked", "Comedy", R.drawable.movie12));
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        recyclerView.setAdapter(new RatingMovie_Adapter(requireContext(), items));
 
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,33 +117,6 @@ public class FeedbackFragment extends Fragment {
             public void onClick(View view) {
                 Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Notification.Notification_Activity.class);
                 startActivity(i);
-            }
-        });
-
-        ratingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
-            String ratingText;
-            if (rating <= 1) {
-                ratingText = "Terrible";
-            } else if (rating <= 2) {
-                ratingText = "Bad";
-            } else if (rating <= 3) {
-                ratingText = "Okay";
-            } else if (rating <= 4) {
-                ratingText = "Good";
-            } else {
-                ratingText = "Excellent!";
-            }
-            ratingScale.setText(ratingText);
-        });
-
-        buttonSubmit.setOnClickListener(v1 -> {
-            String feedback = editFeedback.getText().toString().trim();
-            float rating = ratingBar.getRating();
-
-            if (feedback.isEmpty()) {
-                Toast.makeText(getContext(), "Please leave a comment", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getContext(), "Thank you for rating: " + rating + " stars\nFeedback: " + feedback, Toast.LENGTH_SHORT).show();
             }
         });
 
