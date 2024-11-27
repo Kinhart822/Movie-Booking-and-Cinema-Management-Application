@@ -39,6 +39,4 @@ public class UpdateAccountRequest {
 
     @NotNull(message = "address must be not null")
     private String address;
-
-    private Date dateUpdated;
 }
