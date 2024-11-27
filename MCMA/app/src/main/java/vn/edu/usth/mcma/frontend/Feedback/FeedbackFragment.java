@@ -45,7 +45,7 @@ public class FeedbackFragment extends Fragment {
         recyclerView = v.findViewById(R.id.recyclerview_feedbackmovie);
         items = new ArrayList<>();
 
-        items.add(new RatingMovie_Item("Wolverine", "Action", R.drawable.movie1));
+        items.add(new RatingMovie_Item("Wolverine", "Action", R.drawable.movie4));
         items.add(new RatingMovie_Item("IronMan", "Drama", R.drawable.movie13));
         items.add(new RatingMovie_Item("Wicked", "Comedy", R.drawable.movie12));
 

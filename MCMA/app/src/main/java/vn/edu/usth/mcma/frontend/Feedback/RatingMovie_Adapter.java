@@ -36,11 +36,13 @@ public class RatingMovie_Adapter extends RecyclerView.Adapter<RatingMovie_ViewHo
         holder.typeView.setText(item.getMovie_type());
         holder.imageView.setImageResource(item.getMovie_image());
 
+
         // Chỗ này sẽ click vô được item trong recycle view
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, RatingMovie_Activity.class);
             intent.putExtra("movie_name", item.getMovie_name());
             intent.putExtra("movie_type", item.getMovie_type());
+            intent.putExtra("movie_image", item.getMovie_image());
             context.startActivity(intent);
         });
     }

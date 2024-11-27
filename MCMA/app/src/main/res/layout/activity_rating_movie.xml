@@ -45,98 +45,139 @@
                 android:background="@drawable/notification" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/ratingAndFeedbackLayout"
+        <!-- Scrollable Content -->
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
-            <!-- Rating Section -->
-
-            <TextView
-                android:id="@+id/tvMovieName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Movie Name"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
-
-            <TextView
-                android:id="@+id/tvMovieType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Movie Type"
-                android:textSize="16sp"
-                android:layout_marginBottom="16dp" />
-            <TextView
-                android:id="@+id/tvRatingLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Rate this:"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:layout_marginBottom="8dp" />
-
-            <RatingBar
-                android:id="@+id/ratingBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:numStars="5"
-                android:stepSize="0.5"
-                android:rating="5"
-                android:progressTint="@color/gold"
-                android:backgroundTint="@color/LightBlue"
-                android:layout_marginBottom="16dp" />
-
-            <TextView
-                android:id="@+id/tvRatingScale"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:text="Excellent!"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/black" />
-
-            <!-- Comment Section -->
-            <TextView
-                android:id="@+id/tvCommentLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Leave a feedback:"
-                android:textColor="@color/black"
-                android:layout_marginTop="15dp"
-                android:textSize="18sp"
-                android:layout_marginBottom="8dp" />
-
-            <EditText
-                android:id="@+id/etComment"
+            <LinearLayout
+                android:id="@+id/ratingAndFeedbackLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Type your comment here"
-                android:gravity="top"
-                android:lines="10"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/tab_rect"
-                android:padding="10dp" />
+                android:orientation="vertical"
+                android:padding="16dp">
 
-            <!-- Submit Button -->
-            <Button
-                android:id="@+id/btnSubmit"
-                android:layout_width="129dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center"
-                android:backgroundTint="@color/gray_text"
-                android:gravity="center"
-                android:text="Submit"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-        </LinearLayout>
+                <!-- Rating Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <!-- FrameLayout chứa ảnh -->
+                    <FrameLayout
+                        android:layout_width="200dp"
+                        android:layout_height="300dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/feedback_filmimage_border"
+                        android:padding="4dp">
+
+                        <ImageView
+                            android:id="@+id/tvMovieImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:scaleType="centerCrop" />
+                    </FrameLayout>
+
+                    <!-- LinearLayout chứa thông tin -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center_horizontal">
+
+                        <TextView
+                            android:id="@+id/tvMovieName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="4dp"
+                            android:text="Tên phim" />
+
+                        <TextView
+                            android:id="@+id/tvMovieType"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:textColor="@android:color/darker_gray"
+                            android:text="Thể loại phim" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvRatingLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rate this:"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="8dp" />
+
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:numStars="5"
+                    android:stepSize="0.5"
+                    android:rating="5"
+                    android:progressTint="@color/gold"
+                    android:backgroundTint="@color/LightBlue"
+                    android:layout_marginBottom="5dp" />
+
+                <TextView
+                    android:id="@+id/tvRatingScale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="3dp"
+                    android:text="Excellent!"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black" />
+
+                <!-- Comment Section -->
+                <TextView
+                    android:id="@+id/tvCommentLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Leave a feedback:"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="15dp"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="8dp" />
+
+                <EditText
+                    android:id="@+id/etComment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Type your comment here"
+                    android:gravity="top"
+                    android:lines="10"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/tab_rect"
+                    android:padding="10dp" />
+
+                <!-- Submit Button -->
+                <Button
+                    android:id="@+id/btnSubmit"
+                    android:layout_width="129dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:backgroundTint="@color/gray_text"
+                    android:gravity="center"
+                    android:text="Submit"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>

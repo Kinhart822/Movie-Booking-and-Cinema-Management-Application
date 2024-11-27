@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView; // Thêm import này
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,9 +25,9 @@ public class RatingMovie_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rating_movie);
 
-        // Ánh xạ các View
-        TextView movieName = findViewById(R.id.tvMovieName); // Tên phim
-        TextView movieType = findViewById(R.id.tvMovieType); // Thể loại phim
+        TextView movieName = findViewById(R.id.tvMovieName);
+        TextView movieType = findViewById(R.id.tvMovieType);
+        ImageView movieImage = findViewById(R.id.tvMovieImage); // Thêm ImageView
         ImageButton mImageView = findViewById(R.id.back_button);
         ratingBar = findViewById(R.id.ratingBar);
         ratingScale = findViewById(R.id.tvRatingScale);
@@ -36,11 +37,14 @@ public class RatingMovie_Activity extends AppCompatActivity {
         // Lấy dữ liệu từ intent trong adapter
         String name = getIntent().getStringExtra("movie_name");
         String type = getIntent().getStringExtra("movie_type");
+        int imageResId = getIntent().getIntExtra("movie_image", R.drawable.movie5); // Lấy hình ảnh, với giá trị mặc định nếu không có
 
-        // Chỗ này sẽ thay tên phim và thể loại vô chỗ được set id trong xml
+        // Gán dữ liệu cho các view
         movieName.setText(name);
         movieType.setText(type);
+        movieImage.setImageResource(imageResId); // Hiển thị hình ảnh
 
+        // Xử lý nút quay lại
         mImageView.setOnClickListener(v -> finish());
 
         ratingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
