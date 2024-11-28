@@ -131,7 +131,7 @@ public class Register_Activity extends AppCompatActivity {
                 return;
             }
 
-
+//            String formattedDate = dateFormat.format(dateOfBirth);
 
             SignUpRequest signUpRequest = new SignUpRequest();
             signUpRequest.setFirstName(firstname);

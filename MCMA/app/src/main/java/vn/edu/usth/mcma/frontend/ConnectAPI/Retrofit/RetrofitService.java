@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class RetrofitService {
-    private static final String BASE_URL = "http://192.168.88.32:8080"; //BACKEND IP ADDRESS
+    private static final String BASE_URL = "http://192.168.13.20:8080"; //BACKEND IP ADDRESS
 
     private final Retrofit retrofit;
     public RetrofitService(Context context) {
@@ -31,15 +31,11 @@ public class RetrofitService {
                     .addHeader("Authorization", "Bearer " + token)
                     .build()));
         }
-        Gson gson = new GsonBuilder()
-                .setDateFormat("MM/dd/yyyy") // Define date format
-                .setLenient()
-                .create();
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(okHttpClient.build())
                 .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(new Gson()))
                 .build();
     }
     public Retrofit getRetrofit() {
