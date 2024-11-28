@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.frontend.Showtimes.UI;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -28,14 +29,17 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.TheaterShowtimesAdapter;
+import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.MovieDetails;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.TheaterType;
+
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.MovieDataProvider;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.TheaterDataProvider;
 
@@ -50,11 +54,19 @@ public class MovieBookingActivity extends AppCompatActivity {
     private View citiesSection;
     private View theatersSection;
     private String movieTitle;
+    private TheaterType theaterType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_booking);
+
+        // Get movie title and theater type from intent
+        movieTitle = getIntent().getStringExtra("MOVIE_TITLE");
+        theaterType = (TheaterType) getIntent().getSerializableExtra("THEATER_TYPE");
+        if (theaterType == null) {
+            theaterType = TheaterType.REGULAR;
+        }
 
         citiesSection = findViewById(R.id.cities_section);
         theatersSection = findViewById(R.id.theaters_section);
@@ -201,8 +213,9 @@ public class MovieBookingActivity extends AppCompatActivity {
     }
 
     private void updateTheatersList() {
-        List<Theater> cityTheaters = TheaterDataProvider.getTheatersForCity(selectedCity, TheaterType.REGULAR);
-        theaterAdapter.setTheaters(cityTheaters, selectedDate);
+        // Pass the current theater type when getting theaters
+        List<Theater> cityTheaters = TheaterDataProvider.getTheatersForCity(selectedCity, theaterType);
+        theaterAdapter.setTheaters(cityTheaters, selectedDate, movieTitle, theaterType);
     }
 
 
@@ -211,13 +224,38 @@ public class MovieBookingActivity extends AppCompatActivity {
         theaterAdapter = new TheaterShowtimesAdapter(new TheaterShowtimesAdapter.OnShowtimeClickListener() {
             @Override
             public void onShowtimeClick(Theater theater, String showtime) {
-                // Handle showtime selection
-                Toast.makeText(MovieBookingActivity.this,
-                        "Selected: " + theater.getName() + " at " + showtime,
-                        Toast.LENGTH_SHORT).show();
+                showTimerDialog(theater, showtime);
             }
         });
         theatersRecyclerView.setAdapter(theaterAdapter);
         theatersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    // Add new method to MovieBookingActivity.java
+    private void showTimerDialog(Theater theater, String showtime) {
+        TimerDialog dialog = new TimerDialog(this, new TimerDialog.OnDialogActionListener() {
+            @Override
+            public void onUnderstandClicked() {
+                // Retrieve the movie details for the current selection
+                MovieDetails movieDetails = MovieDataProvider.getMovieDetails(movieTitle);
+                Movie selectedMovie = new Movie(
+                        "movie_" + movieTitle.toLowerCase().replace(" ", "_"),
+                        movieTitle,
+                        new HashMap<>() // You might want to populate this with actual showtimes
+                );
+
+                Intent intent = new Intent(MovieBookingActivity.this, SeatSelectionActivity.class);
+                intent.putExtra("SELECTED_THEATER", theater);
+                intent.putExtra("SELECTED_SHOWTIME", showtime);
+                intent.putExtra("SELECTED_MOVIE", selectedMovie);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onCloseClicked() {
+                // Dialog will be automatically dismissed
+            }
+        });
+        dialog.show();
     }
 }

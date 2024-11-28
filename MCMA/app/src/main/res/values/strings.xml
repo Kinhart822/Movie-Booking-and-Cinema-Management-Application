@@ -31,5 +31,6 @@
     <string name="total_price">Tổng tiền (đã bao gồm phụ thu)</string>
     <string name="complete_payment">Hoàn tất thanh toán</string>
     <string name="concession">Concession</string>
+    <string name="book_ticket">Booking for</string>
 </resources>
 

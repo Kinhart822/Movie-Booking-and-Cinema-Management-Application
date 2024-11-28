@@ -96,6 +96,7 @@ public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdap
             viewDetails.setOnClickListener(v -> {
                 Intent intent = new Intent(itemView.getContext(), MovieDetailsActivity.class);
                 intent.putExtra("MOVIE_TITLE", movie.getTitle());
+                intent.putExtra("THEATER_TYPE", currentType);  // Pass the theater type
                 itemView.getContext().startActivity(intent);
             });
         }

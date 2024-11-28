@@ -237,7 +237,7 @@
                     android:layout_weight="1"/>
             </LinearLayout>
         </ScrollView>
-        <!--
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -263,7 +263,7 @@
                 android:background="@drawable/rounded_dark_background"
                 android:layout_margin="16dp"/>
         </LinearLayout>
-        -->
+
     </LinearLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>

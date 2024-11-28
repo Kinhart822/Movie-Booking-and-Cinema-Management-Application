@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,20 +31,26 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private TextView synopsisTextView;
     private TextView expandCollapseTextView;
     private boolean isSynopsisExpanded = false;
-    private TheaterType currentTheaterType = TheaterType.REGULAR; // Default theater type
+    private TheaterType currentTheaterType;
+    private Button bookingButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
+        // Get theater type from intent if available
+        currentTheaterType = (TheaterType) getIntent().getSerializableExtra("THEATER_TYPE");
+        if (currentTheaterType == null) {
+            currentTheaterType = TheaterType.REGULAR; // Default fallback
+        }
         // Find views
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
         Toolbar toolbar = findViewById(R.id.toolbar);
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
-        synopsisTextView = findViewById(R.id.tv_synopsis); // Added this line
-        expandCollapseTextView = findViewById(R.id.tv_concise); // Added this line
+        synopsisTextView = findViewById(R.id.tv_synopsis);
+        expandCollapseTextView = findViewById(R.id.tv_concise);
         setSupportActionBar(toolbar);
 
         // Get movie title from intent
@@ -59,18 +66,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         // Back button on banner
         findViewById(R.id.btn_back_banner).setOnClickListener(v -> finish());
-
         // Back button in toolbar
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-        // Setup booking button click listener
-        Button bookingButton = findViewById(R.id.bookingButton);
-        bookingButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MovieBookingActivity.class);
-            intent.putExtra("MOVIE_TITLE", getIntent().getStringExtra("MOVIE_TITLE"));
-            startActivity(intent);
-        });
-
+        // Setup booking buttons based on theater type
+        setupBookingButtons(movieTitle);
         // Populate movie details
         populateMovieDetails(movieDetails);
         setupSynopsisExpansion();
@@ -127,9 +127,37 @@ public class MovieDetailsActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
+    private void setupBookingButtons(String movieTitle) {
+        LinearLayout bookingButtonsContainer = findViewById(R.id.booking_buttons_container);
+        bookingButtonsContainer.removeAllViews(); // Clear any existing buttons
+
+        bookingButton = new Button(this);
+        String buttonText = getString(R.string.book_ticket) + " - " + currentTheaterType.getDisplayName();
+        bookingButton.setText(buttonText);
+
+        // Set button styling if needed
+        if (currentTheaterType == TheaterType.FIRST_CLASS) {
+            // Apply first class styling
+            bookingButton.setBackgroundResource(R.drawable.first_class_button_bg);
+        } else {
+            // Apply regular styling
+            bookingButton.setBackgroundResource(R.drawable.regular_button_bg);
+        }
+
+        bookingButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MovieBookingActivity.class);
+            intent.putExtra("MOVIE_TITLE", movieTitle);
+            intent.putExtra("THEATER_TYPE", currentTheaterType);
+            startActivity(intent);
+        });
+
+        // Add button to container
+        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        buttonParams.setMargins(0, 8, 0, 8);
+        bookingButton.setLayoutParams(buttonParams);
+        bookingButtonsContainer.addView(bookingButton);
     }
 }
