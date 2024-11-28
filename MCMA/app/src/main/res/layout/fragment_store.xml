@@ -127,7 +127,7 @@
                     android:id="@+id/total_price_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Tổng tiền (đã bao gồm phụ thu):"
+                    android:text="Total prize:"
                     android:textSize="16sp"/>
 
                 <Button

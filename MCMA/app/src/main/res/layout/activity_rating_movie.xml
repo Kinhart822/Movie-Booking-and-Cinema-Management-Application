@@ -93,7 +93,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             android:layout_marginBottom="4dp"
-                            android:text="Tên phim" />
+                            android:text="Movie name" />
 
                         <TextView
                             android:id="@+id/tvMovieType"
@@ -101,7 +101,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
                             android:textColor="@android:color/darker_gray"
-                            android:text="Thể loại phim" />
+                            android:text="Movie type" />
                     </LinearLayout>
                 </LinearLayout>
 
