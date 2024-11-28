@@ -48,7 +48,6 @@ public class ForgotPassword_Activity extends AppCompatActivity {
         RetrofitService retrofitService = new RetrofitService(this);
         AuthenticationApi authenticationApi = retrofitService.getRetrofit().create(AuthenticationApi.class);
 
-
         resetButton.setOnClickListener(view -> {
             String TextEmail = editTextEmail.getText().toString();
 

@@ -94,7 +94,6 @@ public class ResetPassword_Activity extends AppCompatActivity {
                         transaction.replace(android.R.id.content, loginFragment);
                         transaction.commit();
                     } else {
-
                         Toast.makeText(ResetPassword_Activity.this, "Reset Password failed.", Toast.LENGTH_LONG).show();
                     }
                 }

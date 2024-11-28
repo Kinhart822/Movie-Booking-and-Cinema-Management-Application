@@ -94,6 +94,16 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
             }
         });
 
+        LinearLayout to_feedback_fragment = view.findViewById(R.id.feedback_side_navigation);
+        to_feedback_fragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getActivity() instanceof MainActivity){
+                    ((MainActivity) getActivity()).close_to_feedback_page();
+                }
+            }
+        });
+
         LinearLayout to_personal_fragment = view.findViewById(R.id.personal_side_navigation);
         to_personal_fragment.setOnClickListener(new View.OnClickListener() {
             @Override

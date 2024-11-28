@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,9 +45,15 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
+        // Chỗ này tránh click lỗi sẽ nhảy sang layout khác
+        view.setOnClickListener(v -> {
+
+        });
+
         editTextEmail = view.findViewById(R.id.editText);
         editTextPassword = view.findViewById(R.id.editText2);
         buttonLogin = view.findViewById(R.id.login_button);
+        ImageView imageView = view.findViewById(R.id.imageView);
 
         RetrofitService retrofitService = new RetrofitService(requireActivity());
         authenticationApi = retrofitService.getRetrofit().create(AuthenticationApi.class);

@@ -1,0 +1,26 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Màu của các ngôi sao chưa được đánh giá -->
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <solid android:color="#D3D3D3" /> <!-- Màu xám -->
+        </shape>
+    </item>
+
+    <!-- Màu của các ngôi sao khi đánh giá -->
+    <item android:id="@android:id/secondaryProgress">
+        <clip>
+            <shape android:shape="rectangle">
+                <solid android:color="#FFD700" /> <!-- Màu vàng nhạt -->
+            </shape>
+        </clip>
+    </item>
+
+    <!-- Màu của các ngôi sao được đánh giá -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape android:shape="rectangle">
+                <solid android:color="#FFAA00" /> <!-- Màu cam vàng -->
+            </shape>
+        </clip>
+    </item>
+</layer-list>

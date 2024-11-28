@@ -22,6 +22,8 @@ public class Fragment_changing extends FragmentStateAdapter {
             case 2:
                 return new vn.edu.usth.mcma.frontend.Store.UI.StoreFragment();
             case 3:
+                return new vn.edu.usth.mcma.frontend.Feedback.FeedbackFragment();
+            case 4:
                 return new vn.edu.usth.mcma.frontend.Personal.PersonalFragment();
             default:
                 return new HomeFragment();
@@ -30,7 +32,6 @@ public class Fragment_changing extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-
-        return 4;
+        return 5;
     }
 }

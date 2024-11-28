@@ -232,6 +232,31 @@
                         android:textSize="20sp" />
                 </LinearLayout>
 
+                <!--Feedback-->
+                <LinearLayout
+                    android:id="@+id/feedback_side_navigation"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/edit_group_box">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="25dp"
+                        android:src="@drawable/feedback" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="Feedback"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
                 <!-- Personal Information -->
                 <LinearLayout
                     android:id="@+id/personal_side_navigation"

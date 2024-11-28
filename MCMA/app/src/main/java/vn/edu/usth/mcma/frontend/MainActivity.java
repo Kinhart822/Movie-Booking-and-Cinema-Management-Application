@@ -75,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
                         bottomNavigationView.getMenu().findItem(R.id.store_page).setChecked(true);
                         break;
                     case 3:
+                        bottomNavigationView.getMenu().findItem(R.id.feedback_page).setChecked(true);
+                        break;
+                    case 4:
                         bottomNavigationView.getMenu().findItem(R.id.personal_page).setChecked(true);
                         break;
                 }
@@ -101,8 +104,12 @@ public class MainActivity extends AppCompatActivity {
                     mviewPager.setCurrentItem(2, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.personal_page) {
+                if (item.getItemId() == R.id.feedback_page) {
                     mviewPager.setCurrentItem(3, true);
+                    return true;
+                }
+                if (item.getItemId() == R.id.personal_page) {
+                    mviewPager.setCurrentItem(4, true);
                     return true;
                 }
                 return false;
@@ -121,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    // close icon to home page in personal
+    // Chỗ này để chuyển sang fragment khác vẫn giữ nguyên bottom navigation
     public void close_to_home_page(){
         mviewPager.setCurrentItem(0,true);
     }
@@ -133,7 +140,10 @@ public class MainActivity extends AppCompatActivity {
     public void close_to_store_page() {
         mviewPager.setCurrentItem(2, true);
     }
-    public void close_to_personal_page() {
+    public void close_to_feedback_page() {
         mviewPager.setCurrentItem(3, true);
+    }
+    public void close_to_personal_page() {
+        mviewPager.setCurrentItem(4, true);
     }
 }

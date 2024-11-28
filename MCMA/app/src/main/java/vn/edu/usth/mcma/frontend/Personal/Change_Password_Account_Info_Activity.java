@@ -45,7 +45,6 @@ public class Change_Password_Account_Info_Activity extends AppCompatActivity {
         RetrofitService retrofitService = new RetrofitService(this);
         UpdatePasswordAPI updatePasswordAPI = retrofitService.getRetrofit().create(UpdatePasswordAPI.class);
 
-
         button_UpdatePass = findViewById(R.id.btn_updatepass);
         button_UpdatePass.setOnClickListener(view -> {
             String currentPass = editCurrent_pass.getText().toString().trim();
@@ -88,10 +87,6 @@ public class Change_Password_Account_Info_Activity extends AppCompatActivity {
                     Logger.getLogger(Change_Password_Account_Info_Activity.class.getName()).log(Level.SEVERE, null, t);
                 }
             });
-
-
-
-
         });
 
         ImageButton backButton = findViewById(R.id.change_password_back_button);
