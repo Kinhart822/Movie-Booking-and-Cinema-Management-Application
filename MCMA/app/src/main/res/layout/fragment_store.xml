@@ -127,14 +127,14 @@
                     android:id="@+id/total_price_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Total prize:"
+                    android:text="Total price:"
                     android:textSize="16sp"/>
 
                 <Button
                     android:id="@+id/checkout_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Hoàn tất thanh toán"
+                    android:text="Complete payment"
                     android:enabled="false"
                     android:layout_marginTop="8dp"/>
             </LinearLayout>

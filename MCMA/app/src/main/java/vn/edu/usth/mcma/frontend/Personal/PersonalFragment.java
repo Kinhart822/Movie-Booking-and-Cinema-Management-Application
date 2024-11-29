@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.frontend.Personal;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -9,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -26,7 +28,7 @@ public class PersonalFragment extends Fragment {
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(getActivity() instanceof vn.edu.usth.mcma.frontend.MainActivity){
+                if (getActivity() instanceof vn.edu.usth.mcma.frontend.MainActivity) {
                     ((vn.edu.usth.mcma.frontend.MainActivity) getActivity()).close_to_home_page();
                 }
             }
@@ -45,7 +47,7 @@ public class PersonalFragment extends Fragment {
         to_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(requireContext(),vn.edu.usth.mcma.frontend.Personal.Account_Information_Activity.class );
+                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Personal.Account_Information_Activity.class);
                 startActivity(i);
             }
         });
@@ -54,7 +56,7 @@ public class PersonalFragment extends Fragment {
         to_changepass_account.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(requireContext(),vn.edu.usth.mcma.frontend.Personal.Change_Password_Account_Info_Activity.class );
+                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Personal.Change_Password_Account_Info_Activity.class);
                 startActivity(i);
             }
         });
@@ -63,7 +65,7 @@ public class PersonalFragment extends Fragment {
         to_booking_history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(requireContext(),vn.edu.usth.mcma.frontend.Personal.Booking_History_Activity.class );
+                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Personal.Booking_History_Activity.class);
                 startActivity(i);
             }
         });
@@ -72,7 +74,7 @@ public class PersonalFragment extends Fragment {
         to_feedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(requireContext(), ViewFeedback_Activity.class);
+                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Personal.ViewFeedback_Activity.class);
                 startActivity(i);
             }
         });
@@ -81,15 +83,41 @@ public class PersonalFragment extends Fragment {
         logout_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment loginFragment = new vn.edu.usth.mcma.frontend.Login.LoginFragment();
-                FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(android.R.id.content, loginFragment);
-                fragmentTransaction.commit();
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_logout, null);
 
+                Button confirmButton = dialogView.findViewById(R.id.btn_confirm_logout);
+                Button cancelButton = dialogView.findViewById(R.id.btn_cancel_logout);
+
+                builder.setView(dialogView);
+                AlertDialog dialog = builder.create();
+
+                confirmButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Fragment loginFragment = new vn.edu.usth.mcma.frontend.Login.LoginFragment();
+                        FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(android.R.id.content, loginFragment);
+                        fragmentTransaction.commit();
+
+                        // Đóng dialog
+                        dialog.dismiss();
+                    }
+                });
+
+                cancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Đóng dialog
+                        dialog.dismiss();
+                    }
+                });
+
+                // Hiển thị dialog
+                dialog.show();
             }
         });
 
         return v;
     }
-
 }

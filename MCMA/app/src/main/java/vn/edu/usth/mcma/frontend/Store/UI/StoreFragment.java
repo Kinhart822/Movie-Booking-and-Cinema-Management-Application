@@ -208,7 +208,7 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
     private void updateTotalPrice(double total) {
         PriceCalculator.PriceResult result = PriceCalculator.calculateTotalPrice(comboAdapter.getComboItems());
         String formattedPrice = PriceCalculator.formatPrice(result.getTotal());
-        totalPriceText.setText(String.format("Tổng tiền (đã bao gồm phụ thu): %s", formattedPrice));
+        totalPriceText.setText(String.format("Total Price(surcharge included): %s", formattedPrice));
         checkoutButton.setEnabled(result.getTotal() > 0);
     }
 
