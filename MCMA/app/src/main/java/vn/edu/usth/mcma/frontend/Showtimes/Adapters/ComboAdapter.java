@@ -1,6 +1,7 @@
-package vn.edu.usth.mcma.frontend.Store.Adapters;
+package vn.edu.usth.mcma.frontend.Showtimes.Adapters;
 
 import android.content.res.Resources;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Locale;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.Store.Models.ComboItem;
+import vn.edu.usth.mcma.frontend.Showtimes.Models.ComboItem;
 
 public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHolder> {
     private List<ComboItem> comboItems;
@@ -41,7 +42,7 @@ public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHol
     @Override
     public ComboViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.store_item_combo, parent, false);
+                .inflate(R.layout.select_item_combo, parent, false);
         return new ComboViewHolder(view);
     }
 
@@ -73,8 +74,12 @@ public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHol
         for (ComboItem item : comboItems) {
             total += item.getPrice() * item.getQuantity();
         }
+
+        // Add null check for listener
         if (listener != null) {
             listener.onTotalPriceChanged(total);
+        } else {
+            Log.w("ComboAdapter", "Total price listener is null");
         }
     }
 
@@ -117,4 +122,3 @@ public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHol
         }
     }
 }
-

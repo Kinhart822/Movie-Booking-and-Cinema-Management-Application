@@ -64,9 +64,8 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
         noDataContainer = view.findViewById(R.id.no_data_container);
         buttonTheater = view.findViewById(R.id.theater_button);
         comboRecyclerView = view.findViewById(R.id.combo_recycler_view);
-        /*
         totalPriceText = view.findViewById(R.id.total_price_text);
-        checkoutButton = view.findViewById(R.id.checkout_button); */
+        checkoutButton = view.findViewById(R.id.checkout_button);
         comboMenuContainer = view.findViewById(R.id.combo_menu_container);
         noDataImage = view.findViewById(R.id.no_data_image);
         noDataText = view.findViewById(R.id.no_data_text);
@@ -123,11 +122,11 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
     private void setupComboList() {
         List<ComboItem> comboItems = getComboItems();
         comboAdapter = new ComboAdapter(comboItems);
-        /* comboAdapter.setTotalPriceChangedListener(this::updateTotalPrice); */
+        comboAdapter.setTotalPriceChangedListener(this::updateTotalPrice);
         comboRecyclerView.setAdapter(comboAdapter);
         comboRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
     }
-    /*
+
     private void updateTotalPrice(double total) {
 
         PriceCalculator.PriceResult result = PriceCalculator.calculateTotalPrice(comboAdapter.getComboItems());
@@ -135,8 +134,6 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
         totalPriceText.setText(String.format("Tổng tiền (đã bao gồm phụ thu): %s", formattedPrice));
         checkoutButton.setEnabled(result.getTotal() > 0);
     }
-    */
-
 
     private void setupCheckoutButton() {
         /* checkoutButton.setOnClickListener(v -> {

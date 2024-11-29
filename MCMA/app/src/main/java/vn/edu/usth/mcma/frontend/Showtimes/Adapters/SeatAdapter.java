@@ -20,7 +20,7 @@ import vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType;
 public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder> {
     private List<List<Seat>> seatLayout;
     private OnSeatSelectedListener listener;
-    private List<Seat> selectedSeats = new ArrayList<>();
+    private Set<Seat> selectedSeats = new HashSet<>();
 
     public interface OnSeatSelectedListener {
         void onSeatSelected(Seat seat);
@@ -41,15 +41,15 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull SeatViewHolder holder, int position) {
-        int rowIndex = position / 17;
-        int seatIndexInRow = position % 17;
+        int rowIndex = position / seatLayout.get(0).size();
+        int seatIndexInRow = position % seatLayout.get(0).size();
 
         if (rowIndex < seatLayout.size() && seatIndexInRow < seatLayout.get(rowIndex).size()) {
             Seat seat = seatLayout.get(rowIndex).get(seatIndexInRow);
 
-            // Set seat label
-            holder.seatTextView.setText(generateSeatLabel(rowIndex, seatIndexInRow));
-
+            // Modify seat label generation to include row letter for most rows
+            String seatLabel = generateSeatLabel(rowIndex, seatIndexInRow);
+            holder.seatTextView.setText(seatLabel);
             // Set background based on seat type and selection state
             updateSeatBackground(holder, seat);
 
@@ -85,21 +85,29 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
         listener.onSeatSelected(seat);
     }
 
+    public Set<Seat> getSelectedSeats() {
+        return selectedSeats;
+    }
+
     private int getPosition(Seat seat) {
         for (int row = 0; row < seatLayout.size(); row++) {
             int index = seatLayout.get(row).indexOf(seat);
             if (index != -1) {
-                return row * 17 + index;
+                return row * seatLayout.get(0).size() + index;
             }
         }
         return -1;
     }
 
     private String generateSeatLabel(int rowIndex, int seatIndexInRow) {
+        // For the last row (couple row), handle differently
+        if (rowIndex == seatLayout.size() - 1) {
+            return "H-" + (seatIndexInRow + 1);
+        }
+
+        // For other rows, use row letter and seat number
         char rowLetter = (char) ('A' + rowIndex);
-        return (rowIndex == seatLayout.size() - 1) ?
-                rowLetter + "-" + (seatIndexInRow + 1) :
-                String.valueOf(seatIndexInRow + 1);
+        return rowLetter + String.valueOf(seatIndexInRow + 1);
     }
 
     @Override
