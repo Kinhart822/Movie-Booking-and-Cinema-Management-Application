@@ -20,10 +20,12 @@ public class ListFoodAndDrinkToOrderingResponse {
     private List<String> imageUrlFoodList;
     private List<String> descriptionFoodList;
     private List<SizeFoodOrDrink> sizeFoodList;
+    private List<Double> foodPriceList;
 
     private List<Integer> drinkIds;
     private List<String> drinkNameList;
     private List<String> imageUrlDrinkList;
     private List<String> descriptionDrinkList;
     private List<SizeFoodOrDrink> sizeDrinkList;
+    private List<Double> drinkPriceList;
 }

@@ -406,7 +406,6 @@ public class BookingServiceImpl implements BookingService {
         }
         List<AvailableSeatResponse> seatResponses = new ArrayList<>();
 
-
         for (Seat seat : availableSeats) {
             AvailableSeatResponse seatResponse = new AvailableSeatResponse(
                     screen.getName(),
@@ -414,7 +413,8 @@ public class BookingServiceImpl implements BookingService {
                     seat.getName(),
                     seat.getColumn(),
                     seat.getRow(),
-                    seat.getSeatType().getName()
+                    seat.getSeatType().getName(),
+                    seat.getSeatType().getPrice()
             );
             seatResponses.add(seatResponse);
         }
@@ -441,12 +441,14 @@ public class BookingServiceImpl implements BookingService {
         List<String> imageUrlFoodList = new ArrayList<>();
         List<String> descriptionFoodList = new ArrayList<>();
         List<SizeFoodOrDrink> sizeFoodList = new ArrayList<>();
+        List<Double> foodPriceList = new ArrayList<>();
 
         List<Integer> drinkIds = new ArrayList<>();
         List<String> drinkNameList = new ArrayList<>();
         List<String> imageUrlDrinkList = new ArrayList<>();
         List<String> descriptionDrinkList = new ArrayList<>();
         List<SizeFoodOrDrink> sizeDrinkList = new ArrayList<>();
+        List<Double> drinkPriceList = new ArrayList<>();
 
         for (Food food : foods) {
             foodIds.add(food.getId());
@@ -454,6 +456,7 @@ public class BookingServiceImpl implements BookingService {
             imageUrlFoodList.add(food.getImageUrl());
             descriptionFoodList.add(food.getDescription());
             sizeFoodList.add(food.getSize());
+            foodPriceList.add(food.getPrice());
         }
 
         for (Drink drink : drinks) {
@@ -462,6 +465,7 @@ public class BookingServiceImpl implements BookingService {
             imageUrlDrinkList.add(drink.getImageUrl());
             descriptionDrinkList.add(drink.getDescription());
             sizeDrinkList.add(drink.getSize());
+            drinkPriceList.add(drink.getPrice());
         }
 
         ListFoodAndDrinkToOrderingResponse listFoodAndDrinkToOrderingResponse = new ListFoodAndDrinkToOrderingResponse(
@@ -471,11 +475,13 @@ public class BookingServiceImpl implements BookingService {
                 imageUrlFoodList,
                 descriptionFoodList,
                 sizeFoodList,
+                foodPriceList,
                 drinkIds,
                 drinkNameList,
                 imageUrlDrinkList,
                 descriptionDrinkList,
-                sizeDrinkList
+                sizeDrinkList,
+                drinkPriceList
         );
 
         return List.of(listFoodAndDrinkToOrderingResponse);
@@ -853,6 +859,10 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingRequest.getBookingId())));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found for ID: %d".formatted(userId)));
+        List<MovieGenre> movieGenres = movieGenreRepository.findMovieGenresByMovie(booking.getMovie().getId());
+        if (movieGenres.isEmpty()) {
+            throw new IllegalArgumentException("Movie does not have any genre.");
+        }
 
         if (isBookingIncomplete(booking)) {
             deleteBooking(booking.getId(), userId);
@@ -917,6 +927,9 @@ public class BookingServiceImpl implements BookingService {
         return new BookingResponse(
                 booking.getBookingNo(),
                 booking.getMovie().getName(),
+                movieGenres.stream()
+                        .map(movieGenre -> movieGenre.getMovieGenreDetail().getName())
+                        .toList(),
                 booking.getMovie().getImageUrl(),
                 booking.getCity().getName(),
                 booking.getCinema().getName(),

@@ -47,6 +47,9 @@ public class ViewServiceImpl implements ViewService {
     @Autowired
     private BookingRepository bookingRepository;
 
+    @Autowired
+    private  MovieGenreRepository movieGenreRepository;
+
     @Override
     public ViewCityResponse getAvailableCities() {
         List<City> cities = cityRepository.findAll();
@@ -145,12 +148,14 @@ public class ViewServiceImpl implements ViewService {
         List<String> imageUrlFoodList = new ArrayList<>();
         List<String> descriptionFoodList = new ArrayList<>();
         List<SizeFoodOrDrink> sizeFoodList = new ArrayList<>();
+        List<Double> priceFoodList = new ArrayList<>();
 
         List<Integer> drinkIds = new ArrayList<>();
         List<String> drinkNameList = new ArrayList<>();
         List<String> imageUrlDrinkList = new ArrayList<>();
         List<String> descriptionDrinkList = new ArrayList<>();
         List<SizeFoodOrDrink> sizeDrinkList = new ArrayList<>();
+        List<Double> priceDrinkList = new ArrayList<>();
 
         for (Food food : foodList) {
             foodIds.add(food.getId());
@@ -158,6 +163,7 @@ public class ViewServiceImpl implements ViewService {
             imageUrlFoodList.add(food.getImageUrl());
             descriptionFoodList.add(food.getDescription());
             sizeFoodList.add(food.getSize());
+            priceFoodList.add(food.getPrice());
         }
 
         for (Drink drink : drinkList) {
@@ -166,6 +172,7 @@ public class ViewServiceImpl implements ViewService {
             imageUrlDrinkList.add(drink.getImageUrl());
             descriptionDrinkList.add(drink.getDescription());
             sizeDrinkList.add(drink.getSize());
+            priceDrinkList.add(drink.getPrice());
         }
 
         ListFoodAndDrinkToOrderingResponse response = new ListFoodAndDrinkToOrderingResponse(
@@ -175,11 +182,13 @@ public class ViewServiceImpl implements ViewService {
                 imageUrlFoodList,
                 descriptionFoodList,
                 sizeFoodList,
+                priceFoodList,
                 drinkIds,
                 drinkNameList,
                 imageUrlDrinkList,
                 descriptionDrinkList,
-                sizeDrinkList
+                sizeDrinkList,
+                priceDrinkList
         );
 
         return List.of(response);
@@ -325,8 +334,12 @@ public class ViewServiceImpl implements ViewService {
         }
         List<BookingResponse> bookingResponses = new ArrayList<>();
 
-
         for (Booking book : bookings) {
+            List<MovieGenre> movieGenres = movieGenreRepository.findMovieGenresByMovie(book.getMovie().getId());
+            if (movieGenres.isEmpty()) {
+                throw new IllegalArgumentException("Movie does not have any genre.");
+            }
+
             BookingResponse bookResponse = new BookingResponse();
             bookResponse.setBookingNo(book.getBookingNo());
             bookResponse.setMovieName(book.getMovie().getName());

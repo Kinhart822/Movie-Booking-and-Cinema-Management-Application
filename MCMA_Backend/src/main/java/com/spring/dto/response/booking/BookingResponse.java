@@ -14,6 +14,7 @@ import java.util.List;
 public class BookingResponse {
     private String bookingNo;
     private String movieName;
+    private List<String> movieGenre;
     private String imageUrlMovie;
     private String cityName;
     private String cinemaName;
