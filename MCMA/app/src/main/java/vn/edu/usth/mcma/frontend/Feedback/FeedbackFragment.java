@@ -22,15 +22,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.MovieRespondResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetAllBookingAPI;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 import vn.edu.usth.mcma.frontend.MainActivity;
+import vn.edu.usth.mcma.frontend.Personal.ViewFeedback_Activity;
 
 
 public class FeedbackFragment extends Fragment {
     private DrawerLayout mDrawerLayout;
     private RecyclerView recyclerView;
     private RatingMovie_Adapter adapter;
-    private List<RatingMovie_Item> items;
+    private List<BookingResponse> items;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,12 +54,16 @@ public class FeedbackFragment extends Fragment {
         recyclerView = v.findViewById(R.id.recyclerview_feedbackmovie);
         items = new ArrayList<>();
 
-        items.add(new RatingMovie_Item("Wolverine", "Action", R.drawable.movie4));
-        items.add(new RatingMovie_Item("IronMan", "Drama", R.drawable.movie13));
-        items.add(new RatingMovie_Item("Wicked", "Comedy", R.drawable.movie12));
+        adapter = new RatingMovie_Adapter(requireContext(), items);
+
+
+
 
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        recyclerView.setAdapter(new RatingMovie_Adapter(requireContext(), items));
+        recyclerView.setAdapter(adapter);
+
+
+        fetchBookingList();
 
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,5 +134,28 @@ public class FeedbackFragment extends Fragment {
         });
 
         return v;
+    }
+
+    private void fetchBookingList() {
+        RetrofitService retrofitService = new RetrofitService(requireContext());
+        GetAllBookingAPI getAllBookingAPI = retrofitService.getRetrofit().create(GetAllBookingAPI.class);
+        getAllBookingAPI.getBookingHistory().enqueue(new Callback<List<BookingResponse>>() {
+            @Override
+            public void onResponse(Call<List<BookingResponse>> call, Response<List<BookingResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Toast.makeText(requireActivity(), "Here's your feedbacks", Toast.LENGTH_SHORT).show();
+                    items.clear();
+                    items.addAll(response.body());
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(requireActivity(), "Failed to load feedbacks", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<BookingResponse>> call, Throwable t) {
+                Toast.makeText(requireActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
