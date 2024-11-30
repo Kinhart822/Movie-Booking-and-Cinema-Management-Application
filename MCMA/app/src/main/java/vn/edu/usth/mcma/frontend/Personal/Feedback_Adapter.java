@@ -10,13 +10,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.MovieRespondResponse;
 
 public class Feedback_Adapter extends RecyclerView.Adapter<Feedback_ViewHolder> {
 
     Context context;
-    List<Feedback_Item> items;
+//    List<Feedback_Item> items;
+    private final List<MovieRespondResponse> items;
 
-    public Feedback_Adapter(Context context, List<Feedback_Item> items) {
+    public Feedback_Adapter(Context context, List<MovieRespondResponse> items) {
         this.context = context;
         this.items = items;
     }
@@ -29,9 +32,11 @@ public class Feedback_Adapter extends RecyclerView.Adapter<Feedback_ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull Feedback_ViewHolder holder, int position) {
-        holder.nameView.setText(items.get(position).getMovie_name());
-        holder.ratingView.setText(items.get(position).getRating_star());
-        holder.commentView.setText(items.get(position).getComment());
+        MovieRespondResponse movieRespondResponse = items.get(position);
+        holder.nameView.setText(movieRespondResponse.getMovieName());
+        holder.ratingView.setText(String.valueOf(movieRespondResponse.getRatingStar()));
+        holder.commentView.setText(movieRespondResponse.getContent());
+
     }
 
     @Override
