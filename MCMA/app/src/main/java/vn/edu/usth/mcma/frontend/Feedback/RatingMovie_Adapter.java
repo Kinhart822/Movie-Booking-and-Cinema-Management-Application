@@ -52,7 +52,6 @@ public class RatingMovie_Adapter extends RecyclerView.Adapter<RatingMovie_ViewHo
             intent.putExtra("movie_name", bookingResponse.getMovieName());
             intent.putExtra("movie_type", bookingResponse.getBookingNo());
             intent.putExtra("movie_image", bookingResponse.getImageUrlMovie());
-
             context.startActivity(intent);
         });
     }
