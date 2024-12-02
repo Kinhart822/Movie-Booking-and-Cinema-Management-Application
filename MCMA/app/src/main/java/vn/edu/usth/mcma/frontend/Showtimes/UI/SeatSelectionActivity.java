@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Seat;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
+import vn.edu.usth.mcma.frontend.Showtimes.Utils.PriceCalculator;
 
 public class SeatSelectionActivity extends AppCompatActivity {
     private RecyclerView seatRecyclerView;
@@ -58,6 +60,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
         setupSeatLayout();
         setupRecyclerView();
         setupCheckoutButton();
+        setupBackButton();
     }
 
     private void setupTheaterInfo() {
@@ -158,21 +161,23 @@ public class SeatSelectionActivity extends AppCompatActivity {
 
             // Ensure at least one seat is selected
             if (selectedSeats.isEmpty()) {
-                // Show an error message or dialog
                 Toast.makeText(this, "Please select at least one seat", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Get the current total price
-            String currentPrice = ((TextView)findViewById(R.id.text_price_)).getText().toString();
-
+            // Calculate the base seat price
+            int seatPriceTotal = calculateTotalPrice(selectedSeats);
+            String seatPriceFormatted = formatCurrency(seatPriceTotal);
             // Convert Set to ArrayList for Parcelable
             ArrayList<Seat> seatsList = new ArrayList<>(selectedSeats);
 
             // Navigate to ComboSelectionActivity
             Intent intent = new Intent(this, ComboSelectionActivity.class);
-            intent.putExtra(ComboSelectionActivity.EXTRA_SEAT_PRICE, currentPrice);
+            intent.putExtra(ComboSelectionActivity.EXTRA_SEAT_PRICE, seatPriceTotal);
+            intent.putExtra(ComboSelectionActivity.EXTRA_SEAT_COUNT, seatsList.size());
             intent.putParcelableArrayListExtra(ComboSelectionActivity.EXTRA_SELECTED_SEATS, seatsList);
+            intent.putExtra(ComboSelectionActivity.EXTRA_THEATER, selectedTheater);
+            intent.putExtra(ComboSelectionActivity.EXTRA_MOVIE, selectedMovie);
             startActivity(intent);
         });
     }
@@ -180,7 +185,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
     // Price calculation methods
     private void updateSelectedSeatsDisplay() {
         TextView noOfSeatsTV = findViewById(R.id.no_of_seats);
-        TextView priceTotalTV = findViewById(R.id.text_price_);
+        TextView seatPriceTotalTV = findViewById(R.id.seat_price_total);
         Button checkoutButton = findViewById(R.id.checkout_button);
 
         // Get selected seats from adapter
@@ -190,12 +195,12 @@ public class SeatSelectionActivity extends AppCompatActivity {
         int seatCount = selectedSeats.size();
         noOfSeatsTV.setText(seatCount + " ghế");
 
-        // Calculate price
-        int totalPrice = calculateTotalPrice(selectedSeats);
-        priceTotalTV.setText(formatCurrency(totalPrice));
+        // Calculate seat price
+        int seatPriceTotal = calculateTotalPrice(selectedSeats);
+        seatPriceTotalTV.setText(formatCurrency(seatPriceTotal));
 
         // Update checkout button color based on selection
-        if (seatCount > 0 && totalPrice > 0) {
+        if (seatCount > 0 && seatPriceTotal > 0) {
             checkoutButton.setBackgroundResource(R.drawable.rounded_active_background);
             checkoutButton.setEnabled(true);
         } else {
@@ -224,6 +229,12 @@ public class SeatSelectionActivity extends AppCompatActivity {
 
     private String formatCurrency(int price) {
         return String.format("%,d đ", price);
+    }
+
+
+    private void setupBackButton() {
+        ImageButton backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(v -> onBackPressed());
     }
 
     private void setupRecyclerView() {

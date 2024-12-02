@@ -34,7 +34,7 @@
                 android:id="@+id/text_seat_selection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Seat Selection"
+                android:text="Combo Selection"
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -182,12 +182,25 @@
                     android:layout_marginStart="24dp" />
 
                 <TextView
-                    android:id="@+id/text_price_"
+                    android:id="@+id/combo_price_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0đ"
+                    android:textColor="@color/white"
+                    android:layout_marginStart="1dp"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
+                    android:layout_marginTop="8dp"
+                    android:textSize="14sp" />
+
+
+                <TextView
+                    android:id="@+id/total_price_0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0d"
                     android:textColor="@color/white"
-                    android:layout_marginStart="140dp"
+                    android:layout_marginStart="74dp"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="4dp"
                     android:layout_marginTop="8dp"

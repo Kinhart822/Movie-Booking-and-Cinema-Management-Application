@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.ComboItem;
@@ -27,13 +28,8 @@ public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHol
 
     // Custom listener interface for price updates
     public interface OnTotalPriceChangedListener {
-        void onTotalPriceChanged(double total);
+        void onTotalPriceChanged(List<ComboItem> comboItems);
     }
-
-    public List<ComboItem> getComboItems() {
-        return comboItems;
-    }
-
     public void setTotalPriceChangedListener(OnTotalPriceChangedListener listener) {
         this.listener = listener;
     }
@@ -57,32 +53,23 @@ public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHol
         return comboItems != null ? comboItems.size() : 0;
     }
 
-    // Updates the quantity of a ComboItem and recalculates the total price
+    public List<ComboItem> getSelectedComboItems() {
+        return comboItems.stream()
+                .filter(item -> item.getQuantity() > 0)
+                .collect(Collectors.toList());
+    }
 
+    // Updates the quantity of a ComboItem and recalculates the total price
     private void updateQuantity(int position, int delta) {
 
         ComboItem item = comboItems.get(position);
         int newQuantity = Math.max(0, item.getQuantity() + delta);
         item.setQuantity(newQuantity);
         notifyItemChanged(position);
-        calculateTotalPrice();
-    }
-
-    // Calculates the total price based on the quantities of ComboItem
-    private void calculateTotalPrice() {
-        double total = 0;
-        for (ComboItem item : comboItems) {
-            total += item.getPrice() * item.getQuantity();
-        }
-
-        // Add null check for listener
         if (listener != null) {
-            listener.onTotalPriceChanged(total);
-        } else {
-            Log.w("ComboAdapter", "Total price listener is null");
+            listener.onTotalPriceChanged(comboItems);
         }
     }
-
     // ViewHolder class for ComboItem
     class ComboViewHolder extends RecyclerView.ViewHolder {
         private TextView nameText;
