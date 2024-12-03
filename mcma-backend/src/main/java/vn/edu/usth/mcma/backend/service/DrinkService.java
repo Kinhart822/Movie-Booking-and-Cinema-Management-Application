@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import vn.edu.usth.mcma.backend.dao.Drink;
+import vn.edu.usth.mcma.backend.entity.Drink;
 import vn.edu.usth.mcma.backend.dto.CommonResponse;
 import vn.edu.usth.mcma.backend.dto.DrinkRequest;
 import vn.edu.usth.mcma.backend.repository.DrinkRepository;

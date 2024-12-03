@@ -9,7 +9,7 @@ import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.dto.CinemaRequest;
 import vn.edu.usth.mcma.backend.repository.CinemaRepository;
 import vn.edu.usth.mcma.backend.dto.CommonResponse;
-import vn.edu.usth.mcma.backend.dao.Cinema;
+import vn.edu.usth.mcma.backend.entity.Cinema;
 
 import java.time.Instant;
 import java.util.List;

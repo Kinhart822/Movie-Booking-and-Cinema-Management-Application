@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.dto.CityRequest;
 import vn.edu.usth.mcma.backend.service.CityService;
 import vn.edu.usth.mcma.backend.dto.CommonResponse;
-import vn.edu.usth.mcma.backend.dao.City;
+import vn.edu.usth.mcma.backend.entity.City;
 
 import java.util.List;
 

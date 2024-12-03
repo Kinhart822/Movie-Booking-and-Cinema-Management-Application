@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.dto.CinemaRequest;
 import vn.edu.usth.mcma.backend.service.CinemaService;
 import vn.edu.usth.mcma.backend.dto.CommonResponse;
-import vn.edu.usth.mcma.backend.dao.Cinema;
+import vn.edu.usth.mcma.backend.entity.Cinema;
 
 import java.util.List;
 

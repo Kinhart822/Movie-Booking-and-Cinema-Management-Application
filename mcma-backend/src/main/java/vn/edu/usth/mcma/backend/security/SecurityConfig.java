@@ -48,14 +48,19 @@ public class SecurityConfig {
                 .cors(corsCustomizer())
                 .csrf(csrfCustomizer())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers(
+                                "/swagger-ui.html",
+                                "/v3/api-docs",
+                                "/api/v1/auth/sign-in",
+                                "/api/v1/auth/sign-up",
+                                "/api/v1/auth/reset-password/**",
+                                "/api/v1/user/search-movie-by-name",
+                                "/api/v1/user/search-movie-by-genre",
+                                "/api/v1/user/search-movie-by-movie-genre-name",
+                                "/api/v1/user/booking/**",
+                                "/api/v1/user/view/**").permitAll()
                         .requestMatchers("/api/v1/admin").hasAuthority(UserType.ADMIN.name())
                         .requestMatchers("/api/v1/user").hasAuthority(UserType.USER.name())
-                        .requestMatchers("/api/v1/user/search-movie-by-name").permitAll()
-                        .requestMatchers("/api/v1/user/search-movie-by-genre").permitAll()
-                        .requestMatchers("/api/v1/user/search-movie-by-movie-genre-name").permitAll()
-                        .requestMatchers("/api/v1/user/booking/**").permitAll()
-                        .requestMatchers("/api/v1/user/view/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

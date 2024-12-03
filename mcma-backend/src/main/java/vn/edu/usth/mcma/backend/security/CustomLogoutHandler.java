@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Component;
-import vn.edu.usth.mcma.backend.dao.Token;
+import vn.edu.usth.mcma.backend.entity.Token;
 import vn.edu.usth.mcma.backend.repository.TokenRepository;
 import vn.edu.usth.mcma.backend.service.TokenService;
 

@@ -22,3 +22,6 @@ spring:
       mail.smtp:
         auth: true
         starttls.enable: true
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

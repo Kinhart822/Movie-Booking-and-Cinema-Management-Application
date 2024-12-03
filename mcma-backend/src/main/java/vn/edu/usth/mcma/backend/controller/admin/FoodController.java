@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.usth.mcma.backend.dao.Food;
+import vn.edu.usth.mcma.backend.entity.Food;
 import vn.edu.usth.mcma.backend.dto.FoodRequest;
 import vn.edu.usth.mcma.backend.dto.CommonResponse;
 import vn.edu.usth.mcma.backend.service.FoodService;

@@ -3,7 +3,7 @@ package vn.edu.usth.mcma.backend.service;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import vn.edu.usth.mcma.backend.dao.Token;
+import vn.edu.usth.mcma.backend.entity.Token;
 import vn.edu.usth.mcma.backend.repository.TokenRepository;
 
 @Service

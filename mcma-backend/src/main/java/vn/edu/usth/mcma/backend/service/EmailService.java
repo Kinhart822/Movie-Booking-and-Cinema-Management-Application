@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import vn.edu.usth.mcma.backend.dao.User;
+import vn.edu.usth.mcma.backend.entity.User;
 
 @Transactional
 @Service

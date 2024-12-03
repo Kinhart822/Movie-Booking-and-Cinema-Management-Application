@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import vn.edu.usth.mcma.backend.dao.Food;
+import vn.edu.usth.mcma.backend.entity.Food;
 import vn.edu.usth.mcma.backend.dto.FoodRequest;
 import vn.edu.usth.mcma.backend.dto.CommonResponse;
 import vn.edu.usth.mcma.backend.repository.FoodRepository;

@@ -6,7 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.usth.mcma.backend.dao.User;
+import vn.edu.usth.mcma.backend.entity.User;
 import vn.edu.usth.mcma.backend.dto.*;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.service.AuthService;
@@ -28,7 +28,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth/sign-up")
-    public ResponseEntity<String> signUp(@RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<CommonResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
         return ResponseEntity.ok(authService.signUp(signUpRequest));
     }
 
@@ -36,7 +36,7 @@ public class AuthController {
     public ResponseEntity<JwtAuthResponse> signIn(@RequestBody SignInRequest signInRequest) {
         return ResponseEntity.ok(authService.signIn(signInRequest));
     }
-
+    // TODO
     @PostMapping("/auth/refresh")
     public ResponseEntity<JwtAuthResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest) {
         return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest));
@@ -54,13 +54,13 @@ public class AuthController {
     public ResponseEntity<CommonResponse> resetPasswordFinish(@RequestBody @Valid ResetPasswordFinish finish) {
         return ResponseEntity.ok(authService.resetPasswordFinish(finish));
     }
-
+    // TODO
     @PutMapping("/auth/update-account/{userId}")
     public ResponseEntity<String> updateAccount(@PathVariable Long userId, @RequestBody UpdateAccountRequest updateAccountRequest) {
         authService.updateAccount(userId, updateAccountRequest);
         return ResponseEntity.ok("Account updated successfully");
     }
-
+    // TODO
     @Transactional
     @RequestMapping(value = "/update-password", method = {RequestMethod.POST, RequestMethod.GET})
     public ResponseEntity<String> updatePassword(HttpServletRequest hsRequest,  @RequestBody UpdatePasswordRequest updatePasswordRequest) {
@@ -68,7 +68,7 @@ public class AuthController {
         authService.changeNewPassword(userId, updatePasswordRequest);
         return ResponseEntity.ok("Password updated successfully");
     }
-
+    // TODO
     @DeleteMapping("/delete-account/{userId}")
     public ResponseEntity<String> deleteAccount(@PathVariable Long userId) {
         authService.deleteAccount(userId);

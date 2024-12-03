@@ -9,7 +9,7 @@ import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.dto.CityRequest;
 import vn.edu.usth.mcma.backend.repository.CityRepository;
 import vn.edu.usth.mcma.backend.dto.CommonResponse;
-import vn.edu.usth.mcma.backend.dao.City;
+import vn.edu.usth.mcma.backend.entity.City;
 
 import java.time.Instant;
 import java.util.List;
