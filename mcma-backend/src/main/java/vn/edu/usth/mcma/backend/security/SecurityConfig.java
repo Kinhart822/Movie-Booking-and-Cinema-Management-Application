@@ -49,8 +49,8 @@ public class SecurityConfig {
                 .csrf(csrfCustomizer())
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(
-                                "/swagger-ui.html",
-                                "/v3/api-docs",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
                                 "/api/v1/auth/sign-in",
                                 "/api/v1/auth/sign-up",
                                 "/api/v1/auth/reset-password/**",

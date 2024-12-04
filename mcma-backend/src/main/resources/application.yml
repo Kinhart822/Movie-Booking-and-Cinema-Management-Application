@@ -6,22 +6,12 @@ spring:
     username: root
     password:
   jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MariaDBDialect
-        format_sql: true
     hibernate:
       ddl-auto: validate
     show-sql: true
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: minophen.aceta114@gmail.com
-    password: jldw ofhh ymhm qbbp
-    properties:
-      mail.smtp:
-        auth: true
-        starttls.enable: true
+  web:
+    resources:
+      add-mappings: true
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
