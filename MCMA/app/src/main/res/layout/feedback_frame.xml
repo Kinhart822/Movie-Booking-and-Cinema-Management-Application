@@ -25,79 +25,113 @@
                 android:background="@drawable/tab_background"
                 android:padding="16dp">
 
-                <TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false">
+
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:text="Information"
                         android:textStyle="bold"
                         android:padding="8dp"
-                        android:background="@drawable/tab_background"/>
+                        android:gravity="center_vertical"
+                        android:background="@drawable/tab_background" />
+
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
                         android:text="Information 2"
                         android:padding="8dp"
-                        android:background="@drawable/tab_background"/>
+                        android:gravity="center_vertical"
+                        android:background="@drawable/tab_background" />
                 </TableRow>
 
-                <TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:background="@drawable/tab_background"
-                        android:padding="8dp"
+                        android:layout_weight="1"
                         android:text="Movie Name"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:padding="8dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/tab_background" />
+
                     <TextView
                         android:id="@+id/movie_name_feedback"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
                         android:padding="8dp"
+                        android:gravity="center_vertical"
                         android:background="@drawable/tab_background"
                         android:maxWidth="200dp"
                         android:maxLines="2"
                         android:ellipsize="end"
-                        tools:text="Movie name"/>
+                        tools:text="Movie name" />
                 </TableRow>
 
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false">
 
-                <TableRow>
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:text="Rating"
                         android:textStyle="bold"
                         android:padding="8dp"
-                        android:background="@drawable/tab_background"/>
+                        android:gravity="center_vertical"
+                        android:background="@drawable/tab_background" />
+
                     <TextView
                         android:id="@+id/rating_feedback"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
                         android:padding="8dp"
+                        android:gravity="center_vertical"
                         android:background="@drawable/tab_background"
-                        tools:text="Rating Stars"/>
+                        tools:text="Rating Stars" />
                 </TableRow>
 
-                <TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false">
+
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:background="@drawable/tab_background"
-                        android:padding="8dp"
+                        android:layout_weight="1"
                         android:text="Comment"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:padding="8dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/tab_background" />
+
                     <TextView
                         android:id="@+id/comment_feedback"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
                         android:padding="8dp"
+                        android:gravity="center_vertical"
                         android:background="@drawable/tab_background"
                         android:maxWidth="200dp"
                         android:maxLines="2"
                         android:ellipsize="end"
-                        tools:text="Comment"/>
+                        tools:text="Comment" />
                 </TableRow>
             </TableLayout>
 

@@ -7,16 +7,19 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.NowShowingResponse;
 
 public class NowShowing_Adapter extends RecyclerView.Adapter<NowShowing_ViewHolder> {
     private final FilmViewInterface filmViewInterface;
     private final Context context;
-    private final List<NowShowing_Item> items;
+    private final List<NowShowingResponse> items;
 
-    public NowShowing_Adapter(Context context, List<NowShowing_Item> items, FilmViewInterface filmViewInterface) {
+    public NowShowing_Adapter(Context context, List<NowShowingResponse> items, FilmViewInterface filmViewInterface) {
         this.context = context;
         this.items = items;
         this.filmViewInterface = filmViewInterface;
@@ -30,12 +33,20 @@ public class NowShowing_Adapter extends RecyclerView.Adapter<NowShowing_ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull NowShowing_ViewHolder holder, int position) {
-        NowShowing_Item item = items.get(position);
-        holder.nameView.setText(item.getName());
-        holder.typeView.setText(item.getCategory());
-        holder.timeView.setText(item.getTime());
-        holder.age_limitView.setText(item.getAge_limit());
-        holder.filmView.setImageResource(item.getFilm_image());
+        NowShowingResponse nowShowingResponse = items.get(position);
+        List<String> genres = nowShowingResponse.getMovieGenreNameList();
+        if (genres != null && !genres.isEmpty() ) {
+            holder.typeView.setText(genres.get(0)); // Use a valid index, e.g., 0 or a relevant value
+        } else {
+            holder.typeView.setText(R.string.unknown_genre); // Fallback text
+        }
+        holder.nameView.setText(nowShowingResponse.getMovieName());
+//        holder.typeView.setText(nowShowingResponse.getMovieGenreNameList().get(position));
+        holder.timeView.setText(String.format("%d min", nowShowingResponse.getMovieLength()));
+        holder.age_limitView.setText(nowShowingResponse.getPublishedDate());
+        Glide.with(context)
+                .load(nowShowingResponse.getImageUrl())
+                .into(holder.filmView);
     }
 
     @Override
