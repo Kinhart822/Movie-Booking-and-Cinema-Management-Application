@@ -84,9 +84,6 @@ public class BookingServiceImpl implements BookingService {
     private BookingTicketRepository bookingTicketRepository;
 
     @Autowired
-    private BookingSeatRepository bookingSeatRepository;
-
-    @Autowired
     private EmailService emailService;
 
     @Override
@@ -951,16 +948,6 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingRequest.getBookingId())));
         if (bookingRequest.getSeatIds() == null || bookingRequest.getSeatIds().isEmpty()) return;
 
-        double oldTotalPrice = booking.getTotalPrice();
-        double oldTotalPriceSeat = booking.getSeatList().stream()
-                .mapToDouble(draftSeat -> draftSeat.getSeatType().getPrice())
-                .sum();
-
-        for (BookingSeat bookingSeat : booking.getSeatList()) {
-            bookingSeat.setSeat(null);
-            bookingSeatRepository.delete(bookingSeat);
-        }
-
         int ticketCount = booking.getTickets().stream()
                 .mapToInt(BookingTicket::getQuantity)
                 .sum();
@@ -969,16 +956,11 @@ public class BookingServiceImpl implements BookingService {
             throw new IllegalArgumentException("The number of selected seats (%d) does not match the number of tickets (%d).".formatted(seatCount, ticketCount));
         }
 
-        Set<Integer> seatIdSet = new HashSet<>(bookingRequest.getSeatIds());
-        if (seatIdSet.size() != bookingRequest.getSeatIds().size()) {
-            throw new IllegalArgumentException("Duplicate seat IDs detected in the request.");
-        }
-
         List<Seat> selectedSeats = seatRepository.findAllById(bookingRequest.getSeatIds())
                 .stream()
                 .toList();
         if (selectedSeats.size() != seatCount) {
-            throw new IllegalArgumentException("One or more selected seats are unavailable.");
+            throw new IllegalArgumentException("The size of the updated booking list does not match the number of the size of the old booking list");
         }
         if (selectedSeats.stream().anyMatch(seat -> seat.getScreen().getId() != booking.getScreen().getId())) {
             throw new IllegalArgumentException("The selected seats do not match the specified screen!");
@@ -987,27 +969,45 @@ public class BookingServiceImpl implements BookingService {
             throw new IllegalArgumentException("Selected seats are already unavailable, please select a different seat.");
         }
 
-        if (bookingRequest.getSeatIds() != null && !bookingRequest.getSeatIds().isEmpty()) {
-            Map<Integer, BookingSeat> seatMap = new HashMap<>();
-
-            for (Seat seat : selectedSeats) {
-                BookingSeat bookingSeat = seatMap.computeIfAbsent(seat.getId(), id -> {
-                    BookingSeat newBookingSeat = new BookingSeat();
-                    newBookingSeat.setBooking(booking);
-                    newBookingSeat.setSeat(seat);
-                    newBookingSeat.setSeatType(seat.getSeatType());
-                    return newBookingSeat;
-                });
-                seat.setSeatStatus(SeatStatus.Held);
-            }
-            booking.setSeatList(new ArrayList<>(seatMap.values()));
+        List<Integer> newSeatIds = selectedSeats.stream()
+                .map(Seat::getId)
+                .sorted()
+                .toList();
+        List<Integer> oldSeatIds = booking.getSeatList().stream()
+                .map(bookingSeat -> bookingSeat.getSeat().getId())
+                .toList();
+        if (newSeatIds.equals(oldSeatIds)) {
+            throw new IllegalArgumentException("The updated booking list matches the original booking list. Please make a valid change!");
         }
-        double newTotalSeatPrice = booking.getSeatList().stream()
-                .mapToDouble(draftSeat -> draftSeat.getSeatType().getPrice())
-                .sum();
 
-        double updatedTotalPrice = oldTotalPrice - oldTotalPriceSeat + newTotalSeatPrice;
-        booking.setTotalPrice(updatedTotalPrice);
+        // Chuyển trạng thái ghế cũ thành Available
+        List<Seat> seatListChangeToAvailable = new ArrayList<>();
+        for (BookingSeat seat : booking.getSeatList()) {
+            seat.getSeat().setSeatStatus(SeatStatus.Available);
+            seatListChangeToAvailable.add(seat.getSeat());
+        }
+        seatRepository.saveAll(seatListChangeToAvailable);
+
+        // Cập nhật ghế mới và trạng thái
+        List<BookingSeat> existingBookingSeats = booking.getSeatList();
+        for (int i = 0; i < existingBookingSeats.size(); i++) {
+            BookingSeat existingBookingSeat = existingBookingSeats.get(i);
+            Seat newSeat = selectedSeats.get(i);
+
+            existingBookingSeat.setSeat(newSeat);
+            existingBookingSeat.setSeatType(newSeat.getSeatType());
+            newSeat.setSeatStatus(SeatStatus.Held);
+        }
+
+        seatRepository.saveAll(selectedSeats);
+        booking.setSeatList(existingBookingSeats);
+
+        double newTotalPrice = booking.getSeatList().stream()
+                .mapToDouble(bookingSeat -> bookingSeat.getSeat().getSeatType().getPrice())
+                .sum();
+        booking.setTotalPrice(newTotalPrice);
+
+        bookingRepository.save(booking);
     }
 
     @Override
@@ -1044,8 +1044,9 @@ public class BookingServiceImpl implements BookingService {
                 }
 
                 // Schedule the booking deletion 10 minutes after cancellation
-                ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-                scheduler.schedule(() -> deleteBooking(bookingId, userId), 10, TimeUnit.MINUTES);
+                try (ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor()) {
+                    scheduler.schedule(() -> deleteBooking(bookingId, userId), 10, TimeUnit.MINUTES);
+                }
             }
         }
     }
@@ -1092,9 +1093,9 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingId)));
 
-        if (booking.getStartDateTime().isBefore(LocalDateTime.now().plusHours(1))) {
-            throw new IllegalArgumentException("You cannot delete a booking within 1 hour of the start time.");
-        }
+//        if (booking.getStartDateTime().isBefore(LocalDateTime.now().plusHours(1))) {
+//            throw new IllegalArgumentException("You cannot delete a booking within 1 hour of the start time.");
+//        }
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));

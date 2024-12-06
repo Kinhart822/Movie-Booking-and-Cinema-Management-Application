@@ -54,7 +54,7 @@ public class Food {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateUpdated;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "cinema_id", nullable = false)
     private Cinema cinema;
 

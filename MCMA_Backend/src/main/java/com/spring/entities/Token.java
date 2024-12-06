@@ -21,7 +21,7 @@ public class Token implements Serializable {
     @Column(name = "is_logged_out")
     private boolean isLoggedOut;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     public User user;
 }

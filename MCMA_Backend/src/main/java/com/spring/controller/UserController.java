@@ -167,7 +167,7 @@ public class UserController {
         return ResponseEntity.ok(bookingResponse);
     }
 
-    @DeleteMapping("booking/edit-booking-seat")
+    @PostMapping("/booking/updateBookingSeat")
     public ResponseEntity<String> updateBookingSeat(@RequestBody BookingRequest bookingRequest) {
         bookingService.updateBookingSeat(bookingRequest);
         return ResponseEntity.ok("Seat(s) updated successfully");
