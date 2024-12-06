@@ -1106,7 +1106,7 @@ public class BookingServiceImpl implements BookingService {
         }
         seatRepository.saveAll(seatListChangeToAvailable);
 
-        // Cập nhật ghế mới và trạng thái
+        // Cập nhập ghế mới và trạng thái
         List<BookingSeat> existingBookingSeats = booking.getSeatList();
         for (int i = 0; i < existingBookingSeats.size(); i++) {
             BookingSeat existingBookingSeat = existingBookingSeats.get(i);
