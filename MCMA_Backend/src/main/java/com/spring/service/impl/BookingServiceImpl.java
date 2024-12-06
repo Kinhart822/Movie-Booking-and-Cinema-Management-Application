@@ -943,74 +943,6 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public void updateBookingSeat(BookingRequest bookingRequest) {
-        Booking booking = bookingRepository.findById(bookingRequest.getBookingId())
-                .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingRequest.getBookingId())));
-        if (bookingRequest.getSeatIds() == null || bookingRequest.getSeatIds().isEmpty()) return;
-
-        int ticketCount = booking.getTickets().stream()
-                .mapToInt(BookingTicket::getQuantity)
-                .sum();
-        int seatCount = bookingRequest.getSeatIds().size();
-        if (seatCount != ticketCount) {
-            throw new IllegalArgumentException("The number of selected seats (%d) does not match the number of tickets (%d).".formatted(seatCount, ticketCount));
-        }
-
-        List<Seat> selectedSeats = seatRepository.findAllById(bookingRequest.getSeatIds())
-                .stream()
-                .toList();
-        if (selectedSeats.size() != seatCount) {
-            throw new IllegalArgumentException("The size of the updated booking list does not match the number of the size of the old booking list");
-        }
-        if (selectedSeats.stream().anyMatch(seat -> seat.getScreen().getId() != booking.getScreen().getId())) {
-            throw new IllegalArgumentException("The selected seats do not match the specified screen!");
-        }
-        if (selectedSeats.stream().anyMatch(seat -> seat.getSeatStatus() == SeatStatus.Unavailable)) {
-            throw new IllegalArgumentException("Selected seats are already unavailable, please select a different seat.");
-        }
-
-        List<Integer> newSeatIds = selectedSeats.stream()
-                .map(Seat::getId)
-                .sorted()
-                .toList();
-        List<Integer> oldSeatIds = booking.getSeatList().stream()
-                .map(bookingSeat -> bookingSeat.getSeat().getId())
-                .toList();
-        if (newSeatIds.equals(oldSeatIds)) {
-            throw new IllegalArgumentException("The updated booking list matches the original booking list. Please make a valid change!");
-        }
-
-        // Chuyển trạng thái ghế cũ thành Available
-        List<Seat> seatListChangeToAvailable = new ArrayList<>();
-        for (BookingSeat seat : booking.getSeatList()) {
-            seat.getSeat().setSeatStatus(SeatStatus.Available);
-            seatListChangeToAvailable.add(seat.getSeat());
-        }
-        seatRepository.saveAll(seatListChangeToAvailable);
-
-        // Cập nhật ghế mới và trạng thái
-        List<BookingSeat> existingBookingSeats = booking.getSeatList();
-        for (int i = 0; i < existingBookingSeats.size(); i++) {
-            BookingSeat existingBookingSeat = existingBookingSeats.get(i);
-            Seat newSeat = selectedSeats.get(i);
-
-            existingBookingSeat.setSeat(newSeat);
-            existingBookingSeat.setSeatType(newSeat.getSeatType());
-            newSeat.setSeatStatus(SeatStatus.Held);
-        }
-
-        seatRepository.saveAll(selectedSeats);
-        booking.setSeatList(existingBookingSeats);
-
-        double newTotalPrice = booking.getSeatList().stream()
-                .mapToDouble(bookingSeat -> bookingSeat.getSeat().getSeatType().getPrice())
-                .sum();
-        booking.setTotalPrice(newTotalPrice);
-
-        bookingRepository.save(booking);
-    }
-
-    @Override
     public void cancelBooking(Integer bookingId, Integer userId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingId)));
@@ -1125,6 +1057,75 @@ public class BookingServiceImpl implements BookingService {
         } catch (Exception e) {
             System.out.println("Failed to send email notification. Please try again later.");
         }
+    }
+
+    // TODO: Check Xem có Update đc Seat ko (Ko cần thiết)
+    @Override
+    public void updateBookingSeat(BookingRequest bookingRequest) {
+        Booking booking = bookingRepository.findById(bookingRequest.getBookingId())
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingRequest.getBookingId())));
+        if (bookingRequest.getSeatIds() == null || bookingRequest.getSeatIds().isEmpty()) return;
+
+        int ticketCount = booking.getTickets().stream()
+                .mapToInt(BookingTicket::getQuantity)
+                .sum();
+        int seatCount = bookingRequest.getSeatIds().size();
+        if (seatCount != ticketCount) {
+            throw new IllegalArgumentException("The number of selected seats (%d) does not match the number of tickets (%d).".formatted(seatCount, ticketCount));
+        }
+
+        List<Seat> selectedSeats = seatRepository.findAllById(bookingRequest.getSeatIds())
+                .stream()
+                .toList();
+        if (selectedSeats.size() != seatCount) {
+            throw new IllegalArgumentException("The size of the updated booking list does not match the number of the size of the old booking list");
+        }
+        if (selectedSeats.stream().anyMatch(seat -> seat.getScreen().getId() != booking.getScreen().getId())) {
+            throw new IllegalArgumentException("The selected seats do not match the specified screen!");
+        }
+        if (selectedSeats.stream().anyMatch(seat -> seat.getSeatStatus() == SeatStatus.Unavailable)) {
+            throw new IllegalArgumentException("Selected seats are already unavailable, please select a different seat.");
+        }
+
+        List<Integer> newSeatIds = selectedSeats.stream()
+                .map(Seat::getId)
+                .sorted()
+                .toList();
+        List<Integer> oldSeatIds = booking.getSeatList().stream()
+                .map(bookingSeat -> bookingSeat.getSeat().getId())
+                .toList();
+        if (newSeatIds.equals(oldSeatIds)) {
+            throw new IllegalArgumentException("The updated booking list matches the original booking list. Please make a valid change!");
+        }
+
+        // Chuyển trạng thái ghế cũ thành Available
+        List<Seat> seatListChangeToAvailable = new ArrayList<>();
+        for (BookingSeat seat : booking.getSeatList()) {
+            seat.getSeat().setSeatStatus(SeatStatus.Available);
+            seatListChangeToAvailable.add(seat.getSeat());
+        }
+        seatRepository.saveAll(seatListChangeToAvailable);
+
+        // Cập nhật ghế mới và trạng thái
+        List<BookingSeat> existingBookingSeats = booking.getSeatList();
+        for (int i = 0; i < existingBookingSeats.size(); i++) {
+            BookingSeat existingBookingSeat = existingBookingSeats.get(i);
+            Seat newSeat = selectedSeats.get(i);
+
+            existingBookingSeat.setSeat(newSeat);
+            existingBookingSeat.setSeatType(newSeat.getSeatType());
+            newSeat.setSeatStatus(SeatStatus.Held);
+        }
+
+        seatRepository.saveAll(selectedSeats);
+        booking.setSeatList(existingBookingSeats);
+
+        double newTotalPrice = booking.getSeatList().stream()
+                .mapToDouble(bookingSeat -> bookingSeat.getSeat().getSeatType().getPrice())
+                .sum();
+        booking.setTotalPrice(newTotalPrice);
+
+        bookingRepository.save(booking);
     }
 
     // TODO: Additional methods
