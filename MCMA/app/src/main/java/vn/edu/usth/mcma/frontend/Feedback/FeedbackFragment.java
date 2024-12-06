@@ -1,6 +1,8 @@
 package vn.edu.usth.mcma.frontend.Feedback;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -143,7 +145,7 @@ public class FeedbackFragment extends Fragment {
             @Override
             public void onResponse(Call<List<BookingResponse>> call, Response<List<BookingResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Toast.makeText(requireActivity(), "Here's your feedbacks", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(requireActivity(), "Here's your feedbacks", Toast.LENGTH_SHORT).show();
                     items.clear();
                     items.addAll(response.body());
                     adapter.notifyDataSetChanged();
@@ -158,4 +160,6 @@ public class FeedbackFragment extends Fragment {
             }
         });
     }
+
+
 }

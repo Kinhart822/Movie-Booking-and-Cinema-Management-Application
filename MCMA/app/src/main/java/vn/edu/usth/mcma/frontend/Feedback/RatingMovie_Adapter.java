@@ -36,25 +36,24 @@ public class RatingMovie_Adapter extends RecyclerView.Adapter<RatingMovie_ViewHo
     @Override
     public void onBindViewHolder(@NonNull RatingMovie_ViewHolder holder, int position) {
         BookingResponse bookingResponse = items.get(position);
+
         // Load image using Glide
         Glide.with(context)
                 .load(bookingResponse.getImageUrlMovie())
                 .into(holder.imageView);
         holder.nameView.setText(bookingResponse.getMovieName());
         holder.typeView.setText(bookingResponse.getBookingNo());
-//        holder.imageView.setImageResource(Integer.parseInt(bookingResponse.getImageUrlMovie()));
 
-
-
-        // Chỗ này sẽ click vô được item trong recycle view
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, RatingMovie_Activity.class);
+            intent.putExtra("movieId", bookingResponse.getMovieId()); // Pass movieId
             intent.putExtra("movie_name", bookingResponse.getMovieName());
             intent.putExtra("movie_type", bookingResponse.getBookingNo());
             intent.putExtra("movie_image", bookingResponse.getImageUrlMovie());
             context.startActivity(intent);
         });
     }
+
 
     @Override
     public int getItemCount() {

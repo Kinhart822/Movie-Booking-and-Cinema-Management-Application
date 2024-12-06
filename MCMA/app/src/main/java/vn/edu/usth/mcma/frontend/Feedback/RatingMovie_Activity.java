@@ -1,6 +1,8 @@
 package vn.edu.usth.mcma.frontend.Feedback;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +30,8 @@ public class RatingMovie_Activity extends AppCompatActivity {
     private RatingBar ratingBar;
     private TextView ratingScale;
     private Integer movieId;
+    private static final String SHARED_PREFS_NAME = "MoviePreferences";
+    private static final String KEY_MOVIE_ID = "movieId";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,22 +48,28 @@ public class RatingMovie_Activity extends AppCompatActivity {
         buttonSubmit = findViewById(R.id.btnSubmit);
 
 //        // Lấy dữ liệu từ intent trong adapter
-//        String name = getIntent().getStringExtra("movie_name");
-//        String type = getIntent().getStringExtra("movie_type");
-//        int imageResId = getIntent().getIntExtra("movie_image", R.drawable.movie5); // Lấy hình ảnh, với giá trị mặc định nếu không có
-
-        // Retrieve data passed from FeedbackFragment
         Intent intent = getIntent();
         String name = intent.getStringExtra("movie_name");
         String type = intent.getStringExtra("movie_type");
         String imageUrl = intent.getStringExtra("movie_image");
-        movieId = intent.getIntExtra("movieId", -1);
 
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        movieId = intent.getIntExtra(KEY_MOVIE_ID, -1);
+        if (movieId == -1) {
+            movieId = sharedPreferences.getInt("movieId", -1);
+        }
+
+        if (movieId == -1) {
+            Toast.makeText(this, "Movie ID not found", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        sharedPreferences.edit().putInt(KEY_MOVIE_ID, movieId).apply();
 
         // Gán dữ liệu cho các view
         movieName.setText(name);
         movieType.setText(type);
-//        movieImage.setImageResource(imageResId); // Hiển thị hình ảnh
         Glide.with(this).load(imageUrl).into(movieImage);
 
         // Xử lý nút quay lại
@@ -89,12 +99,6 @@ public class RatingMovie_Activity extends AppCompatActivity {
                 Toast.makeText(this, "Please leave a comment", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Thank you for rating: " + rating + " stars\nFeedback: " + feedback, Toast.LENGTH_SHORT).show();
-
-//                Intent resultIntent = new Intent();
-//                resultIntent.putExtra("rating", rating);
-//                resultIntent.putExtra("feedback", feedback);
-//                setResult(RESULT_OK, resultIntent);
-//                finish();
 
                 // Reset the feedback and rating sections
                 editFeedback.setText(""); // Clear the feedback text

@@ -29,5 +29,4 @@ public class MovieRespondResponse {
         this.content = content;
     }
 
-
 }

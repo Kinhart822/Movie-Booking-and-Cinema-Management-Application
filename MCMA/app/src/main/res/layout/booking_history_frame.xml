@@ -24,112 +24,166 @@
                     android:background="@drawable/tab_background"
                     android:padding="16dp">
 
-                    <TableRow>
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false">
+
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
                             android:text="Information"
                             android:textStyle="bold"
                             android:padding="8dp"
-                            android:background="@drawable/tab_background"/>
+                            android:gravity="center_vertical"
+                            android:background="@drawable/tab_background" />
+
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
                             android:text="Information 2"
                             android:padding="8dp"
-                            android:background="@drawable/tab_background"/>
+                            android:gravity="center_vertical"
+                            android:background="@drawable/tab_background" />
                     </TableRow>
 
-                    <TableRow>
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false">
+
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
                             android:text="Booking No"
                             android:textStyle="bold"
                             android:padding="8dp"
-                            android:background="@drawable/tab_background"/>
+                            android:gravity="center_vertical"
+                            android:background="@drawable/tab_background" />
+
                         <TextView
                             android:id="@+id/booking_number_input"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
                             android:padding="8dp"
+                            android:gravity="center_vertical"
                             android:background="@drawable/tab_background"
-                            tools:text="Booking No"/>
+                            tools:text="Booking No" />
                     </TableRow>
 
-                    <TableRow>
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:background="@drawable/tab_background"
-                            android:padding="8dp"
+                            android:layout_weight="1"
                             android:text="Movie name"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:padding="8dp"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/tab_background" />
+
                         <TextView
                             android:id="@+id/booking_movie_input"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
                             android:padding="8dp"
+                            android:gravity="center_vertical"
                             android:background="@drawable/tab_background"
                             android:maxWidth="200dp"
                             android:maxLines="2"
                             android:ellipsize="end"
-                            tools:text="Movie name"/>
+                            tools:text="Movie name" />
                     </TableRow>
 
-                    <TableRow>
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false">
+
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
                             android:text="Start Date"
                             android:textStyle="bold"
                             android:padding="8dp"
-                            android:background="@drawable/tab_background"/>
+                            android:gravity="center_vertical"
+                            android:background="@drawable/tab_background" />
+
                         <TextView
                             android:id="@+id/booking_startdate_input"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
                             android:padding="8dp"
+                            android:gravity="center_vertical"
                             android:background="@drawable/tab_background"
-                            tools:text="Start Date"/>
+                            tools:text="Start Date" />
                     </TableRow>
 
-                    <TableRow>
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false">
+
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
                             android:text="End Date"
                             android:textStyle="bold"
                             android:padding="8dp"
-                            android:background="@drawable/tab_background"/>
+                            android:gravity="center_vertical"
+                            android:background="@drawable/tab_background" />
+
                         <TextView
                             android:id="@+id/booking_enddate_input"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
                             android:padding="8dp"
+                            android:gravity="center_vertical"
                             android:background="@drawable/tab_background"
-                            tools:text="End Date"/>
+                            tools:text="End Date" />
                     </TableRow>
 
-                    <TableRow>
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false">
+
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
                             android:text="Status"
                             android:textStyle="bold"
                             android:padding="8dp"
-                            android:background="@drawable/tab_background"/>
+                            android:gravity="center_vertical"
+                            android:background="@drawable/tab_background" />
+
                         <TextView
                             android:id="@+id/booking_status_input"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
                             android:padding="8dp"
+                            android:gravity="center_vertical"
                             android:background="@drawable/tab_background"
-                            tools:text="Status"/>
+                            tools:text="Status" />
                     </TableRow>
 
                 </TableLayout>
+
 
             </LinearLayout>
     </LinearLayout>

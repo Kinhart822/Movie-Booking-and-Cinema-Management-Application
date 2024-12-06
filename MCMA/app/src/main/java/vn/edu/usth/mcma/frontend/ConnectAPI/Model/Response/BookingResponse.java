@@ -4,6 +4,7 @@ import java.util.List;
 
 public class BookingResponse {
     private String bookingNo;
+    private Integer movieId;
     private String movieName;
     private String imageUrlMovie;
     private String cityName;
@@ -129,5 +130,13 @@ public class BookingResponse {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Integer getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(Integer movieId) {
+        this.movieId = movieId;
     }
 }

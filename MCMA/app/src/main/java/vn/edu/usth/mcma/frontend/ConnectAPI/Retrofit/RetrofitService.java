@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
 
 import java.util.concurrent.TimeUnit;
 
@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class RetrofitService {
-    private static final String BASE_URL = "http://192.168.1.27:8080"; //BACKEND IP ADDRESS
+    private static final String BASE_URL = "http://192.168.1.203:8080"; //BACKEND IP ADDRESS
 
     private final Retrofit retrofit;
     public RetrofitService(Context context) {
