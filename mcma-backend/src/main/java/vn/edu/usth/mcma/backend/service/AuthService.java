@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.entity.Token;
 import vn.edu.usth.mcma.backend.entity.User;
 import vn.edu.usth.mcma.backend.dto.*;
+import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.TokenRepository;
 import vn.edu.usth.mcma.backend.repository.UserRepository;
@@ -52,7 +53,7 @@ public class AuthService {
         }
     }
 
-    public CommonResponse signUp(SignUpRequest signUpRequest) {
+    public ApiResponse signUp(SignUpRequest signUpRequest) {
         Integer type = signUpRequest.getType();
         if (type != UserType.ADMIN.getValue() && type != UserType.USER.getValue()) {
             throw new BusinessException(ApiResponseCode.ILLEGAL_TYPE);
@@ -79,7 +80,7 @@ public class AuthService {
         email = user.getEmail();//email of the saved entity, not from request
         String token = jwtService.generateToken(email);
         saveUserToken(token, email);
-        return CommonResponse
+        return ApiResponse
                 .builder()
                 .status(ApiResponseCode.SUCCESS.getStatus())
                 .message(ApiResponseCode.SUCCESS.getMessage())
@@ -137,7 +138,7 @@ public class AuthService {
 //        return response;
 //    }
 
-    public CommonResponse resetPasswordRequest(ResetPasswordRequest request) {
+    public ApiResponse resetPasswordRequest(ResetPasswordRequest request) {
         Integer type = request.getType();
         if (type != UserType.ADMIN.getValue() && type != UserType.USER.getValue()) {
             throw new BusinessException(ApiResponseCode.ILLEGAL_TYPE);
@@ -147,7 +148,7 @@ public class AuthService {
             throw new BusinessException(ApiResponseCode.EMAIL_NOT_FOUND);
         }
         emailService.sendResetPasswordMail(user.get());
-        return CommonResponse
+        return ApiResponse
                 .builder()
                 .status(ApiResponseCode.SUCCESS.getStatus())
                 .message(ApiResponseCode.SUCCESS.getMessage())
@@ -163,7 +164,7 @@ public class AuthService {
         response.put("isValid", user.isPresent());
         return response;
     }
-    public CommonResponse resetPasswordFinish(ResetPasswordFinish finish) {
+    public ApiResponse resetPasswordFinish(ResetPasswordFinish finish) {
         Integer type = finish.getType();
         if (type != UserType.ADMIN.getValue() && type != UserType.USER.getValue()) {
             throw new BusinessException(ApiResponseCode.ILLEGAL_TYPE);
@@ -172,7 +173,7 @@ public class AuthService {
         if (user.isEmpty()) {
             throw new BusinessException(ApiResponseCode.RESET_KEY_NOT_FOUND);
         }
-        return CommonResponse
+        return ApiResponse
                 .builder()
                 .status(ApiResponseCode.SUCCESS.getStatus())
                 .message(ApiResponseCode.SUCCESS.getMessage())

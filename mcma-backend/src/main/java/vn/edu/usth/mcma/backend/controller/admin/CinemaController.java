@@ -6,8 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.dto.CinemaRequest;
+import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.service.CinemaService;
-import vn.edu.usth.mcma.backend.dto.CommonResponse;
 import vn.edu.usth.mcma.backend.entity.Cinema;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
 public class CinemaController {
     private final CinemaService cinemaService;
     @PostMapping("/cinema")
-    public CommonResponse createCinema(@RequestBody CinemaRequest request, HttpServletRequest hsRequest) {
+    public ApiResponse createCinema(@RequestBody CinemaRequest request, HttpServletRequest hsRequest) {
         return cinemaService.createCinema(request, hsRequest);
     }
     @GetMapping("/cinema")
@@ -30,11 +30,11 @@ public class CinemaController {
         return cinemaService.findById(id);
     }
     @PutMapping("/cinema/{id}")
-    public CommonResponse updateCinema(@PathVariable Long id, @RequestBody CinemaRequest request, HttpServletRequest hsRequest) {
+    public ApiResponse updateCinema(@PathVariable Long id, @RequestBody CinemaRequest request, HttpServletRequest hsRequest) {
         return cinemaService.updateCinema(id, request, hsRequest);
     }
     @DeleteMapping("/cinema/{id}")
-    public CommonResponse deleteCinema(@PathVariable Long id, HttpServletRequest hsRequest) {
+    public ApiResponse deleteCinema(@PathVariable Long id, HttpServletRequest hsRequest) {
         return cinemaService.deleteCinema(id, hsRequest);
     }
 }

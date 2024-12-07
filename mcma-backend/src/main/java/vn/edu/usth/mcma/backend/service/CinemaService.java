@@ -5,10 +5,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.dto.CinemaRequest;
 import vn.edu.usth.mcma.backend.repository.CinemaRepository;
-import vn.edu.usth.mcma.backend.dto.CommonResponse;
 import vn.edu.usth.mcma.backend.entity.Cinema;
 
 import java.time.Instant;
@@ -25,7 +25,7 @@ public class CinemaService extends AbstractService<Cinema, Long> {
         this.cinemaRepository = cinemaRepository;
         this.jwtUtil = jwtUtil;
     }
-    public CommonResponse createCinema(CinemaRequest request, HttpServletRequest hsRequest) {
+    public ApiResponse createCinema(CinemaRequest request, HttpServletRequest hsRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         Cinema cinema = new Cinema();
         cinema.setCityId(request.getCityId());
@@ -39,7 +39,7 @@ public class CinemaService extends AbstractService<Cinema, Long> {
     public List<Cinema> findAll(String query, Pageable pageable) {
         return cinemaRepository.findAllByNameContaining(query, pageable);
     }
-    public CommonResponse updateCinema(Long id, CinemaRequest request, HttpServletRequest hsRequest) {
+    public ApiResponse updateCinema(Long id, CinemaRequest request, HttpServletRequest hsRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         Cinema cinema = findById(id);
         // changing cityId is not allowed think about it :)
@@ -49,7 +49,7 @@ public class CinemaService extends AbstractService<Cinema, Long> {
         cinemaRepository.save(cinema);
         return this.successResponse();
     }
-    public CommonResponse deleteCinema(Long id, HttpServletRequest hsRequest) {
+    public ApiResponse deleteCinema(Long id, HttpServletRequest hsRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         Cinema cinema = findById(id);
         cinema.setStatus(EntityStatus.DELETED.getStatus());

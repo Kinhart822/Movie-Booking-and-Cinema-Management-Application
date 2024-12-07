@@ -5,10 +5,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.dto.CityRequest;
 import vn.edu.usth.mcma.backend.repository.CityRepository;
-import vn.edu.usth.mcma.backend.dto.CommonResponse;
 import vn.edu.usth.mcma.backend.entity.City;
 
 import java.time.Instant;
@@ -26,7 +26,7 @@ public class CityService extends AbstractService<City, Long> {
         this.cityRepository = cityRepository;
         this.jwtUtil = jwtUtil;
     }
-    public CommonResponse createCity(CityRequest request, HttpServletRequest hsRequest) {
+    public ApiResponse createCity(CityRequest request, HttpServletRequest hsRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         City city = new City();
         city.setName(request.getName());
@@ -39,7 +39,7 @@ public class CityService extends AbstractService<City, Long> {
     public List<City> findAll(String query, Pageable pageable) {
         return cityRepository.findAllByNameContaining(query, pageable);
     }
-    public CommonResponse updateCity(Long id, CityRequest request, HttpServletRequest hsRequest) {
+    public ApiResponse updateCity(Long id, CityRequest request, HttpServletRequest hsRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         City city = findById(id);
         city.setName(request.getName());
@@ -48,7 +48,7 @@ public class CityService extends AbstractService<City, Long> {
         cityRepository.save(city);
         return this.successResponse();
     }
-    public CommonResponse deleteCity(Long id, HttpServletRequest hsRequest) {
+    public ApiResponse deleteCity(Long id, HttpServletRequest hsRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         City city = findById(id);
         city.setStatus(EntityStatus.DELETED.getStatus());

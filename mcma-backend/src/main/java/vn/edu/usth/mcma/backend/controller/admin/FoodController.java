@@ -7,7 +7,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.entity.Food;
 import vn.edu.usth.mcma.backend.dto.FoodRequest;
-import vn.edu.usth.mcma.backend.dto.CommonResponse;
+import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.service.FoodService;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
 public class FoodController {
     private final FoodService foodService;
     @PostMapping("/food")
-    public CommonResponse createFood(@RequestBody FoodRequest request, HttpServletRequest hsRequest) {
+    public ApiResponse createFood(@RequestBody FoodRequest request, HttpServletRequest hsRequest) {
         return foodService.createFood(request, hsRequest);
     }
     @GetMapping("/food")
@@ -30,11 +30,11 @@ public class FoodController {
         return foodService.findById(id);
     }
     @PutMapping("/food/{id}")
-    public CommonResponse updateFood(@PathVariable Long id, @RequestBody FoodRequest request, HttpServletRequest hsRequest) {
+    public ApiResponse updateFood(@PathVariable Long id, @RequestBody FoodRequest request, HttpServletRequest hsRequest) {
         return foodService.updateFood(id, request, hsRequest);
     }
     @DeleteMapping("/food/{id}")
-    public CommonResponse deleteFood(@PathVariable Long id, HttpServletRequest hsRequest) {
+    public ApiResponse deleteFood(@PathVariable Long id, HttpServletRequest hsRequest) {
         return foodService.deleteFood(id, hsRequest);
     }
 }

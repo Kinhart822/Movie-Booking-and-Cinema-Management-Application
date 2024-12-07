@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.entity.Food;
 import vn.edu.usth.mcma.backend.dto.FoodRequest;
-import vn.edu.usth.mcma.backend.dto.CommonResponse;
+import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.repository.FoodRepository;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 
@@ -25,7 +25,7 @@ public class FoodService extends AbstractService<Food, Long> {
         this.foodRepository = foodRepository;
         this.jwtUtil = jwtUtil;
     }
-    public CommonResponse createFood(FoodRequest request, HttpServletRequest hsRequest) {
+    public ApiResponse createFood(FoodRequest request, HttpServletRequest hsRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         Food food = new Food();
         food.setName(request.getName());
@@ -42,7 +42,7 @@ public class FoodService extends AbstractService<Food, Long> {
     public List<Food> findAll(String query, Pageable pageable) {
         return foodRepository.findAllByNameContaining(query, pageable);
     }
-    public CommonResponse updateFood(Long id, FoodRequest request, HttpServletRequest hsRequest) {
+    public ApiResponse updateFood(Long id, FoodRequest request, HttpServletRequest hsRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         Food food = findById(id);
         food.setName(request.getName());
@@ -55,7 +55,7 @@ public class FoodService extends AbstractService<Food, Long> {
         foodRepository.save(food);
         return this.successResponse();
     }
-    public CommonResponse deleteFood(Long id, HttpServletRequest hsRequest) {
+    public ApiResponse deleteFood(Long id, HttpServletRequest hsRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         Food food = findById(id);
         food.setStatus(EntityStatus.DELETED.getStatus());

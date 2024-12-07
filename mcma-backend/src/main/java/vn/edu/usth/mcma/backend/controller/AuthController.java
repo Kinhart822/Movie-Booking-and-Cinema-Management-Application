@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.entity.User;
 import vn.edu.usth.mcma.backend.dto.*;
+import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.service.AuthService;
 import vn.edu.usth.mcma.backend.service.UserService;
@@ -28,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth/sign-up")
-    public ResponseEntity<CommonResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<ApiResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
         return ResponseEntity.ok(authService.signUp(signUpRequest));
     }
 
@@ -43,7 +44,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth/reset-password/request")
-    public ResponseEntity<CommonResponse> resetPasswordRequest(@RequestBody @Valid ResetPasswordRequest request) {
+    public ResponseEntity<ApiResponse> resetPasswordRequest(@RequestBody @Valid ResetPasswordRequest request) {
         return ResponseEntity.ok(authService.resetPasswordRequest(request));
     }
     @GetMapping("/auth/reset-password/check")
@@ -51,7 +52,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.resetPasswordCheck(check));
     }
     @PostMapping("/auth/reset-password/finish")
-    public ResponseEntity<CommonResponse> resetPasswordFinish(@RequestBody @Valid ResetPasswordFinish finish) {
+    public ResponseEntity<ApiResponse> resetPasswordFinish(@RequestBody @Valid ResetPasswordFinish finish) {
         return ResponseEntity.ok(authService.resetPasswordFinish(finish));
     }
     // TODO

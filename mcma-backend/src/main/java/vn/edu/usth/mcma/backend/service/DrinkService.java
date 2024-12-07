@@ -6,8 +6,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.entity.Drink;
-import vn.edu.usth.mcma.backend.dto.CommonResponse;
 import vn.edu.usth.mcma.backend.dto.DrinkRequest;
+import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.repository.DrinkRepository;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 
@@ -25,7 +25,7 @@ public class DrinkService extends AbstractService<Drink, Long> {
         this.drinkRepository = drinkRepository;
         this.jwtUtil = jwtUtil;
     }
-    public CommonResponse createDrink(DrinkRequest request, HttpServletRequest hsRequest) {
+    public ApiResponse createDrink(DrinkRequest request, HttpServletRequest hsRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         Drink drink = new Drink();
         drink.setName(request.getName());
@@ -43,7 +43,7 @@ public class DrinkService extends AbstractService<Drink, Long> {
     public List<Drink> findAll(String query, Pageable pageable) {
         return drinkRepository.findAllByNameContaining(query, pageable);
     }
-    public CommonResponse updateDrink(Long id, DrinkRequest request, HttpServletRequest hsRequest) {
+    public ApiResponse updateDrink(Long id, DrinkRequest request, HttpServletRequest hsRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         Drink drink = findById(id);
         drink.setName(request.getName());
@@ -57,7 +57,7 @@ public class DrinkService extends AbstractService<Drink, Long> {
         drinkRepository.save(drink);
         return this.successResponse();
     }
-    public CommonResponse deleteDrink(Long id, HttpServletRequest hsRequest) {
+    public ApiResponse deleteDrink(Long id, HttpServletRequest hsRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         Drink drink = findById(id);
         drink.setStatus(EntityStatus.DELETED.getStatus());

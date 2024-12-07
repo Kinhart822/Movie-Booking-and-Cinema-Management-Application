@@ -24,7 +24,7 @@ public class GlobalExceptionHandler extends RuntimeException {
         String description = ExceptionUtils.getMessage(messageSource, request, be.getMessage());
         return ResponseEntity
                 .status(status)
-                .body(new ApiErrorResponse(be.getStatus(), be.getMessage(), description));
+                .body(new ApiResponse(be.getStatus(), be.getMessage(), description));
     }
     // fallback
     @ExceptionHandler(Exception.class)
