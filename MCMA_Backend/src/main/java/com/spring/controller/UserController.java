@@ -293,6 +293,12 @@ public class UserController {
         return ResponseEntity.ok(highRatingMovieResponses);
     }
 
+    @GetMapping("/view/allMovieGenres")
+    public ResponseEntity<List<MovieGenreResponse>> getAllMovieGenres() {
+        List<MovieGenreResponse> movieGenreResponses = viewService.getAllMovieGenres();
+        return ResponseEntity.ok(movieGenreResponses);
+    }
+
     @GetMapping("/view/notifications")
     public ResponseEntity<NotificationResponse> getNotifications(HttpServletRequest request) {
         Integer userId = jwtUtil.getUserIdFromToken(request);

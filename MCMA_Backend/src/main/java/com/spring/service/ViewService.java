@@ -30,6 +30,8 @@ public interface ViewService {
 
     List<HighRatingMovieResponse> getHighRatingMovies();
 
+    List<MovieGenreResponse> getAllMovieGenres();
+
     List<BookingResponse> getAllBookings();
 
     List<BookingResponse> getAllBookingsByUser(Integer userId);

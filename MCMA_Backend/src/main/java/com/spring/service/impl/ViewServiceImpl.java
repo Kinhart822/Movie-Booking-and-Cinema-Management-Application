@@ -277,6 +277,18 @@ public class ViewServiceImpl implements ViewService {
         }).toList();
     }
 
+    public List<MovieGenreResponse> getAllMovieGenres() {
+        List<MovieGenre> genres = movieGenreRepository.findAll();
+        return genres.stream()
+                .map(genre -> new MovieGenreResponse(
+                        genre.getMovieGenreDetail().getId(),
+                        genre.getMovieGenreDetail().getName(),
+                        genre.getMovieGenreDetail().getDescription(),
+                        genre.getMovieGenreDetail().getImageUrl()
+                ))
+                .toList();
+    }
+
     @Override
     public List<ComingSoonResponse> getAvailableComingSoonMovies() {
         Calendar calendar = Calendar.getInstance();
