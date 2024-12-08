@@ -70,9 +70,15 @@ public class SeatSelectionActivity extends AppCompatActivity {
         TextView releaseDateTV = findViewById(R.id.movie_release_date);
         TextView durationTV = findViewById(R.id.movie_duration);
 
+        // Get selected screen room from intent
+        String selectedScreenRoom = getIntent().getStringExtra("SELECTED_SCREEN_ROOM");
+        if (selectedScreenRoom != null) {
+            screenNumberTV.setText(selectedScreenRoom);
+        } else {
+            screenNumberTV.setText("Screen 1"); // Default fallback
+        }
         theaterNameTV.setText(selectedTheater.getName());
         movieNameTV.setText(selectedMovie.getTitle());
-        screenNumberTV.setText("Screen 1");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd'th' MMM, yyyy", Locale.getDefault());
         releaseDateTV.setText(dateFormat.format(new Date()));
         String[] showtimeParts = selectedShowtime.split(":");
@@ -178,6 +184,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
             intent.putParcelableArrayListExtra(ComboSelectionActivity.EXTRA_SELECTED_SEATS, seatsList);
             intent.putExtra(ComboSelectionActivity.EXTRA_THEATER, selectedTheater);
             intent.putExtra(ComboSelectionActivity.EXTRA_MOVIE, selectedMovie);
+            intent.putExtra("SELECTED_SCREEN_ROOM", getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
             startActivity(intent);
         });
     }

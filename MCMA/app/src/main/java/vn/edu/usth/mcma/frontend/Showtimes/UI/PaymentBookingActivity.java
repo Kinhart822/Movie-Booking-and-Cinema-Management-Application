@@ -7,6 +7,7 @@ import static vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType.VIP;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,7 +32,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.Showtimes.Adapters.ComboDetailsAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.PaymentMethodAdapter;
+import vn.edu.usth.mcma.frontend.Showtimes.Adapters.SeatDetailsAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.ComboItem;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.MovieDetails;
@@ -43,6 +46,8 @@ import vn.edu.usth.mcma.frontend.Showtimes.Utils.PriceCalculator;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.MovieDataProvider;
 
 public class PaymentBookingActivity extends AppCompatActivity {
+    private RecyclerView seatDetailsRecyclerView;
+    private RecyclerView comboDetailsRecyclerView;
     private RecyclerView paymentMethodsRecyclerView;
     private PaymentMethodAdapter paymentMethodAdapter;
     private CheckBox termsCheckbox;
@@ -59,7 +64,6 @@ public class PaymentBookingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_payment_booking);
         // Retrieve intent extras
         retrieveIntentExtras();
-
         // Initialize and set up views
         initializeViews();
         // Initialize views
@@ -114,7 +118,7 @@ public class PaymentBookingActivity extends AppCompatActivity {
 
     private void setDateAndShowtime() {
         TextView movieDateTV = findViewById(R.id.movieDate);
-        TextView movieShowtimeTV = findViewById(R.id.movieShowtime);
+        TextView movieShowtimeTV = findViewById(R.id.movieDuration);
 
         // Set today's date
         SimpleDateFormat dateFormat = new SimpleDateFormat("d 'tháng' M, yyyy", Locale.getDefault());
@@ -133,31 +137,38 @@ public class PaymentBookingActivity extends AppCompatActivity {
 
     private void setSeatsDetails() {
         TextView noOfSeatsTV = findViewById(R.id.noOfSeats);
-        LinearLayout seatDetailsLayout = findViewById(R.id.seat_details_layout);
+        seatDetailsRecyclerView = findViewById(R.id.seat_details_recycler_view);
 
         if (selectedSeats != null) {
-            // Set number of seats
             noOfSeatsTV.setText(String.format("%d vé", selectedSeats.size()));
 
-            // Group seats by type
+            // Prepare seat details for the adapter
+            List<SeatDetailsAdapter.SeatDetailItem> seatDetailItems = new ArrayList<>();
             Map<SeatType, List<Seat>> seatsByType = groupSeatsByType(selectedSeats);
 
-            // Clear any existing views
-            seatDetailsLayout.removeAllViews();
-
-            // Add seat type details
             for (Map.Entry<SeatType, List<Seat>> entry : seatsByType.entrySet()) {
                 SeatType seatType = entry.getKey();
                 List<Seat> typedSeats = entry.getValue();
 
                 if (!typedSeats.isEmpty() && seatType != SeatType.SOLD) {
-                    TextView seatTypeTV = createSeatTypeTextView(typedSeats, seatType);
-                    seatDetailsLayout.addView(seatTypeTV);
+                    String seatPositions = typedSeats.stream()
+                            .map(Seat::getId)
+                            .collect(Collectors.joining(", "));
 
-                    TextView seatPriceTV = createSeatPriceTextView(typedSeats, seatType);
-                    seatDetailsLayout.addView(seatPriceTV);
+                    String seatTypeDisplay = getSeatTypeDisplay(seatType);
+                    int seatPrice = getSeatTypePrice(seatType);
+
+                    seatDetailItems.add(new SeatDetailsAdapter.SeatDetailItem(
+                            String.format("%d x Adult - %s - 2D: %s",
+                                    typedSeats.size(), seatTypeDisplay, seatPositions),
+                            PriceCalculator.formatPrice(typedSeats.size() * seatPrice)
+                    ));
                 }
             }
+
+            SeatDetailsAdapter seatDetailsAdapter = new SeatDetailsAdapter(seatDetailItems);
+            seatDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            seatDetailsRecyclerView.setAdapter(seatDetailsAdapter);
         }
     }
 
@@ -192,7 +203,7 @@ public class PaymentBookingActivity extends AppCompatActivity {
 
     private void setCombosDetails() {
         TextView noOfCombosTV = findViewById(R.id.noOfCombos);
-        LinearLayout comboDetailsLayout = findViewById(R.id.combo_details_layout);
+        comboDetailsRecyclerView = findViewById(R.id.combo_details_recycler_view);
 
         if (selectedComboItems != null) {
             // Filter and count combos with quantity > 0
@@ -200,21 +211,20 @@ public class PaymentBookingActivity extends AppCompatActivity {
                     .filter(combo -> combo.getQuantity() > 0)
                     .collect(Collectors.toList());
 
-            // Set number of combos
-            noOfCombosTV.setText(String.format("%d combo",
-                    filteredCombos.stream().mapToInt(ComboItem::getQuantity).sum()));
+            int totalComboCount = filteredCombos.stream().mapToInt(ComboItem::getQuantity).sum();
+            noOfCombosTV.setText(String.format("%d combo", totalComboCount));
 
-            // Clear any existing views
-            comboDetailsLayout.removeAllViews();
+            // Prepare combo details for the adapter
+            List<ComboDetailsAdapter.ComboDetailItem> comboDetailItems = filteredCombos.stream()
+                    .map(combo -> new ComboDetailsAdapter.ComboDetailItem(
+                            String.format("%d x %s", combo.getQuantity(), combo.getName()),
+                            PriceCalculator.formatPrice(combo.getQuantity() * combo.getPrice())
+                    ))
+                    .collect(Collectors.toList());
 
-            // Add combo details
-            for (ComboItem combo : filteredCombos) {
-                TextView comboNameTV = createComboNameTextView(combo);
-                comboDetailsLayout.addView(comboNameTV);
-
-                TextView comboPriceTV = createComboPriceTextView(combo);
-                comboDetailsLayout.addView(comboPriceTV);
-            }
+            ComboDetailsAdapter comboDetailsAdapter = new ComboDetailsAdapter(comboDetailItems);
+            comboDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            comboDetailsRecyclerView.setAdapter(comboDetailsAdapter);
         }
     }
 

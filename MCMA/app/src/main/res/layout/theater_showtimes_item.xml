@@ -51,6 +51,15 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/screen_rooms_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:visibility="gone"
+        app:flexWrap="wrap"
+        app:justifyContent="flex_start" />
+
+    <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/showtimes_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

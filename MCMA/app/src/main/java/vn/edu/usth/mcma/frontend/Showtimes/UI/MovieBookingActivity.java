@@ -223,8 +223,8 @@ public class MovieBookingActivity extends AppCompatActivity {
         theatersRecyclerView = findViewById(R.id.theaters_recycler_view);
         theaterAdapter = new TheaterShowtimesAdapter(new TheaterShowtimesAdapter.OnShowtimeClickListener() {
             @Override
-            public void onShowtimeClick(Theater theater, String showtime) {
-                showTimerDialog(theater, showtime);
+            public void onShowtimeClick(Theater theater, String showtime, String screenRoom) {
+                showQuantityAndTypeTicketDialog(theater, showtime, screenRoom);
             }
         });
         theatersRecyclerView.setAdapter(theaterAdapter);
@@ -232,10 +232,10 @@ public class MovieBookingActivity extends AppCompatActivity {
     }
 
     // Add new method to MovieBookingActivity.java
-    private void showTimerDialog(Theater theater, String showtime) {
-        TimerDialog dialog = new TimerDialog(this, new TimerDialog.OnDialogActionListener() {
+    private void showQuantityAndTypeTicketDialog(Theater theater, String showtime, String screenRoom) {
+        QuantityAndTypeTicketDialog dialog = new QuantityAndTypeTicketDialog(this, new QuantityAndTypeTicketDialog.OnDialogActionListener() {
             @Override
-            public void onUnderstandClicked() {
+            public void onContinueClicked(List<QuantityAndTypeTicketDialog.TicketTypeItem> selectedTickets) {
                 // Retrieve the movie details for the current selection
                 MovieDetails movieDetails = MovieDataProvider.getMovieDetails(movieTitle);
                 Movie selectedMovie = new Movie(
@@ -248,6 +248,7 @@ public class MovieBookingActivity extends AppCompatActivity {
                 intent.putExtra("SELECTED_THEATER", theater);
                 intent.putExtra("SELECTED_SHOWTIME", showtime);
                 intent.putExtra("SELECTED_MOVIE", selectedMovie);
+                intent.putExtra("SELECTED_SCREEN_ROOM", screenRoom);
                 startActivity(intent);
             }
 

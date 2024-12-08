@@ -64,6 +64,7 @@ public class ComboSelectionActivity extends AppCompatActivity {
     private TextView theaterNameTV;
     private TextView movieNameTV;
     private TextView releaseDateTV;
+    private TextView screenRoomTV;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,6 +101,12 @@ public class ComboSelectionActivity extends AppCompatActivity {
                 Date today = new Date();
                 String formattedDate = formatDateWithOrdinal(today);
                 releaseDateTV.setText(formattedDate);
+            }
+
+            // Screen number handling
+            String selectedScreenRoom = getIntent().getStringExtra("SELECTED_SCREEN_ROOM");
+            if (screenRoomTV != null) {
+                screenRoomTV.setText(selectedScreenRoom != null ? selectedScreenRoom : "Screen 1");
             }
 
             // Find TextView references with null checks
@@ -170,6 +177,7 @@ public class ComboSelectionActivity extends AppCompatActivity {
         theaterNameTV = findViewById(R.id.theater_name);
         movieNameTV = findViewById(R.id.movie_name);
         releaseDateTV = findViewById(R.id.movie_release_date);
+        screenRoomTV = findViewById(R.id.screen_number);
         if (checkoutButton == null) {
             Log.e("ComboSelectionActivity", "checkoutButton is null");
         }

@@ -1,7 +1,9 @@
 package vn.edu.usth.mcma.frontend.Showtimes.Adapters;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.util.SparseBooleanArray;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
@@ -35,7 +38,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
     private SparseBooleanArray expandedStates = new SparseBooleanArray();
 
     public interface OnShowtimeClickListener {
-        void onShowtimeClick(Theater theater, String showtime);
+        void onShowtimeClick(Theater theater, String showtime, String screenRoom);
     }
 
     public TheaterShowtimesAdapter(OnShowtimeClickListener listener) {
@@ -73,15 +76,18 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
         private TextView theaterName;
         private TextView theaterAddress;
         private FlexboxLayout showtimesContainer;
+        private FlexboxLayout screenRoomsContainer;
         private ImageView arrowIcon;
         private View divider;
         private ConstraintLayout headerLayout;
+        private String selectedScreenRoom;
 
         TheaterViewHolder(@NonNull View itemView) {
             super(itemView);
             theaterName = itemView.findViewById(R.id.theater_name);
             theaterAddress = itemView.findViewById(R.id.theater_address);
             showtimesContainer = itemView.findViewById(R.id.showtimes_container);
+            screenRoomsContainer = itemView.findViewById(R.id.screen_rooms_container);
             arrowIcon = itemView.findViewById(R.id.arrow_icon);
             divider = itemView.findViewById(R.id.divider);
             headerLayout = itemView.findViewById(R.id.header_layout);
@@ -92,6 +98,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
             theaterAddress.setText(theater.getAddress());
 
             boolean isExpanded = expandedStates.get(position, false);
+            screenRoomsContainer.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
             showtimesContainer.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
             arrowIcon.setRotation(isExpanded ? 180f : 0f);
 
@@ -110,16 +117,63 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
 
                 // Show/hide showtimes container
                 if (newState) {
-                    showtimesContainer.setVisibility(View.VISIBLE);
-                    populateShowtimes(theater);
+                    screenRoomsContainer.setVisibility(View.VISIBLE);
+                    populateScreenRooms(theater);
                 } else {
+                    screenRoomsContainer.setVisibility(View.GONE);
                     showtimesContainer.setVisibility(View.GONE);
                 }
             });
 
             // Populate showtimes only if expanded
             if (isExpanded) {
-                populateShowtimes(theater);
+                populateScreenRooms(theater);
+            }
+        }
+
+        private void populateScreenRooms(Theater theater) {
+            screenRoomsContainer.removeAllViews();
+
+            // Randomly generate 5 to 10 screen rooms
+            Random random = new Random();
+            int screenRoomCount = random.nextInt(6) + 5; // 5 to 10 screen rooms
+
+            Context context = itemView.getContext();
+            ColorStateList textColorStateList = ContextCompat.getColorStateList(context, R.color.button_text_selector);
+
+            for (int i = 1; i <= screenRoomCount; i++) {
+                Button screenRoomButton = new Button(context);
+                screenRoomButton.setText("Screen " + i);
+
+                FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
+                        FlexboxLayout.LayoutParams.WRAP_CONTENT,
+                        FlexboxLayout.LayoutParams.WRAP_CONTENT
+                );
+                params.setMargins(8, 8, 8, 8);
+                screenRoomButton.setLayoutParams(params);
+                screenRoomButton.setBackground(ContextCompat.getDrawable(context, R.drawable.date_button_selector));
+                screenRoomButton.setTextColor(textColorStateList);
+                screenRoomButton.setAllCaps(false);
+                screenRoomButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+
+                screenRoomButton.setOnClickListener(v -> {
+                    // Reset previous button state if any
+                    for (int j = 0; j < screenRoomsContainer.getChildCount(); j++) {
+                        screenRoomsContainer.getChildAt(j).setSelected(false);
+                    }
+
+                    // Select current button
+                    screenRoomButton.setSelected(true);
+
+                    // Store selected screen room
+                    selectedScreenRoom = screenRoomButton.getText().toString();
+
+                    // Populate showtimes
+                    showtimesContainer.setVisibility(View.VISIBLE);
+                    populateShowtimes(theater);
+                });
+
+                screenRoomsContainer.addView(screenRoomButton);
             }
         }
 
@@ -141,8 +195,10 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
             for (String time : showtimes) {
                 Button timeButton = new Button(context);
                 timeButton.setText(time);
-                timeButton.setOnClickListener(v -> listener.onShowtimeClick(theater, time));
-
+                timeButton.setOnClickListener(v -> {
+                    // Pass selected screen room to the listener
+                    listener.onShowtimeClick(theater, time, selectedScreenRoom);
+                });
                 FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
                         FlexboxLayout.LayoutParams.WRAP_CONTENT,
                         FlexboxLayout.LayoutParams.WRAP_CONTENT
