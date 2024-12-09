@@ -14,4 +14,6 @@ import java.util.List;
 public class NotificationResponse {
     private List<String> message;
     private List<String> dateCreated;
+//    private String message;
+//    private String dateCreated;
 }

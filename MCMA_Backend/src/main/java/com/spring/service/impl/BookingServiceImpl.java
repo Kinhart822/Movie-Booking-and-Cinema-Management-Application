@@ -403,6 +403,7 @@ public class BookingServiceImpl implements BookingService {
         }
         List<AvailableSeatResponse> seatResponses = new ArrayList<>();
 
+
         for (Seat seat : availableSeats) {
             AvailableSeatResponse seatResponse = new AvailableSeatResponse(
                     screen.getName(),
@@ -923,6 +924,7 @@ public class BookingServiceImpl implements BookingService {
 
         return new BookingResponse(
                 booking.getBookingNo(),
+                booking.getMovie().getId(),
                 booking.getMovie().getName(),
                 movieGenres.stream()
                         .map(movieGenre -> movieGenre.getMovieGenreDetail().getName())

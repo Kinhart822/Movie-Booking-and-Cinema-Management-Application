@@ -269,6 +269,7 @@ public class ViewServiceImpl implements ViewService {
             response.setMovieLength(movie.getLength());
             response.setPublishedDate(new SimpleDateFormat("dd/MM/yyyy").format(movie.getDatePublish()));
             response.setImageUrl(movie.getImageUrl());
+            response.setBackgroundUrl(movie.getBackgroundImageUrl());
             response.setMovieGenreNameList(
                     movie.getMovieGenreSet().stream()
                             .map(movieGenre -> movieGenre.getMovieGenreDetail().getName())
@@ -355,6 +356,7 @@ public class ViewServiceImpl implements ViewService {
             BookingResponse bookResponse = new BookingResponse();
             bookResponse.setBookingNo(book.getBookingNo());
             bookResponse.setMovieName(book.getMovie().getName());
+            bookResponse.setMovieId(book.getMovie().getId());
             bookResponse.setImageUrlMovie(book.getMovie().getImageUrl());
             bookResponse.setCityName(book.getCity().getName());
             bookResponse.setCinemaName(book.getCinema().getName());

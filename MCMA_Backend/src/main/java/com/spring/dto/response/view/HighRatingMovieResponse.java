@@ -17,5 +17,6 @@ public class HighRatingMovieResponse {
     private Integer movieLength;
     private String publishedDate;
     private String imageUrl;
+    private String backgroundUrl;
     private List<String> movieGenreNameList;
 }
