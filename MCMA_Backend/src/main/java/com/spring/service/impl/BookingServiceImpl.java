@@ -403,7 +403,6 @@ public class BookingServiceImpl implements BookingService {
         }
         List<AvailableSeatResponse> seatResponses = new ArrayList<>();
 
-
         for (Seat seat : availableSeats) {
             AvailableSeatResponse seatResponse = new AvailableSeatResponse(
                     screen.getName(),
