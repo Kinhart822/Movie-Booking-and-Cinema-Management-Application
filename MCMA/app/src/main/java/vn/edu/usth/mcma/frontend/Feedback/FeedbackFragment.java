@@ -1,8 +1,6 @@
 package vn.edu.usth.mcma.frontend.Feedback;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,19 +23,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingResponse;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.MovieRespondResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetAllBookingAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 import vn.edu.usth.mcma.frontend.MainActivity;
-import vn.edu.usth.mcma.frontend.Personal.ViewFeedback_Activity;
-
 
 public class FeedbackFragment extends Fragment {
-    private DrawerLayout mDrawerLayout;
     private RecyclerView recyclerView;
     private RatingMovie_Adapter adapter;
     private List<BookingResponse> items;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,29 +38,19 @@ public class FeedbackFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_feedback, container, false);
 
-        ImageButton mImageView = v.findViewById(R.id.menu_button);
-
-        mDrawerLayout = v.findViewById(R.id.feedback_fragment);
-
         recyclerView = v.findViewById(R.id.recyclerview_feedbackmovie);
         items = new ArrayList<>();
-
         adapter = new RatingMovie_Adapter(requireContext(), items);
-
-
-
-
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(adapter);
 
-
         fetchBookingList();
-
-        mImageView.setOnClickListener(new View.OnClickListener() {
+        ImageButton closeButton = v.findViewById(R.id.close_button);
+        closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mDrawerLayout != null && !mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
-                    mDrawerLayout.openDrawer(GravityCompat.START);
+                if (getActivity() instanceof vn.edu.usth.mcma.frontend.MainActivity) {
+                    ((vn.edu.usth.mcma.frontend.MainActivity) getActivity()).close_to_home_page();
                 }
             }
         });
@@ -80,7 +59,7 @@ public class FeedbackFragment extends Fragment {
         to_home_fragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
+                if (getActivity() instanceof MainActivity) {
                     ((MainActivity) getActivity()).close_to_home_page();
                 }
             }
@@ -90,7 +69,7 @@ public class FeedbackFragment extends Fragment {
         to_showtimes_fragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
+                if (getActivity() instanceof MainActivity) {
                     ((MainActivity) getActivity()).close_to_showtimes_page();
                 }
             }
@@ -100,7 +79,7 @@ public class FeedbackFragment extends Fragment {
         to_store_fragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
+                if (getActivity() instanceof MainActivity) {
                     ((MainActivity) getActivity()).close_to_store_page();
                 }
             }
@@ -110,7 +89,7 @@ public class FeedbackFragment extends Fragment {
         to_feedback_fragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
+                if (getActivity() instanceof MainActivity) {
                     ((MainActivity) getActivity()).close_to_feedback_page();
                 }
             }
@@ -120,7 +99,7 @@ public class FeedbackFragment extends Fragment {
         to_personal_fragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
+                if (getActivity() instanceof MainActivity) {
                     ((MainActivity) getActivity()).close_to_personal_page();
                 }
             }

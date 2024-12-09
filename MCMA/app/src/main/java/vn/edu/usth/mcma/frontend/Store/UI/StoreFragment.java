@@ -15,8 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,7 +41,6 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
     private Button checkoutButton;
     private ComboAdapter comboAdapter;
     private View comboMenuContainer;
-    private DrawerLayout mDrawerLayout;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -51,19 +48,15 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
         View view = inflater.inflate(R.layout.fragment_store, container, false);
         initializeViews(view);
 
-        ImageButton mImageView = view.findViewById(R.id.menu_button);
-
-        mDrawerLayout = view.findViewById(R.id.store_fragment);
-
-        mImageView.setOnClickListener(new View.OnClickListener() {
+        ImageButton closeButton = view.findViewById(R.id.close_button);
+        closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mDrawerLayout != null && !mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
-                    mDrawerLayout.openDrawer(GravityCompat.START);
+                if(getActivity() instanceof vn.edu.usth.mcma.frontend.MainActivity){
+                    ((vn.edu.usth.mcma.frontend.MainActivity) getActivity()).close_to_home_page();
                 }
             }
         });
-
         LinearLayout to_home_fragment = view.findViewById(R.id.home_side_navigation);
         to_home_fragment.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -30,12 +30,9 @@ public class ComingSoonFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_coming_soon, container, false);
 
         comingSoonResponseList = new ArrayList<>();
-
         RecyclerView recyclerView = v.findViewById(R.id.recyclerview_coming_soon);
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
-
-
 
         adapter = new ComingSoon_Adapter(requireContext(), comingSoonResponseList, position -> {
             ComingSoonResponse selectedFilm = comingSoonResponseList.get(position);

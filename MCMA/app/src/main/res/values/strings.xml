@@ -25,6 +25,7 @@
     <string name="terrible">Terrible</string>
     <string name="rating_excellent">Excellent!</string>
     <string name="unknown_genre">Unknown Genre</string>
+    <string name="can_t_book">Can\'t Book</string>
 
     <string-array name="gender_array">
         <item>Choose gender</item>

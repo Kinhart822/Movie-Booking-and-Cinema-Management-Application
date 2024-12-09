@@ -42,4 +42,5 @@
     <color name="button_text_selector">#2196F3</color>
     <color name="date_text_selector">#000000</color>
     <color name="gold">#ccac00</color>
+    <color name ="dark_red">#8b0000</color>
 </resources>

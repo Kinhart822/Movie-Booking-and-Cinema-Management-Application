@@ -14,14 +14,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.SearchMovieByNameResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.SearchMovieByName;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 
 public class Search_Activity extends AppCompatActivity implements SearchViewInterface {
     private SearchView searchView;
     private RecyclerView recyclerView;
     private Search_Adapter adapter;
-    private List<Search_Item> items;
-    private List<Search_Item> filteredItems;
+    private List<SearchMovieByNameResponse> items;
+    private List<SearchMovieByNameResponse> filteredItems;
     private List<View> buttons; // Danh sách lưu các button
 
     @Override
@@ -38,16 +44,8 @@ public class Search_Activity extends AppCompatActivity implements SearchViewInte
         filteredItems = new ArrayList<>();
         buttons = new ArrayList<>(); // Khởi tạo danh sách button
 
-        items.add(new Search_Item("Olivia Adams", "Horror", "135 minutes", "T16", R.drawable.movie12));
-        items.add(new Search_Item("Liam Johnson", "Action", "120 minutes", "T18", R.drawable.movie6));
-        items.add(new Search_Item("Noah Brown", "Horror", "90 minutes", "P", R.drawable.movie8));
-        items.add(new Search_Item("Grace Morgan", "Horror", "85 minutes", "P", R.drawable.movie1));
-        items.add(new Search_Item("Isabella Lewis", "Comedy", "100 minutes", "P", R.drawable.movie3));
-        items.add(new Search_Item("Evelyn", "Sci-Fi", "94 minutes", "T13", R.drawable.movie4));
-        items.add(new Search_Item("Jack", "Action", "114 minutes", "P", R.drawable.movie5));
-        items.add(new Search_Item("Tino", "Horror", "125 minutes", "P", R.drawable.movie7));
 
-        filteredItems.addAll(items);
+//        filteredItems.addAll(items);
 
         adapter = new Search_Adapter(this, filteredItems, this);
         recyclerView.setAdapter(adapter);
@@ -55,17 +53,23 @@ public class Search_Activity extends AppCompatActivity implements SearchViewInte
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
+
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                fetchMoviesFromApi(); // Fetch movies based on the query
+                return false; // Indicate that the query submission is handled
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                // Optional: Update the UI or filter local data here if needed
                 filterList(newText);
                 return true;
+//                return false;
             }
+
         });
 
         ImageButton backButton = findViewById(R.id.back_button);
@@ -77,6 +81,35 @@ public class Search_Activity extends AppCompatActivity implements SearchViewInte
         setupCategoryButton(findViewById(R.id.btn_comedy), "Comedy");
         setupCategoryButton(findViewById(R.id.btn_horror), "Horror");
         setupCategoryButton(findViewById(R.id.btn_drama), "Drama");
+    }
+
+    private void fetchMoviesFromApi() {
+        String title = searchView.getQuery().toString().trim();
+        int limit = 5;
+        int offset = 0;
+
+        RetrofitService retrofitService = new RetrofitService(this);
+        SearchMovieByName searchMovieByName = retrofitService.getRetrofit().create(SearchMovieByName.class);
+        searchMovieByName.searchMovies(title, limit, offset).enqueue(new Callback<List<SearchMovieByNameResponse>>() {
+            @Override
+            public void onResponse(Call<List<SearchMovieByNameResponse>> call, Response<List<SearchMovieByNameResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    items.clear();
+                    items.addAll(response.body());
+                    filteredItems.clear();
+                    filteredItems.addAll(items); // Initially show all movies
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(Search_Activity.this, "Failed to fetch movies", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<SearchMovieByNameResponse>> call, Throwable t) {
+                Toast.makeText(Search_Activity.this, "Failed to fetch movies", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     private void setupCategoryButton(View button, String category) {
@@ -100,8 +133,8 @@ public class Search_Activity extends AppCompatActivity implements SearchViewInte
         if (category.equalsIgnoreCase("All")) {
             filteredItems.addAll(items);
         } else {
-            for (Search_Item item : items) {
-                if (item.getCategory().equalsIgnoreCase(category)) {
+            for (SearchMovieByNameResponse item : items) {
+                if (item.getGenreName().equalsIgnoreCase(category)) {
                     filteredItems.add(item);
                 }
             }
@@ -116,9 +149,9 @@ public class Search_Activity extends AppCompatActivity implements SearchViewInte
 
     private void filterList(String text) {
         filteredItems.clear();
-        for (Search_Item item : items) {
+        for (SearchMovieByNameResponse item : items) {
             if (item.getName().toLowerCase().contains(text.toLowerCase()) ||
-                    item.getCategory().toLowerCase().contains(text.toLowerCase())) {
+                    item.getGenreName().toLowerCase().contains(text.toLowerCase())) {
                 filteredItems.add(item);
             }
         }
@@ -132,9 +165,11 @@ public class Search_Activity extends AppCompatActivity implements SearchViewInte
 
     @Override
     public void onItemClick(int position) {
-        Search_Item clickedItem = filteredItems.get(position);
+        SearchMovieByNameResponse clickedItem = filteredItems.get(position);
         Toast.makeText(this, "Film: " + clickedItem.getName(), Toast.LENGTH_SHORT).show();
     }
+
+
 
     @Override
     public void onBackPressed() {

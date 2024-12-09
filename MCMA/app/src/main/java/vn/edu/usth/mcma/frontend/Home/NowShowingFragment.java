@@ -33,7 +33,6 @@ public class NowShowingFragment extends Fragment {
         // Initialize the list
         nowShowingResponseList = new ArrayList<>();
         RecyclerView recyclerView = v.findViewById(R.id.recyclerview_now_showing);
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -70,10 +69,5 @@ public class NowShowingFragment extends Fragment {
             }
         });
     }
-//    List<NowShowing_Item> items = new ArrayList<>();
-//        items.add(new NowShowing_Item("Grace Morgan", "Horror","85 minutes","P" ,R.drawable.movie1));
-//        items.add(new NowShowing_Item("Isabella Lewis", "Comedy","100 minutes","P" ,R.drawable.movie3));
-//        items.add(new NowShowing_Item("Evelyn", "Sci-Fi", "94 minutes","T13" ,R.drawable.movie4));
-//        items.add(new NowShowing_Item("Jack", "Action","114 minutes", "P" ,R.drawable.movie5));
-//        items.add(new NowShowing_Item("Tino", "Horror","125 minutes","P" ,R.drawable.movie7));
+
 }
