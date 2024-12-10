@@ -2,12 +2,16 @@ package vn.edu.usth.mcma.frontend.Search;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,7 +22,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.MovieGenreResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.SearchMovieByNameResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetAllMovieGenres;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.SearchMovieByName;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 
@@ -29,6 +35,8 @@ public class Search_Activity extends AppCompatActivity implements SearchViewInte
     private List<SearchMovieByNameResponse> items;
     private List<SearchMovieByNameResponse> filteredItems;
     private List<View> buttons; // Danh sách lưu các button
+    private List<MovieGenreResponse> genres; // Store fetched genres
+    private LinearLayout genreButtonContainer; // Container for dynamic buttons
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +52,7 @@ public class Search_Activity extends AppCompatActivity implements SearchViewInte
         filteredItems = new ArrayList<>();
         buttons = new ArrayList<>(); // Khởi tạo danh sách button
 
+        genreButtonContainer = findViewById(R.id.genre_button_container);
 
 //        filteredItems.addAll(items);
 
@@ -53,20 +62,22 @@ public class Search_Activity extends AppCompatActivity implements SearchViewInte
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
+        fetchMoviesFromApi();
+        fetchAndDisplayGenres();
 
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 fetchMoviesFromApi(); // Fetch movies based on the query
-                return false; // Indicate that the query submission is handled
+                return true; // Indicate that the query submission is handled
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 // Optional: Update the UI or filter local data here if needed
                 filterList(newText);
-                return true;
+                return false;
 //                return false;
             }
 
@@ -75,13 +86,72 @@ public class Search_Activity extends AppCompatActivity implements SearchViewInte
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(view -> onBackPressed());
 
-        setupCategoryButton(findViewById(R.id.btn_all), "All");
-        setupCategoryButton(findViewById(R.id.btn_action), "Action");
-        setupCategoryButton(findViewById(R.id.btn_adventure), "Adventure");
-        setupCategoryButton(findViewById(R.id.btn_comedy), "Comedy");
-        setupCategoryButton(findViewById(R.id.btn_horror), "Horror");
-        setupCategoryButton(findViewById(R.id.btn_drama), "Drama");
+//        setupCategoryButton(findViewById(R.id.btn_all), "All");
+//        setupCategoryButton(findViewById(R.id.btn_action), "Action");
+//        setupCategoryButton(findViewById(R.id.btn_adventure), "Adventure");
+//        setupCategoryButton(findViewById(R.id.btn_comedy), "Comedy");
+//        setupCategoryButton(findViewById(R.id.btn_horror), "Horror");
+//        setupCategoryButton(findViewById(R.id.btn_drama), "Drama");
     }
+
+    private void fetchAndDisplayGenres() {
+        RetrofitService retrofitService = new RetrofitService(this);
+        GetAllMovieGenres getAllMovieGenres = retrofitService.getRetrofit().create(GetAllMovieGenres.class);
+        getAllMovieGenres.getAllMovieGenres().enqueue(new Callback<List<MovieGenreResponse>>() {
+            @Override
+            public void onResponse(Call<List<MovieGenreResponse>> call, Response<List<MovieGenreResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<MovieGenreResponse> genres = response.body();
+
+                    // Add "All" button first
+                    addGenreButton("All");
+
+                    // Add buttons for each genre dynamically
+                    for (MovieGenreResponse genre : genres) {
+                        addGenreButton(genre.getGenreName());
+                    }
+                } else {
+                    Toast.makeText(Search_Activity.this, "Failed to fetch genres", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<MovieGenreResponse>> call, Throwable t) {
+                Toast.makeText(Search_Activity.this, "Failed to fetch genres", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void addGenreButton(String genreName) {
+        Button button = new Button(this);
+        button.setText(genreName);
+        button.setTransformationMethod(null);
+        button.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.colorLightBlue));
+        button.setTextColor(ContextCompat.getColor(this, R.color.black));
+        button.setPadding(20, 10, 20, 10);
+        button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17.5f);
+
+        // Set button margins programmatically
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(8, 0, 8, 0);
+        button.setLayoutParams(params);
+
+        // Add button to container
+        genreButtonContainer.addView(button);
+
+        // Set click listener
+        button.setOnClickListener(v -> {
+            resetButtonColors();
+            button.setBackgroundColor(Color.LTGRAY);
+            filterByCategory(genreName);
+        });
+
+        buttons.add(button); // Add button to list for reset
+    }
+
 
     private void fetchMoviesFromApi() {
         String title = searchView.getQuery().toString().trim();

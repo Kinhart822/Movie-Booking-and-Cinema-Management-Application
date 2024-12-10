@@ -40,19 +40,7 @@ public class Search_Adapter extends RecyclerView.Adapter<Search_ViewHolder> {
         holder.typeView.setText(item.getGenreName() != null ? item.getGenreName() : "N/A");
         holder.timeView.setText(item.getLength() != null ? item.getLength() + " min" : "Unknown");
         holder.age_limitView.setText(item.getRatingName() != null ? item.getRatingName() : "No Rating");
-//        if (item.getTrailerLink() != null) {
-//            Glide.with(context)
-//                    .load(item.getTrailerLink()) // Update if a different property contains the image URL
-//                    .placeholder(R.drawable.placeholder_image)
-//                    .into(holder.filmView);
-//        } else {
-//            holder.filmView.setImageResource(R.drawable.placeholder_image);
-//        }
-//        holder.nameView.setText(item.getName());
-//        holder.typeView.setText(item.getCategory());
-//        holder.timeView.setText(item.getTime());
-//        holder.age_limitView.setText(item.getAge_limit());
-//        holder.filmView.setImageResource(item.getFilm_image());
+
     }
 
     @Override
