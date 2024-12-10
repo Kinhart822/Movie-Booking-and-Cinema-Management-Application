@@ -30,7 +30,6 @@ public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnThe
     private TheaterAdapter theaterAdapter;
     private Button typeButton;
     private String currentCity = "TPHCM";
-    private DrawerLayout mDrawerLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,78 +41,6 @@ public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnThe
         setupTypeButton();
         setupCityButtons(v); // Pass 'v' to avoid calling getView() prematurely
         updateTheaterList();
-
-        ImageButton mImageView = v.findViewById(R.id.menu_button);
-
-        mDrawerLayout = v.findViewById(R.id.launchtime_fragment);
-
-        mImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mDrawerLayout != null && !mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
-                    mDrawerLayout.openDrawer(GravityCompat.START);
-                }
-            }
-        });
-
-        LinearLayout to_home_fragment = v.findViewById(R.id.home_side_navigation);
-        to_home_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_home_page();
-                }
-            }
-        });
-
-        LinearLayout to_showtimes_fragment = v.findViewById(R.id.showtimes_side_navigation);
-        to_showtimes_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_showtimes_page();
-                }
-            }
-        });
-
-        LinearLayout to_store_fragment = v.findViewById(R.id.store_side_navigation);
-        to_store_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_store_page();
-                }
-            }
-        });
-
-        LinearLayout to_feedback_fragment = v.findViewById(R.id.feedback_side_navigation);
-        to_feedback_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_feedback_page();
-                }
-            }
-        });
-
-        LinearLayout to_personal_fragment = v.findViewById(R.id.personal_side_navigation);
-        to_personal_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_personal_page();
-                }
-            }
-        });
-
-        ImageButton notication_buttonn = v.findViewById(R.id.notification_button);
-        notication_buttonn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Notification.Notification_Activity.class );
-                startActivity(i);
-            }
-        });
 
         return v;
     }

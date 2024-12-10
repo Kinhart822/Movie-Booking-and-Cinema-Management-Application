@@ -46,66 +46,10 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
 
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
-        ImageButton mImageButton = v.findViewById(R.id.menu_button);
-        mDrawerLayout = v.findViewById(R.id.home_fragment);
+
         tabLayout = v.findViewById(R.id.type_tablayout);
         viewPager = v.findViewById(R.id.type_viewPager2);
 
-        mImageButton.setOnClickListener(view -> {
-            if (mDrawerLayout != null && !mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-                mDrawerLayout.openDrawer(GravityCompat.START);
-            }
-        });
-
-        LinearLayout to_home_fragment = v.findViewById(R.id.home_side_navigation);
-        to_home_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_home_page();
-                }
-            }
-        });
-
-        LinearLayout to_showtimes_fragment = v.findViewById(R.id.showtimes_side_navigation);
-        to_showtimes_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_showtimes_page();
-                }
-            }
-        });
-
-        LinearLayout to_store_fragment = v.findViewById(R.id.store_side_navigation);
-        to_store_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_store_page();
-                }
-            }
-        });
-
-        LinearLayout to_personal_fragment = v.findViewById(R.id.personal_side_navigation);
-        to_personal_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_personal_page();
-                }
-            }
-        });
-
-        LinearLayout to_feedback_fragment = v.findViewById(R.id.feedback_side_navigation);
-        to_feedback_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_feedback_page();
-                }
-            }
-        });
 
         int images[] = {R.drawable.movie9, R.drawable.movie3, R.drawable.movie4};
         v_flipper = v.findViewById(R.id.view_flipper);
@@ -119,14 +63,6 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
         // Setup TabLayout and ViewPager2
         setupViewPagerAndTabs();
 
-        ImageButton notication_buttonn = v.findViewById(R.id.notification_button);
-        notication_buttonn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Notification.Notification_Activity.class );
-                startActivity(i);
-            }
-        });
 
         LinearLayout to_search_activity = v.findViewById(R.id.search_bar);
         to_search_activity.setOnClickListener(new View.OnClickListener() {

@@ -38,10 +38,6 @@ public class FeedbackFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_feedback, container, false);
 
-        ImageButton mImageView = v.findViewById(R.id.menu_button);
-
-        mDrawerLayout = v.findViewById(R.id.feedback_fragment);
-
         recyclerView = v.findViewById(R.id.recyclerview_feedbackmovie);
         items = new ArrayList<>();
 
@@ -51,74 +47,6 @@ public class FeedbackFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(new RatingMovie_Adapter(requireContext(), items));
-
-        mImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mDrawerLayout != null && !mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
-                    mDrawerLayout.openDrawer(GravityCompat.START);
-                }
-            }
-        });
-
-        LinearLayout to_home_fragment = v.findViewById(R.id.home_side_navigation);
-        to_home_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_home_page();
-                }
-            }
-        });
-
-        LinearLayout to_showtimes_fragment = v.findViewById(R.id.showtimes_side_navigation);
-        to_showtimes_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_showtimes_page();
-                }
-            }
-        });
-
-        LinearLayout to_store_fragment = v.findViewById(R.id.store_side_navigation);
-        to_store_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_store_page();
-                }
-            }
-        });
-
-        LinearLayout to_feedback_fragment = v.findViewById(R.id.feedback_side_navigation);
-        to_feedback_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_feedback_page();
-                }
-            }
-        });
-
-        LinearLayout to_personal_fragment = v.findViewById(R.id.personal_side_navigation);
-        to_personal_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_personal_page();
-                }
-            }
-        });
-
-        ImageButton notification_button = v.findViewById(R.id.notification_button);
-        notification_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Notification.Notification_Activity.class);
-                startActivity(i);
-            }
-        });
 
         return v;
     }

@@ -24,15 +24,15 @@ public class PersonalFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_personal, container, false);
 
-        ImageButton closeButton = v.findViewById(R.id.close_button);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (getActivity() instanceof vn.edu.usth.mcma.frontend.MainActivity) {
-                    ((vn.edu.usth.mcma.frontend.MainActivity) getActivity()).close_to_home_page();
-                }
-            }
-        });
+//        ImageButton closeButton = v.findViewById(R.id.close_button);
+//        closeButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (getActivity() instanceof vn.edu.usth.mcma.frontend.MainActivity) {
+//                    ((vn.edu.usth.mcma.frontend.MainActivity) getActivity()).close_to_home_page();
+//                }
+//            }
+//        });
 
         LinearLayout to_edit_update = v.findViewById(R.id.account_information_edit_update);
         to_edit_update.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +103,7 @@ public class PersonalFragment extends Fragment {
                         // Đóng dialog
                         dialog.dismiss();
                     }
-                });
+                }); 
 
                 cancelButton.setOnClickListener(new View.OnClickListener() {
                     @Override
