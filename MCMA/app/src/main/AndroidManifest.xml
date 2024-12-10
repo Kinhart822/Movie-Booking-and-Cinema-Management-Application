@@ -54,6 +54,7 @@
             android:exported="false" />
         <activity
             android:name=".frontend.MainActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize"
             android:exported="false" />
         <activity
             android:name=".frontend.Search.Search_Activity"

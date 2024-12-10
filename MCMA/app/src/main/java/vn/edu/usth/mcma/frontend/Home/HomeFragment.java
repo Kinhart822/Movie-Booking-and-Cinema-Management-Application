@@ -54,21 +54,8 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
 
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
-        ImageButton mImageButton = v.findViewById(R.id.menu_button);
-        mDrawerLayout = v.findViewById(R.id.home_fragment);
         tabLayout = v.findViewById(R.id.type_tablayout);
         viewPager = v.findViewById(R.id.type_viewPager2);
-
-        mImageButton.setOnClickListener(view -> {
-            if (mDrawerLayout != null) {
-                if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    mDrawerLayout.closeDrawer(GravityCompat.START);
-                } else {
-                    mDrawerLayout.openDrawer(GravityCompat.START);
-                }
-            }
-        });
-
 
         LinearLayout to_home_fragment = v.findViewById(R.id.home_side_navigation);
         to_home_fragment.setOnClickListener(new View.OnClickListener() {

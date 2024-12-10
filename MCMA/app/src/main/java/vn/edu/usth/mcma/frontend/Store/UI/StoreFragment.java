@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,80 +43,13 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
     private Button checkoutButton;
     private ComboAdapter comboAdapter;
     private View comboMenuContainer;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_store, container, false);
         initializeViews(view);
-
-        ImageButton closeButton = view.findViewById(R.id.close_button);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof vn.edu.usth.mcma.frontend.MainActivity){
-                    ((vn.edu.usth.mcma.frontend.MainActivity) getActivity()).close_to_home_page();
-                }
-            }
-        });
-        LinearLayout to_home_fragment = view.findViewById(R.id.home_side_navigation);
-        to_home_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_home_page();
-                }
-            }
-        });
-
-        LinearLayout to_showtimes_fragment = view.findViewById(R.id.showtimes_side_navigation);
-        to_showtimes_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_showtimes_page();
-                }
-            }
-        });
-
-        LinearLayout to_store_fragment = view.findViewById(R.id.store_side_navigation);
-        to_store_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_store_page();
-                }
-            }
-        });
-
-        LinearLayout to_feedback_fragment = view.findViewById(R.id.feedback_side_navigation);
-        to_feedback_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_feedback_page();
-                }
-            }
-        });
-
-        LinearLayout to_personal_fragment = view.findViewById(R.id.personal_side_navigation);
-        to_personal_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_personal_page();
-                }
-            }
-        });
-
-        ImageButton notication_buttonn = view.findViewById(R.id.notification_button);
-        notication_buttonn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Notification.Notification_Activity.class );
-                startActivity(i);
-            }
-        });
 
         // Set default theater (Tất cả các rạp)
         selectedTheater = getTheaterList().get(0);
@@ -201,7 +136,7 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
     private void updateTotalPrice(double total) {
         PriceCalculator.PriceResult result = PriceCalculator.calculateTotalPrice(comboAdapter.getComboItems());
         String formattedPrice = PriceCalculator.formatPrice(result.getTotal());
-        totalPriceText.setText(String.format("Tổng tiền (đã bao gồm phụ thu): %s", formattedPrice));
+        totalPriceText.setText(String.format("Total Price(surcharge included): %s", formattedPrice));
         checkoutButton.setEnabled(result.getTotal() > 0);
     }
 

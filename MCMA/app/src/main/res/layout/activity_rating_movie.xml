@@ -45,7 +45,6 @@
                 android:background="@drawable/notification" />
         </LinearLayout>
 
-        <!-- Scrollable Content -->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -58,14 +57,12 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- Rating Section -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="8dp">
 
-                    <!-- FrameLayout chứa ảnh -->
                     <FrameLayout
                         android:layout_width="200dp"
                         android:layout_height="300dp"
@@ -81,7 +78,6 @@
                             android:scaleType="centerCrop" />
                     </FrameLayout>
 
-                    <!-- LinearLayout chứa thông tin -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -97,7 +93,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold"
                             android:layout_marginBottom="4dp"
-                            android:text="Tên phim" />
+                            android:text="Movie name" />
 
                         <TextView
                             android:id="@+id/tvMovieType"
@@ -105,7 +101,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
                             android:textColor="@android:color/darker_gray"
-                            android:text="Thể loại phim" />
+                            android:text="Movie type" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -141,7 +137,6 @@
                     android:textStyle="bold"
                     android:textColor="@color/black" />
 
-                <!-- Comment Section -->
                 <TextView
                     android:id="@+id/tvCommentLabel"
                     android:layout_width="wrap_content"
@@ -164,7 +159,6 @@
                     android:background="@drawable/tab_rect"
                     android:padding="10dp" />
 
-                <!-- Submit Button -->
                 <Button
                     android:id="@+id/btnSubmit"
                     android:layout_width="129dp"
