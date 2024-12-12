@@ -1,25 +1,15 @@
 package vn.edu.usth.mcma.frontend.Showtimes.UI;
 
-import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.Intent;
 
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,7 +18,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.SeatAdapter;
@@ -36,9 +25,11 @@ import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Seat;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
-import vn.edu.usth.mcma.frontend.Showtimes.Utils.PriceCalculator;
+import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketItem;
+import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketType;
 
 public class SeatSelectionActivity extends AppCompatActivity {
+    private int totalTicketPrice; // store total ticket price from previous activity
     private RecyclerView seatRecyclerView;
     private SeatAdapter seatAdapter;
     private List<List<Seat>> seatLayout;
@@ -46,11 +37,18 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private String selectedShowtime;
     private Movie selectedMovie;
     private int totalSeatsPerRow;
+    private int guestQuantity; //variable to track kid ticket quantity
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seat_selection);
+        // Retrieve guest quantity from previous activity
+        List<TicketItem> ticketItems = getIntent().getParcelableArrayListExtra("TICKET_ITEMS");
+        guestQuantity = calculateTotalTicketQuantity(ticketItems);
+        // Calculate total ticket price
+        totalTicketPrice = calculateTotalTicketPrice(ticketItems);
         // Determine seats per row based on theater and movie duration
         totalSeatsPerRow = determineTotalSeatsPerRow();
         selectedTheater = (Theater) getIntent().getSerializableExtra("SELECTED_THEATER");
@@ -61,8 +59,20 @@ public class SeatSelectionActivity extends AppCompatActivity {
         setupRecyclerView();
         setupCheckoutButton();
         setupBackButton();
+        updateSelectedSeatsDisplay();
     }
 
+    private int calculateTotalTicketQuantity(List<TicketItem> ticketItems) {
+        return ticketItems.stream()
+                .mapToInt(TicketItem::getQuantity)
+                .sum();
+    }
+    // New method to calculate total ticket price
+    private int calculateTotalTicketPrice(List<TicketItem> ticketItems) {
+        return ticketItems.stream()
+                .mapToInt(TicketItem::getTotalPrice)
+                .sum();
+    }
     private void setupTheaterInfo() {
         TextView theaterNameTV = findViewById(R.id.theater_name);
         TextView movieNameTV = findViewById(R.id.movie_name);
@@ -162,29 +172,36 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private void setupCheckoutButton() {
         Button checkoutButton = findViewById(R.id.checkout_button);
         checkoutButton.setOnClickListener(v -> {
-            // Get selected seats
             Set<Seat> selectedSeats = seatAdapter.getSelectedSeats();
-
-            // Ensure at least one seat is selected
-            if (selectedSeats.isEmpty()) {
-                Toast.makeText(this, "Please select at least one seat", Toast.LENGTH_SHORT).show();
+            if (selectedSeats.size() != guestQuantity) {
+                Toast.makeText(this, "Please choose the correct number of seats", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Calculate the base seat price
-            int seatPriceTotal = calculateTotalPrice(selectedSeats);
-            String seatPriceFormatted = formatCurrency(seatPriceTotal);
-            // Convert Set to ArrayList for Parcelable
+            // Calculate total seat price
+            int seatPriceAdditional = calculateTotalPrice(selectedSeats);
+            int totalPrice = totalTicketPrice + seatPriceAdditional;
             ArrayList<Seat> seatsList = new ArrayList<>(selectedSeats);
 
-            // Navigate to ComboSelectionActivity
+            // Prepare intent for ComboSelectionActivity
+            List<TicketItem> ticketItems = getIntent().getParcelableArrayListExtra("TICKET_ITEMS");
             Intent intent = new Intent(this, ComboSelectionActivity.class);
-            intent.putExtra(ComboSelectionActivity.EXTRA_SEAT_PRICE, seatPriceTotal);
-            intent.putExtra(ComboSelectionActivity.EXTRA_SEAT_COUNT, seatsList.size());
-            intent.putParcelableArrayListExtra(ComboSelectionActivity.EXTRA_SELECTED_SEATS, seatsList);
-            intent.putExtra(ComboSelectionActivity.EXTRA_THEATER, selectedTheater);
-            intent.putExtra(ComboSelectionActivity.EXTRA_MOVIE, selectedMovie);
-            intent.putExtra("SELECTED_SCREEN_ROOM", getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
+
+            intent.putParcelableArrayListExtra("TICKET_ITEMS", new ArrayList<>(ticketItems));
+            // Pass all necessary extras
+            intent.putExtra(ComboSelectionActivity.EXTRA_SEAT_PRICE, totalPrice);
+            intent.putExtra(ComboSelectionActivity.EXTRA_SEAT_COUNT, guestQuantity);
+            intent.putParcelableArrayListExtra(ComboSelectionActivity.EXTRA_SELECTED_SEATS, new ArrayList<>(selectedSeats));
+            // Pass through extras from previous activities
+            intent.putExtra(ComboSelectionActivity.EXTRA_THEATER,
+                    getIntent().getSerializableExtra("SELECTED_THEATER"));
+            intent.putExtra(ComboSelectionActivity.EXTRA_MOVIE,
+                    getIntent().getSerializableExtra("SELECTED_MOVIE"));
+            intent.putExtra("SELECTED_SHOWTIME",
+                    getIntent().getStringExtra("SELECTED_SHOWTIME"));
+            intent.putExtra("SELECTED_SCREEN_ROOM",
+                    getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
+
             startActivity(intent);
         });
     }
@@ -192,7 +209,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
     // Price calculation methods
     private void updateSelectedSeatsDisplay() {
         TextView noOfSeatsTV = findViewById(R.id.no_of_seats);
-        TextView seatPriceTotalTV = findViewById(R.id.seat_price_total);
+        TextView seatPriceTV = findViewById(R.id.seat_price_total);
         Button checkoutButton = findViewById(R.id.checkout_button);
 
         // Get selected seats from adapter
@@ -203,17 +220,18 @@ public class SeatSelectionActivity extends AppCompatActivity {
         noOfSeatsTV.setText(seatCount + " ghế");
 
         // Calculate seat price
-        int seatPriceTotal = calculateTotalPrice(selectedSeats);
-        seatPriceTotalTV.setText(formatCurrency(seatPriceTotal));
+        int seatPriceAdditional = calculateTotalPrice(selectedSeats);
+        int totalPrice = totalTicketPrice + seatPriceAdditional;
+        seatPriceTV.setText(formatCurrency(totalPrice));
 
-        // Update checkout button color based on selection
-        if (seatCount > 0 && seatPriceTotal > 0) {
-            checkoutButton.setBackgroundResource(R.drawable.rounded_active_background);
-            checkoutButton.setEnabled(true);
-        } else {
-            checkoutButton.setBackgroundResource(R.drawable.rounded_dark_background);
-            checkoutButton.setEnabled(true);
-        }
+        // Enable/disable checkout based on selected seats matching ticket quantity
+        boolean isCorrectSeatCount = seatCount == guestQuantity;
+        checkoutButton.setEnabled(isCorrectSeatCount);
+        checkoutButton.setBackgroundResource(
+                isCorrectSeatCount ?
+                        R.drawable.rounded_active_background :
+                        R.drawable.rounded_dark_background
+        );
     }
 
     private int calculateTotalPrice(Set<Seat> selectedSeats) {
@@ -246,23 +264,12 @@ public class SeatSelectionActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         seatRecyclerView = findViewById(R.id.seatRecyclerView);
-
-        // Dynamically set column count based on max row seats
-        int maxRowSeats = seatLayout.stream()
-                .mapToInt(List::size)
-                .max()
-                .orElse(17);
-
-        // Use GridLayoutManager with fixed column count
+        int maxRowSeats = seatLayout.stream().mapToInt(List::size).max().orElse(17);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, maxRowSeats);
         seatRecyclerView.setLayoutManager(gridLayoutManager);
-
         seatAdapter = new SeatAdapter(seatLayout, seat -> {
             updateSelectedSeatsDisplay();
-        });
+        }, guestQuantity); // Pass total guest quantity to adapter
         seatRecyclerView.setAdapter(seatAdapter);
     }
 }
-
-
-

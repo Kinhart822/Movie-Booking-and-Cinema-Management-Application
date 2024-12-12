@@ -8,7 +8,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,14 +20,16 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
     private List<List<Seat>> seatLayout;
     private OnSeatSelectedListener listener;
     private Set<Seat> selectedSeats = new HashSet<>();
+    private int maxSeats;
 
     public interface OnSeatSelectedListener {
         void onSeatSelected(Seat seat);
     }
 
-    public SeatAdapter(List<List<Seat>> seatLayout, OnSeatSelectedListener listener) {
+    public SeatAdapter(List<List<Seat>> seatLayout, OnSeatSelectedListener listener, int maxSeats) {
         this.seatLayout = seatLayout;
         this.listener = listener;
+        this.maxSeats = maxSeats;
     }
 
     @NonNull
@@ -79,10 +80,17 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
         if (selectedSeats.contains(seat)) {
             selectedSeats.remove(seat);
         } else {
-            selectedSeats.add(seat);
+            // Prevent selecting more than max kid seats
+            if (selectedSeats.size() < maxSeats) {
+                selectedSeats.add(seat);
+            }
         }
+
+        // Always notify item changed and call listener
         notifyItemChanged(getPosition(seat));
-        listener.onSeatSelected(seat);
+        if (listener != null) {
+            listener.onSeatSelected(seat);
+        }
     }
 
     public Set<Seat> getSelectedSeats() {

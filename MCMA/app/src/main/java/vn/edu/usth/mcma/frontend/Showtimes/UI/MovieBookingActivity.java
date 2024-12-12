@@ -224,7 +224,7 @@ public class MovieBookingActivity extends AppCompatActivity {
         theaterAdapter = new TheaterShowtimesAdapter(new TheaterShowtimesAdapter.OnShowtimeClickListener() {
             @Override
             public void onShowtimeClick(Theater theater, String showtime, String screenRoom) {
-                showQuantityAndTypeTicketDialog(theater, showtime, screenRoom);
+                showQuantityTicketDialog(theater, showtime, screenRoom);
             }
         });
         theatersRecyclerView.setAdapter(theaterAdapter);
@@ -232,11 +232,10 @@ public class MovieBookingActivity extends AppCompatActivity {
     }
 
     // Add new method to MovieBookingActivity.java
-    private void showQuantityAndTypeTicketDialog(Theater theater, String showtime, String screenRoom) {
-        QuantityAndTypeTicketDialog dialog = new QuantityAndTypeTicketDialog(this, new QuantityAndTypeTicketDialog.OnDialogActionListener() {
+    private void showQuantityTicketDialog(Theater theater, String showtime, String screenRoom) {
+        QuantityTicketDialog dialog = new QuantityTicketDialog(this, new QuantityTicketDialog.OnDialogActionListener() {
             @Override
-            public void onContinueClicked(List<QuantityAndTypeTicketDialog.TicketTypeItem> selectedTickets) {
-                // Retrieve the movie details for the current selection
+            public void onContinueClicked(int guestQuantity) {
                 MovieDetails movieDetails = MovieDataProvider.getMovieDetails(movieTitle);
                 Movie selectedMovie = new Movie(
                         "movie_" + movieTitle.toLowerCase().replace(" ", "_"),
@@ -244,10 +243,11 @@ public class MovieBookingActivity extends AppCompatActivity {
                         new HashMap<>() // You might want to populate this with actual showtimes
                 );
 
-                Intent intent = new Intent(MovieBookingActivity.this, SeatSelectionActivity.class);
-                intent.putExtra("SELECTED_THEATER", theater);
+                Intent intent = new Intent(MovieBookingActivity.this, TicketSelectionActivity.class);
+                intent.putExtra(TicketSelectionActivity.EXTRA_GUEST_QUANTITY, guestQuantity);
+                intent.putExtra(TicketSelectionActivity.EXTRA_THEATER, theater);
+                intent.putExtra(TicketSelectionActivity.EXTRA_MOVIE, selectedMovie);
                 intent.putExtra("SELECTED_SHOWTIME", showtime);
-                intent.putExtra("SELECTED_MOVIE", selectedMovie);
                 intent.putExtra("SELECTED_SCREEN_ROOM", screenRoom);
                 startActivity(intent);
             }

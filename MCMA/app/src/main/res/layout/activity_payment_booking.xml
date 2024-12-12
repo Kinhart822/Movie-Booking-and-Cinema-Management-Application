@@ -97,6 +97,20 @@
                         android:textColor="@color/dark_grey"/>
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/ticket_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Chi tiết loại vé"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/ticket_details_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
                 <!-- Order Details -->
                 <TextView
                     android:id="@+id/order_details"
@@ -132,7 +146,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Tổng tiền (đã bao gồm phụ thu)"
+                        android:text="Tổng tiền"
                         android:textColor="@color/dark_grey" />
                     <TextView
                         android:id="@+id/total_price"
@@ -146,6 +160,34 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="16dp"
                     android:background="#333333"/>
+
+                <Button
+                    android:id="@+id/coupon_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="List of coupons"
+                    android:textColor="@color/white"
+                    android:background="@drawable/bg_button_enabled"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Tổng tiền (đã bao gôm coupon):"
+                        android:textColor="@color/dark_grey" />
+                    <TextView
+                        android:id="@+id/total_price_coupon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="65,000đ"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
         <!-- Payment Methods Section -->
@@ -177,7 +219,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:backgroundTint="@color/GreenBtn"
-            android:text="Hoàn tất thanh toán (3/3)"
+            android:text="Complete payment booking"
             android:textAllCaps="false"/>
     </LinearLayout>
 </ScrollView>

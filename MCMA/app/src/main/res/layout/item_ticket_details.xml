@@ -7,20 +7,20 @@
     android:padding="8dp">
 
     <TextView
-        android:id="@+id/numberTypeAndPosition"
+        android:id="@+id/quantityAndTypeTicket"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="1 x Stand - 2D: E4"
+        android:text="3 x Kid"
         android:textColor="@color/white"
         android:maxLines="2"
         android:ellipsize="end"/>
 
     <TextView
-        android:id="@+id/seatPricePerQuantity"
+        android:id="@+id/ticketPricePerQuantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="100,000đ"
+        android:text="75000đ"
         android:textColor="@color/white"
         android:gravity="end"/>
 </LinearLayout>

@@ -43,9 +43,11 @@ import vn.edu.usth.mcma.frontend.Showtimes.Adapters.ComboAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.TheaterAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.ComboItem;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
+import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketItem;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.PriceCalculator;
 
 public class ComboSelectionActivity extends AppCompatActivity {
+
     public static final String EXTRA_SEAT_PRICE = "extra_seat_price";
     public static final String EXTRA_SEAT_COUNT = "extra_seat_count";
     public static final String EXTRA_SELECTED_SEATS = "extra_selected_seats";
@@ -243,6 +245,7 @@ public class ComboSelectionActivity extends AppCompatActivity {
     private void setupCheckoutButton() {
         Button checkoutButton = findViewById(R.id.checkout_button);
         checkoutButton.setOnClickListener(v -> {
+            List<TicketItem> ticketItems = getIntent().getParcelableArrayListExtra("TICKET_ITEMS");
             // Retrieve selected seats from previous activity
             List<Seat> selectedSeats = getIntent().getParcelableArrayListExtra(EXTRA_SELECTED_SEATS);
 
@@ -254,6 +257,7 @@ public class ComboSelectionActivity extends AppCompatActivity {
 
             // Create intent to PaymentBookingActivity
             Intent intent = new Intent(this, PaymentBookingActivity.class);
+            intent.putParcelableArrayListExtra("TICKET_ITEMS", new ArrayList<>(ticketItems));
             intent.putExtra("SELECTED_MOVIE", getIntent().getSerializableExtra("SELECTED_MOVIE"));
             intent.putExtra("SELECTED_THEATER", getIntent().getSerializableExtra("SELECTED_THEATER"));
             intent.putExtra("SELECTED_SHOWTIME", getIntent().getStringExtra("SELECTED_SHOWTIME"));

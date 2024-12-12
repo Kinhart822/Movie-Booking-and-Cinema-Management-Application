@@ -34,7 +34,7 @@
                 android:id="@+id/text_seat_selection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Combo Selection"
+                android:text="Ticket Selection"
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -94,7 +94,7 @@
             android:id="@+id/concession_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Concession"
+            android:text="Select Ticket Type"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:padding="12dp"
@@ -109,13 +109,13 @@
             android:layout_weight="1">
 
             <LinearLayout
-                android:id="@+id/combo_menu_container"
+                android:id="@+id/ticket_menu_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/combo_recycler_view"
+                    android:id="@+id/ticket_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"/>
@@ -170,7 +170,7 @@
                     android:layout_marginEnd="8dp" />
 
                 <TextView
-                    android:id="@+id/no_of_seats"
+                    android:id="@+id/total_ticket_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0 ghế"
@@ -182,20 +182,7 @@
                     android:layout_marginStart="24dp" />
 
                 <TextView
-                    android:id="@+id/combo_price_total"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0đ"
-                    android:textColor="@color/white"
-                    android:layout_marginStart="1dp"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="4dp"
-                    android:layout_marginTop="8dp"
-                    android:textSize="14sp" />
-
-
-                <TextView
-                    android:id="@+id/total_price_0"
+                    android:id="@+id/total_price_ticket"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0d"
@@ -211,7 +198,7 @@
                 android:id="@+id/checkout_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Complete combo selection"
+                android:text="Completed ticket type selection"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:padding="12dp"

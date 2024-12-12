@@ -4,7 +4,9 @@ import static vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType.COUPLE;
 import static vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType.STAND;
 import static vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType.VIP;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
@@ -33,19 +35,24 @@ import java.util.stream.Collectors;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.ComboDetailsAdapter;
+import vn.edu.usth.mcma.frontend.Showtimes.Adapters.CouponAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.PaymentMethodAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.SeatDetailsAdapter;
+import vn.edu.usth.mcma.frontend.Showtimes.Adapters.TicketDetailsAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.ComboItem;
+import vn.edu.usth.mcma.frontend.Showtimes.Models.Coupon;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.MovieDetails;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.PaymentMethod;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Seat;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
+import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketItem;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.PriceCalculator;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.MovieDataProvider;
 
 public class PaymentBookingActivity extends AppCompatActivity {
+    private RecyclerView ticketDetailsRecyclerView;
     private RecyclerView seatDetailsRecyclerView;
     private RecyclerView comboDetailsRecyclerView;
     private RecyclerView paymentMethodsRecyclerView;
@@ -58,6 +65,11 @@ public class PaymentBookingActivity extends AppCompatActivity {
     private List<Seat> selectedSeats;
     private List<ComboItem> selectedComboItems;
     private double totalPrice;
+    private Button buttonCoupon;
+    private Coupon selectedCoupon;
+    private TextView totalPriceTV;
+    private TextView totalPriceCouponTV;
+    private double originalTotalPrice;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +78,14 @@ public class PaymentBookingActivity extends AppCompatActivity {
         retrieveIntentExtras();
         // Initialize and set up views
         initializeViews();
+        setupCouponButton();
+        // Set initial coupon to "Not use coupon"
+        selectedCoupon = getCouponList().get(0);
+        updateCouponButton();
+        // Store the original total price
+        originalTotalPrice = totalPrice;
+        // Update total price with coupon
+        updateTotalPriceWithCoupon();
         // Initialize views
         paymentMethodsRecyclerView = findViewById(R.id.paymentMethodsRecyclerView);
         termsCheckbox = findViewById(R.id.termsCheckbox);
@@ -75,6 +95,72 @@ public class PaymentBookingActivity extends AppCompatActivity {
         // Setup complete payment button
         completePaymentButton.setOnClickListener(v -> handlePaymentCompletion());
     }
+    private void setupCouponButton() {
+        buttonCoupon.setOnClickListener(v -> showCouponSelectionDialog());
+    }
+
+    private void showCouponSelectionDialog() {
+        View dialogView = getLayoutInflater().inflate(R.layout.activity_coupon_booking, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+
+        TextView cancelBtn = dialogView.findViewById(R.id.cancel_button);
+        Button confirmBtn = dialogView.findViewById(R.id.confirm_button);
+        RecyclerView couponDialogRecyclerView = dialogView.findViewById(R.id.coupon_recycler_view);
+
+        List<Coupon> couponList = getCouponList();
+        CouponAdapter dialogAdapter = new CouponAdapter(couponList);
+        dialogAdapter.setOnCouponClickListener(coupon -> {
+            selectedCoupon = coupon;
+            dialogAdapter.setCurrentSelection(coupon);
+        });
+
+        // Set current selection in dialog
+        dialogAdapter.setCurrentSelection(selectedCoupon);
+
+        couponDialogRecyclerView.setAdapter(dialogAdapter);
+        couponDialogRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        AlertDialog dialog = builder.create();
+
+        cancelBtn.setOnClickListener(v -> dialog.dismiss());
+        confirmBtn.setOnClickListener(v -> {
+            updateCouponButton();
+            updateTotalPriceWithCoupon();
+            dialog.dismiss();
+        });
+        dialog.show();
+    }
+
+    private void updateCouponButton() {
+        buttonCoupon.setText(selectedCoupon.getName());
+    }
+
+    private void updateTotalPriceWithCoupon() {
+        // Calculate discounted price
+        double discountPercentage = selectedCoupon.getDiscountPercentage();
+        double discountAmount = originalTotalPrice * discountPercentage;
+        double discountedPrice = originalTotalPrice - discountAmount;
+
+        // Update total price with coupon TextView
+        totalPriceCouponTV.setText(PriceCalculator.formatPrice(discountedPrice));
+    }
+
+    private List<Coupon> getCouponList() {
+        List<Coupon> coupons = new ArrayList<>();
+        coupons.add(new Coupon("1", "Not use coupon"));
+        coupons.add(new Coupon("2", "10%"));
+        coupons.add(new Coupon("3", "20%"));
+        coupons.add(new Coupon("4", "30%"));
+        coupons.add(new Coupon("5", "40%"));
+        coupons.add(new Coupon("6", "50%"));
+        coupons.add(new Coupon("7", "60%"));
+        coupons.add(new Coupon("8", "70%"));
+        coupons.add(new Coupon("9", "80%"));
+        coupons.add(new Coupon("10", "90%"));
+        return coupons;
+    }
+
     private void retrieveIntentExtras() {
         selectedMovie = (Movie) getIntent().getSerializableExtra("SELECTED_MOVIE");
         selectedTheater = (Theater) getIntent().getSerializableExtra("SELECTED_THEATER");
@@ -82,12 +168,14 @@ public class PaymentBookingActivity extends AppCompatActivity {
         selectedComboItems = getIntent().getParcelableArrayListExtra("SELECTED_COMBO_ITEMS");
         totalPrice = getIntent().getDoubleExtra("TOTAL_PRICE", 0);
     }
-
-    private void initializeViews() {
+    private void initializeViews()   {
         // Movie Details
         TextView movieTitleTV = findViewById(R.id.movieTitle);
         ImageView moviePosterIV = findViewById(R.id.moviePoster);
         TextView theaterNameTV = findViewById(R.id.theaterName);
+        buttonCoupon = findViewById(R.id.coupon_button);
+        totalPriceTV = findViewById(R.id.total_price);
+        totalPriceCouponTV = findViewById(R.id.total_price_coupon);
 
         // Set movie title
         if (selectedMovie != null) {
@@ -99,21 +187,44 @@ public class PaymentBookingActivity extends AppCompatActivity {
                 moviePosterIV.setImageResource(movieDetails.getBannerImageResId());
             }
         }
-
         // Set theater name
         if (selectedTheater != null) {
             theaterNameTV.setText(selectedTheater.getName());
         }
-
         // Set date and showtime
         setDateAndShowtime();
         // Set seats and combo details
         setSeatsDetails();
         setCombosDetails();
+        setTicketDetails();
 
         // Set total price
         TextView totalPriceTV = findViewById(R.id.total_price);
         totalPriceTV.setText(PriceCalculator.formatPrice(totalPrice));
+    }
+
+    private void setTicketDetails() {
+        ticketDetailsRecyclerView = findViewById(R.id.ticket_details_recycler_view);
+        List<TicketItem> ticketItems = getIntent().getParcelableArrayListExtra("TICKET_ITEMS");
+
+        if (ticketItems != null) {
+            // Filter out ticket types with zero quantity and create TicketDetailsItems
+            List<TicketDetailsAdapter.TicketDetailsItem> ticketDetailItems = ticketItems.stream()
+                    .filter(item -> item.getQuantity() > 0)
+                    .map(item -> new TicketDetailsAdapter.TicketDetailsItem(
+                            item.getQuantity(),
+                            item.getType().getName(),
+                            item.getTotalPrice()
+                    ))
+                    .collect(Collectors.toList());
+
+            // Only set up the adapter if there are ticket items
+            if (!ticketDetailItems.isEmpty()) {
+                TicketDetailsAdapter ticketDetailsAdapter = new TicketDetailsAdapter(ticketDetailItems);
+                ticketDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+                ticketDetailsRecyclerView.setAdapter(ticketDetailsAdapter);
+            }
+        }
     }
 
     private void setDateAndShowtime() {
@@ -159,7 +270,7 @@ public class PaymentBookingActivity extends AppCompatActivity {
                     int seatPrice = getSeatTypePrice(seatType);
 
                     seatDetailItems.add(new SeatDetailsAdapter.SeatDetailItem(
-                            String.format("%d x Adult - %s - 2D: %s",
+                            String.format("%d x %s - 2D: %s",
                                     typedSeats.size(), seatTypeDisplay, seatPositions),
                             PriceCalculator.formatPrice(typedSeats.size() * seatPrice)
                     ));
@@ -175,30 +286,6 @@ public class PaymentBookingActivity extends AppCompatActivity {
     private Map<SeatType, List<Seat>> groupSeatsByType(List<Seat> seats) {
         return seats.stream()
                 .collect(Collectors.groupingBy(Seat::getType));
-    }
-
-    private TextView createSeatTypeTextView(List<Seat> seats, SeatType seatType) {
-        TextView textView = new TextView(this);
-        String seatPositions = seats.stream()
-                .map(Seat::getId)
-                .collect(Collectors.joining(", "));
-
-        textView.setText(String.format("%d x Adult - %s - 2D: %s",
-                seats.size(),
-                getSeatTypeDisplay(seatType),
-                seatPositions));
-
-        return textView;
-    }
-
-    private TextView createSeatPriceTextView(List<Seat> seats, SeatType seatType) {
-        TextView textView = new TextView(this);
-        int seatPrice = getSeatTypePrice(seatType);
-        int totalPrice = seats.size() * seatPrice;
-
-        textView.setText(PriceCalculator.formatPrice(totalPrice));
-
-        return textView;
     }
 
     private void setCombosDetails() {
@@ -226,21 +313,6 @@ public class PaymentBookingActivity extends AppCompatActivity {
             comboDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
             comboDetailsRecyclerView.setAdapter(comboDetailsAdapter);
         }
-    }
-
-    private TextView createComboNameTextView(ComboItem combo) {
-        TextView textView = new TextView(this);
-        textView.setText(String.format("%d x %s",
-                combo.getQuantity(),
-                combo.getName()));
-        return textView;
-    }
-
-    private TextView createComboPriceTextView(ComboItem combo) {
-        TextView textView = new TextView(this);
-        double totalComboPrice = combo.getQuantity() * combo.getPrice();
-        textView.setText(PriceCalculator.formatPrice(totalComboPrice));
-        return textView;
     }
 
     // Utility methods
