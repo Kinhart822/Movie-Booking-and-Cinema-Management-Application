@@ -16,12 +16,6 @@
             android:name=".frontend.Feedback.RatingMovie_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.Showtimes.UI.StudentSeatSelectionActivity"
-            android:exported="false" />
-        <activity
-            android:name=".frontend.Showtimes.UI.KidSeatSelectionActivity"
-            android:exported="false" />
-        <activity
             android:name=".frontend.Showtimes.UI.TicketSelectionActivity"
             android:exported="false" />
         <activity

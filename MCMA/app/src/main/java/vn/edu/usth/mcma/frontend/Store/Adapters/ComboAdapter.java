@@ -18,7 +18,7 @@ import vn.edu.usth.mcma.frontend.Store.Models.ComboItem;
 
 public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHolder> {
     private List<ComboItem> comboItems;
-    private OnTotalPriceChangedListener listener;
+//    private OnTotalPriceChangedListener listener;
 
     public ComboAdapter(List<ComboItem> comboItems) {
         this.comboItems = comboItems;
@@ -33,9 +33,9 @@ public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHol
         return comboItems;
     }
 
-    public void setTotalPriceChangedListener(OnTotalPriceChangedListener listener) {
-        this.listener = listener;
-    }
+//    public void setTotalPriceChangedListener(OnTotalPriceChangedListener listener) {
+//        this.listener = listener;
+//    }
 
     @NonNull
     @Override
@@ -71,16 +71,16 @@ public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHol
         for (ComboItem item : comboItems) {
             total += item.getPrice() * item.getQuantity();
         }
-        if (listener != null) {
-            listener.onTotalPriceChanged(total);
-        }
+//        if (listener != null) {
+//            listener.onTotalPriceChanged(total);
+//        }
     }
 
     // ViewHolder class for ComboItem
     class ComboViewHolder extends RecyclerView.ViewHolder {
         private TextView nameText;
         private TextView priceText;
-        private TextView quantityText;
+//        private TextView quantityText;
         private ImageView plusButton;
         private ImageView minusButton;
         private ImageView comboImage;
@@ -89,21 +89,21 @@ public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHol
             super(itemView);
             nameText = itemView.findViewById(R.id.combo_name);
             priceText = itemView.findViewById(R.id.combo_price);
-            quantityText = itemView.findViewById(R.id.combo_quantity);
-            plusButton = itemView.findViewById(R.id.plus_button);
-            minusButton = itemView.findViewById(R.id.minus_button);
+//            quantityText = itemView.findViewById(R.id.combo_quantity);
+//            plusButton = itemView.findViewById(R.id.plus_button);
+//            minusButton = itemView.findViewById(R.id.minus_button);
             comboImage = itemView.findViewById(R.id.combo_image);
 
             // Setting up button click listeners to adjust quantity
-            plusButton.setOnClickListener(v -> updateQuantity(getAdapterPosition(), 1));
-            minusButton.setOnClickListener(v -> updateQuantity(getAdapterPosition(), -1));
+//            plusButton.setOnClickListener(v -> updateQuantity(getAdapterPosition(), 1));
+//            minusButton.setOnClickListener(v -> updateQuantity(getAdapterPosition(), -1));
         }
 
         // Binds data to the view holder elements
         void bind(ComboItem item) {
             nameText.setText(item.getName());
             priceText.setText(String.format(Locale.getDefault(), "%,.0fđ", item.getPrice()));
-            quantityText.setText(String.valueOf(item.getQuantity()));
+//            quantityText.setText(String.valueOf(item.getQuantity()));
 
             // Load image from drawable resource
             try {

@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.View;
 import android.widget.ImageView;
+
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.activity.EdgeToEdge;
@@ -70,7 +71,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         // Setup booking buttons based on theater type
-        setupBookingButtons(movieTitle);
+        bookingButton = findViewById(R.id.bookingButton);
+        bookingButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MovieBookingActivity.class);
+            intent.putExtra("MOVIE_TITLE", movieTitle);
+            intent.putExtra("THEATER_TYPE", currentTheaterType);
+            startActivity(intent);
+        });
+
         // Populate movie details
         populateMovieDetails(movieDetails);
         setupSynopsisExpansion();
@@ -79,16 +87,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private void populateMovieDetails(MovieDetails movie) {
         // Populate all TextViews with movie details
-        ((TextView)findViewById(R.id.tv_movie_title)).setText(movie.getTitle());
-        ((ImageView)findViewById(R.id.tv_movie_banner)).setImageResource(movie.getBannerImageResId());
-        ((TextView)findViewById(R.id.tv_movie_genres)).setText(String.join(", ", movie.getGenres()));
-        ((TextView)findViewById(R.id.tv_duration)).setText(movie.getDuration() + " minutes");
-        ((TextView)findViewById(R.id.tv_release_date)).setText(movie.getReleaseDate());
-        ((TextView)findViewById(R.id.tv_synopsis)).setText(movie.getSynopsis());
-        ((TextView)findViewById(R.id.tv_director)).setText(movie.getDirector());
-        ((TextView)findViewById(R.id.tv_cast)).setText(String.join(", ", movie.getCast()));
-        ((TextView)findViewById(R.id.tv_classification)).setText(movie.getClassification());
-        ((TextView)findViewById(R.id.tv_language)).setText(movie.getLanguage());
+        ((TextView) findViewById(R.id.tv_movie_title)).setText(movie.getTitle());
+        ((ImageView) findViewById(R.id.tv_movie_banner)).setImageResource(movie.getBannerImageResId());
+        ((TextView) findViewById(R.id.tv_movie_genres)).setText(String.join(", ", movie.getGenres()));
+        ((TextView) findViewById(R.id.tv_duration)).setText(movie.getDuration() + " minutes");
+        ((TextView) findViewById(R.id.tv_release_date)).setText(movie.getReleaseDate());
+        ((TextView) findViewById(R.id.tv_synopsis)).setText(movie.getSynopsis());
+        ((TextView) findViewById(R.id.tv_director)).setText(movie.getDirector());
+        ((TextView) findViewById(R.id.tv_cast)).setText(String.join(", ", movie.getCast()));
+        ((TextView) findViewById(R.id.tv_classification)).setText(movie.getClassification());
+        ((TextView) findViewById(R.id.tv_language)).setText(movie.getLanguage());
     }
 
     private void setupSynopsisExpansion() {
@@ -101,11 +109,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 expandCollapseTextView.setOnClickListener(v -> {
                     if (!isSynopsisExpanded) {
                         synopsisTextView.setMaxLines(Integer.MAX_VALUE);
-                        expandCollapseTextView.setText("Thu gọn");
+                        expandCollapseTextView.setText("Reduce");
                         isSynopsisExpanded = true;
                     } else {
                         synopsisTextView.setMaxLines(maxLines);
-                        expandCollapseTextView.setText("Xem thêm");
+                        expandCollapseTextView.setText("Expand");
                         isSynopsisExpanded = false;
                     }
                 });
@@ -127,37 +135,28 @@ public class MovieDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void setupBookingButtons(String movieTitle) {
-        LinearLayout bookingButtonsContainer = findViewById(R.id.booking_buttons_container);
-        bookingButtonsContainer.removeAllViews(); // Clear any existing buttons
+//    private void setupBookingButtons(String movieTitle) {
+//        // Tìm button đã tồn tại trong layout (nếu bạn có button trong XML)
+//        Button bookingButton = findViewById(R.id.bookingButton);
+//
+//        if (bookingButton == null) {
+//            // Nếu không có button trong XML, tạo mới một button
+//            bookingButton = new Button(this);
+//            String buttonText = getString(R.string.book_ticket);
+//            bookingButton.setText(buttonText);
+//
+//            bookingButton.setBackgroundResource(R.drawable.regular_button_bg);
+//
+//
+//
+//            // Thêm button vào container (ví dụ LinearLayout)
+//            LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT
+//            );
+//            buttonParams.setMargins(0, 8, 0, 8);
+//            bookingButton.setLayoutParams(buttonParams);
+//        }
+//    }
 
-        bookingButton = new Button(this);
-        String buttonText = getString(R.string.book_ticket) + " - " + currentTheaterType.getDisplayName();
-        bookingButton.setText(buttonText);
-
-        // Set button styling if needed
-        if (currentTheaterType == TheaterType.FIRST_CLASS) {
-            // Apply first class styling
-            bookingButton.setBackgroundResource(R.drawable.first_class_button_bg);
-        } else {
-            // Apply regular styling
-            bookingButton.setBackgroundResource(R.drawable.regular_button_bg);
-        }
-
-        bookingButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MovieBookingActivity.class);
-            intent.putExtra("MOVIE_TITLE", movieTitle);
-            intent.putExtra("THEATER_TYPE", currentTheaterType);
-            startActivity(intent);
-        });
-
-        // Add button to container
-        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        buttonParams.setMargins(0, 8, 0, 8);
-        bookingButton.setLayoutParams(buttonParams);
-        bookingButtonsContainer.addView(bookingButton);
-    }
 }

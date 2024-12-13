@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:padding="16dp"
-    android:background="@color/black">
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/theater_name"
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textSize="16sp"
-        android:textColor="@color/white"/>
+        android:textColor="@color/black"/>
 
     <ImageView
         android:layout_marginLeft="64dp"

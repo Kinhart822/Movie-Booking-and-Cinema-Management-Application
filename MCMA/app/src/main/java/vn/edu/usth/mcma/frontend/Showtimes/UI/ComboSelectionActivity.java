@@ -190,11 +190,11 @@ public class ComboSelectionActivity extends AppCompatActivity {
         comboAdapter = new ComboAdapter(comboItems);
 
         // Ensure listener is set before calling updateTotalPrice
-        comboAdapter.setTotalPriceChangedListener(items -> {
-            if (totalPriceText != null) {
-                updateTotalPrice();
-            }
-        });
+//        comboAdapter.setTotalPriceChangedListener(items -> {
+//            if (totalPriceText != null) {
+//                updateTotalPrice();
+//            }
+//        });
 
         comboRecyclerView.setAdapter(comboAdapter);
         comboRecyclerView.setLayoutManager(new LinearLayoutManager(this));

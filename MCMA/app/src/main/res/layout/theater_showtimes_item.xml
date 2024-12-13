@@ -57,7 +57,8 @@
         android:padding="16dp"
         android:visibility="gone"
         app:flexWrap="wrap"
-        app:justifyContent="flex_start" />
+        app:justifyContent="flex_start"
+        tools:ignore="MissingClass" />
 
     <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/showtimes_container"

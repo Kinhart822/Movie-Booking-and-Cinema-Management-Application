@@ -24,15 +24,15 @@ public class PersonalFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_personal, container, false);
 
         // Find the ImageButton by its ID (assuming you have an ImageButton in your layout)
-        ImageButton closeButton = v.findViewById(R.id.close_button);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_home_page();
-                }
-            }
-        });
+//        ImageButton closeButton = v.findViewById(R.id.close_button);
+//        closeButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(getActivity() instanceof MainActivity){
+//                    ((MainActivity) getActivity()).close_to_home_page();
+//                }
+//            }
+//        });
 
         LinearLayout logout_button = v.findViewById(R.id.account_information_log_out);
         logout_button.setOnClickListener(new View.OnClickListener() {

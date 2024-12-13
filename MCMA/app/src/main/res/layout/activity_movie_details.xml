@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/white"
     tools:context=".frontend.Showtimes.UI.MovieDetailsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -22,22 +21,16 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="0dp"
                 android:fitsSystemWindows="true"
                 app:layout_collapseMode="parallax">
-
-                <ImageView
-                    android:id="@+id/tv_movie_banner"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"/>
 
                 <ImageButton
                     android:id="@+id/btn_back_banner"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:background="@drawable/ic_back"
-                    android:layout_marginStart="8dp"/>
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/left" />
             </FrameLayout>
 
             <androidx.appcompat.widget.Toolbar
@@ -45,8 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                android:backgroundTint="#4CAF50"
-                app:layout_collapseMode="pin">
+                android:backgroundTint="@color/LightBlue">
 
                 <TextView
                     android:id="@+id/toolbar_title"
@@ -55,7 +47,7 @@
                     android:layout_marginStart="16dp"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
-                    tools:text="Movie Title"/>
+                    tools:text="Movie Title" />
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -64,15 +56,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="48dp"
-        android:background="@color/black"
+        android:background="@color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="16dp"
             android:layout_marginTop="16dp"
-            android:background="@color/black">
+            android:background="@color/white"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/tv_movie_banner"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Movie Title -->
             <TextView
@@ -82,11 +81,11 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="GLADIATOR: VÕ SĨ GIÁC ĐẤU 2"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_movie_banner"
+                tools:text="GLADIATOR: VÕ SĨ GIÁC ĐẤU 2" />
 
             <!-- Genre Tags -->
             <TextView
@@ -99,7 +98,7 @@
                 android:textColor="#808080"
                 android:textSize="14sp"
                 app:layout_constraintTop_toBottomOf="@id/tv_movie_title"
-                tools:text="Action, Adventure, Drama"/>
+                tools:text="Action, Adventure, Drama" />
 
             <!-- Duration -->
             <TextView
@@ -124,10 +123,10 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
                 android:text="Description"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/tv_duration"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_duration" />
 
             <!-- Movie Synopsis Section -->
 
@@ -135,11 +134,11 @@
                 android:id="@+id/tv_synopsis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sau khi quê hương của anh bị chinh phục bởi các hoàng đế độc tài hiện đang lãnh đạo Rome, Lucius buộc phải vào Đấu trường La Mã và phải nhìn về quá khứ của mình để tìm sức mạnh trả lại vinh quang cho người dân Rome."
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                android:textColor="@color/white"
+                android:text="Sau khi quê hương của anh bị chinh phục bởi các hoàng đế độc tài hiện đang lãnh đạo Rome, Lucius buộc phải vào Đấu trường La Mã và phải nhìn về quá khứ của mình để tìm sức mạnh trả lại vinh quang cho người dân Rome."
+                android:textColor="@color/black"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_content_label" />
@@ -150,20 +149,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:text="Thu gọn"
-                android:textColor="@color/green"
+                android:text="Expand"
+                android:textColor="@color/LightBlue"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_synopsis"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_synopsis" />
 
             <View
                 android:id="@+id/tv_first_divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#BDBDBD"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                app:layout_constraintTop_toBottomOf="@id/tv_concise"/>
+                android:background="#BDBDBD"
+                app:layout_constraintTop_toBottomOf="@id/tv_concise" />
 
             <!-- Movie Information Section -->
             <!-- Release Date Row -->
@@ -174,10 +173,10 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Release date"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_first_divider"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_first_divider" />
 
             <TextView
                 android:id="@+id/tv_release_date"
@@ -185,12 +184,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:textColor="@color/white"
+                android:text="15 tháng 11, 2024"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_release_date_label"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/guideline"
-                android:text="15 tháng 11, 2024"/>
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <!-- Classification Row -->
             <TextView
@@ -200,10 +198,10 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Rating"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_release_date_label"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_release_date_label" />
 
             <TextView
                 android:id="@+id/tv_classification"
@@ -211,12 +209,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                android:text="Phim chỉ dành cho khán giả trên 18 tuổi"
                 android:textColor="#FF4444"
                 android:textSize="16sp"
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_classification_label"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/guideline"
-                android:text="Phim chỉ dành cho khán giả trên 18 tuổi"/>
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <!-- Language Row -->
             <TextView
@@ -226,10 +223,10 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Languages"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_classification_label"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_classification_label" />
 
             <TextView
                 android:id="@+id/tv_language"
@@ -237,12 +234,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:textColor="@color/white"
+                android:text="Phụ đề tiếng Việt"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_language_label"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/guideline"
-                android:text="Phụ đề tiếng Việt"/>
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <!-- Theater Row -->
             <TextView
@@ -252,20 +248,20 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Cinema Room"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_language_label"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_language_label" />
 
             <!-- Divider -->
             <View
                 android:id="@+id/tv_divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#BDBDBD"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                app:layout_constraintTop_toBottomOf="@id/tv_theater_label"/>
+                android:background="#BDBDBD"
+                app:layout_constraintTop_toBottomOf="@id/tv_theater_label" />
 
             <!-- Director Row -->
             <TextView
@@ -275,10 +271,10 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Director"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_divider"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_divider" />
 
             <TextView
                 android:id="@+id/tv_director"
@@ -286,12 +282,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:textColor="@color/white"
+                android:text="Ridley Scott"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_director_label"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/guideline"
-                android:text="Ridley Scott"/>
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <!-- Cast Row -->
             <TextView
@@ -301,64 +296,49 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Cast"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_director_label"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_director" />
 
             <TextView
                 android:id="@+id/tv_cast"
-                android:layout_width="0dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="32dp"
                 android:layout_marginEnd="16dp"
-                android:textColor="@color/white"
+                android:breakStrategy="simple"
+                android:maxLines="4"
+                android:text="Paul Mescal, Joseph Quinn, Kennu Reaves , Taylor Swift"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_cast_label"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/guideline"
-                android:text="Paul Mescal, Joseph Quinn"/>
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@id/tv_cast_label" />
 
-            <!-- Guideline for aligning text -->
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_end="269dp" />
 
+            <Button
+                android:id="@+id/bookingButton"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/LightBlue"
+                android:drawableLeft="@drawable/ic_ticket"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/white"
+                android:text="Booking"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_cast"
+                app:layout_constraintWidth_percent="0.75" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <LinearLayout
-        android:id="@+id/booking_buttons_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:background="@color/black"
-        android:layout_gravity="bottom">
 
-        <Button
-            android:id="@+id/bookingButton"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_gravity="bottom"
-            android:backgroundTint="#4CAF50"
-            android:text="Booking"
-            android:textColor="#FFFFFF"
-            android:textAllCaps="false"
-            android:textSize="16sp"
-            android:drawableLeft="@drawable/ic_ticket"
-            android:drawableTint="@color/white"
-            android:drawablePadding="8dp"
-            android:layout_marginBottom="0dp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"/>
-
-    </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

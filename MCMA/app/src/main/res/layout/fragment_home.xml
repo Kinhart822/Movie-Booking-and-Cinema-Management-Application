@@ -16,13 +16,14 @@
         <!-- Title -->
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:text="SpotCinema+"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
             android:padding="16dp" />
+
 
         <!-- Scrollable Content -->
         <ScrollView

@@ -20,7 +20,7 @@
             android:id="@+id/back_button"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:background="@drawable/ic_back"
+            android:background="@drawable/left"
             android:layout_marginStart="8dp"/>
 
         <LinearLayout
@@ -34,7 +34,7 @@
                 android:id="@+id/theater_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
 
@@ -42,7 +42,7 @@
                 android:id="@+id/theater_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="14sp"
                 android:alpha="0.8"/>
         </LinearLayout>
@@ -50,6 +50,7 @@
 
     <!-- Scrollable dates container -->
     <HorizontalScrollView
+        android:background="@color/white"
         android:id="@+id/days_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -65,15 +66,17 @@
 
     <!-- Movie schedules -->
     <ScrollView
+
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/movie_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:padding="8dp"
-            android:clipToPadding="false"/>
+            android:clipToPadding="false"
+            android:padding="8dp" />
     </ScrollView>
 </LinearLayout>

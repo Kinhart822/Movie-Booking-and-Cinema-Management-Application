@@ -1,8 +1,9 @@
 package vn.edu.usth.mcma.frontend.Showtimes.Models;
 
+import java.io.Serializable;
 import java.util.Set;
 
-public class Theater {
+public class Theater implements Serializable {
     private String id;
     private String name;
     private String address;

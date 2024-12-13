@@ -1,10 +1,11 @@
 package vn.edu.usth.mcma.frontend.Showtimes.Models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Movie {
+public class Movie implements Serializable {
     private String id;
     private String title;
     private List<String> showtimes;

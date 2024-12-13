@@ -24,8 +24,7 @@ import vn.edu.usth.mcma.frontend.Showtimes.Models.TheaterType;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.MovieScheduleAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.TheaterDataProvider;
 
-public class TheaterScheduleActivity extends AppCompatActivity
-        implements MovieScheduleAdapter.OnShowtimeClickListener {
+public class TheaterScheduleActivity extends AppCompatActivity implements MovieScheduleAdapter.OnShowtimeClickListener {
     private RecyclerView movieRecyclerView;
     private MovieScheduleAdapter movieAdapter;
     private TheaterType currentType;
@@ -83,7 +82,7 @@ public class TheaterScheduleActivity extends AppCompatActivity
 
             // Set background selector
             dayButton.setBackground(getDrawable(R.drawable.date_button_selector));
-            dayButton.setTextColor(Color.WHITE);
+            dayButton.setTextColor(Color.BLACK);
 //            dayButton.setTextColor(Color.BLACK);
 
             // Set initial selection
