@@ -9,7 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketItem;
@@ -82,6 +84,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
         private ImageView plusButton;
         private ImageView minusButton;
         private ImageView ticketImage;
+        private TextView ticketPrice;
 
         TicketViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -90,6 +93,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
             plusButton = itemView.findViewById(R.id.plus_button);
             minusButton = itemView.findViewById(R.id.minus_button);
             ticketImage = itemView.findViewById(R.id.ticket_image);
+            ticketPrice = itemView.findViewById(R.id.ticket_price);
 
             plusButton.setOnClickListener(v -> updateQuantity(getAdapterPosition(), 1));
             minusButton.setOnClickListener(v -> updateQuantity(getAdapterPosition(), -1));
@@ -99,6 +103,17 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
             nameText.setText(item.getType().getName());
             quantityText.setText(String.valueOf(item.getQuantity()));
             ticketImage.setImageResource(item.getType().getImageResourceId());
+
+            // Định dạng số tiền với dấu phẩy và thêm "đ"
+            int price = item.getType().getPrice();
+            String formattedPrice = formatPrice(price);
+            ticketPrice.setText(formattedPrice);
+        }
+
+        // Phương thức định dạng số tiền
+        private String formatPrice(int price) {
+            NumberFormat format = NumberFormat.getInstance(new Locale("vi", "VN"));
+            return format.format(price) + "đ";
         }
     }
 }

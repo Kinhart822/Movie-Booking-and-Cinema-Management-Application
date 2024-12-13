@@ -1,9 +1,12 @@
 package vn.edu.usth.mcma.frontend.Home;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,8 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.Showtimes.UI.MovieBookingActivity;
 
 public class NowShowingFragment extends Fragment {
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_now_showing, container, false);
@@ -27,18 +32,32 @@ public class NowShowingFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         List<NowShowing_Item> items = new ArrayList<>();
-        items.add(new NowShowing_Item("Grace Morgan", "Horror","85 minutes","P" ,R.drawable.movie1));
-        items.add(new NowShowing_Item("Isabella Lewis", "Comedy","100 minutes","P" ,R.drawable.movie3));
-        items.add(new NowShowing_Item("Evelyn", "Sci-Fi", "94 minutes","T13" ,R.drawable.movie4));
-        items.add(new NowShowing_Item("Jack", "Action","114 minutes", "P" ,R.drawable.movie5));
-        items.add(new NowShowing_Item("Tino", "Horror","125 minutes","P" ,R.drawable.movie7));
+        items.add(new NowShowing_Item("Grace Morgan", "Horror", "85 minutes", "P", R.drawable.movie1));
+        items.add(new NowShowing_Item("Isabella Lewis", "Comedy", "100 minutes", "P", R.drawable.movie3));
+        items.add(new NowShowing_Item("Evelyn", "Sci-Fi", "94 minutes", "T13", R.drawable.movie4));
+        items.add(new NowShowing_Item("Jack", "Action", "114 minutes", "P", R.drawable.movie5));
+        items.add(new NowShowing_Item("Tino", "Horror", "125 minutes", "P", R.drawable.movie7));
 
-        NowShowing_Adapter adapter = new NowShowing_Adapter(requireContext(), items, position -> {
-            NowShowing_Item selectedFilm = items.get(position);
-            Toast.makeText(requireContext(), "Selected Film: " + selectedFilm.getName(), Toast.LENGTH_SHORT).show();
+        NowShowing_Adapter adapter = new NowShowing_Adapter(requireContext(), items, new FilmViewInterface() {
+            @Override
+            public void onFilmSelected(int position) {
+                NowShowing_Item selectedFilm = items.get(position);
+                Toast.makeText(requireContext(), "Selected Film: " + selectedFilm.getName(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onBookingClicked(int position) {
+                NowShowing_Item selectedFilm = items.get(position);
+                Intent intent = new Intent(requireContext(), MovieBookingActivity.class);
+                intent.putExtra("MOVIE_TITLE", selectedFilm.getName());
+                intent.putExtra("THEATER_TYPE", selectedFilm.getCategory());
+                startActivity(intent);
+            }
         });
         recyclerView.setAdapter(adapter);
 
         return v;
     }
 }
+
+

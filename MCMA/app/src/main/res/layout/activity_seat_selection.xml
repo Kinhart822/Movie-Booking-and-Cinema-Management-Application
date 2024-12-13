@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:background="@color/black"
-    tools:context=".frontend.Showtimes.UI.KidSeatSelectionActivity">
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,6 +16,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/LightBlue"
             android:orientation="horizontal"
             android:paddingStart="16dp"
             android:paddingTop="16dp">
@@ -26,17 +25,18 @@
                 android:id="@+id/back_button"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginEnd="16dp"
-                android:background="@drawable/ic_back"
-                android:layout_marginStart="8dp"/>
+                android:background="@drawable/left" />
 
 
             <TextView
                 android:id="@+id/text_seat_selection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:text="Seat Selection"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -46,6 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="24dp"
             android:orientation="vertical">
 
@@ -54,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="BHD Star 3.2"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="32sp"
                 android:textStyle="bold" />
 
@@ -63,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="The Dark Night"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -76,8 +77,9 @@
                     android:id="@+id/screen_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="Screen 1"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="16sp" />
 
                 <TextView
@@ -85,8 +87,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
+                    android:layout_marginTop="10dp"
                     android:text="26th Nov, 2024"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="16sp" />
 
                 <TextView
@@ -100,127 +103,156 @@
             </LinearLayout>
         </LinearLayout>
 
-        <RelativeLayout
+        <View
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/black">
+            android:layout_height="3dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/light_gray" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/image_screen"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="24dp"
-                android:text="Screen"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/image_screen"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            app:srcCompat="@drawable/screen1" />
 
-            <!-- Seat Layout Section -->
-            <ImageView
-                android:id="@+id/image_screen"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:layout_marginTop="20dp"
-                app:srcCompat="@drawable/newnewscreen" />
-
-        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="horizontal">
 
-            <View
-                android:id="@+id/view_selecting_seat"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@drawable/ic_seat_selecting" />
-
-            <TextView
-                android:id="@+id/text_selecting_seat"
-                android:layout_width="0dp"
+            <!-- Khối Đang chọn -->
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:text="Đang chọn"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:gravity="center"
+                android:orientation="horizontal">
 
-            <View
-                android:id="@+id/view_sold_seat"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@drawable/ic_seat_sold" />
+                <View
+                    android:id="@+id/view_selecting_seat"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/ic_seat_selecting" />
 
-            <TextView
-                android:id="@+id/text_sold_seat"
-                android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/text_selecting_seat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Đang chọn"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- Khối Đã bán -->
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_weight="1"
-                android:text="Đã bán"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:layout_marginLeft="15dp"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-            <View
-                android:id="@+id/view_stand_seat"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@drawable/ic_seat_stand" />
+                <View
+                    android:id="@+id/view_sold_seat"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/ic_seat_sold" />
 
-            <TextView
-                android:id="@+id/text_stand_seat"
-                android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/text_sold_seat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Đã bán"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- Khối Held -->
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:text="-Stand-"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:layout_marginLeft="15dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/view_stand_seat"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/ic_seat_stand" />
+
+                <TextView
+                    android:id="@+id/text_stand_seat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Held"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="horizontal"
             android:padding="8dp">
 
-            <View
-                android:id="@+id/view_vip_seat"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@drawable/ic_seat_vip" />
-
-            <TextView
-                android:id="@+id/text_vip_seat"
-                android:layout_width="0dp"
+            <!-- Khối VIP -->
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:text="-VIP-ES"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:gravity="center"
+                android:orientation="horizontal">
 
-            <View
-                android:id="@+id/view_couple_seat"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@drawable/ic_seat_couple" />
+                <View
+                    android:id="@+id/view_vip_seat"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/ic_seat_vip" />
 
-            <TextView
-                android:id="@+id/text_couple_seat"
-                android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/text_vip_seat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="VIP"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- Khối Couple -->
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_weight="1"
-                android:text="-Couple-Pack-ES"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:layout_marginLeft="65dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/view_couple_seat"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/ic_seat_couple" />
+
+                <TextView
+                    android:id="@+id/text_couple_seat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Couple"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
         </LinearLayout>
+
 
         <ScrollView
             android:layout_width="match_parent"
@@ -237,99 +269,122 @@
                     android:id="@+id/seatRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scrollbars="vertical"
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
+                    android:scrollbars="vertical"
                     app:layout_constraintBottom_toBottomOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/light_gray"
+        android:layout_margin="10dp"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
         android:orientation="vertical"
-        android:background="@color/black">
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <TextView
+            <!-- LinearLayout chứa movie_name và T18 -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="T18"
-                android:textSize="14sp"
-                android:textColor="@android:color/holo_red_dark"
-                android:background="@drawable/rounded_dark_background"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp"
-                android:layout_marginEnd="8dp" />
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/movie_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:text="The Dark Night"
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/age_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/rounded_dark_background"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
+                    android:text="T18"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- LinearLayout chứa Total, 0 ghế và 0d -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Tổng tiền (đã bao gồm phụ thu):"
-                android:textSize="20dp"
-                android:textColor="@color/white"/>
-        </LinearLayout>
+                android:layout_marginStart="24dp"
+                android:gravity="end"
+                android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="10dp"
+                    android:text="Total:"
+                    android:textColor="@color/black"
+                    android:textSize="20dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2D SUB"
-                android:textSize="14sp"
-                android:textColor="@color/white"
-                android:background="@drawable/rounded_dark_background"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp"
-                android:layout_marginTop="8dp" />
+                <TextView
+                    android:id="@+id/no_of_seats"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
+                    android:text="0 ghế"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
 
-            <TextView
-                android:id="@+id/no_of_seats"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0 ghế"
-                android:textColor="@color/white"
-                android:textSize="20dp"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginStart="24dp" />
+                <TextView
+                    android:id="@+id/total_ticket_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
+                    android:text="-"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/seat_price_total"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0d"
-                android:textColor="@color/white"
-                android:layout_marginStart="140dp"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp"
-                android:layout_marginTop="8dp"
-                android:textSize="14sp" />
-
+                <TextView
+                    android:id="@+id/seat_price_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
+                    android:text="0d"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+            </LinearLayout>
         </LinearLayout>
 
         <Button
             android:id="@+id/checkout_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/rounded_dark_background"
+            android:padding="12dp"
             android:text="Complete seat selection"
             android:textColor="@color/white"
-            android:textSize="16sp"
-            android:padding="12dp"
-            android:background="@drawable/rounded_dark_background"
-            android:layout_margin="16dp"/>
+            android:textSize="16sp" />
 
     </LinearLayout>
 </LinearLayout>

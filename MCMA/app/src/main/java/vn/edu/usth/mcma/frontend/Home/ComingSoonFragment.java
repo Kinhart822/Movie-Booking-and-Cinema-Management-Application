@@ -30,9 +30,17 @@ public class ComingSoonFragment extends Fragment {
         items.add(new ComingSoon_Item("Liam Johnson", "Action","120 minutes","T18" ,R.drawable.movie6));
         items.add(new ComingSoon_Item("Noah Brown", "Horror","90 minutes","P" ,R.drawable.movie8));
 
-        ComingSoon_Adapter adapter = new ComingSoon_Adapter(requireContext(), items, position -> {
-            ComingSoon_Item selectedFilm = items.get(position);
-            Toast.makeText(requireContext(), "Selected Film: " + selectedFilm.getName(), Toast.LENGTH_SHORT).show();
+        ComingSoon_Adapter adapter = new ComingSoon_Adapter(requireContext(), items, new FilmViewInterface() {
+            @Override
+            public void onFilmSelected(int position) {
+                ComingSoon_Item selectedFilm = items.get(position);
+                Toast.makeText(requireContext(), "Selected Film: " + selectedFilm.getName(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onBookingClicked(int position) {
+
+            }
         });
         recyclerView.setAdapter(adapter);
 

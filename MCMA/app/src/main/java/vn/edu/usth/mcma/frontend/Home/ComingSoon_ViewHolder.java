@@ -20,16 +20,16 @@ public class ComingSoon_ViewHolder extends RecyclerView.ViewHolder {
         age_limitView = itemView.findViewById(R.id.age_limit);
         typeView = itemView.findViewById(R.id.category_name);
 
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (filmViewInterface != null) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        filmViewInterface.onItemClick(position);
-                    }
-                }
-            }
-        });
+//        itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (filmViewInterface != null) {
+//                    int position = getAdapterPosition();
+//                    if (position != RecyclerView.NO_POSITION) {
+//                        filmViewInterface.onItemClick(position);
+//                    }
+//                }
+//            }
+//        });
     }
 }

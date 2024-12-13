@@ -89,21 +89,24 @@ public class MovieBookingActivity extends AppCompatActivity {
 
     private void setupToolbarAndBanner() {
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         toolbarTitle.setText(movieTitle);
 
-        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
+        // Set toolbar as the support action bar
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Enable the back button
+            getSupportActionBar().setDisplayShowTitleEnabled(false); // Disable default title
+        }
+
+        // Back button action
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+
         CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
 
-        // Get movie details
-        MovieDetails movieDetails = MovieDataProvider.getMovieDetails(movieTitle);
-
-        // Set banner image
-        ImageView bannerImage = findViewById(R.id.movie_banner);
-        bannerImage.setImageResource(movieDetails.getBannerImageResId());
-
         // Setup collapsing toolbar behavior
+        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
         appBarLayout.addOnOffsetChangedListener((appBarLayout1, verticalOffset) -> {
             if (Math.abs(verticalOffset) >= appBarLayout1.getTotalScrollRange()) {
                 // Fully collapsed
@@ -113,9 +116,6 @@ public class MovieBookingActivity extends AppCompatActivity {
                 toolbar.setVisibility(View.GONE);
             }
         });
-
-        // Setup back button
-        findViewById(R.id.back_button).setOnClickListener(v -> finish());
     }
 
     private void setupMovieInfo() {

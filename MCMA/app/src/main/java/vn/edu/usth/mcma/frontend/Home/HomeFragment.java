@@ -109,10 +109,15 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
     }
 
     @Override
-    public void onItemClick(int position) {
+    public void onFilmSelected(int position) {
         if (position < filteredFilms.size()) {
             ComingSoon_Item selectedFilm = filteredFilms.get(position);
             Toast.makeText(getContext(), "Selected Film: " + selectedFilm.getName(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onBookingClicked(int position) {
+
     }
 }

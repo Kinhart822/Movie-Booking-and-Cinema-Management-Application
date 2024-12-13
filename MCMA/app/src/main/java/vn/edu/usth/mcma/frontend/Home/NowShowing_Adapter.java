@@ -36,6 +36,12 @@ public class NowShowing_Adapter extends RecyclerView.Adapter<NowShowing_ViewHold
         holder.timeView.setText(item.getTime());
         holder.age_limitView.setText(item.getAge_limit());
         holder.filmView.setImageResource(item.getFilm_image());
+
+        // Handle film selection
+        holder.itemView.setOnClickListener(v -> filmViewInterface.onFilmSelected(position));
+
+        // Handle booking button click
+        holder.bookingButton.setOnClickListener(v -> filmViewInterface.onBookingClicked(position));
     }
 
     @Override
@@ -43,3 +49,4 @@ public class NowShowing_Adapter extends RecyclerView.Adapter<NowShowing_ViewHold
         return items.size();
     }
 }
+

@@ -45,7 +45,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/black"
                     android:textSize="18sp"
                     tools:text="Movie Title" />
             </androidx.appcompat.widget.Toolbar>
@@ -95,7 +95,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                android:textColor="#808080"
+                android:textColor="@color/black"
                 android:textSize="14sp"
                 app:layout_constraintTop_toBottomOf="@id/tv_movie_title"
                 tools:text="Action, Adventure, Drama" />
@@ -108,7 +108,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:drawablePadding="4dp"
-                android:textColor="#808080"
+                android:textColor="@color/black"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_movie_genres"
@@ -122,7 +122,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
-                android:text="Description"
+                android:text="Description:"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -172,9 +172,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Release date"
+                android:text="Release date:"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_first_divider" />
 
@@ -197,9 +198,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Rating"
+                android:text="Rating:"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_release_date_label" />
 
@@ -222,9 +224,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Languages"
+                android:text="Languages:"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_classification_label" />
 
@@ -240,18 +243,7 @@
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_language_label"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <!-- Theater Row -->
-            <TextView
-                android:id="@+id/tv_theater_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="Cinema Room"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_language_label" />
+
 
             <!-- Divider -->
             <View
@@ -261,7 +253,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="#BDBDBD"
-                app:layout_constraintTop_toBottomOf="@id/tv_theater_label" />
+                app:layout_constraintTop_toBottomOf="@id/tv_language" />
 
             <!-- Director Row -->
             <TextView
@@ -270,9 +262,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Director"
+                android:text="Director:"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_divider" />
 
@@ -289,33 +282,35 @@
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <!-- Cast Row -->
+            <!-- Cast Row -->
             <TextView
                 android:id="@+id/tv_cast_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Cast"
+                android:text="Cast:"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_director" />
 
             <TextView
                 android:id="@+id/tv_cast"
-                android:layout_width="200dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:breakStrategy="simple"
                 android:maxLines="4"
                 android:text="Paul Mescal, Joseph Quinn, Kennu Reaves , Taylor Swift"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                app:layout_constraintBaseline_toBaselineOf="@id/tv_cast_label"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@id/tv_cast_label" />
+                app:layout_constraintTop_toBottomOf="@id/tv_cast_label" />
 
 
             <Button

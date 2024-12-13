@@ -49,7 +49,7 @@
     <color name="disabledColor">#9E9E9E</color>
 
     <!-- Button text selectors -->
-    <color name="button_text_selector">#2196F3</color>  <!-- Blue -->
+    <color name="button_text_selector">#FF000000</color>  <!-- Black -->
     <color name="date_text_selector">#000000</color>    <!-- Black -->
 
     <color name="first_class_text_color">#FFD700</color>

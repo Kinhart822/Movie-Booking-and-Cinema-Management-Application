@@ -1,6 +1,7 @@
 package vn.edu.usth.mcma.frontend.Home;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,6 +12,7 @@ import vn.edu.usth.mcma.R;
 public class NowShowing_ViewHolder extends RecyclerView.ViewHolder {
     TextView nameView, typeView, timeView, age_limitView;
     ImageView filmView;
+    Button bookingButton;
 
     public NowShowing_ViewHolder(View itemView, final FilmViewInterface filmViewInterface) {
         super(itemView);
@@ -19,6 +21,7 @@ public class NowShowing_ViewHolder extends RecyclerView.ViewHolder {
         timeView = itemView.findViewById(R.id.film_time);
         age_limitView = itemView.findViewById(R.id.age_limit);
         typeView = itemView.findViewById(R.id.category_name);
+        bookingButton = itemView.findViewById(R.id.btn_booking_film);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -26,7 +29,7 @@ public class NowShowing_ViewHolder extends RecyclerView.ViewHolder {
                 if (filmViewInterface != null) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        filmViewInterface.onItemClick(position);
+                        filmViewInterface.onFilmSelected(position);
                     }
                 }
             }
