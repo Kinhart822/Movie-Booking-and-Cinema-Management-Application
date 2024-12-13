@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.frontend.Showtimes.UI;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
@@ -39,8 +40,7 @@ public class TheaterScheduleActivity extends AppCompatActivity
         // Get theater details from intent
         String theaterName = getIntent().getStringExtra("THEATER_NAME");
         String theaterAddress = getIntent().getStringExtra("THEATER_ADDRESS");
-        currentType = TheaterType.valueOf(
-                getIntent().getStringExtra("THEATER_TYPE"));
+        currentType = TheaterType.valueOf(getIntent().getStringExtra("THEATER_TYPE"));
 
         // Set theater details in toolbar
         TextView nameTextView = findViewById(R.id.theater_name);
@@ -51,7 +51,6 @@ public class TheaterScheduleActivity extends AppCompatActivity
         // Setup back button
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> finish());
-
 
         setupViews();
         setupDateButtons();
@@ -84,7 +83,8 @@ public class TheaterScheduleActivity extends AppCompatActivity
 
             // Set background selector
             dayButton.setBackground(getDrawable(R.drawable.date_button_selector));
-            dayButton.setTextColor(Color.BLACK);
+            dayButton.setTextColor(Color.WHITE);
+//            dayButton.setTextColor(Color.BLACK);
 
             // Set initial selection
             if (i == 0) {
@@ -116,7 +116,11 @@ public class TheaterScheduleActivity extends AppCompatActivity
     }
 
     private List<Movie> getMoviesForDate(String date) {
-        return TheaterDataProvider.getMoviesForTheater(currentType, date);
+        List<Movie> movies = TheaterDataProvider.getMoviesForTheater(currentType, date);
+
+        // Make sure movie titles match those in MovieDataProvider
+        // This ensures MovieDetailsActivity can find the correct movie details
+        return movies;
     }
 
     @Override

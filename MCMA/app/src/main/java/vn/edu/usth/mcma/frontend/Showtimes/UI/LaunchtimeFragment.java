@@ -112,7 +112,7 @@ public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnThe
         Intent intent = new Intent(requireContext(), TheaterScheduleActivity.class);
         intent.putExtra("THEATER_NAME", theater.getName());
         intent.putExtra("THEATER_ADDRESS", theater.getAddress());
-        intent.putExtra("THEATER_TYPE", currentType.name());
+        intent.putExtra("THEATER_TYPE", currentType.name()); // Pass the current theater type
         startActivity(intent);
     }
 }

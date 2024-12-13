@@ -16,6 +16,30 @@
             android:name=".frontend.Feedback.RatingMovie_Activity"
             android:exported="false" />
         <activity
+            android:name=".frontend.Showtimes.UI.StudentSeatSelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Showtimes.UI.KidSeatSelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Showtimes.UI.TicketSelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Showtimes.UI.PaymentBookingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Showtimes.UI.ComboSelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Showtimes.UI.SeatSelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Showtimes.UI.MovieBookingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Showtimes.UI.MovieDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".frontend.Personal.ViewFeedback_Activity"
             android:exported="false" />
         <activity

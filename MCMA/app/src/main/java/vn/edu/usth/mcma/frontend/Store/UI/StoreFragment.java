@@ -136,7 +136,7 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
     private void updateTotalPrice(double total) {
         PriceCalculator.PriceResult result = PriceCalculator.calculateTotalPrice(comboAdapter.getComboItems());
         String formattedPrice = PriceCalculator.formatPrice(result.getTotal());
-        totalPriceText.setText(String.format("Total Price(surcharge included): %s", formattedPrice));
+        totalPriceText.setText(String.format("Tổng tiền (đã bao gồm phụ thu): %s", formattedPrice));
         checkoutButton.setEnabled(result.getTotal() > 0);
     }
 
@@ -149,8 +149,14 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
     private List<ComboItem> getComboItems() {
         // Sample data - replace with actual data from your backend
         List<ComboItem> items = new ArrayList<>();
-        items.add(new ComboItem("Combo 1", "url1", 80000));
-        items.add(new ComboItem("Combo 2", "url2", 120000));
+        items.add(new ComboItem("OL Combo1 Sweet32oz - Pepsi22oz", String.valueOf(R.drawable.combo_image_1), 80000));
+        items.add(new ComboItem("OL Combo2 Sweet32oz - Pepsi22oz", String.valueOf(R.drawable.combo_image_1), 107000));
+        items.add(new ComboItem("OL Combo Special Bap nam Ga (Sweet)", String.valueOf(R.drawable.combo_image_1), 135000));
+        items.add(new ComboItem("OL Special Combo1 Khoai Lac (Sweet)", String.valueOf(R.drawable.combo_image_1), 135000));
+        items.add(new ComboItem("OL Combo Special Bap nam XX loc xoay (Sweet)", String.valueOf(R.drawable.combo_image_1), 135000));
+        items.add(new ComboItem("OL Special Combo2 Bap nam Ga Lac (Sweet)", String.valueOf(R.drawable.combo_image_1), 162900));
+        items.add(new ComboItem("OL Special Combo2 Khoai Lac (Sweet)", String.valueOf(R.drawable.combo_image_1), 162900));
+        items.add(new ComboItem("OL Special Combo2 Bap nam XX loc xoay (Sweet)", String.valueOf(R.drawable.combo_image_1), 162900));
         return items;
     }
 

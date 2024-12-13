@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@color/black">
 
     <ImageView
         android:id="@+id/combo_image"
@@ -22,7 +23,8 @@
             android:id="@+id/combo_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:textColor="@color/white"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -40,7 +42,8 @@
                 android:id="@+id/combo_quantity"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:textColor="@color/white"/>
 
             <ImageButton
                 android:id="@+id/plus_button"
@@ -52,9 +55,11 @@
                 android:id="@+id/combo_price"
                 android:layout_marginLeft="64dp"
                 android:textSize="20dp"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"/>
         </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>
