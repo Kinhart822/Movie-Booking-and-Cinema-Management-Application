@@ -26,7 +26,6 @@ import vn.edu.usth.mcma.frontend.Showtimes.Models.Seat;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketItem;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketType;
 
 public class SeatSelectionActivity extends AppCompatActivity {
     private int totalTicketPrice; // store total ticket price from previous activity
@@ -75,7 +74,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
     }
     private void setupTheaterInfo() {
         TextView theaterNameTV = findViewById(R.id.theater_name);
-        TextView movieNameTV = findViewById(R.id.movie_name);
+        TextView movieNameTV = findViewById(R.id.movie_name2);
         TextView screenNumberTV = findViewById(R.id.screen_number);
         TextView releaseDateTV = findViewById(R.id.movie_release_date);
         TextView durationTV = findViewById(R.id.movie_duration);

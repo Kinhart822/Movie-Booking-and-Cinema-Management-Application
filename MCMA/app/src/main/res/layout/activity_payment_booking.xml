@@ -3,13 +3,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/white"
     tools:context=".frontend.Showtimes.UI.PaymentBookingActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/LightBlue"
+            android:paddingStart="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:gravity="center_vertical">
+
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/left"
+                android:contentDescription="Back Button" />
+
+            <TextView
+                android:id="@+id/text_seat_selection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Payment"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
         <!-- Movie Info Section -->
         <RelativeLayout
             android:layout_width="match_parent"
@@ -34,7 +63,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="NGAY XUA CO MOT CHUYEN TINH"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="24sp"
                     android:textStyle="bold"/>
 
@@ -43,7 +72,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Phim chi dành cho khán giả trên 16 tuổi"
+                    android:text="Movie is allowed for audience above 16 years old"
                     android:textColor="#FF0000"/>
 
                 <TextView
@@ -52,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="BHD Star The Garden"
-                    android:textColor="@color/dark_grey"/>
+                    android:textColor="@color/black"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -64,16 +93,16 @@
                         android:id="@+id/movieDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1 tháng 12, 2024"
+                        android:text="December 1, 2024"
                         android:layout_marginRight="15dp"
-                        android:textColor="@color/dark_grey" />
+                        android:textColor="@color/black" />
 
                     <TextView
                         android:id="@+id/movieDuration"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="20:00 - 22:00"
-                        android:textColor="@color/dark_grey"/>
+                        android:textColor="@color/black"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -85,16 +114,16 @@
                         android:id="@+id/noOfSeats"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1 vé"
+                        android:text="2 tickets"
                         android:layout_marginRight="15dp"
-                        android:textColor="@color/dark_grey" />
+                        android:textColor="@color/black" />
 
                     <TextView
                         android:id="@+id/noOfCombos"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1 combo"
-                        android:textColor="@color/dark_grey"/>
+                        android:textColor="@color/black"/>
                 </LinearLayout>
 
                 <TextView
@@ -102,8 +131,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="Chi tiết loại vé"
-                    android:textColor="@color/white"
+                    android:text="Ticket details"
+                    android:textColor="@color/black"
                     android:textStyle="bold"/>
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -117,8 +146,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="Chi tiết đơn hàng"
-                    android:textColor="@color/white"
+                    android:text="Order details"
+                    android:textColor="@color/black"
                     android:textStyle="bold"/>
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -146,14 +175,14 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Tổng tiền"
-                        android:textColor="@color/dark_grey" />
+                        android:text="Total"
+                        android:textColor="@color/black" />
                     <TextView
                         android:id="@+id/total_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="65,000đ"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/black"/>
                 </LinearLayout>
                 <View
                     android:layout_width="match_parent"
@@ -179,14 +208,14 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Tổng tiền (đã bao gôm coupon):"
-                        android:textColor="@color/dark_grey" />
+                        android:text="Total (including coupon):"
+                        android:textColor="@color/black" />
                     <TextView
                         android:id="@+id/total_price_coupon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="65,000đ"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/black"/>
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
@@ -195,8 +224,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:text="Phương thức thanh toán"
-            android:textColor="@color/dark_grey"
+            android:text="Payment methods"
+            android:textColor="@color/black"
             android:textStyle="bold"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/paymentMethodsRecyclerView"
@@ -209,17 +238,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="Tôi đã đọc, hiểu và đồng ý với các điều khoản"
-            android:textColor="@color/white"
-            android:buttonTint="@drawable/checkbox_selector" />
+            android:text="I have read and accepted the requirements"
+            android:textColor="@color/black"
+            android:buttonTint="@drawable/checkbox_selector"
+            android:padding="8dp" />
+
         <!-- Complete Payment Button -->
         <Button
             android:id="@+id/completePaymentButton"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:backgroundTint="@color/GreenBtn"
+            android:layout_gravity="center"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="25dp"
+            android:padding="20dp"
+            android:backgroundTint="@color/LightBlue"
             android:text="Complete payment booking"
+            android:textSize="16sp"
             android:textAllCaps="false"/>
     </LinearLayout>
 </ScrollView>

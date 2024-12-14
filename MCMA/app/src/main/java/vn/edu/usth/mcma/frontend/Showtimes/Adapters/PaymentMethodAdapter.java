@@ -35,12 +35,18 @@ public class PaymentMethodAdapter extends RecyclerView.Adapter<PaymentMethodAdap
                 .inflate(R.layout.item_payment_method, parent, false);
         return new PaymentMethodViewHolder(view);
     }
+
     @Override
     public void onBindViewHolder(@NonNull PaymentMethodViewHolder holder, int position) {
         PaymentMethod paymentMethod = paymentMethods.get(position);
         holder.paymentMethodIcon.setImageResource(paymentMethod.getIconResource());
         holder.paymentMethodName.setText(paymentMethod.getName());
+
+        // Set text color to black
+        holder.paymentMethodName.setTextColor(holder.itemView.getContext().getResources().getColor(android.R.color.black));
+
         holder.paymentMethodRadio.setChecked(position == selectedPosition);
+
         // Handle both the entire item click and radio button click
         View.OnClickListener clickListener = v -> {
             int previousSelected = selectedPosition;
@@ -60,6 +66,7 @@ public class PaymentMethodAdapter extends RecyclerView.Adapter<PaymentMethodAdap
         // Prevent radio button from handling clicks separately
         holder.paymentMethodRadio.setClickable(false);
     }
+
     @Override
     public int getItemCount() {
         return paymentMethods.size();

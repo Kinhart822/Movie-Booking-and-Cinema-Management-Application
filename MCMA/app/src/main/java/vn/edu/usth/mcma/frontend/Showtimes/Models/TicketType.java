@@ -2,9 +2,6 @@ package vn.edu.usth.mcma.frontend.Showtimes.Models;
 
 import vn.edu.usth.mcma.R;
 
-import java.text.NumberFormat;
-import java.util.Locale;
-
 public enum TicketType {
     KID("Kid", R.drawable.ic_kid, 25000),
     ADULT("Adult", R.drawable.ic_adult, 50000),
@@ -31,11 +28,4 @@ public enum TicketType {
     public int getPrice() {
         return price;
     }
-
-    // Phương thức định dạng giá
-    public String getFormattedPrice() {
-        NumberFormat format = NumberFormat.getInstance(new Locale("vi", "VN"));
-        return format.format(price) + "đ";
-    }
 }
-

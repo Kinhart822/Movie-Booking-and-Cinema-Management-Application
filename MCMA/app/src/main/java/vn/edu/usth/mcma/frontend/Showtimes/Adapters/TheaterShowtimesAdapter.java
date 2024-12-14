@@ -25,15 +25,12 @@ import java.util.Random;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.TheaterType;
-import vn.edu.usth.mcma.frontend.Showtimes.UI.MovieBookingActivity;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.TheaterDataProvider;
 
 public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtimesAdapter.TheaterViewHolder> {
     private List<Theater> theaters = new ArrayList<>();
     private String selectedDate;
     private String movieTitle;
-    private TheaterType theaterType;
     private OnShowtimeClickListener listener;
     private SparseBooleanArray expandedStates = new SparseBooleanArray();
 
@@ -45,11 +42,10 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
         this.listener = listener;
     }
 
-    public void setTheaters(List<Theater> theaters, String selectedDate, String movieTitle, TheaterType theaterType) {
+    public void setTheaters(List<Theater> theaters, String selectedDate, String movieTitle) {
         this.theaters = theaters;
         this.selectedDate = selectedDate;
         this.movieTitle = movieTitle;
-        this.theaterType = theaterType;
         expandedStates.clear();
         notifyDataSetChanged();
     }
@@ -181,11 +177,11 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
             showtimesContainer.removeAllViews();
             // Get showtimes based on theater type
             List<String> showtimes = new ArrayList<>();
-            List<Movie> movies = TheaterDataProvider.getMoviesForTheater(theaterType, selectedDate);
+            List<Movie> movies = TheaterDataProvider.getMoviesForTheater(selectedDate);
 
             for (Movie movie : movies) {
                 if (movie.getTitle().equals(movieTitle)) {
-                    showtimes.addAll(movie.getShowtimesForType(theaterType));
+                    showtimes.addAll(movie.getShowtimes());
                     break;
                 }
             }

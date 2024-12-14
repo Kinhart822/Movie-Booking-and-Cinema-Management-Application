@@ -177,7 +177,6 @@ public class ComboSelectionActivity extends AppCompatActivity {
         comboPriceText = findViewById(R.id.combo_price_total);
         totalPriceText = findViewById(R.id.total_price_0);
         theaterNameTV = findViewById(R.id.theater_name);
-        movieNameTV = findViewById(R.id.movie_name);
         releaseDateTV = findViewById(R.id.movie_release_date);
         screenRoomTV = findViewById(R.id.screen_number);
         if (checkoutButton == null) {
@@ -189,12 +188,12 @@ public class ComboSelectionActivity extends AppCompatActivity {
         List<ComboItem> comboItems = getComboItems();
         comboAdapter = new ComboAdapter(comboItems);
 
-        // Ensure listener is set before calling updateTotalPrice
-//        comboAdapter.setTotalPriceChangedListener(items -> {
-//            if (totalPriceText != null) {
-//                updateTotalPrice();
-//            }
-//        });
+//         Ensure listener is set before calling updateTotalPrice
+        comboAdapter.setTotalPriceChangedListener(items -> {
+            if (totalPriceText != null) {
+                updateTotalPrice();
+            }
+        });
 
         comboRecyclerView.setAdapter(comboAdapter);
         comboRecyclerView.setLayoutManager(new LinearLayoutManager(this));

@@ -9,16 +9,11 @@ public class Movie implements Serializable {
     private String id;
     private String title;
     private List<String> showtimes;
-    private Map<TheaterType, List<String>> showtimesByType;
 
-    public Movie(String id, String title, Map<TheaterType, List<String>> showtimesByType) {
+    public Movie(String id, String title, List<String> showtimes) {
         this.id = id;
         this.title = title;
-        this.showtimesByType = showtimesByType;
-    }
-
-    public List<String> getShowtimesForType(TheaterType type) {
-        return showtimesByType.getOrDefault(type, new ArrayList<>());
+        this.showtimes = showtimes;
     }
 
     // Getters and Setters
@@ -36,14 +31,6 @@ public class Movie implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public Map<TheaterType, List<String>> getShowtimesByType() {
-        return showtimesByType;
-    }
-
-    public void setShowtimesByType(Map<TheaterType, List<String>> showtimesByType) {
-        this.showtimesByType = showtimesByType;
     }
 
     public List<String> getShowtimes() {

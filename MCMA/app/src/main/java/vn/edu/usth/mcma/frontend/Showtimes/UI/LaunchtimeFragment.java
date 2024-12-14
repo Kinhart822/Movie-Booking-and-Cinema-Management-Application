@@ -6,11 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,17 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.MainActivity;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.TheaterType;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.TheaterDataProvider;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.TheaterAdapter;
 
 public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnTheaterClickListener {
-    private TheaterType currentType = TheaterType.REGULAR;
     private RecyclerView theaterRecyclerView;
     private TheaterAdapter theaterAdapter;
-    private Button typeButton;
     private String currentCity = "TPHCM";
 
     @Override
@@ -38,7 +31,6 @@ public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnThe
 
         // Initialize views and adapters
         setupViews(v);
-        setupTypeButton();
         setupCityButtons(v); // Pass 'v' to avoid calling getView() prematurely
         updateTheaterList();
 
@@ -50,19 +42,6 @@ public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnThe
         theaterAdapter = new TheaterAdapter(this);
         theaterRecyclerView.setAdapter(theaterAdapter);
         theaterRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        typeButton = v.findViewById(R.id.type_button);
-    }
-
-    private void setupTypeButton() {
-        if (typeButton != null) {
-            typeButton.setText(currentType.getDisplayName());
-            typeButton.setOnClickListener(v -> {
-                currentType = (currentType == TheaterType.REGULAR) ?
-                        TheaterType.FIRST_CLASS : TheaterType.REGULAR;
-                typeButton.setText(currentType.getDisplayName());
-                updateTheaterList();
-            });
-        }
     }
 
     private void setupCityButtons(View v) { // Use 'v' instead of getView()
@@ -100,10 +79,9 @@ public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnThe
     }
 
     private void updateTheaterList() {
-        List<Theater> theaters = TheaterDataProvider.getTheatersForCity(currentCity, currentType);
+        List<Theater> theaters = TheaterDataProvider.getTheatersForCity(currentCity);
         if (theaterAdapter != null) {
             theaterAdapter.setTheaters(theaters);
-            theaterAdapter.setTheaterType(currentType);
         }
     }
 
@@ -112,7 +90,6 @@ public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnThe
         Intent intent = new Intent(requireContext(), TheaterScheduleActivity.class);
         intent.putExtra("THEATER_NAME", theater.getName());
         intent.putExtra("THEATER_ADDRESS", theater.getAddress());
-        intent.putExtra("THEATER_TYPE", currentType.name()); // Pass the current theater type
         startActivity(intent);
     }
 }

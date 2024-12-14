@@ -12,7 +12,6 @@ import java.util.Set;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.TheaterType;
 
 public class TheaterDataProvider {
     // List of sample theater images (add these to your drawable folder)
@@ -91,64 +90,37 @@ public class TheaterDataProvider {
             "Dune"
     };
 
-    public static List<Theater> getTheatersForCity(String city, TheaterType type) {
+    public static List<Theater> getTheatersForCity(String city) {
         List<TheaterInfo> allTheaters = CITY_THEATERS.getOrDefault(city, new ArrayList<>());
         List<Theater> theaters = new ArrayList<>();
 
-        int maxTheaters = (type == TheaterType.FIRST_CLASS) ?
-                Math.min(3, allTheaters.size()) : allTheaters.size();
-
-        for (int i = 0; i < maxTheaters; i++) {
-            TheaterInfo info = allTheaters.get(i);
-            Set<TheaterType> types = new HashSet<>();
-            types.add(TheaterType.REGULAR);
-            if (type == TheaterType.FIRST_CLASS) {
-                types.add(TheaterType.FIRST_CLASS);
-            }
-
+        for (TheaterInfo info : allTheaters){
             theaters.add(new Theater(
-                    "theater_" + city.toLowerCase() + "_" + i,
+                    "theater_" + city.toLowerCase() + "_" + info.name.hashCode(),
                     info.name,
                     info.address,
                     city,
-                    info.imageResId,
-                    types
+                    info.imageResId
             ));
         }
 
         return theaters;
     }
 
-    public static List<Movie> getMoviesForTheater(TheaterType type, String date) {
+    public static List<Movie> getMoviesForTheater(String date) {
         List<Movie> movies = new ArrayList<>();
-        int movieCount = (type == TheaterType.FIRST_CLASS) ? 5 : MOVIES.length;
-
-        for (int i = 0; i < movieCount; i++) {
-            Map<TheaterType, List<String>> showtimesByType = new HashMap<>();
-
-            // Regular showtimes: 10:00 to 22:00
-            List<String> regularShowtimes = generateShowtimes();
-            showtimesByType.put(TheaterType.REGULAR, regularShowtimes);
-
-            // First class: fewer showtimes
-            if (type == TheaterType.FIRST_CLASS) {
-                List<String> firstClassShowtimes = new ArrayList<>(regularShowtimes);
-                Collections.shuffle(firstClassShowtimes);
-                showtimesByType.put(TheaterType.FIRST_CLASS,
-                        firstClassShowtimes.subList(0, Math.min(3, firstClassShowtimes.size())));
-            }
-
+        for (String movieTitle : MOVIES){
             movies.add(new Movie(
-                    "movie_" + i,
-                    MOVIES[i],
-                    showtimesByType
+                    "movie_" + movieTitle.toLowerCase().replace(" ", "_"),
+                    movieTitle,
+                    generateShowtimes()
             ));
         }
 
         return movies;
     }
 
-    private static List<String> generateShowtimes() {
+    public static List<String> generateShowtimes() {
         List<String> showtimes = new ArrayList<>();
         int startHour = 10; // 10 AM
         int endHour = 22;   // 10 PM

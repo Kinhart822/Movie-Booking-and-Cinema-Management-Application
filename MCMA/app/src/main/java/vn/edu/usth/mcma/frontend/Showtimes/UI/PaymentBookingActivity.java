@@ -5,6 +5,7 @@ import static vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType.STAND;
 import static vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType.VIP;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -74,6 +76,12 @@ public class PaymentBookingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_booking);
+
+        ImageButton backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(view -> {
+            onBackPressed();
+        });
+
         // Retrieve intent extras
         retrieveIntentExtras();
         // Initialize and set up views
@@ -371,9 +379,18 @@ public class PaymentBookingActivity extends AppCompatActivity {
             Toast.makeText(this, "Vui lòng đồng ý với điều khoản", Toast.LENGTH_SHORT).show();
             return;
         }
-        // Proceed with payment
-        Toast.makeText(this, "Đang xử lý thanh toán với " + selectedPaymentMethod.getName(),
-                Toast.LENGTH_SHORT).show();
-        // Add your payment processing logic here
+
+        // Hiển thị thông báo hoàn tất thanh toán
+        Toast.makeText(this, "Thanh toán thành công!", Toast.LENGTH_SHORT).show();
+
+        // Chuyển về HomeFragment
+        Intent intent = new Intent(this, vn.edu.usth.mcma.frontend.MainActivity.class); // Thay `MainActivity` bằng activity chứa HomeFragment
+        intent.putExtra("navigate_to", "HomeFragment"); // Gửi thông tin để chuyển đến HomeFragment
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+
+        // Kết thúc PaymentBookingActivity
+        finish();
     }
+
 }

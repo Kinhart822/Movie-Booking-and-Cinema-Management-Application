@@ -50,7 +50,6 @@ public class NowShowingFragment extends Fragment {
                 NowShowing_Item selectedFilm = items.get(position);
                 Intent intent = new Intent(requireContext(), MovieBookingActivity.class);
                 intent.putExtra("MOVIE_TITLE", selectedFilm.getName());
-                intent.putExtra("THEATER_TYPE", selectedFilm.getCategory());
                 startActivity(intent);
             }
         });

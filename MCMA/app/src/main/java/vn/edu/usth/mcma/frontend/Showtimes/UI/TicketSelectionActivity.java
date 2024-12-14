@@ -219,12 +219,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -274,7 +270,6 @@ public class TicketSelectionActivity extends AppCompatActivity {
         ticketRecyclerView = findViewById(R.id.ticket_recycler_view);
         checkoutButton = findViewById(R.id.checkout_button);
         theaterNameTV = findViewById(R.id.theater_name);
-        movieNameTV = findViewById(R.id.movie_name);
         releaseDateTV = findViewById(R.id.movie_release_date);
         screenRoomTV = findViewById(R.id.screen_number);
         totalTicketPriceTV = findViewById(R.id.total_price_ticket);

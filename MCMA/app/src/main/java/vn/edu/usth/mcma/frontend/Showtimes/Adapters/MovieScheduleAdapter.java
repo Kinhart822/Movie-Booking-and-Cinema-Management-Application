@@ -1,6 +1,5 @@
 package vn.edu.usth.mcma.frontend.Showtimes.Adapters;
 
-import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,18 +16,15 @@ import java.util.List;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.TheaterType;
 import vn.edu.usth.mcma.frontend.Showtimes.UI.MovieDetailsActivity;
 
 public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdapter.MovieViewHolder> {
     private List<Movie> movies;
-    private TheaterType currentType;
     private OnShowtimeClickListener listener;
 
     public MovieScheduleAdapter(OnShowtimeClickListener listener) {
         this.movies = new ArrayList<>();
         this.listener = listener;
-        this.currentType = TheaterType.REGULAR;
     }
 
     @NonNull
@@ -54,12 +50,6 @@ public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdap
         this.movies = movies;
         notifyDataSetChanged();
     }
-
-    public void setTheaterType(TheaterType type) {
-        this.currentType = type;
-        notifyDataSetChanged();
-    }
-
     class MovieViewHolder extends RecyclerView.ViewHolder {
         private TextView movieTitle;
         private TextView viewDetails;
@@ -76,7 +66,7 @@ public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdap
             movieTitle.setText(movie.getTitle());
             timeContainer.removeAllViews();
 
-            List<String> showtimes = movie.getShowtimesForType(currentType);
+            List<String> showtimes = movie.getShowtimes();
             for (String time : showtimes) {
                 Button timeButton = new Button(itemView.getContext());
                 timeButton.setText(time);
@@ -95,7 +85,6 @@ public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdap
             viewDetails.setOnClickListener(v -> {
                 Intent intent = new Intent(itemView.getContext(), MovieDetailsActivity.class);
                 intent.putExtra("MOVIE_TITLE", movie.getTitle());
-                intent.putExtra("THEATER_TYPE", currentType);  // Pass the theater type
                 itemView.getContext().startActivity(intent);
             });
         }
