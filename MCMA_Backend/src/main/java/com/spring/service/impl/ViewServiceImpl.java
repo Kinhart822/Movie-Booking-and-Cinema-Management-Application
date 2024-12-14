@@ -254,6 +254,10 @@ public class ViewServiceImpl implements ViewService {
                     movie.getMovieGenreSet().stream()
                             .map(movieGenre -> movieGenre.getMovieGenreDetail().getName())
                             .toList());
+            response.setMovieRatingDetailNameList(
+                    movie.getMovieRatingDetailSet().stream()
+                            .map(MovieRatingDetail::getName)
+                            .toList());
             return response;
         }).toList();
     }
@@ -307,6 +311,10 @@ public class ViewServiceImpl implements ViewService {
             response.setMovieGenreNameList(
                     movie.getMovieGenreSet().stream()
                             .map(movieGenre -> movieGenre.getMovieGenreDetail().getName())
+                            .toList());
+            response.setMovieRatingDetailNameList(
+                    movie.getMovieRatingDetailSet().stream()
+                            .map(MovieRatingDetail::getName)
                             .toList());
             return response;
         }).toList();

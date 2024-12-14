@@ -18,4 +18,5 @@ public class ComingSoonResponse {
     private String publishedDate;
     private String imageUrl;
     private List<String> movieGenreNameList;
+    private List<String> movieRatingDetailNameList;
 }

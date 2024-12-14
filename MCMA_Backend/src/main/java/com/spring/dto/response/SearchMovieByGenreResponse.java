@@ -13,6 +13,7 @@ public class SearchMovieByGenreResponse {
     private int id;
     private String name;
     private Integer length;
+    private String imageUrl;
     private String trailerLink;
     private String datePublish;
     private String ratingName;

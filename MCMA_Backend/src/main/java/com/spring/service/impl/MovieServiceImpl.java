@@ -29,14 +29,15 @@ public class MovieServiceImpl implements MovieService {
                         (Integer) result[0],        // id
                         (String) result[1],         // name
                         (Integer) result[2],        // length
-                        (String) result[3],         // trailerLink
-                        result[4] != null ? dateFormat.format((Date) result[4]) : null, //  datePublish
-                        (String) result[5],         // ratingName
-                        (String) result[6],         // ratingDescription
-                        (String) result[7],         // genreName
-                        (String) result[8],         // performerName
-                        result[9] != null ? String.valueOf(PerformerType.values()[(Byte) result[9]]) : null, // performerType
-                        result[10] != null ? String.valueOf(PerformerSex.values()[(Byte) result[10]]) : null // performerSex
+                        (String) result[3],         // image Url
+                        (String) result[4],         // trailerLink
+                        result[5] != null ? dateFormat.format((Date) result[5]) : null, //  datePublish
+                        (String) result[6],         // ratingName
+                        (String) result[7],         // ratingDescription
+                        (String) result[8],         // genreName
+                        (String) result[9],         // performerName
+                        result[10] != null ? String.valueOf(PerformerType.values()[(Byte) result[10]]) : null, // performerType
+                        result[11] != null ? String.valueOf(PerformerSex.values()[(Byte) result[11]]) : null // performerSex
                 ))
                 .collect(Collectors.toList());
     }
@@ -50,14 +51,15 @@ public class MovieServiceImpl implements MovieService {
                         (Integer) result[0],        // id
                         (String) result[1],         // name
                         (Integer) result[2],        // length
-                        (String) result[3],         // trailerLink
-                        result[4] != null ? dateFormat.format((Date) result[4]) : null, // datePublish
-                        (String) result[5],         // ratingName
-                        (String) result[6],         // ratingDescription
-                        (String) result[7],         // genreName
-                        (String) result[8],         // performerName
-                        result[9] != null ? String.valueOf(PerformerType.values()[(Byte) result[9]]) : null, // performerType
-                        result[10] != null ? String.valueOf(PerformerSex.values()[(Byte) result[10]]) : null // performerSex
+                        (String) result[3],         // image Url
+                        (String) result[4],         // trailerLink
+                        result[5] != null ? dateFormat.format((Date) result[5]) : null, //  datePublish
+                        (String) result[6],         // ratingName
+                        (String) result[7],         // ratingDescription
+                        (String) result[8],         // genreName
+                        (String) result[9],         // performerName
+                        result[10] != null ? String.valueOf(PerformerType.values()[(Byte) result[10]]) : null, // performerType
+                        result[11] != null ? String.valueOf(PerformerSex.values()[(Byte) result[11]]) : null // performerSex
                 ))
                 .collect(Collectors.toList());
     }
@@ -71,14 +73,15 @@ public class MovieServiceImpl implements MovieService {
                         (Integer) result[0],        // id
                         (String) result[1],         // name
                         (Integer) result[2],        // length
-                        (String) result[3],         // trailerLink
-                        result[4] != null ? dateFormat.format((Date) result[4]) : null, // datePublish
-                        (String) result[5],         // ratingName
-                        (String) result[6],         // ratingDescription
-                        (String) result[7],         // genreName
-                        (String) result[8],         // performerName
-                        result[9] != null ? String.valueOf(PerformerType.values()[(Byte) result[9]]) : null, // performerType
-                        result[10] != null ? String.valueOf(PerformerSex.values()[(Byte) result[10]]) : null // performerSex
+                        (String) result[3],         // imageUrl
+                        (String) result[4],         // trailerLink
+                        result[5] != null ? dateFormat.format((Date) result[5]) : null, // datePublish
+                        (String) result[6],         // ratingName
+                        (String) result[7],         // ratingDescription
+                        (String) result[8],         // genreName
+                        (String) result[9],         // performerName
+                        result[10] != null ? String.valueOf(PerformerType.values()[(Byte) result[10]]) : null, // performerType
+                        result[11] != null ? String.valueOf(PerformerSex.values()[(Byte) result[11]]) : null // performerSex
                 ))
                 .collect(Collectors.toList());    }
 }
