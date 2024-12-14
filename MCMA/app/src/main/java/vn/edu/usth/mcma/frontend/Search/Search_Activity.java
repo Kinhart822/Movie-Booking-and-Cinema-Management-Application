@@ -204,9 +204,13 @@ public class Search_Activity extends AppCompatActivity implements SearchViewInte
             filteredItems.addAll(items);
         } else {
             for (SearchMovieByNameResponse item : items) {
-                if (item.getGenreName().equalsIgnoreCase(category)) {
+                List<String> genres = item.getGenreNameList();
+                if (genres != null && genres.contains(category)) {
                     filteredItems.add(item);
                 }
+//                if (item.getGenreName().equalsIgnoreCase(category)) {
+//                    filteredItems.add(item);
+//                }
             }
 
             if (filteredItems.isEmpty()) {
@@ -220,11 +224,31 @@ public class Search_Activity extends AppCompatActivity implements SearchViewInte
     private void filterList(String text) {
         filteredItems.clear();
         for (SearchMovieByNameResponse item : items) {
-            if (item.getName().toLowerCase().contains(text.toLowerCase()) ||
-                    item.getGenreName().toLowerCase().contains(text.toLowerCase())) {
+            // Check if the name matches
+            boolean matchesName = item.getName().toLowerCase().contains(text.toLowerCase());
+
+            // Check if any genre in the genreNameList matches
+            boolean matchesGenre = false;
+            if (item.getGenreNameList() != null) {
+                for (String genre : item.getGenreNameList()) {
+                    if (genre.toLowerCase().contains(text.toLowerCase())) {
+                        matchesGenre = true;
+                        break;
+                    }
+                }
+            }
+
+            // Add item if it matches either name or genre
+            if (matchesName || matchesGenre) {
                 filteredItems.add(item);
             }
         }
+//        for (SearchMovieByNameResponse item : items) {
+//            if (item.getName().toLowerCase().contains(text.toLowerCase()) ||
+//                    item.getGenreName().toLowerCase().contains(text.toLowerCase())) {
+//                filteredItems.add(item);
+//            }
+//        }
 
         if (filteredItems.isEmpty()) {
             Toast.makeText(this, "No results found", Toast.LENGTH_SHORT).show();

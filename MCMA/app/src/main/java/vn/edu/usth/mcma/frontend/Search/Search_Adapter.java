@@ -37,9 +37,21 @@ public class Search_Adapter extends RecyclerView.Adapter<Search_ViewHolder> {
     public void onBindViewHolder(@NonNull Search_ViewHolder holder, int position) {
         SearchMovieByNameResponse item = items.get(position);
         holder.nameView.setText(item.getName() != null ? item.getName() : "Unknown");
-        holder.typeView.setText(item.getGenreName() != null ? item.getGenreName() : "N/A");
+
+        List<String> genres = item.getGenreNameList();
+        if (genres != null && !genres.isEmpty() ) {
+            holder.typeView.setText(genres.get(0)); // Use a valid index, e.g., 0 or a relevant value
+        } else {
+            holder.typeView.setText(R.string.unknown_genre); // Fallback text
+        }
         holder.timeView.setText(item.getLength() != null ? item.getLength() + " min" : "Unknown");
-        holder.age_limitView.setText(item.getRatingName() != null ? item.getRatingName() : "No Rating");
+
+        List<String> rating = item.getRatingNameList();
+        if (genres != null && !genres.isEmpty() ) {
+            holder.age_limitView.setText(genres.get(0)); // Use a valid index, e.g., 0 or a relevant value
+        } else {
+            holder.age_limitView.setText(R.string.unknown_rating); // Fallback text
+        }
         Glide.with(context)
                 .load(item.getImageUrl())
                 .into(holder.filmView);

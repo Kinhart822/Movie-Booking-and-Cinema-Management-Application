@@ -1,5 +1,7 @@
 package vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response;
 
+import java.util.List;
+
 public class SearchMovieByNameResponse {
     private Integer id;
     private String imageUrl;
@@ -7,12 +9,12 @@ public class SearchMovieByNameResponse {
     private Integer length;
     private String trailerLink;
     private String datePublish;
-    private String ratingName;
-    private String ratingDescription;
-    private String genreName;
-    private String performerName;
-    private String performerType;
-    private String performerSex;
+    private List<String> ratingNameList;
+    private List<String> ratingDescriptionList;
+    private List<String> genreNameList;
+    private List<String> performerNameList;
+    private List<String> performerType;
+    private List<String> performerSex;
 
     public Integer getId() {
         return id;
@@ -54,53 +56,6 @@ public class SearchMovieByNameResponse {
         this.datePublish = datePublish;
     }
 
-    public String getRatingName() {
-        return ratingName;
-    }
-
-    public void setRatingName(String ratingName) {
-        this.ratingName = ratingName;
-    }
-
-    public String getRatingDescription() {
-        return ratingDescription;
-    }
-
-    public void setRatingDescription(String ratingDescription) {
-        this.ratingDescription = ratingDescription;
-    }
-
-    public String getGenreName() {
-        return genreName;
-    }
-
-    public void setGenreName(String genreName) {
-        this.genreName = genreName;
-    }
-
-    public String getPerformerName() {
-        return performerName;
-    }
-
-    public void setPerformerName(String performerName) {
-        this.performerName = performerName;
-    }
-
-    public String getPerformerType() {
-        return performerType;
-    }
-
-    public void setPerformerType(String performerType) {
-        this.performerType = performerType;
-    }
-
-    public String getPerformerSex() {
-        return performerSex;
-    }
-
-    public void setPerformerSex(String performerSex) {
-        this.performerSex = performerSex;
-    }
 
     public String getImageUrl() {
         return imageUrl;
@@ -108,5 +63,21 @@ public class SearchMovieByNameResponse {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public List<String> getRatingNameList() {
+        return ratingNameList;
+    }
+
+    public void setRatingNameList(List<String> ratingNameList) {
+        this.ratingNameList = ratingNameList;
+    }
+
+    public List<String> getGenreNameList() {
+        return genreNameList;
+    }
+
+    public void setGenreNameList(List<String> genreNameList) {
+        this.genreNameList = genreNameList;
     }
 }
