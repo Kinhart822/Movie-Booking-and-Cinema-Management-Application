@@ -40,6 +40,9 @@ public class Search_Adapter extends RecyclerView.Adapter<Search_ViewHolder> {
         holder.typeView.setText(item.getGenreName() != null ? item.getGenreName() : "N/A");
         holder.timeView.setText(item.getLength() != null ? item.getLength() + " min" : "Unknown");
         holder.age_limitView.setText(item.getRatingName() != null ? item.getRatingName() : "No Rating");
+        Glide.with(context)
+                .load(item.getImageUrl())
+                .into(holder.filmView);
 
     }
 

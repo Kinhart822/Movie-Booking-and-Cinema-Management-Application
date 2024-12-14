@@ -44,7 +44,13 @@ public class ComingSoon_Adapter extends RecyclerView.Adapter<ComingSoon_ViewHold
         holder.nameView.setText(comingSoonResponse.getMovieName());
 //        holder.typeView.setText(nowShowingResponse.getMovieGenreNameList().get(position));
         holder.timeView.setText(String.format("%d min", comingSoonResponse.getMovieLength()));
-        holder.age_limitView.setText(comingSoonResponse.getPublishedDate());
+        List<String> rating = comingSoonResponse.getMovieRatingDetailNameList();
+        if (rating != null && !rating.isEmpty() ) {
+            holder.age_limitView.setText(rating.get(0)); // Use a valid index, e.g., 0 or a relevant value
+        } else {
+            holder.age_limitView.setText(R.string.unknown_rating); // Fallback text
+        }
+//        holder.age_limitView.setText(comingSoonResponse.getPublishedDate());
         Glide.with(context)
                 .load(comingSoonResponse.getImageUrl())
                 .into(holder.filmView);

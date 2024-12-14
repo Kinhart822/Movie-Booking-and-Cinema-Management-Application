@@ -26,6 +26,11 @@
     <string name="rating_excellent">Excellent!</string>
     <string name="unknown_genre">Unknown Genre</string>
     <string name="can_t_book">Can\'t Book</string>
+    <string name="are_you_sure_want_to_delete_account">Are you sure want to delete account?</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="are_you_sure_want_to_log_out">Are you sure want to log out?</string>
+    <string name="unknown_rating">Unknown Rating\n</string>
 
     <string-array name="gender_array">
         <item>Choose gender</item>

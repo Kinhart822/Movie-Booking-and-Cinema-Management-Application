@@ -43,7 +43,12 @@ public class NowShowing_Adapter extends RecyclerView.Adapter<NowShowing_ViewHold
         holder.nameView.setText(nowShowingResponse.getMovieName());
 //        holder.typeView.setText(nowShowingResponse.getMovieGenreNameList().get(position));
         holder.timeView.setText(String.format("%d min", nowShowingResponse.getMovieLength()));
-        holder.age_limitView.setText(nowShowingResponse.getPublishedDate());
+        List<String> rating = nowShowingResponse.getMovieRatingDetailNameList();
+        if (rating != null && !rating.isEmpty() ) {
+            holder.age_limitView.setText(rating.get(0)); // Use a valid index, e.g., 0 or a relevant value
+        } else {
+            holder.age_limitView.setText(R.string.unknown_rating); // Fallback text
+        }
         Glide.with(context)
                 .load(nowShowingResponse.getImageUrl())
                 .into(holder.filmView);

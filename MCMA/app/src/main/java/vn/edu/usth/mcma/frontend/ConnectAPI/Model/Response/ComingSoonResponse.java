@@ -9,6 +9,15 @@ public class ComingSoonResponse {
     private String publishedDate;
     private String imageUrl;
     private List<String> movieGenreNameList;
+    private List<String> movieRatingDetailNameList;
+
+    public List<String> getMovieRatingDetailNameList() {
+        return movieRatingDetailNameList;
+    }
+
+    public void setMovieRatingDetailNameList(List<String> movieRatingDetailNameList) {
+        this.movieRatingDetailNameList = movieRatingDetailNameList;
+    }
 
     public Integer getMovieId() {
         return movieId;

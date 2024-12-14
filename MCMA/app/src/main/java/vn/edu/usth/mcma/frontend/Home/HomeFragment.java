@@ -57,56 +57,6 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
         tabLayout = v.findViewById(R.id.type_tablayout);
         viewPager = v.findViewById(R.id.type_viewPager2);
 
-        LinearLayout to_home_fragment = v.findViewById(R.id.home_side_navigation);
-        to_home_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_home_page();
-                }
-            }
-        });
-
-        LinearLayout to_showtimes_fragment = v.findViewById(R.id.showtimes_side_navigation);
-        to_showtimes_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_showtimes_page();
-                }
-            }
-        });
-
-        LinearLayout to_store_fragment = v.findViewById(R.id.store_side_navigation);
-        to_store_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_store_page();
-                }
-            }
-        });
-
-        LinearLayout to_personal_fragment = v.findViewById(R.id.personal_side_navigation);
-        to_personal_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_personal_page();
-                }
-            }
-        });
-
-        LinearLayout to_feedback_fragment = v.findViewById(R.id.feedback_side_navigation);
-        to_feedback_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getActivity() instanceof MainActivity){
-                    ((MainActivity) getActivity()).close_to_feedback_page();
-                }
-            }
-        });
-
         // Setup TabLayout and ViewPager2
         setupViewPagerAndTabs();
 

@@ -89,7 +89,8 @@ public class LoginFragment extends Fragment {
                     if (response.isSuccessful()){
                         Toast.makeText(getActivity(), "Login successful!", Toast.LENGTH_SHORT).show();
                         String token = response.body().getToken();
-
+                        int userId = response.body().getUserId();
+                        saveUserIdToPreferences(userId);
                         // Assuming this is where you receive the token after successful login
                         SharedPreferences sharedTokenPreferences = getActivity().getSharedPreferences("AuthPrefs", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editorToken = sharedTokenPreferences.edit();
@@ -99,6 +100,7 @@ public class LoginFragment extends Fragment {
                         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("TOLogin", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putBoolean("isLoggedIn", true);
+                        editor.apply(); // Save userId persistently
                         // Tính thời gian hết hạn từ thời điểm hiện tại
                         long expirationTime = System.currentTimeMillis() + 1440000; // 1440000ms = 24 phút
                         editor.putLong("expirationTime", expirationTime);
@@ -119,7 +121,6 @@ public class LoginFragment extends Fragment {
                 }
             });
         });
-
         TextView create_account = view.findViewById(R.id.create_account);
         create_account.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,6 +140,12 @@ public class LoginFragment extends Fragment {
         });
 
         return view;
+    }
+    private void saveUserIdToPreferences(int userId) {
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("ProfilePrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("userId", userId);
+        editor.apply(); // Save userId persistently
     }
 
     private boolean validateLogin(String email, String password) {

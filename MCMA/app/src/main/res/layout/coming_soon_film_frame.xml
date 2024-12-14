@@ -68,6 +68,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:layout_marginEnd="4dp"
                     android:id="@+id/film_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -77,19 +78,21 @@
                     tools:text="minutes" />
 
                 <TextView
+                    android:id="@+id/center_dash"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginHorizontal="5dp"
                     android:gravity="center"
                     android:text="-"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
+
+                    android:textColor="@color/red"
                     android:id="@+id/age_limit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
                     android:background="@drawable/tab_rect"
                     android:gravity="center"
                     android:padding="5dp"

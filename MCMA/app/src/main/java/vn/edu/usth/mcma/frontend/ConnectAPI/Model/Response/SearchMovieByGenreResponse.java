@@ -2,6 +2,7 @@ package vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response;
 
 public class SearchMovieByGenreResponse {
     private int id;
+    private String imageUrl;
     private String name;
     private Integer length;
     private String trailerLink;
@@ -99,5 +100,13 @@ public class SearchMovieByGenreResponse {
 
     public void setPerformerSex(String performerSex) {
         this.performerSex = performerSex;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

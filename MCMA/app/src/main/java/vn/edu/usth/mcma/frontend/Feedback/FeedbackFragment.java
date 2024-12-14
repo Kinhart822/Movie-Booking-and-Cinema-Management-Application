@@ -45,74 +45,15 @@ public class FeedbackFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         fetchBookingList();
-        ImageButton closeButton = v.findViewById(R.id.close_button);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (getActivity() instanceof vn.edu.usth.mcma.frontend.MainActivity) {
-                    ((vn.edu.usth.mcma.frontend.MainActivity) getActivity()).close_to_home_page();
-                }
-            }
-        });
 
-        LinearLayout to_home_fragment = v.findViewById(R.id.home_side_navigation);
-        to_home_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (getActivity() instanceof MainActivity) {
-                    ((MainActivity) getActivity()).close_to_home_page();
-                }
-            }
-        });
-
-        LinearLayout to_showtimes_fragment = v.findViewById(R.id.showtimes_side_navigation);
-        to_showtimes_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (getActivity() instanceof MainActivity) {
-                    ((MainActivity) getActivity()).close_to_showtimes_page();
-                }
-            }
-        });
-
-        LinearLayout to_store_fragment = v.findViewById(R.id.store_side_navigation);
-        to_store_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (getActivity() instanceof MainActivity) {
-                    ((MainActivity) getActivity()).close_to_store_page();
-                }
-            }
-        });
-
-        LinearLayout to_feedback_fragment = v.findViewById(R.id.feedback_side_navigation);
-        to_feedback_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (getActivity() instanceof MainActivity) {
-                    ((MainActivity) getActivity()).close_to_feedback_page();
-                }
-            }
-        });
-
-        LinearLayout to_personal_fragment = v.findViewById(R.id.personal_side_navigation);
-        to_personal_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (getActivity() instanceof MainActivity) {
-                    ((MainActivity) getActivity()).close_to_personal_page();
-                }
-            }
-        });
-
-        ImageButton notification_button = v.findViewById(R.id.notification_button);
-        notification_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Notification.Notification_Activity.class);
-                startActivity(i);
-            }
-        });
+//        ImageButton notification_button = v.findViewById(R.id.notification_button);
+//        notification_button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Notification.Notification_Activity.class);
+//                startActivity(i);
+//            }
+//        });
 
         return v;
     }
@@ -129,7 +70,7 @@ public class FeedbackFragment extends Fragment {
                     items.addAll(response.body());
                     adapter.notifyDataSetChanged();
                 } else {
-                    Toast.makeText(requireActivity(), "Failed to load feedbacks", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), "You haven't made any feedbacks", Toast.LENGTH_SHORT).show();
                 }
             }
 
