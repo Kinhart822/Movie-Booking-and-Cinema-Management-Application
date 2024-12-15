@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.Showtimes.UI;
+package vn.edu.usth.mcma.frontend.Home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,14 +18,13 @@ import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.MovieDetails;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.MovieDataProvider;
 
-public class MovieDetailsActivity extends AppCompatActivity {
+public class OnlyDetailsActivity extends AppCompatActivity {
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private AppBarLayout appBarLayout;
     private Toolbar toolbar;
     private TextView synopsisTextView;
     private TextView expandCollapseTextView;
     private boolean isSynopsisExpanded = false;
-    private Button bookingButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +38,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
         synopsisTextView = findViewById(R.id.tv_synopsis);
         expandCollapseTextView = findViewById(R.id.tv_concise);
         setSupportActionBar(toolbar);
+        // Hide the booking button
+        Button bookingButton = findViewById(R.id.bookingButton);
+        bookingButton.setVisibility(View.GONE);
 
         // Get movie title from intent
         String movieTitle = getIntent().getStringExtra("MOVIE_TITLE");
@@ -50,14 +52,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-
         // Back button on banner
         findViewById(R.id.btn_back_banner).setOnClickListener(v -> finish());
         // Back button in toolbar
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
-
-        // Setup booking buttons based on theater type
-        setupBookingButtons(movieTitle);
         // Populate movie details
         populateMovieDetails(movieDetails);
         setupSynopsisExpansion();
@@ -111,20 +109,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 // Expanded or partially expanded
                 toolbar.setVisibility(View.GONE);
             }
-        });
-    }
-
-    private void setupBookingButtons(String movieTitle) {
-        Button bookingButton = findViewById(R.id.bookingButton);
-
-        bookingButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MovieBookingActivity.class);
-            intent.putExtra("MOVIE_TITLE", movieTitle);
-            MovieDetails movieDetails = MovieDataProvider.getMovieDetails(movieTitle);
-            if (movieDetails != null) {
-                intent.putExtra("MOVIE_BANNER", movieDetails.getBannerImageResId());
-            }
-            startActivity(intent);
         });
     }
 }

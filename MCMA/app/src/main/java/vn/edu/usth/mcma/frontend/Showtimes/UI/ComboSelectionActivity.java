@@ -263,7 +263,8 @@ public class ComboSelectionActivity extends AppCompatActivity {
             intent.putParcelableArrayListExtra("SELECTED_SEATS", new ArrayList<>(selectedSeats));
             intent.putParcelableArrayListExtra("SELECTED_COMBO_ITEMS", new ArrayList<>(selectedComboItems));
             intent.putExtra("TOTAL_PRICE", totalPrice);
-
+            int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
+            intent.putExtra("MOVIE_BANNER", movieBannerResId);
             startActivity(intent);
         });
     }

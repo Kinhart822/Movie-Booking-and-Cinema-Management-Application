@@ -185,16 +185,26 @@ public class PaymentBookingActivity extends AppCompatActivity {
         totalPriceTV = findViewById(R.id.total_price);
         totalPriceCouponTV = findViewById(R.id.total_price_coupon);
 
-        // Set movie title
+        // Set movie title and poster
         if (selectedMovie != null) {
-            movieTitleTV.setText(selectedMovie.getTitle());
+            // Always prefer the passed banner resource ID
+            int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
 
-            // Set movie poster from MovieDataProvider
-            MovieDetails movieDetails = MovieDataProvider.getMovieDetails(selectedMovie.getTitle());
-            if (movieDetails != null) {
-                moviePosterIV.setImageResource(movieDetails.getBannerImageResId());
+            if (movieBannerResId != 0) {
+                // Use the banner passed through intent
+                moviePosterIV.setImageResource(movieBannerResId);
+            } else {
+                // Fallback to MovieDataProvider if no banner passed
+                MovieDetails movieDetails = MovieDataProvider.getMovieDetails(selectedMovie.getTitle());
+                if (movieDetails != null) {
+                    moviePosterIV.setImageResource(movieDetails.getBannerImageResId());
+                }
             }
+
+            // Set movie title from selected movie
+            movieTitleTV.setText(selectedMovie.getTitle());
         }
+
         // Set theater name
         if (selectedTheater != null) {
             theaterNameTV.setText(selectedTheater.getName());

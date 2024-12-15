@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.frontend.Home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.Showtimes.Models.MovieDetails;
+import vn.edu.usth.mcma.frontend.Showtimes.Utils.MovieDataProvider;
 
 public class ComingSoonFragment extends Fragment {
     @Override
@@ -25,16 +28,28 @@ public class ComingSoonFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        List<ComingSoon_Item> items = new ArrayList<ComingSoon_Item>();
-        items.add(new ComingSoon_Item("Olivia Adams", "Horror", "135 minutes","T16",R.drawable.movie12));
-        items.add(new ComingSoon_Item("Liam Johnson", "Action","120 minutes","T18" ,R.drawable.movie6));
-        items.add(new ComingSoon_Item("Noah Brown", "Horror","90 minutes","P" ,R.drawable.movie8));
+        // Get the list of movie details
+        List<MovieDetails> movieDetailsList = MovieDataProvider.getAllMovieDetails();
+
+        // Create ComingSoon_Item list from MovieDetails
+        List<ComingSoon_Item> items = new ArrayList<>();
+        for (MovieDetails movie : movieDetailsList) {
+            items.add(new ComingSoon_Item(
+                    movie.getTitle(),
+                    movie.getGenres().get(0), // Take first genre
+                    movie.getDuration() + " minutes",
+                    movie.getClassification(),
+                    movie.getBannerImageResId()
+            ));
+        }
 
         ComingSoon_Adapter adapter = new ComingSoon_Adapter(requireContext(), items, new FilmViewInterface() {
             @Override
             public void onFilmSelected(int position) {
                 ComingSoon_Item selectedFilm = items.get(position);
-                Toast.makeText(requireContext(), "Selected Film: " + selectedFilm.getName(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(requireContext(), OnlyDetailsActivity.class);
+                intent.putExtra("MOVIE_TITLE", selectedFilm.getName());
+                startActivity(intent);
             }
 
             @Override

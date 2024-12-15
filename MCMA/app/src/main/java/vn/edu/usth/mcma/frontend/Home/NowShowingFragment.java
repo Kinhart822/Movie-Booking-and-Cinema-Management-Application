@@ -18,7 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.Showtimes.Models.MovieDetails;
 import vn.edu.usth.mcma.frontend.Showtimes.UI.MovieBookingActivity;
+import vn.edu.usth.mcma.frontend.Showtimes.UI.MovieDetailsActivity;
+import vn.edu.usth.mcma.frontend.Showtimes.Utils.MovieDataProvider;
 
 public class NowShowingFragment extends Fragment {
 
@@ -31,18 +34,27 @@ public class NowShowingFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        List<NowShowing_Item> items = new ArrayList<>();
-        items.add(new NowShowing_Item("Grace Morgan", "Horror", "85 minutes", "P", R.drawable.movie1));
-        items.add(new NowShowing_Item("Isabella Lewis", "Comedy", "100 minutes", "P", R.drawable.movie3));
-        items.add(new NowShowing_Item("Evelyn", "Sci-Fi", "94 minutes", "T13", R.drawable.movie4));
-        items.add(new NowShowing_Item("Jack", "Action", "114 minutes", "P", R.drawable.movie5));
-        items.add(new NowShowing_Item("Tino", "Horror", "125 minutes", "P", R.drawable.movie7));
+        // Get the list of movie details
+        List<MovieDetails> movieDetailsList = MovieDataProvider.getAllMovieDetails();
 
+        // Create NowShowing_Item list from MovieDetails
+        List<NowShowing_Item> items = new ArrayList<>();
+        for (MovieDetails movie : movieDetailsList) {
+            items.add(new NowShowing_Item(
+                    movie.getTitle(),
+                    movie.getGenres().get(0), // Take first genre
+                    movie.getDuration() + " minutes",
+                    movie.getClassification(),
+                    movie.getBannerImageResId()
+            ));
+        }
         NowShowing_Adapter adapter = new NowShowing_Adapter(requireContext(), items, new FilmViewInterface() {
             @Override
             public void onFilmSelected(int position) {
                 NowShowing_Item selectedFilm = items.get(position);
-                Toast.makeText(requireContext(), "Selected Film: " + selectedFilm.getName(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(requireContext(), OnlyDetailsActivity.class);
+                intent.putExtra("MOVIE_TITLE", selectedFilm.getName());
+                startActivity(intent);
             }
 
             @Override

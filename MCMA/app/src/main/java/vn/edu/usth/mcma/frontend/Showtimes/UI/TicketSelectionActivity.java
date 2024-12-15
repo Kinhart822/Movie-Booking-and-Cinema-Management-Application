@@ -381,15 +381,15 @@ public class TicketSelectionActivity extends AppCompatActivity {
                     .sum();
             if (totalSelectedTickets == guestQuantity) {
                 Intent intent = new Intent(this, SeatSelectionActivity.class);
-
                 // Crucially, pass the ticket items
                 intent.putParcelableArrayListExtra("TICKET_ITEMS", new ArrayList<>(ticketAdapter.getSelectedTicketItems()));
-
                 // Pass other extras as you were doing before
                 intent.putExtra("SELECTED_THEATER", getIntent().getSerializableExtra(EXTRA_THEATER));
                 intent.putExtra("SELECTED_MOVIE", getIntent().getSerializableExtra(EXTRA_MOVIE));
                 intent.putExtra("SELECTED_SHOWTIME", getIntent().getStringExtra("SELECTED_SHOWTIME"));
                 intent.putExtra("SELECTED_SCREEN_ROOM", getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
+                int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
+                intent.putExtra("MOVIE_BANNER", movieBannerResId);
                 startActivity(intent);
             } else {
                 Toast.makeText(this, "Please order the correct number of seats", Toast.LENGTH_SHORT).show();

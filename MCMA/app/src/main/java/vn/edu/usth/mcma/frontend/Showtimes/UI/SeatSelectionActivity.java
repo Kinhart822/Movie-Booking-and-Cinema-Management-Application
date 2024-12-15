@@ -192,14 +192,12 @@ public class SeatSelectionActivity extends AppCompatActivity {
             intent.putExtra(ComboSelectionActivity.EXTRA_SEAT_COUNT, guestQuantity);
             intent.putParcelableArrayListExtra(ComboSelectionActivity.EXTRA_SELECTED_SEATS, new ArrayList<>(selectedSeats));
             // Pass through extras from previous activities
-            intent.putExtra(ComboSelectionActivity.EXTRA_THEATER,
-                    getIntent().getSerializableExtra("SELECTED_THEATER"));
-            intent.putExtra(ComboSelectionActivity.EXTRA_MOVIE,
-                    getIntent().getSerializableExtra("SELECTED_MOVIE"));
-            intent.putExtra("SELECTED_SHOWTIME",
-                    getIntent().getStringExtra("SELECTED_SHOWTIME"));
-            intent.putExtra("SELECTED_SCREEN_ROOM",
-                    getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
+            intent.putExtra(ComboSelectionActivity.EXTRA_THEATER, getIntent().getSerializableExtra("SELECTED_THEATER"));
+            intent.putExtra(ComboSelectionActivity.EXTRA_MOVIE, getIntent().getSerializableExtra("SELECTED_MOVIE"));
+            intent.putExtra("SELECTED_SHOWTIME", getIntent().getStringExtra("SELECTED_SHOWTIME"));
+            intent.putExtra("SELECTED_SCREEN_ROOM", getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
+            int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
+            intent.putExtra("MOVIE_BANNER", movieBannerResId);
 
             startActivity(intent);
         });

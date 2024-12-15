@@ -30,13 +30,7 @@ import vn.edu.usth.mcma.frontend.MainActivity;
 public class HomeFragment extends Fragment implements FilmViewInterface {
 
     private ViewFlipper v_flipper;
-    private List<ComingSoon_Item> nowShowingFilms;
-    private List<ComingSoon_Item> comingSoonFilms;
     private List<ComingSoon_Item> filteredFilms = new ArrayList<>();
-    private ComingSoon_Adapter adapter;
-    private RecyclerView recyclerView;
-    private SearchView searchView;
-    private DrawerLayout mDrawerLayout;
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
 
