@@ -53,7 +53,7 @@ public class UserController {
     @GetMapping("/search-movie-by-name")
     public ResponseEntity<List<SearchMovieByNameResponse>> getAllMovies(
             @RequestParam(required = false, name = "title") String title,
-            @RequestParam(required = false, name = "limit", defaultValue = "10") Integer limit,
+            @RequestParam(required = false, name = "limit", defaultValue = "100") Integer limit,
             @RequestParam(required = false, name = "offset", defaultValue = "0") Integer offset) {
         return ResponseEntity.ok(movieService.getAllMovies(title, limit, offset));
     }
@@ -67,7 +67,7 @@ public class UserController {
     @GetMapping("/search-movie-by-movie-genre-name")
     public ResponseEntity<List<SearchMovieByGenreResponse>> getAllMoviesByMovieGenreName(
             @RequestParam(required = false, name = "name") String name,
-            @RequestParam(required = false, name = "limit", defaultValue = "10") Integer limit,
+            @RequestParam(required = false, name = "limit", defaultValue = "100") Integer limit,
             @RequestParam(required = false, name = "offset", defaultValue = "0") Integer offset
     ) {
         return ResponseEntity.ok(movieService.getAllMoviesByMovieGenreName(name, limit, offset));
