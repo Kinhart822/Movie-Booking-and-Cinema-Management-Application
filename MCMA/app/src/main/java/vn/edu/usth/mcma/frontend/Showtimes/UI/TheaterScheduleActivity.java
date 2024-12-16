@@ -19,7 +19,6 @@ import java.util.Locale;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.TheaterType;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.MovieScheduleAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.TheaterDataProvider;
 
@@ -27,7 +26,6 @@ public class TheaterScheduleActivity extends AppCompatActivity
         implements MovieScheduleAdapter.OnShowtimeClickListener {
     private RecyclerView movieRecyclerView;
     private MovieScheduleAdapter movieAdapter;
-    private TheaterType currentType;
     private String selectedDate;
     private Button selectedDateButton;
 
@@ -39,8 +37,6 @@ public class TheaterScheduleActivity extends AppCompatActivity
         // Get theater details from intent
         String theaterName = getIntent().getStringExtra("THEATER_NAME");
         String theaterAddress = getIntent().getStringExtra("THEATER_ADDRESS");
-        currentType = TheaterType.valueOf(
-                getIntent().getStringExtra("THEATER_TYPE"));
 
         // Set theater details in toolbar
         TextView nameTextView = findViewById(R.id.theater_name);
@@ -51,7 +47,6 @@ public class TheaterScheduleActivity extends AppCompatActivity
         // Setup back button
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> finish());
-
 
         setupViews();
         setupDateButtons();
@@ -84,7 +79,7 @@ public class TheaterScheduleActivity extends AppCompatActivity
 
             // Set background selector
             dayButton.setBackground(getDrawable(R.drawable.date_button_selector));
-            dayButton.setTextColor(Color.BLACK);
+            dayButton.setTextColor(Color.WHITE);
 
             // Set initial selection
             if (i == 0) {
@@ -112,11 +107,14 @@ public class TheaterScheduleActivity extends AppCompatActivity
         // Load movies and showtimes based on selectedDate and currentType
         List<Movie> movies = getMoviesForDate(selectedDate);
         movieAdapter.setMovies(movies);
-        movieAdapter.setTheaterType(currentType);
     }
 
     private List<Movie> getMoviesForDate(String date) {
-        return TheaterDataProvider.getMoviesForTheater(currentType, date);
+        List<Movie> movies = TheaterDataProvider.getMoviesForTheater(date);
+
+        // Make sure movie titles match those in MovieDataProvider
+        // This ensures MovieDetailsActivity can find the correct movie details
+        return movies;
     }
 
     @Override

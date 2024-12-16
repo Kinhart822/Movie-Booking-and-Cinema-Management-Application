@@ -12,38 +12,16 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+        <!-- Title -->
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/LightBlue"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <ImageButton
-                android:id="@+id/close_button"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/ic_close" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="SpotCinema+"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <ImageButton
-                android:id="@+id/notification_button"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:background="@drawable/notification" />
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="SpotCinema+"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:id="@+id/ratingAndFeedbackLayout"
@@ -55,16 +33,19 @@
             <!-- Rating Section -->
             <TextView
                 android:id="@+id/tvRatingLabel"
-                android:layout_width="350dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/edit_group_box"
+                android:background="@drawable/feedback_text_background"
                 android:gravity="center"
-                android:padding="20dp"
+                android:paddingLeft="90dp"
+                android:paddingTop="15dp"
+                android:paddingRight="90dp"
+                android:paddingBottom="15dp"
                 android:text="Movie List"
-                android:textColor="@color/LightBlue"
-                android:textSize="25sp"
+                android:textColor="@color/white"
+                android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -81,168 +62,4 @@
 
         </androidx.core.widget.NestedScrollView>
     </LinearLayout>
-    <!--    <com.google.android.material.navigation.NavigationView-->
-    <!--        android:id="@+id/home_nav"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:layout_gravity="start"-->
-    <!--        android:background="@color/colorAccentLight">-->
-
-    <!--        &lt;!&ndash; Header Section &ndash;&gt;-->
-    <!--        <LinearLayout-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:orientation="vertical">-->
-
-    <!--            &lt;!&ndash; Logo Section &ndash;&gt;-->
-    <!--            <LinearLayout-->
-    <!--                android:layout_width="match_parent"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_marginTop="20dp"-->
-    <!--                android:layout_marginBottom="20dp"-->
-    <!--                android:background="@color/colorAccentLight"-->
-    <!--                android:orientation="vertical">-->
-
-    <!--                <ImageView-->
-    <!--                    android:layout_width="200dp"-->
-    <!--                    android:layout_height="200dp"-->
-    <!--                    android:layout_gravity="center"-->
-    <!--                    android:src="@drawable/logo_usth" />-->
-    <!--            </LinearLayout>-->
-
-    <!--            &lt;!&ndash; Navigation Items &ndash;&gt;-->
-    <!--            <LinearLayout-->
-    <!--                android:layout_width="270dp"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_gravity="center"-->
-    <!--                android:orientation="vertical">-->
-
-    <!--                &lt;!&ndash; Home &ndash;&gt;-->
-    <!--                <LinearLayout-->
-    <!--                    android:id="@+id/home_side_navigation"-->
-    <!--                    android:layout_width="match_parent"-->
-    <!--                    android:layout_height="70dp"-->
-    <!--                    android:layout_margin="2dp"-->
-    <!--                    android:orientation="horizontal"-->
-    <!--                    android:background="@drawable/edit_group_box">-->
-
-    <!--                    <ImageView-->
-    <!--                        android:layout_width="25dp"-->
-    <!--                        android:layout_height="25dp"-->
-    <!--                        android:layout_gravity="center_vertical"-->
-    <!--                        android:layout_marginLeft="25dp"-->
-    <!--                        android:src="@drawable/home" />-->
-
-    <!--                    <TextView-->
-    <!--                        android:layout_width="match_parent"-->
-    <!--                        android:layout_height="match_parent"-->
-    <!--                        android:gravity="center"-->
-    <!--                        android:text="Home"-->
-    <!--                        android:textColor="@color/black"-->
-    <!--                        android:textSize="20sp" />-->
-    <!--                </LinearLayout>-->
-
-    <!--                &lt;!&ndash; Showtimes &ndash;&gt;-->
-    <!--                <LinearLayout-->
-    <!--                    android:id="@+id/showtimes_side_navigation"-->
-    <!--                    android:layout_width="match_parent"-->
-    <!--                    android:layout_height="70dp"-->
-    <!--                    android:orientation="horizontal"-->
-    <!--                    android:layout_marginTop="12dp"-->
-    <!--                    android:background="@drawable/edit_group_box">-->
-
-    <!--                    <ImageView-->
-    <!--                        android:layout_width="25dp"-->
-    <!--                        android:layout_height="25dp"-->
-    <!--                        android:layout_gravity="center_vertical"-->
-    <!--                        android:layout_marginLeft="25dp"-->
-    <!--                        android:src="@drawable/videoclip" />-->
-
-    <!--                    <TextView-->
-    <!--                        android:layout_width="match_parent"-->
-    <!--                        android:layout_height="match_parent"-->
-    <!--                        android:gravity="center"-->
-    <!--                        android:text="Showtimes"-->
-    <!--                        android:textColor="@color/black"-->
-    <!--                        android:textSize="20sp" />-->
-    <!--                </LinearLayout>-->
-
-    <!--                &lt;!&ndash; Store &ndash;&gt;-->
-    <!--                <LinearLayout-->
-    <!--                    android:id="@+id/store_side_navigation"-->
-    <!--                    android:layout_width="match_parent"-->
-    <!--                    android:layout_height="70dp"-->
-    <!--                    android:orientation="horizontal"-->
-    <!--                    android:layout_marginTop="12dp"-->
-    <!--                    android:background="@drawable/edit_group_box">-->
-
-    <!--                    <ImageView-->
-    <!--                        android:layout_width="25dp"-->
-    <!--                        android:layout_height="25dp"-->
-    <!--                        android:layout_gravity="center_vertical"-->
-    <!--                        android:layout_marginLeft="25dp"-->
-    <!--                        android:src="@drawable/shop" />-->
-
-    <!--                    <TextView-->
-    <!--                        android:layout_width="match_parent"-->
-    <!--                        android:layout_height="match_parent"-->
-    <!--                        android:gravity="center"-->
-    <!--                        android:text="Store"-->
-    <!--                        android:textColor="@color/black"-->
-    <!--                        android:textSize="20sp" />-->
-    <!--                </LinearLayout>-->
-
-    <!--                &lt;!&ndash;Feedback&ndash;&gt;-->
-    <!--                <LinearLayout-->
-    <!--                    android:id="@+id/feedback_side_navigation"-->
-    <!--                    android:layout_width="match_parent"-->
-    <!--                    android:layout_height="70dp"-->
-    <!--                    android:orientation="horizontal"-->
-    <!--                    android:layout_marginTop="12dp"-->
-    <!--                    android:background="@drawable/edit_group_box">-->
-
-    <!--                    <ImageView-->
-    <!--                        android:layout_width="25dp"-->
-    <!--                        android:layout_height="25dp"-->
-    <!--                        android:layout_gravity="center_vertical"-->
-    <!--                        android:layout_marginLeft="25dp"-->
-    <!--                        android:src="@drawable/feedback" />-->
-
-    <!--                    <TextView-->
-    <!--                        android:layout_width="match_parent"-->
-    <!--                        android:layout_height="match_parent"-->
-    <!--                        android:gravity="center"-->
-    <!--                        android:text="Feedback"-->
-    <!--                        android:textColor="@color/black"-->
-    <!--                        android:textSize="20sp" />-->
-    <!--                </LinearLayout>-->
-
-    <!--                &lt;!&ndash; Personal Information &ndash;&gt;-->
-    <!--                <LinearLayout-->
-    <!--                    android:id="@+id/personal_side_navigation"-->
-    <!--                    android:layout_width="match_parent"-->
-    <!--                    android:layout_height="70dp"-->
-    <!--                    android:orientation="horizontal"-->
-    <!--                    android:layout_marginTop="12dp"-->
-    <!--                    android:background="@drawable/edit_group_box">-->
-
-    <!--                    <ImageView-->
-    <!--                        android:layout_width="25dp"-->
-    <!--                        android:layout_height="25dp"-->
-    <!--                        android:layout_gravity="center_vertical"-->
-    <!--                        android:layout_marginLeft="25dp"-->
-    <!--                        android:src="@drawable/profile" />-->
-
-    <!--                    <TextView-->
-    <!--                        android:layout_width="match_parent"-->
-    <!--                        android:layout_height="match_parent"-->
-    <!--                        android:gravity="center"-->
-    <!--                        android:text="Personal information"-->
-    <!--                        android:textColor="@color/black"-->
-    <!--                        android:textSize="20sp" />-->
-    <!--                </LinearLayout>-->
-
-    <!--            </LinearLayout>-->
-    <!--        </LinearLayout>-->
-    <!--    </com.google.android.material.navigation.NavigationView>-->
 </LinearLayout>

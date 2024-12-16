@@ -1,0 +1,596 @@
+public class SeatSelectionActivity extends AppCompatActivity {
+    private RecyclerView seatRecyclerView;
+    private SeatAdapter seatAdapter;
+    private List<List<Seat>> seatLayout;
+    private Theater selectedTheater;
+    private String selectedShowtime;
+    private Movie selectedMovie;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_seat_selection);
+        selectedTheater = (Theater) getIntent().getSerializableExtra("SELECTED_THEATER");
+        selectedShowtime = getIntent().getStringExtra("SELECTED_SHOWTIME");
+        selectedMovie = (Movie) getIntent().getSerializableExtra("SELECTED_MOVIE");
+        setupTheaterInfo();
+        setupSeatLayout();
+        setupRecyclerView();
+    }
+
+    private void setupTheaterInfo() {
+        TextView theaterNameTV = findViewById(R.id.theater_name);
+        TextView movieNameTV = findViewById(R.id.movie_name);
+        TextView screenNumberTV = findViewById(R.id.screen_number);
+        TextView releaseDateTV = findViewById(R.id.movie_release_date);
+        TextView durationTV = findViewById(R.id.movie_duration);
+
+        theaterNameTV.setText(selectedTheater.getName());
+        movieNameTV.setText(selectedMovie.getTitle());
+        screenNumberTV.setText("Screen 1");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd'th' MMM, yyyy", Locale.getDefault());
+        releaseDateTV.setText(dateFormat.format(new Date()));
+        String[] showtimeParts = selectedShowtime.split(":");
+        int startHour = Integer.parseInt(showtimeParts[0]);
+        int endHour = startHour + 2;
+        durationTV.setText(String.format("%02d:00 - %02d:00", startHour, endHour));
+    }
+
+    private void setupSeatLayout() {
+        seatLayout = new ArrayList<>();
+        int rowCount = 8;
+        int minSeats = 12;
+        int maxSeats = 17;
+
+        for (int row = 0; row < rowCount - 1; row++) {
+            List<Seat> currentRow = new ArrayList<>();
+            int seatsInRow = generateSeatsInRow(minSeats, maxSeats);
+
+            for (int seat = 0; seat < seatsInRow; seat++) {
+                SeatType seatType = determineSeatType(row, seat, seatsInRow);
+                currentRow.add(new Seat(
+                        ((char)('A' + row)) + String.valueOf(seat + 1),
+                        seatType,
+                        seatType != SeatType.SOLD
+                ));
+            }
+            seatLayout.add(currentRow);
+        }
+
+        // Last row (H) - Couple seats
+        List<Seat> coupleRow = new ArrayList<>();
+        int coupleSeats = Math.min(maxSeats / 2, 8);
+        for (int i = 0; i < coupleSeats; i++) {
+            coupleRow.add(new Seat(
+                    "H" + (i + 1),
+                    SeatType.COUPLE,
+                    true
+            ));
+        }
+        seatLayout.add(coupleRow);
+    }
+
+    private int generateSeatsInRow(int min, int max) {
+        return new Random().nextInt(max - min + 1) + min;
+    }
+
+    private SeatType determineSeatType(int row, int seatIndex, int totalSeatsInRow) {
+        // First 3-4 rows are stand seats
+        if (row < 3) {
+            return SeatType.STAND;
+        }
+
+        // VIP seats in middle rows
+        if (row >= 3 && row <= 6) {
+            int vipStartIndex = (totalSeatsInRow - 4) / 2;
+            int vipEndIndex = vipStartIndex + 4;
+
+            if (seatIndex >= vipStartIndex && seatIndex < vipEndIndex) {
+                return SeatType.VIP;
+            }
+        }
+
+        // Randomly assign some seats as sold
+        return new Random().nextDouble() < 0.1 ? SeatType.SOLD : SeatType.STAND;
+    }
+
+
+    private void setupRecyclerView() {
+        seatRecyclerView = findViewById(R.id.seatRecyclerView);
+        seatRecyclerView.setLayoutManager(new GridLayoutManager(this, 17));
+
+        seatAdapter = new SeatAdapter(seatLayout, seat -> {
+            Toast.makeText(this, "Selected seat: " + seat.getId(), Toast.LENGTH_SHORT).show();
+        });
+        seatRecyclerView.setAdapter(seatAdapter);
+    }
+}
+public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder> {
+    private List<List<Seat>> seatLayout;
+    private OnSeatSelectedListener listener;
+    private List<Seat> selectedSeats = new ArrayList<>();
+
+    public interface OnSeatSelectedListener {
+        void onSeatSelected(Seat seat);
+    }
+
+    public SeatAdapter(List<List<Seat>> seatLayout, OnSeatSelectedListener listener) {
+        this.seatLayout = seatLayout;
+        this.listener = listener;
+    }
+
+    @NonNull
+    @Override
+    public SeatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.seat_selection_item, parent, false);
+        return new SeatViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull SeatViewHolder holder, int position) {
+        int rowIndex = position / 17;
+        int seatIndexInRow = position % 17;
+
+        if (rowIndex < seatLayout.size() && seatIndexInRow < seatLayout.get(rowIndex).size()) {
+            Seat seat = seatLayout.get(rowIndex).get(seatIndexInRow);
+
+            // Set seat label
+            holder.seatTextView.setText(generateSeatLabel(rowIndex, seatIndexInRow));
+
+            // Set background based on seat type and selection state
+            updateSeatBackground(holder, seat);
+
+            // Handle seat selection
+            holder.itemView.setOnClickListener(v -> {
+                if (seat.isAvailable() && seat.getType() != SeatType.SOLD) {
+                    toggleSeatSelection(seat, holder);
+                }
+            });
+        }
+    }
+
+    private void updateSeatBackground(SeatViewHolder holder, Seat seat) {
+        // Default background based on seat type
+        int backgroundResId = seat.getType().getDrawableResId();
+
+        // Check if seat is selected
+        if (selectedSeats.contains(seat)) {
+            backgroundResId = R.drawable.ic_seat_selecting;
+        }
+
+        holder.itemView.setBackgroundResource(backgroundResId);
+        holder.itemView.setEnabled(seat.isAvailable());
+    }
+
+    private void toggleSeatSelection(Seat seat, SeatViewHolder holder) {
+        if (selectedSeats.contains(seat)) {
+            selectedSeats.remove(seat);
+        } else {
+            selectedSeats.add(seat);
+        }
+        notifyItemChanged(getPosition(seat));
+        listener.onSeatSelected(seat);
+    }
+
+    private int getPosition(Seat seat) {
+        for (int row = 0; row < seatLayout.size(); row++) {
+            int index = seatLayout.get(row).indexOf(seat);
+            if (index != -1) {
+                return row * 17 + index;
+            }
+        }
+        return -1;
+    }
+
+    private String generateSeatLabel(int rowIndex, int seatIndexInRow) {
+        char rowLetter = (char) ('A' + rowIndex);
+        return (rowIndex == seatLayout.size() - 1) ?
+                rowLetter + "-" + (seatIndexInRow + 1) :
+                String.valueOf(seatIndexInRow + 1);
+    }
+
+    @Override
+    public int getItemCount() {
+        return seatLayout.stream().mapToInt(List::size).sum();
+    }
+
+    static class SeatViewHolder extends RecyclerView.ViewHolder {
+        TextView seatTextView;
+
+        SeatViewHolder(@NonNull View itemView) {
+            super(itemView);
+            seatTextView = itemView.findViewById(R.id.seatTextView);
+        }
+    }
+}
+public class Seat {
+    private String id;
+    private SeatType type;
+    private boolean isAvailable;
+
+    public Seat(String id, SeatType type, boolean isAvailable) {
+        this.id = id;
+        this.type = type;
+        this.isAvailable = isAvailable;
+    }
+    // Getters & setters
+}
+public enum SeatType {
+    STAND(R.drawable.ic_seat_stand),
+    VIP(R.drawable.ic_seat_vip),
+    COUPLE(R.drawable.ic_seat_couple),
+    SOLD(R.drawable.ic_seat_sold),
+    SELECTING(R.drawable.ic_seat_selecting);
+
+    private final int drawableResId;
+
+    SeatType(int drawableResId) {
+        this.drawableResId = drawableResId;
+    }
+
+    public int getDrawableResId() {
+        return drawableResId;
+    }
+}
+// activity_seat_selection.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@color/black"
+    tools:context=".frontend.Showtimes.UI.SeatSelectionActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Top Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingTop="16dp">
+
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/ic_back"
+                android:layout_marginStart="8dp"/>
+
+
+            <TextView
+                android:id="@+id/text_seat_selection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seat Selection"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Cinema Info Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/theater_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BHD Star 3.2"
+                android:textColor="@color/white"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/movie_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="The Dark Night"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/screen_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Screen 1"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/movie_release_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:text="26th Nov, 2024"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/movie_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:text="148 minutes"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/black">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/image_screen"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="24dp"
+                android:text="Screen"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <!-- Seat Layout Section -->
+            <ImageView
+                android:id="@+id/image_screen"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginTop="20dp"
+                app:srcCompat="@drawable/newnewscreen" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/view_selecting_seat"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/ic_seat_selecting" />
+
+            <TextView
+                android:id="@+id/text_selecting_seat"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="Đang chọn"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <View
+                android:id="@+id/view_sold_seat"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/ic_seat_sold" />
+
+            <TextView
+                android:id="@+id/text_sold_seat"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:text="Đã bán"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <View
+                android:id="@+id/view_stand_seat"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/ic_seat_stand" />
+
+            <TextView
+                android:id="@+id/text_stand_seat"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="-Stand-"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <View
+                android:id="@+id/view_vip_seat"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/ic_seat_vip" />
+
+            <TextView
+                android:id="@+id/text_vip_seat"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="-VIP-ES"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <View
+                android:id="@+id/view_couple_seat"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/ic_seat_couple" />
+
+            <TextView
+                android:id="@+id/text_couple_seat"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:text="-Couple-Pack-ES"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/seatRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="vertical"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:orientation="vertical"
+        android:background="@color/black">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="T18"
+                android:textSize="14sp"
+                android:textColor="@android:color/holo_red_dark"
+                android:background="@drawable/rounded_dark_background"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Tổng tiền (đã bao gồm phụ thu):"
+                android:textSize="20dp"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2D SUB"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:background="@drawable/rounded_dark_background"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/no_of_seats"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 ghế"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="24dp" />
+
+            <TextView
+                android:id="@+id/text_price_"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0d"
+                android:textColor="@color/white"
+                android:layout_marginStart="140dp"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp" />
+
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/checkout_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hoàn tất thanh toán (1/3)"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:padding="12dp"
+            android:background="@drawable/rounded_dark_background"
+            android:layout_margin="16dp"/>
+
+    </LinearLayout>
+</LinearLayout>
+// seat_selection_item.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="2dp">
+
+    <TextView
+        android:id="@+id/seatTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:textAlignment="center"/>
+</LinearLayout>
+
+What I want to modify is:
+- what you have done is incredible, so just modify more
+- In a random movie_duration, in a random theater, 
+Modify that the if number of seats in a row is n -> row A, B, C, D, E, F, G will have the equal no of seats n (you decide the no of seats in that theater & that movie_duration) -> row H will have the no of ic_couple_seats = n/2
+- If you able to, please modify that   

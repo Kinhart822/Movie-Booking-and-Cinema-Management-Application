@@ -40,5 +40,15 @@
     </string-array>
 
 
+    <string name="store_title">Cửa hàng</string>
+    <string name="select_theater">Chọn rạp để nhận hàng</string>
+    <string name="all_theaters">Tất cả các rạp</string>
+    <string name="no_data">Chưa có dữ liệu</string>
+    <string name="confirm">Xác nhận</string>
+    <string name="cancel">Hủy</string>
+    <string name="total_price">Tổng tiền (đã bao gồm phụ thu)</string>
+    <string name="complete_payment">Hoàn tất thanh toán</string>
+    <string name="concession">Concession</string>
+    <string name="book_ticket">Booking</string>
 </resources>
 

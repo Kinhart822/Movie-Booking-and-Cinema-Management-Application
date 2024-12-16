@@ -1,22 +1,21 @@
 package vn.edu.usth.mcma.frontend.Showtimes.Models;
 
+import java.io.Serializable;
 import java.util.Set;
 
-public class Theater {
+public class Theater implements Serializable {
     private String id;
     private String name;
     private String address;
     private String city;
     private int imageResId;
-    private Set<TheaterType> availableTypes;
 
-    public Theater(String id, String name, String address, String city, int imageResId, Set<TheaterType> availableTypes) {
+    public Theater(String id, String name, String address, String city, int imageResId) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.city = city;
         this.imageResId = imageResId;
-        this.availableTypes = availableTypes;
     }
 
     // Getters and setters
@@ -58,13 +57,5 @@ public class Theater {
 
     public void setImageResId(int imageResId) {
         this.imageResId = imageResId;
-    }
-
-    public Set<TheaterType> getAvailableTypes() {
-        return availableTypes;
-    }
-
-    public void setAvailableTypes(Set<TheaterType> availableTypes) {
-        this.availableTypes = availableTypes;
     }
 }

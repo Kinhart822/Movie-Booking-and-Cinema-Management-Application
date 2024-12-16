@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.frontend.Home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.Showtimes.Models.MovieDetails;
+import vn.edu.usth.mcma.frontend.Showtimes.Utils.MovieDataProvider;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ComingSoonResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.ComingSoonMovieAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
@@ -38,6 +41,37 @@ public class ComingSoonFragment extends Fragment {
             ComingSoonResponse selectedFilm = comingSoonResponseList.get(position);
             Toast.makeText(requireContext(), "Selected Film: " + selectedFilm.getMovieName(), Toast.LENGTH_SHORT).show();
         });
+
+        // Get the list of movie details
+        List<MovieDetails> movieDetailsList = MovieDataProvider.getAllMovieDetails();
+
+        // Create ComingSoon_Item list from MovieDetails
+        List<ComingSoon_Item> items = new ArrayList<>();
+        for (MovieDetails movie : movieDetailsList) {
+            items.add(new ComingSoon_Item(
+                    movie.getTitle(),
+                    movie.getGenres().get(0), // Take first genre
+                    movie.getDuration() + " minutes",
+                    movie.getClassification(),
+                    movie.getBannerImageResId()
+            ));
+        }
+
+        ComingSoon_Adapter adapter = new ComingSoon_Adapter(requireContext(), items, new FilmViewInterface() {
+            @Override
+            public void onFilmSelected(int position) {
+                ComingSoon_Item selectedFilm = items.get(position);
+                Intent intent = new Intent(requireContext(), OnlyDetailsActivity.class);
+                intent.putExtra("MOVIE_TITLE", selectedFilm.getName());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onBookingClicked(int position) {
+
+            }
+        });
+
         recyclerView.setAdapter(adapter);
 
         fetchComingSoonMovie();

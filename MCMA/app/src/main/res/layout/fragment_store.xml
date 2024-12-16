@@ -7,15 +7,15 @@
     android:layout_height="match_parent"
     tools:context=".frontend.Store.UI.StoreFragment">
 
+    <!-- Main Content -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Title -->
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="16dp"
             android:text="SpotCinema+"
@@ -26,22 +26,22 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
             android:orientation="horizontal"
             android:padding="16dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Cửa hàng"
-                android:textSize="20sp"
-                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/theater_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tất cả các rạp" />
+                android:backgroundTint="@color/gray_text"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:paddingLeft="90dp"
+                android:paddingRight="90dp"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <!-- No data container -->
@@ -59,7 +59,7 @@
 
                 <ImageView
                     android:id="@+id/no_data_image"
-                    android:layout_width="100dp"
+                    android:layout_width="150dp"
                     android:layout_height="100dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_radar" />
@@ -70,217 +70,57 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="16dp"
-                    android:text="Chưa có dữ liệu" />
+                    android:text="No data"
+                    android:textSize="22sp" />
             </LinearLayout>
         </FrameLayout>
 
         <!-- Combo menu container -->
-        <LinearLayout
-            android:id="@+id/combo_menu_container"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/combo_menu_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="Concession"
-                android:textSize="20sp" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/combo_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
             <LinearLayout
+                android:id="@+id/combo_menu_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/total_price_text"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/combo_recycler_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Total price:"
-                    android:textSize="16sp" />
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
-                <Button
-                    android:id="@+id/checkout_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:enabled="false"
-                    android:text="Complete payment" />
+                <!--                <LinearLayout-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:padding="16dp"-->
+                <!--                    android:orientation="vertical">-->
+
+                <!--                    <TextView-->
+                <!--                        android:id="@+id/total_price_text"-->
+                <!--                        android:layout_width="match_parent"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:text="Tổng tiền (đã bao gồm phụ thu):"-->
+                <!--                        android:textSize="16sp"-->
+                <!--                        android:textColor="@color/white" />-->
+
+                <!--                    <Button-->
+                <!--                        android:id="@+id/checkout_button"-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:text="Hoàn tất thanh toán"-->
+                <!--                        android:textColor="@color/white"-->
+                <!--                        android:layout_gravity="center"-->
+                <!--                        android:backgroundTint="@color/gray_text"-->
+                <!--                        android:textSize="16sp"-->
+                <!--                        android:padding="12dp"-->
+                <!--                        android:background="@drawable/rounded_dark_background"-->
+                <!--                        android:layout_margin="16dp" />-->
+                <!--                </LinearLayout>-->
             </LinearLayout>
-        </LinearLayout>
+        </ScrollView>
     </LinearLayout>
-
-    <!--    <com.google.android.material.navigation.NavigationView-->
-    <!--        android:id="@+id/home_nav"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:layout_gravity="start"-->
-    <!--        android:background="@color/colorAccentLight">-->
-
-    <!--        &lt;!&ndash; Header Section &ndash;&gt;-->
-    <!--        <LinearLayout-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:orientation="vertical">-->
-
-    <!--            &lt;!&ndash; Logo Section &ndash;&gt;-->
-    <!--            <LinearLayout-->
-    <!--                android:layout_width="match_parent"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_marginTop="20dp"-->
-    <!--                android:layout_marginBottom="20dp"-->
-    <!--                android:background="@color/colorAccentLight"-->
-    <!--                android:orientation="vertical">-->
-
-    <!--                <ImageView-->
-    <!--                    android:layout_width="200dp"-->
-    <!--                    android:layout_height="200dp"-->
-    <!--                    android:layout_gravity="center"-->
-    <!--                    android:src="@drawable/logo_usth" />-->
-    <!--            </LinearLayout>-->
-
-    <!--            &lt;!&ndash; Navigation Items &ndash;&gt;-->
-    <!--            <LinearLayout-->
-    <!--                android:layout_width="270dp"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_gravity="center"-->
-    <!--                android:orientation="vertical">-->
-
-    <!--                &lt;!&ndash; Home &ndash;&gt;-->
-    <!--                <LinearLayout-->
-    <!--                    android:id="@+id/home_side_navigation"-->
-    <!--                    android:layout_width="match_parent"-->
-    <!--                    android:layout_height="70dp"-->
-    <!--                    android:layout_margin="2dp"-->
-    <!--                    android:orientation="horizontal"-->
-    <!--                    android:background="@drawable/edit_group_box">-->
-
-    <!--                    <ImageView-->
-    <!--                        android:layout_width="25dp"-->
-    <!--                        android:layout_height="25dp"-->
-    <!--                        android:layout_gravity="center_vertical"-->
-    <!--                        android:layout_marginLeft="25dp"-->
-    <!--                        android:src="@drawable/home" />-->
-
-    <!--                    <TextView-->
-    <!--                        android:layout_width="match_parent"-->
-    <!--                        android:layout_height="match_parent"-->
-    <!--                        android:gravity="center"-->
-    <!--                        android:text="Home"-->
-    <!--                        android:textColor="@color/black"-->
-    <!--                        android:textSize="20sp" />-->
-    <!--                </LinearLayout>-->
-
-    <!--                &lt;!&ndash; Showtimes &ndash;&gt;-->
-    <!--                <LinearLayout-->
-    <!--                    android:id="@+id/showtimes_side_navigation"-->
-    <!--                    android:layout_width="match_parent"-->
-    <!--                    android:layout_height="70dp"-->
-    <!--                    android:orientation="horizontal"-->
-    <!--                    android:layout_marginTop="12dp"-->
-    <!--                    android:background="@drawable/edit_group_box">-->
-
-    <!--                    <ImageView-->
-    <!--                        android:layout_width="25dp"-->
-    <!--                        android:layout_height="25dp"-->
-    <!--                        android:layout_gravity="center_vertical"-->
-    <!--                        android:layout_marginLeft="25dp"-->
-    <!--                        android:src="@drawable/videoclip" />-->
-
-    <!--                    <TextView-->
-    <!--                        android:layout_width="match_parent"-->
-    <!--                        android:layout_height="match_parent"-->
-    <!--                        android:gravity="center"-->
-    <!--                        android:text="Showtimes"-->
-    <!--                        android:textColor="@color/black"-->
-    <!--                        android:textSize="20sp" />-->
-    <!--                </LinearLayout>-->
-
-    <!--                &lt;!&ndash; Store &ndash;&gt;-->
-    <!--                <LinearLayout-->
-    <!--                    android:id="@+id/store_side_navigation"-->
-    <!--                    android:layout_width="match_parent"-->
-    <!--                    android:layout_height="70dp"-->
-    <!--                    android:orientation="horizontal"-->
-    <!--                    android:layout_marginTop="12dp"-->
-    <!--                    android:background="@drawable/edit_group_box">-->
-
-    <!--                    <ImageView-->
-    <!--                        android:layout_width="25dp"-->
-    <!--                        android:layout_height="25dp"-->
-    <!--                        android:layout_gravity="center_vertical"-->
-    <!--                        android:layout_marginLeft="25dp"-->
-    <!--                        android:src="@drawable/shop" />-->
-
-    <!--                    <TextView-->
-    <!--                        android:layout_width="match_parent"-->
-    <!--                        android:layout_height="match_parent"-->
-    <!--                        android:gravity="center"-->
-    <!--                        android:text="Store"-->
-    <!--                        android:textColor="@color/black"-->
-    <!--                        android:textSize="20sp" />-->
-    <!--                </LinearLayout>-->
-
-    <!--                &lt;!&ndash;Feedback&ndash;&gt;-->
-    <!--                <LinearLayout-->
-    <!--                    android:id="@+id/feedback_side_navigation"-->
-    <!--                    android:layout_width="match_parent"-->
-    <!--                    android:layout_height="70dp"-->
-    <!--                    android:orientation="horizontal"-->
-    <!--                    android:layout_marginTop="12dp"-->
-    <!--                    android:background="@drawable/edit_group_box">-->
-
-    <!--                    <ImageView-->
-    <!--                        android:layout_width="25dp"-->
-    <!--                        android:layout_height="25dp"-->
-    <!--                        android:layout_gravity="center_vertical"-->
-    <!--                        android:layout_marginLeft="25dp"-->
-    <!--                        android:src="@drawable/feedback" />-->
-
-    <!--                    <TextView-->
-    <!--                        android:layout_width="match_parent"-->
-    <!--                        android:layout_height="match_parent"-->
-    <!--                        android:gravity="center"-->
-    <!--                        android:text="Feedback"-->
-    <!--                        android:textColor="@color/black"-->
-    <!--                        android:textSize="20sp" />-->
-    <!--                </LinearLayout>-->
-
-    <!--                &lt;!&ndash; Personal Information &ndash;&gt;-->
-    <!--                <LinearLayout-->
-    <!--                    android:id="@+id/personal_side_navigation"-->
-    <!--                    android:layout_width="match_parent"-->
-    <!--                    android:layout_height="70dp"-->
-    <!--                    android:orientation="horizontal"-->
-    <!--                    android:layout_marginTop="12dp"-->
-    <!--                    android:background="@drawable/edit_group_box">-->
-
-    <!--                    <ImageView-->
-    <!--                        android:layout_width="25dp"-->
-    <!--                        android:layout_height="25dp"-->
-    <!--                        android:layout_gravity="center_vertical"-->
-    <!--                        android:layout_marginLeft="25dp"-->
-    <!--                        android:src="@drawable/profile" />-->
-
-    <!--                    <TextView-->
-    <!--                        android:layout_width="match_parent"-->
-    <!--                        android:layout_height="match_parent"-->
-    <!--                        android:gravity="center"-->
-    <!--                        android:text="Personal information"-->
-    <!--                        android:textColor="@color/black"-->
-    <!--                        android:textSize="20sp" />-->
-    <!--                </LinearLayout>-->
-    <!--            </LinearLayout>-->
-    <!--        </LinearLayout>-->
-    <!--    </com.google.android.material.navigation.NavigationView>-->
-
 </LinearLayout>

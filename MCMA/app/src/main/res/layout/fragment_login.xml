@@ -83,6 +83,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
         android:gravity="center"
+        android:layout_marginStart="25dp"
         android:text="Don't have an account ?"
         android:textColor="@color/black"
         android:textSize="15sp"
@@ -90,16 +91,16 @@
         app:layout_constraintEnd_toStartOf="@id/forgot_password"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_button"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.004" />
 
     <TextView
         android:id="@+id/forgot_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
         android:layout_marginTop="60dp"
         android:gravity="center"
         android:text="@string/forgotpassword_underlined"
+        android:layout_marginEnd="25dp"
         android:textColor="@color/black"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"

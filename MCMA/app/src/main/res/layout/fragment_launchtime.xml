@@ -16,13 +16,14 @@
         <!-- Title -->
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:text="SpotCinema+"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
             android:padding="16dp" />
+
 
         <ScrollView
             android:layout_width="match_parent"
@@ -61,12 +62,6 @@
                         android:text="Theater"
                         android:textSize="16sp"
                         android:textColor="@android:color/black"/>
-
-                    <Button
-                        android:id="@+id/type_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1 loại"/>
                 </LinearLayout>
 
                 <!-- City Selection -->

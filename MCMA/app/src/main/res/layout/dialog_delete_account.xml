@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:gravity="center"
-        android:text="@string/are_you_sure_want_to_delete_account"
+        android:text="Are you sure want to delete account?"
         android:textColor="@android:color/black"
         android:textSize="16sp" />
 
@@ -19,9 +19,9 @@
         android:id="@+id/btn_confirm_delete_account"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:backgroundTint="@color/LightBlue"
+        android:backgroundTint="@color/gray_text"
         android:padding="10dp"
-        android:text="@string/confirm"
+        android:text="Confirm"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="16sp"/>
@@ -31,11 +31,11 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="15dp"
-        android:backgroundTint="@color/LightBlue"
+        android:backgroundTint="@color/gray_text"
         android:padding="10dp"
-        android:text="@string/cancel"
+        android:text="Cancel"
         android:textAllCaps="false"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="16sp"/>
 
 </LinearLayout>

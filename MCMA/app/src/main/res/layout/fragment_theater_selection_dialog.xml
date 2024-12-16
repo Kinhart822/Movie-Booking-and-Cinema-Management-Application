@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,15 +16,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Chọn rạp để nhận hàng"
+            android:text="Select Cinema"
             android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hủy"
+            android:text="Cancel"
             android:textSize="20sp"
             android:textColor="@color/red"
             android:padding="8dp"/>
@@ -37,14 +39,11 @@
 
     <Button
         android:id="@+id/confirm_button"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Confirm"
         android:layout_gravity="center"
         android:layout_margin="16dp"
         android:background="@drawable/bg_button_enabled"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
-        android:text="Xác nhận"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textColor="@android:color/white"/>
 </LinearLayout>

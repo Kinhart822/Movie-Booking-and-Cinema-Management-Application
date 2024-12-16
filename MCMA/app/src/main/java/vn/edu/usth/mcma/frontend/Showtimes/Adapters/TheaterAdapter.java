@@ -14,17 +14,14 @@ import java.util.List;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.TheaterType;
 
 public class TheaterAdapter extends RecyclerView.Adapter<TheaterAdapter.TheaterViewHolder> {
     private List<Theater> theaters;
-    private TheaterType currentType;
     private OnTheaterClickListener listener;
 
     public TheaterAdapter(OnTheaterClickListener listener) {
         this.theaters = new ArrayList<>();
         this.listener = listener;
-        this.currentType = TheaterType.REGULAR;
     }
 
     @NonNull
@@ -48,11 +45,6 @@ public class TheaterAdapter extends RecyclerView.Adapter<TheaterAdapter.TheaterV
 
     public void setTheaters(List<Theater> theaters) {
         this.theaters = theaters;
-        notifyDataSetChanged();
-    }
-
-    public void setTheaterType(TheaterType type) {
-        this.currentType = type;
         notifyDataSetChanged();
     }
 

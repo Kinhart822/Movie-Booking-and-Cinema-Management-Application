@@ -19,7 +19,7 @@
         android:id="@+id/btn_confirm_logout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:backgroundTint="@color/LightBlue"
+        android:backgroundTint="@color/gray_text"
         android:padding="10dp"
         android:text="@string/confirm"
         android:textAllCaps="false"
@@ -31,11 +31,11 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="15dp"
-        android:backgroundTint="@color/LightBlue"
+        android:backgroundTint="@color/gray_text"
         android:padding="10dp"
         android:text="@string/cancel"
         android:textAllCaps="false"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="16sp"/>
 
 </LinearLayout>

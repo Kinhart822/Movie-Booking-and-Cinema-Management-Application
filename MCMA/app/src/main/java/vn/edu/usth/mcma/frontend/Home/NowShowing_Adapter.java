@@ -52,6 +52,18 @@ public class NowShowing_Adapter extends RecyclerView.Adapter<NowShowing_ViewHold
         Glide.with(context)
                 .load(nowShowingResponse.getImageUrl())
                 .into(holder.filmView);
+        NowShowing_Item item = items.get(position);
+        holder.nameView.setText(item.getName());
+        holder.typeView.setText(item.getCategory());
+        holder.timeView.setText(item.getTime());
+        holder.age_limitView.setText(item.getAge_limit());
+        holder.filmView.setImageResource(item.getFilm_image());
+
+        // Handle film selection
+        holder.itemView.setOnClickListener(v -> filmViewInterface.onFilmSelected(position));
+
+        // Handle booking button click
+        holder.bookingButton.setOnClickListener(v -> filmViewInterface.onBookingClicked(position));
     }
 
     @Override
