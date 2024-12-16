@@ -10,12 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ViewServiceImpl implements ViewService {
@@ -258,6 +256,27 @@ public class ViewServiceImpl implements ViewService {
                     movie.getMovieRatingDetailSet().stream()
                             .map(MovieRatingDetail::getName)
                             .toList());
+            response.setMoviePerformerNameList(
+                    movie.getMoviePerformerSet().stream()
+                            .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getName())
+                            .toList());
+            response.setMoviePerformerType(
+                    movie.getMoviePerformerSet().stream()
+                            .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getPerformerType())
+                            .toList());
+            response.setComments(
+                    movie.getMovieResponds().stream()
+                            .map(movieRespond -> movieRespond.getComment().getContent())
+                            .toList());
+            OptionalDouble averageRating = movie.getMovieResponds().stream()
+                    .mapToDouble(movieRespond -> movieRespond.getRating().getRatingStar())
+                    .average();
+
+            double roundedAvgRating = averageRating.isPresent() ?
+                    BigDecimal.valueOf(averageRating.getAsDouble()).setScale(2, RoundingMode.HALF_UP).doubleValue() : 0.0;
+
+            response.setAverageRating(roundedAvgRating);
+
             return response;
         }).toList();
     }
@@ -315,6 +334,14 @@ public class ViewServiceImpl implements ViewService {
             response.setMovieRatingDetailNameList(
                     movie.getMovieRatingDetailSet().stream()
                             .map(MovieRatingDetail::getName)
+                            .toList());
+            response.setMoviePerformerNameList(
+                    movie.getMoviePerformerSet().stream()
+                            .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getName())
+                            .toList());
+            response.setMoviePerformerType(
+                    movie.getMoviePerformerSet().stream()
+                            .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getPerformerType())
                             .toList());
             return response;
         }).toList();

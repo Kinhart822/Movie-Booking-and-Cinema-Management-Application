@@ -28,6 +28,9 @@ public class Movie {
     @Column(name = "Length")
     private Integer length;
 
+    @Column(name = "Description", length = 1000)
+    private String description;
+
     @Column(name = "Date_Publish")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date datePublish;

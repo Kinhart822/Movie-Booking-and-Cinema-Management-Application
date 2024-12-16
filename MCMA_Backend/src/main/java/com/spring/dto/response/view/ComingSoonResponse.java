@@ -1,5 +1,6 @@
 package com.spring.dto.response.view;
 
+import com.spring.enums.PerformerType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,4 +20,6 @@ public class ComingSoonResponse {
     private String imageUrl;
     private List<String> movieGenreNameList;
     private List<String> movieRatingDetailNameList;
+    private List<String> moviePerformerNameList;
+    private List<PerformerType> moviePerformerType;
 }

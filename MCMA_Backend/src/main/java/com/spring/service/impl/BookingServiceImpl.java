@@ -163,6 +163,7 @@ public class BookingServiceImpl implements BookingService {
                     movie.getId(),
                     movie.getName(),
                     movie.getLength(),
+                    movie.getDescription(),
                     formattedDatePublish,
                     movie.getTrailerLink(),
                     movie.getImageUrl(),
