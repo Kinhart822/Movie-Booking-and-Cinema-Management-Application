@@ -2,12 +2,11 @@ package com.spring.service.impl;
 
 import com.spring.dto.request.*;
 import com.spring.dto.response.UserResponse;
-import com.spring.entities.Token;
-import com.spring.entities.User;
+import com.spring.entities.*;
+import com.spring.enums.SeatStatus;
 import com.spring.enums.Type;
 import com.spring.dto.response.JwtAuthenticationResponse;
-import com.spring.repository.TokenRepository;
-import com.spring.repository.UserRepository;
+import com.spring.repository.*;
 import com.spring.service.AuthenticationService;
 import com.spring.service.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +37,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
     private TokenRepository tokenRepository;
+
+    @Autowired
+    private BookingRepository bookingRepository;
+
+    @Autowired
+    private BookingTicketRepository bookingTicketRepository;
+
+    @Autowired
+    private SeatRepository seatRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     private void saveUserToken(String jwt, User user) {
         Token saveToken = new Token();
@@ -269,9 +280,32 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
+        List<Booking> userBookings = bookingRepository.findByUserId(userId);
+        if (!userBookings.isEmpty()) {
+            List<Seat> seatsToChange = userBookings.stream()
+                    .flatMap(booking -> booking.getSeatList().stream())
+                    .map(BookingSeat::getSeat)
+                    .peek(seat -> seat.setSeatStatus(SeatStatus.Available))
+                    .toList();
+
+            seatRepository.saveAll(seatsToChange);
+
+            List<BookingTicket> ticketsToDelete = userBookings.stream()
+                    .flatMap(booking -> booking.getTickets().stream())
+                    .peek(ticket -> ticket.setTicket(null))
+                    .toList();
+            bookingTicketRepository.deleteAll(ticketsToDelete);
+
+            bookingRepository.deleteAll(userBookings);
+        }
+
+        List<Notification> userNotifications = notificationRepository.findByUserId(userId);
+        notificationRepository.deleteAll(userNotifications);
+
         List<Token> allTokens = tokenRepository.findAllByUser(userId);
         tokenRepository.deleteAll(allTokens);
 
         userRepository.delete(user);
     }
+
 }

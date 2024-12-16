@@ -59,6 +59,6 @@ public class Seat {
     @JoinColumn(name = "screen_id", nullable = false)
     private Screen screen;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "seat")
+    @OneToMany(mappedBy = "seat", cascade = CascadeType.ALL)
     private List<BookingSeat> seatList;
 }
