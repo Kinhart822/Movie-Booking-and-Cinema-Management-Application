@@ -1,6 +1,7 @@
 package vn.edu.usth.mcma.frontend.Home;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -29,31 +30,42 @@ public class ComingSoon_Adapter extends RecyclerView.Adapter<ComingSoon_ViewHold
     @NonNull
     @Override
     public ComingSoon_ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ComingSoon_ViewHolder(LayoutInflater.from(context).inflate(R.layout.coming_soon_film_frame, parent, false), filmViewInterface);
+        return new ComingSoon_ViewHolder(
+                LayoutInflater.from(context).inflate(R.layout.coming_soon_film_frame, parent, false),
+                filmViewInterface
+        );
     }
 
     @Override
     public void onBindViewHolder(@NonNull ComingSoon_ViewHolder holder, int position) {
         ComingSoonResponse comingSoonResponse = items.get(position);
+
+        holder.nameView.setText(comingSoonResponse.getMovieName());
+        holder.timeView.setText(String.format("%d min", comingSoonResponse.getMovieLength()));
+
         List<String> genres = comingSoonResponse.getMovieGenreNameList();
-        if (genres != null && !genres.isEmpty() ) {
+        if (genres != null && !genres.isEmpty()) {
             holder.typeView.setText(genres.get(0)); // Use a valid index, e.g., 0 or a relevant value
         } else {
             holder.typeView.setText(R.string.unknown_genre); // Fallback text
         }
-        holder.nameView.setText(comingSoonResponse.getMovieName());
-//        holder.typeView.setText(nowShowingResponse.getMovieGenreNameList().get(position));
-        holder.timeView.setText(String.format("%d min", comingSoonResponse.getMovieLength()));
+
         List<String> rating = comingSoonResponse.getMovieRatingDetailNameList();
-        if (rating != null && !rating.isEmpty() ) {
+        if (rating != null && !rating.isEmpty()) {
             holder.age_limitView.setText(rating.get(0)); // Use a valid index, e.g., 0 or a relevant value
         } else {
             holder.age_limitView.setText(R.string.unknown_rating); // Fallback text
         }
-//        holder.age_limitView.setText(comingSoonResponse.getPublishedDate());
+
         Glide.with(context)
                 .load(comingSoonResponse.getImageUrl())
                 .into(holder.filmView);
+
+        holder.itemView.setOnClickListener(v -> {
+            int currentPosition = holder.getAdapterPosition();
+            Log.d("ComingSoon_Adapter", "Item clicked at position: " + currentPosition);
+            filmViewInterface.onFilmSelected(currentPosition);
+        });
     }
 
     @Override

@@ -20,7 +20,20 @@ public class ComingSoon_ViewHolder extends RecyclerView.ViewHolder {
         age_limitView = itemView.findViewById(R.id.age_limit);
         typeView = itemView.findViewById(R.id.category_name);
 
-        // Add click listener to filmView as well
+        // Sự kiện click cho toàn bộ itemView
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (filmViewInterface != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        filmViewInterface.onFilmSelected(position);
+                    }
+                }
+            }
+        });
+
+        // Sự kiện click cho ImageView
         filmView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

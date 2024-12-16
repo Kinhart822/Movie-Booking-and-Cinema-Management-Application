@@ -23,7 +23,21 @@ public class NowShowing_ViewHolder extends RecyclerView.ViewHolder {
         typeView = itemView.findViewById(R.id.category_name);
         bookingButton = itemView.findViewById(R.id.btn_booking_film);
 
+        // Sự kiện click cho toàn bộ itemView
         itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (filmViewInterface != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        filmViewInterface.onFilmSelected(position);
+                    }
+                }
+            }
+        });
+
+        // Sự kiện click cho ImageView
+        filmView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (filmViewInterface != null) {

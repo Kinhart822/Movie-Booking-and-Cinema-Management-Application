@@ -3,7 +3,6 @@ package vn.edu.usth.mcma.frontend.Home;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,13 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.MovieDetails;
-import vn.edu.usth.mcma.frontend.Showtimes.Utils.MovieDataProvider;
 
 public class OnlyDetailsActivity extends AppCompatActivity {
-    private CollapsingToolbarLayout collapsingToolbarLayout;
-    private AppBarLayout appBarLayout;
-    private Toolbar toolbar;
     private TextView synopsisTextView;
     private TextView expandCollapseTextView;
     private boolean isSynopsisExpanded = false;
@@ -36,9 +30,9 @@ public class OnlyDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_details);
 
         // Find views
-        collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
-        appBarLayout = findViewById(R.id.app_bar_layout);
-        toolbar = findViewById(R.id.toolbar);
+        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
+        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         synopsisTextView = findViewById(R.id.tv_synopsis);
         expandCollapseTextView = findViewById(R.id.tv_concise);
@@ -55,7 +49,7 @@ public class OnlyDetailsActivity extends AppCompatActivity {
         int movieLength = intent.getIntExtra("MOVIE_LENGTH", 0);
         String movieDescription = intent.getStringExtra("MOVIE_DESCRIPTION");
         String publishedDate = intent.getStringExtra("PUBLISHED_DATE");
-        String imageUrl = intent.getStringExtra("IMAGE_URL");
+        String backgroundImageUrL = intent.getStringExtra("BACKGROUND_IMAGE_URL");
         List<String> movieRatings = intent.getStringArrayListExtra("MOVIE_RATING");
         List<String> moviePerformerNameList = intent.getStringArrayListExtra("MOVIE_PERFORMER_NAME");
         List<String> moviePerformerTypeList = intent.getStringArrayListExtra("MOVIE_PERFORMER_TYPE");
@@ -66,7 +60,7 @@ public class OnlyDetailsActivity extends AppCompatActivity {
         toolbarTitle.setText(movieName);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
         // Back button on banner
@@ -76,20 +70,19 @@ public class OnlyDetailsActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         // Populate movie details
-//        populateMovieDetails(movieDetails);
-        populateMovieDetails(movieName, movieGenres, movieLength, movieDescription, publishedDate, imageUrl, movieRatings, moviePerformerNameList, moviePerformerTypeList, movieCommentList, averageStar);
+        populateMovieDetails(movieName, movieGenres, movieLength, movieDescription, publishedDate, backgroundImageUrL, movieRatings, moviePerformerNameList, moviePerformerTypeList, movieCommentList, averageStar);
         setupSynopsisExpansion();
         setupToolbarBehavior(appBarLayout, toolbar);
     }
 
-    private void populateMovieDetails(String movieName, List<String> movieGenres, Integer movieLength, String movieDescription, String publishedDate, String imageUrl, List<String> movieRatings, List<String> moviePerformerNameList, List<String> moviePerformerTypeList, List<String> movieCommentList, Double averageStar) {
+    private void populateMovieDetails(String movieName, List<String> movieGenres, Integer movieLength, String movieDescription, String publishedDate, String backgroundImageUrL, List<String> movieRatings, List<String> moviePerformerNameList, List<String> moviePerformerTypeList, List<String> movieCommentList, Double averageStar) {
         // Populate all TextViews with movie details
         ((TextView) findViewById(R.id.tv_movie_title)).setText(movieName);
         ImageView bannerView = findViewById(R.id.tv_movie_banner);
-        Glide.with(this).load(imageUrl).into(bannerView);
+        Glide.with(this).load(backgroundImageUrL).into(bannerView);
 
         ((TextView) findViewById(R.id.tv_movie_genres)).setText(String.join(", ", movieGenres));
-        ((TextView) findViewById(R.id.tv_duration)).setText(movieLength + " minutes");
+        ((TextView) findViewById(R.id.tv_duration)).setText(String.format("%d minutes", movieLength));
         ((TextView) findViewById(R.id.tv_synopsis)).setText(movieDescription);
         ((TextView) findViewById(R.id.tv_release_date)).setText(publishedDate);
         ((TextView) findViewById(R.id.tv_classification)).setText(String.join(", ", movieRatings));
@@ -97,13 +90,14 @@ public class OnlyDetailsActivity extends AppCompatActivity {
         List<String> directors = new ArrayList<>();
         List<String> cast = new ArrayList<>();
 
-        if (moviePerformerTypeList != null && moviePerformerNameList != null) {
+        if (moviePerformerTypeList != null && moviePerformerNameList != null && moviePerformerTypeList.size() == moviePerformerNameList.size()) {
             for (int i = 0; i < moviePerformerTypeList.size(); i++) {
                 String type = moviePerformerTypeList.get(i).toLowerCase();
                 String name = moviePerformerNameList.get(i);
-                if (type.equals("Director")) {
+
+                if ("director".equals(type)) {
                     directors.add(name);
-                } else if (type.equals("Actor")) {
+                } else if ("actor".equals(type)) {
                     cast.add(name);
                 }
             }

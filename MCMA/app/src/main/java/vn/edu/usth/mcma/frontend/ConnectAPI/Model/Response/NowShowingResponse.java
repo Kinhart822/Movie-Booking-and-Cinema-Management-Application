@@ -8,9 +8,11 @@ public class NowShowingResponse {
     private Integer movieId;
     private String movieName;
     private Integer movieLength;
-    private String description;
     private String publishedDate;
     private String imageUrl;
+    private String backgroundImageUrl;
+    private String trailer;
+    private String description;
     private List<String> movieGenreNameList;
     private List<String> movieRatingDetailNameList;
     private List<String> moviePerformerNameList;
@@ -18,19 +20,37 @@ public class NowShowingResponse {
     private  List<String> comments;
     private  Double averageRating;
 
-    public NowShowingResponse(Integer movieId, String movieName, Integer movieLength, String description, String publishedDate, String imageUrl, List<String> movieGenreNameList, List<String> movieRatingDetailNameList, List<String> moviePerformerNameList, List<PerformerType> moviePerformerType, List<String> comments, Double averageRating) {
-        this.movieId = movieId;
-        this.movieName = movieName;
-        this.movieLength = movieLength;
+    public NowShowingResponse(Double averageRating, String backgroundImageUrl, List<String> comments, String description, String imageUrl, List<String> movieGenreNameList, Integer movieId, Integer movieLength, String movieName, List<String> moviePerformerNameList, List<PerformerType> moviePerformerType, List<String> movieRatingDetailNameList, String publishedDate, String trailer) {
+        this.averageRating = averageRating;
+        this.backgroundImageUrl = backgroundImageUrl;
+        this.comments = comments;
         this.description = description;
-        this.publishedDate = publishedDate;
         this.imageUrl = imageUrl;
         this.movieGenreNameList = movieGenreNameList;
-        this.movieRatingDetailNameList = movieRatingDetailNameList;
+        this.movieId = movieId;
+        this.movieLength = movieLength;
+        this.movieName = movieName;
         this.moviePerformerNameList = moviePerformerNameList;
         this.moviePerformerType = moviePerformerType;
-        this.comments = comments;
-        this.averageRating = averageRating;
+        this.movieRatingDetailNameList = movieRatingDetailNameList;
+        this.publishedDate = publishedDate;
+        this.trailer = trailer;
+    }
+
+    public String getBackgroundImageUrl() {
+        return backgroundImageUrl;
+    }
+
+    public void setBackgroundImageUrl(String backgroundImageUrl) {
+        this.backgroundImageUrl = backgroundImageUrl;
+    }
+
+    public String getTrailer() {
+        return trailer;
+    }
+
+    public void setTrailer(String trailer) {
+        this.trailer = trailer;
     }
 
     public List<String> getMoviePerformerNameList() {

@@ -155,7 +155,7 @@ public class Search_Activity extends AppCompatActivity implements SearchViewInte
 
     private void fetchMoviesFromApi() {
         String title = searchView.getQuery().toString().trim();
-        int limit = 5;
+        int limit = 100;
         int offset = 0;
 
         RetrofitService retrofitService = new RetrofitService(this);
