@@ -96,46 +96,12 @@ public class PersonalFragment extends Fragment {
                 confirmButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Fragment loginFragment = new vn.edu.usth.mcma.frontend.Login.LoginFragment();
-                        FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction.replace(android.R.id.content, loginFragment);
-                        fragmentTransaction.commit();
-
-                        // Đóng dialog
-                        dialog.dismiss();
-                    }
-                });
-
-                cancelButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Đóng dialog
-                        dialog.dismiss();
-                    }
-                });
-
-                // Hiển thị dialog
-                dialog.show();
-            }
-        });
-
-        LinearLayout delete_account_button = v.findViewById(R.id.account_information_delete_account);
-        delete_account_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-                View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_delete_account, null);
-
-                Button confirmButton = dialogView.findViewById(R.id.btn_confirm_delete_account);
-                Button cancelButton = dialogView.findViewById(R.id.btn_cancel_delete_account);
-
-                builder.setView(dialogView);
-                AlertDialog dialog = builder.create();
-
-                confirmButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+//                        Fragment loginFragment = new vn.edu.usth.mcma.frontend.Login.LoginFragment();
+//                        FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
+//                        fragmentTransaction.replace(android.R.id.content, loginFragment);
+//                        fragmentTransaction.commit();
                         Logout();
+
                         // Đóng dialog
                         dialog.dismiss();
                     }

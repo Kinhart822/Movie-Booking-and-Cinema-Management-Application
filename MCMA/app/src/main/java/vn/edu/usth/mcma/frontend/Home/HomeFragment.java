@@ -54,14 +54,14 @@ public class HomeFragment extends Fragment implements FilmViewInterface {
         // Setup TabLayout and ViewPager2
         setupViewPagerAndTabs();
 
-        ImageButton notication_buttonn = v.findViewById(R.id.notification_button);
-        notication_buttonn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Notification.Notification_Activity.class );
-                startActivity(i);
-            }
-        });
+//        ImageButton notication_buttonn = v.findViewById(R.id.notification_button);
+//        notication_buttonn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Notification.Notification_Activity.class );
+//                startActivity(i);
+//            }
+//        });
 
         LinearLayout to_search_activity = v.findViewById(R.id.search_bar);
         to_search_activity.setOnClickListener(new View.OnClickListener() {

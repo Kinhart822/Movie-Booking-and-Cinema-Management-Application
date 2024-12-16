@@ -1,57 +1,79 @@
 package vn.edu.usth.mcma.frontend.Home;
 
+import java.util.List;
+
 public class NowShowing_Item {
-    private String name;
-    private String category;
-    private String time;
-    private String age_limit;
-    private int film_image;
+    private Integer movieId;
+    private String movieName;
+    private Integer movieLength;
+    private String publishedDate;
+    private String imageUrl;
+    private List<String> movieGenreNameList;
+    private List<String> movieRatingDetailNameList;
 
-    public NowShowing_Item(String name, String category, String time, String age_limit, int film_image) {
-        this.name = name;
-        this.category = category;
-        this.time = time;
-        this.age_limit = age_limit;
-        this.film_image = film_image;
+    public NowShowing_Item(Integer movieId, String movieName, Integer movieLength, String publishedDate, String imageUrl, List<String> movieGenreNameList, List<String> movieRatingDetailNameList) {
+        this.movieId = movieId;
+        this.movieName = movieName;
+        this.movieLength = movieLength;
+        this.publishedDate = publishedDate;
+        this.imageUrl = imageUrl;
+        this.movieGenreNameList = movieGenreNameList;
+        this.movieRatingDetailNameList = movieRatingDetailNameList;
     }
 
-    public String getName() {
-        return name;
+    public Integer getMovieId() {
+        return movieId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setMovieId(Integer movieId) {
+        this.movieId = movieId;
     }
 
-    public String getCategory() {
-        return category;
+    public List<String> getMovieRatingDetailNameList() {
+        return movieRatingDetailNameList;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setMovieRatingDetailNameList(List<String> movieRatingDetailNameList) {
+        this.movieRatingDetailNameList = movieRatingDetailNameList;
     }
 
-    public String getTime() {
-        return time;
+    public String getMovieName() {
+        return movieName;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setMovieName(String movieName) {
+        this.movieName = movieName;
     }
 
-    public String getAge_limit() {
-        return age_limit;
+    public Integer getMovieLength() {
+        return movieLength;
     }
 
-    public void setAge_limit(String age_limit) {
-        this.age_limit = age_limit;
+    public void setMovieLength(Integer movieLength) {
+        this.movieLength = movieLength;
     }
 
-    public int getFilm_image() {
-        return film_image;
+    public String getPublishedDate() {
+        return publishedDate;
     }
 
-    public void setFilm_image(int film_image) {
-        this.film_image = film_image;
+    public void setPublishedDate(String publishedDate) {
+        this.publishedDate = publishedDate;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public List<String> getMovieGenreNameList() {
+        return movieGenreNameList;
+    }
+
+    public void setMovieGenreNameList(List<String> movieGenreNameList) {
+        this.movieGenreNameList = movieGenreNameList;
     }
 }

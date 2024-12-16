@@ -27,50 +27,32 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 public class ComingSoonFragment extends Fragment {
     private List<ComingSoonResponse> comingSoonResponseList;
     private ComingSoon_Adapter adapter;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_coming_soon, container, false);
 
         comingSoonResponseList = new ArrayList<>();
         RecyclerView recyclerView = v.findViewById(R.id.recyclerview_coming_soon);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setItemViewCacheSize(10);
+        recyclerView.setHasFixedSize(true);
 
-        adapter = new ComingSoon_Adapter(requireContext(), comingSoonResponseList, position -> {
-            ComingSoonResponse selectedFilm = comingSoonResponseList.get(position);
-            Toast.makeText(requireContext(), "Selected Film: " + selectedFilm.getMovieName(), Toast.LENGTH_SHORT).show();
-        });
-
-        // Get the list of movie details
-        List<MovieDetails> movieDetailsList = MovieDataProvider.getAllMovieDetails();
-
-        // Create ComingSoon_Item list from MovieDetails
-        List<ComingSoon_Item> items = new ArrayList<>();
-        for (MovieDetails movie : movieDetailsList) {
-            items.add(new ComingSoon_Item(
-                    movie.getTitle(),
-                    movie.getGenres().get(0), // Take first genre
-                    movie.getDuration() + " minutes",
-                    movie.getClassification(),
-                    movie.getBannerImageResId()
-            ));
-        }
-
-        ComingSoon_Adapter adapter = new ComingSoon_Adapter(requireContext(), items, new FilmViewInterface() {
+        adapter = new ComingSoon_Adapter(requireContext(), comingSoonResponseList, new FilmViewInterface() {
             @Override
             public void onFilmSelected(int position) {
-                ComingSoon_Item selectedFilm = items.get(position);
+                ComingSoonResponse selectedFilm = comingSoonResponseList.get(position);
                 Intent intent = new Intent(requireContext(), OnlyDetailsActivity.class);
-                intent.putExtra("MOVIE_TITLE", selectedFilm.getName());
+                intent.putExtra("MOVIE_TITLE", selectedFilm.getMovieName());
                 startActivity(intent);
             }
 
             @Override
             public void onBookingClicked(int position) {
-
+                // Implement nếu cần
             }
         });
+
 
         recyclerView.setAdapter(adapter);
 

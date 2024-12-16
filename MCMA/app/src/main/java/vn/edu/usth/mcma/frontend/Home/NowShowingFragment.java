@@ -1,12 +1,10 @@
 package vn.edu.usth.mcma.frontend.Home;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,7 +29,7 @@ import vn.edu.usth.mcma.frontend.Showtimes.UI.MovieDetailsActivity;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.MovieDataProvider;
 
 public class NowShowingFragment extends Fragment {
-    private List<NowShowingResponse> nowShowingResponseList;
+    private List<NowShowing_Item> nowShowingResponseList;
     private NowShowing_Adapter adapter;
 
     @Override
@@ -44,41 +42,24 @@ public class NowShowingFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new NowShowing_Adapter(requireContext(), nowShowingResponseList, position -> {
-            NowShowingResponse selectedFilm = nowShowingResponseList.get(position);
-            Toast.makeText(requireContext(), "Selected Film: " + selectedFilm.getMovieName(), Toast.LENGTH_SHORT).show();
-        });
-        // Get the list of movie details
-        List<MovieDetails> movieDetailsList = MovieDataProvider.getAllMovieDetails();
-
-        // Create NowShowing_Item list from MovieDetails
-        List<NowShowing_Item> items = new ArrayList<>();
-        for (MovieDetails movie : movieDetailsList) {
-            items.add(new NowShowing_Item(
-                    movie.getTitle(),
-                    movie.getGenres().get(0), // Take first genre
-                    movie.getDuration() + " minutes",
-                    movie.getClassification(),
-                    movie.getBannerImageResId()
-            ));
-        }
-        NowShowing_Adapter adapter = new NowShowing_Adapter(requireContext(), items, new FilmViewInterface() {
+        adapter = new NowShowing_Adapter(requireContext(), nowShowingResponseList, new FilmViewInterface() {
             @Override
             public void onFilmSelected(int position) {
-                NowShowing_Item selectedFilm = items.get(position);
+                NowShowing_Item  selectedFilm = nowShowingResponseList.get(position);
                 Intent intent = new Intent(requireContext(), OnlyDetailsActivity.class);
-                intent.putExtra("MOVIE_TITLE", selectedFilm.getName());
+                intent.putExtra("MOVIE_TITLE", selectedFilm.getMovieName());
                 startActivity(intent);
             }
 
             @Override
             public void onBookingClicked(int position) {
-                NowShowing_Item selectedFilm = items.get(position);
+                NowShowing_Item  selectedFilm = nowShowingResponseList.get(position);
                 Intent intent = new Intent(requireContext(), MovieBookingActivity.class);
-                intent.putExtra("MOVIE_TITLE", selectedFilm.getName());
+                intent.putExtra("MOVIE_TITLE", selectedFilm.getMovieName());
                 startActivity(intent);
             }
         });
+
         recyclerView.setAdapter(adapter);
 
         fetchNowShowingMovies();
@@ -89,26 +70,38 @@ public class NowShowingFragment extends Fragment {
     private void fetchNowShowingMovies() {
         RetrofitService retrofitService = new RetrofitService(requireContext());
         NowShowingMovieAPI nowShowingMovieAPI = retrofitService.getRetrofit().create(NowShowingMovieAPI.class);
+
         nowShowingMovieAPI.getAvailableNowShowingMovies().enqueue(new Callback<List<NowShowingResponse>>() {
             @Override
             public void onResponse(Call<List<NowShowingResponse>> call, Response<List<NowShowingResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-//                    Toast.makeText(requireActivity(), "Here's your feedbacks", Toast.LENGTH_SHORT).show();
-                    nowShowingResponseList.clear();
-                    nowShowingResponseList.addAll(response.body());
-                    adapter.notifyDataSetChanged();
+                    List<NowShowing_Item> items = new ArrayList<>();
+                    for (NowShowingResponse movie : response.body()) {
+                        // Map API response to UI model
+                        items.add(new NowShowing_Item(
+                                movie.getMovieId(),
+                                movie.getMovieName(),
+                                movie.getMovieLength(),
+                                movie.getPublishedDate(),
+                                movie.getImageUrl(),
+                                movie.getMovieGenreNameList(),
+                                movie.getMovieRatingDetailNameList()
+                        ));
+                    }
+
+                    // Update adapter data
+                    adapter.updateData(items);
                 } else {
-                    Toast.makeText(requireActivity(), "Failed to display now showing movies", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), "No movies to show", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<NowShowingResponse>> call, Throwable t) {
-                Toast.makeText(requireActivity(), "Failed to display now showing movies", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireActivity(), "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
-
 }
 
 
