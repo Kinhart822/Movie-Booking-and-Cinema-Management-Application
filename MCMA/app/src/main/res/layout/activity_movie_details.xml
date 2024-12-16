@@ -114,7 +114,7 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_movie_genres"
                 tools:text="148 phút" />
 
-            <!-- Content Label -->
+            <!-- Description Label -->
             <TextView
                 android:id="@+id/tv_content_label"
                 android:layout_width="match_parent"
@@ -129,7 +129,6 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_duration" />
 
             <!-- Movie Synopsis Section -->
-
             <TextView
                 android:id="@+id/tv_synopsis"
                 android:layout_width="match_parent"
@@ -155,6 +154,31 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_synopsis" />
 
+            <TextView
+                android:id="@+id/tv_respond"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Rating:"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_concise" />
+
+            <TextView
+                android:id="@+id/tv_star"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="5 star"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintBaseline_toBaselineOf="@id/tv_respond"
+                app:layout_constraintEnd_toEndOf="parent" />
+
             <View
                 android:id="@+id/tv_first_divider"
                 android:layout_width="match_parent"
@@ -162,7 +186,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="#BDBDBD"
-                app:layout_constraintTop_toBottomOf="@id/tv_concise" />
+                app:layout_constraintTop_toBottomOf="@id/tv_star" />
 
             <!-- Movie Information Section -->
             <!-- Release Date Row -->
@@ -217,34 +241,6 @@
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_classification_label"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <!-- Language Row -->
-            <TextView
-                android:id="@+id/tv_language_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="Languages:"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_classification_label" />
-
-            <TextView
-                android:id="@+id/tv_language"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:text="Phụ đề tiếng Việt"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintBaseline_toBaselineOf="@id/tv_language_label"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-
-
             <!-- Divider -->
             <View
                 android:id="@+id/tv_divider"
@@ -253,7 +249,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="#BDBDBD"
-                app:layout_constraintTop_toBottomOf="@id/tv_language" />
+                app:layout_constraintTop_toBottomOf="@id/tv_classification" />
 
             <!-- Director Row -->
             <TextView

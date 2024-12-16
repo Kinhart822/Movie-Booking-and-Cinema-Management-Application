@@ -1,6 +1,7 @@
 package vn.edu.usth.mcma.frontend.Home;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -69,9 +70,9 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.NowShowingResponse;
 public class NowShowing_Adapter extends RecyclerView.Adapter<NowShowing_ViewHolder> {
     private final FilmViewInterface filmViewInterface;
     private final Context context;
-    private List<NowShowing_Item> items;
+    private List<NowShowingResponse> items;
 
-    public NowShowing_Adapter(Context context, List<NowShowing_Item> items, FilmViewInterface filmViewInterface) {
+    public NowShowing_Adapter(Context context, List<NowShowingResponse> items, FilmViewInterface filmViewInterface) {
         this.context = context;
         this.items = items;
         this.filmViewInterface = filmViewInterface;
@@ -88,7 +89,7 @@ public class NowShowing_Adapter extends RecyclerView.Adapter<NowShowing_ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull NowShowing_ViewHolder holder, int position) {
-        NowShowing_Item nowShowingItem = items.get(position);
+        NowShowingResponse nowShowingItem = items.get(position);
 
         holder.nameView.setText(nowShowingItem.getMovieName());
         holder.timeView.setText(String.format("%d min", nowShowingItem.getMovieLength()));
@@ -109,7 +110,10 @@ public class NowShowing_Adapter extends RecyclerView.Adapter<NowShowing_ViewHold
 
         Glide.with(context).load(nowShowingItem.getImageUrl()).into(holder.filmView);
 
-        holder.itemView.setOnClickListener(v -> filmViewInterface.onFilmSelected(position));
+        holder.itemView.setOnClickListener(v -> {
+            Log.d("NowShowing_Adapter", "Item clicked at position: " + position);
+            filmViewInterface.onFilmSelected(position);
+        });
         holder.bookingButton.setOnClickListener(v -> filmViewInterface.onBookingClicked(position));
     }
 
@@ -119,9 +123,9 @@ public class NowShowing_Adapter extends RecyclerView.Adapter<NowShowing_ViewHold
     }
 
     // Method to update data
-    public void updateData(List<NowShowing_Item> newItems) {
-        this.items = newItems;
-        notifyDataSetChanged();
-    }
+//    public void updateData(List<NowShowing_Item> newItems) {
+//        this.items = newItems;
+//        notifyDataSetChanged();
+//    }
 }
 
