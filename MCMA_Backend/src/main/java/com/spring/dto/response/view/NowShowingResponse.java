@@ -18,6 +18,9 @@ public class NowShowingResponse {
     private Integer movieLength;
     private String publishedDate;
     private String imageUrl;
+    private String backgroundImageUrl;
+    private String trailer;
+    private String description;
     private List<String> movieGenreNameList;
     private List<String> movieRatingDetailNameList;
     private List<String> moviePerformerNameList;
