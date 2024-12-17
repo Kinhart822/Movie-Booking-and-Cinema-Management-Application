@@ -1,6 +1,7 @@
 package vn.edu.usth.mcma.frontend.Search;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -55,6 +56,12 @@ public class Search_Adapter extends RecyclerView.Adapter<Search_ViewHolder> {
         Glide.with(context)
                 .load(item.getImageUrl())
                 .into(holder.filmView);
+
+        holder.itemView.setOnClickListener(v -> {
+            int currentPosition = holder.getAdapterPosition();
+            Log.d("Search_Adapter", "Item clicked at position: " + currentPosition);
+            searchViewInterface.onItemClick(currentPosition);
+        });
 
     }
 

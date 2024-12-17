@@ -6,6 +6,11 @@ public class ViewCinemaResponse {
     private List<Integer> cinemaIdList;
     private List<String> cinemaNameList;
 
+    public ViewCinemaResponse(List<Integer> cinemaIdList, List<String> cinemaNameList) {
+        this.cinemaIdList = cinemaIdList;
+        this.cinemaNameList = cinemaNameList;
+    }
+
     public List<Integer> getCinemaIdList() {
         return cinemaIdList;
     }

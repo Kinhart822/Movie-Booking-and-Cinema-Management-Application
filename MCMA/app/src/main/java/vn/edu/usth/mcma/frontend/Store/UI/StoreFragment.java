@@ -54,7 +54,7 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
     private ComboAdapter comboAdapter;
     private View comboMenuContainer;
     private DrawerLayout mDrawerLayout;
-    private List<Theater> theaters = new ArrayList<>();
+    private final List<Theater> theaters = new ArrayList<>();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -178,12 +178,20 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
             public void onResponse(Call<ViewCinemaResponse> call, Response<ViewCinemaResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     ViewCinemaResponse cinemaResponse = response.body();
-                    theaters.clear();
+                    List<Integer> cinemaIdList = cinemaResponse.getCinemaIdList();
+                    List<String> cinemaNameList = cinemaResponse.getCinemaNameList();
 
-                    for (int i = 0; i < cinemaResponse.getCinemaIdList().size(); i++) {
+                    if (cinemaIdList == null || cinemaNameList == null) {
+                        Log.e("StoreFragment", "Cinema lists are null");
+                        Toast.makeText(requireActivity(), "No theaters to show", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    theaters.clear();
+                    for (int i = 0; i < cinemaIdList.size(); i++) {
                         theaters.add(new Theater(
-                                String.valueOf(cinemaResponse.getCinemaIdList().get(i)),
-                                cinemaResponse.getCinemaNameList().get(i)
+                                String.valueOf(cinemaIdList.get(i)),
+                                cinemaNameList.get(i)
                         ));
                     }
                     updateTheaterList(theaters);
@@ -192,6 +200,7 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
                     Toast.makeText(requireActivity(), "No theaters to show", Toast.LENGTH_SHORT).show();
                 }
             }
+
 
             @Override
             public void onFailure(Call<ViewCinemaResponse> call, Throwable t) {

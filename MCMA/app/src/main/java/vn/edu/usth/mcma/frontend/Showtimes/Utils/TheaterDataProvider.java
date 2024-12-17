@@ -1,5 +1,8 @@
 package vn.edu.usth.mcma.frontend.Showtimes.Utils;
 
+import android.app.Activity;
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,7 +17,6 @@ import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
 
 public class TheaterDataProvider {
-    // List of sample theater images (add these to your drawable folder)
     public static List<String> getCities() {
         return Arrays.asList("TPHCM", "Hà Nội", "Huế", "Đà Nẵng", "Cần Thơ", "Nha Trang", "Đà Lạt", "Vũng Tàu");
     }
@@ -77,7 +79,7 @@ public class TheaterDataProvider {
         ));
     }};
 
-    private static final String[] MOVIES = {
+    private static final ArrayList<String> MOVIES = new ArrayList<>(Arrays.asList(
             "The Dark Knight",
             "Inception",
             "Interstellar",
@@ -88,13 +90,13 @@ public class TheaterDataProvider {
             "Joker",
             "Parasite",
             "Dune"
-    };
+    ));
 
     public static List<Theater> getTheatersForCity(String city) {
         List<TheaterInfo> allTheaters = CITY_THEATERS.getOrDefault(city, new ArrayList<>());
         List<Theater> theaters = new ArrayList<>();
 
-        for (TheaterInfo info : allTheaters){
+        for (TheaterInfo info : allTheaters) {
             theaters.add(new Theater(
                     "theater_" + city.toLowerCase() + "_" + info.name.hashCode(),
                     info.name,
@@ -107,12 +109,29 @@ public class TheaterDataProvider {
         return theaters;
     }
 
-    public static List<Movie> getMoviesForTheater(String date) {
+    public static List<Movie> getMoviesForTheater(String date, Activity activity) {
         List<Movie> movies = new ArrayList<>();
-        for (String movieTitle : MOVIES){
+
+        String movieTitle = activity.getIntent().getStringExtra("MOVIE_TITLE");
+
+        if (movieTitle != null && !movieTitle.isEmpty()) {
+            boolean movieExists = false;
+            for (String movie : MOVIES) {
+                if (movie.equalsIgnoreCase(movieTitle)) {
+                    movieExists = true;
+                    break;
+                }
+            }
+
+            if (!movieExists) {
+                MOVIES.add(movieTitle);
+            }
+        }
+
+        for (String movie : MOVIES) {
             movies.add(new Movie(
-                    "movie_" + movieTitle.toLowerCase().replace(" ", "_"),
-                    movieTitle,
+                    "movie_" + movie.toLowerCase().replace(" ", "_"),
+                    movie,
                     generateShowtimes()
             ));
         }

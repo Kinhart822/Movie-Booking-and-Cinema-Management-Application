@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.frontend.Showtimes.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.util.SparseBooleanArray;
@@ -177,7 +178,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
             showtimesContainer.removeAllViews();
             // Get showtimes based on theater type
             List<String> showtimes = new ArrayList<>();
-            List<Movie> movies = TheaterDataProvider.getMoviesForTheater(selectedDate);
+            List<Movie> movies = TheaterDataProvider.getMoviesForTheater(selectedDate, (Activity) itemView.getContext());
 
             for (Movie movie : movies) {
                 if (movie.getTitle().equals(movieTitle)) {

@@ -95,9 +95,9 @@ public class OnlyDetailsActivity extends AppCompatActivity {
                 String type = moviePerformerTypeList.get(i).toLowerCase();
                 String name = moviePerformerNameList.get(i);
 
-                if ("director".equals(type)) {
+                if ("director".equals(type) || "0".equals(type)) {
                     directors.add(name);
-                } else if ("actor".equals(type)) {
+                } else if ("actor".equals(type) || "1".equals(type)) {
                     cast.add(name);
                 }
             }

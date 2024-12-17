@@ -1,7 +1,9 @@
 package vn.edu.usth.mcma.frontend.Search;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
@@ -22,21 +24,23 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.PerformerType;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.MovieGenreResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.NowShowingResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.SearchMovieByNameResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetAllMovieGenres;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.SearchMovieByName;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
+import vn.edu.usth.mcma.frontend.Home.OnlyDetailsActivity;
 
-public class Search_Activity extends AppCompatActivity implements SearchViewInterface {
+public class Search_Activity extends AppCompatActivity {
     private SearchView searchView;
-    private RecyclerView recyclerView;
     private Search_Adapter adapter;
-    private List<SearchMovieByNameResponse> items;
+    private List<SearchMovieByNameResponse> items = new ArrayList<>();
     private List<SearchMovieByNameResponse> filteredItems;
-    private List<View> buttons; // Danh sách lưu các button
-    private List<MovieGenreResponse> genres; // Store fetched genres
-    private LinearLayout genreButtonContainer; // Container for dynamic buttons
+    private List<View> buttons;
+    private List<MovieGenreResponse> genres;
+    private LinearLayout genreButtonContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +50,8 @@ public class Search_Activity extends AppCompatActivity implements SearchViewInte
         searchView = findViewById(R.id.searchView);
         searchView.clearFocus();
 
-        recyclerView = findViewById(R.id.recyclersearch_activity);
+        RecyclerView recyclerView = findViewById(R.id.recyclersearch_activity);
 
-        items = new ArrayList<>();
         filteredItems = new ArrayList<>();
         buttons = new ArrayList<>(); // Khởi tạo danh sách button
 
@@ -56,7 +59,12 @@ public class Search_Activity extends AppCompatActivity implements SearchViewInte
 
 //        filteredItems.addAll(items);
 
-        adapter = new Search_Adapter(this, filteredItems, this);
+        adapter = new Search_Adapter(this, filteredItems, new SearchViewInterface() {
+            @Override
+            public void onItemClick(int position) {
+                openMovieDetailsActivity(position);
+            }
+        });
         recyclerView.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -85,13 +93,25 @@ public class Search_Activity extends AppCompatActivity implements SearchViewInte
 
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(view -> onBackPressed());
+    }
 
-//        setupCategoryButton(findViewById(R.id.btn_all), "All");
-//        setupCategoryButton(findViewById(R.id.btn_action), "Action");
-//        setupCategoryButton(findViewById(R.id.btn_adventure), "Adventure");
-//        setupCategoryButton(findViewById(R.id.btn_comedy), "Comedy");
-//        setupCategoryButton(findViewById(R.id.btn_horror), "Horror");
-//        setupCategoryButton(findViewById(R.id.btn_drama), "Drama");
+    private void openMovieDetailsActivity(int position) {
+        SearchMovieByNameResponse clickedItem = filteredItems.get(position);
+        Intent intent = new Intent(Search_Activity.this, OnlyDetailsActivity.class);
+
+        intent.putExtra("MOVIE_NAME", clickedItem.getName());
+        intent.putExtra("MOVIE_GENRES", new ArrayList<>(clickedItem.getGenreNameList()));
+        intent.putExtra("MOVIE_LENGTH", clickedItem.getLength());
+        intent.putExtra("MOVIE_DESCRIPTION", clickedItem.getDescription());
+        intent.putExtra("PUBLISHED_DATE", clickedItem.getDatePublish());
+        intent.putExtra("IMAGE_URL", clickedItem.getImageUrl());
+        intent.putExtra("BACKGROUND_IMAGE_URL", clickedItem.getBackgroundImageUrl());
+        intent.putExtra("TRAILER", clickedItem.getTrailerLink());
+        intent.putExtra("MOVIE_RATING", new ArrayList<>(clickedItem.getRatingNameList()));
+        intent.putExtra("MOVIE_PERFORMER_NAME", new ArrayList<>(clickedItem.getPerformerNameList()));
+        intent.putStringArrayListExtra("MOVIE_PERFORMER_TYPE", new ArrayList<>(clickedItem.getPerformerType()));
+
+        startActivity(intent);
     }
 
     private void fetchAndDisplayGenres() {
@@ -256,14 +276,6 @@ public class Search_Activity extends AppCompatActivity implements SearchViewInte
 
         adapter.notifyDataSetChanged();
     }
-
-    @Override
-    public void onItemClick(int position) {
-        SearchMovieByNameResponse clickedItem = filteredItems.get(position);
-        Toast.makeText(this, "Film: " + clickedItem.getName(), Toast.LENGTH_SHORT).show();
-    }
-
-
 
     @Override
     public void onBackPressed() {

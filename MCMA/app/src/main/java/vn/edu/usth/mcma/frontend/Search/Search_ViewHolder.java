@@ -31,5 +31,17 @@ public class Search_ViewHolder extends RecyclerView.ViewHolder {
                 }
             }
         });
+
+        filmView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (searchViewInterface != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        searchViewInterface.onItemClick(position);
+                    }
+                }
+            }
+        });
     }
 }

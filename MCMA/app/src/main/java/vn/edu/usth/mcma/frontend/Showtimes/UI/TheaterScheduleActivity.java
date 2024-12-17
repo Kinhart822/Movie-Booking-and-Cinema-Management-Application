@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.frontend.Showtimes.UI;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
@@ -110,7 +111,9 @@ public class TheaterScheduleActivity extends AppCompatActivity
     }
 
     private List<Movie> getMoviesForDate(String date) {
-        List<Movie> movies = TheaterDataProvider.getMoviesForTheater(date);
+        Activity activity = this;
+
+        List<Movie> movies = TheaterDataProvider.getMoviesForTheater(date, activity);
 
         // Make sure movie titles match those in MovieDataProvider
         // This ensures MovieDetailsActivity can find the correct movie details
