@@ -33,7 +33,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="#ffffff">
 
@@ -42,6 +42,7 @@
                     android:layout_height="wrap_content"
                     android:text="Book ticket by theater"
                     android:textSize="25sp"
+                    android:textStyle="bold"
                     android:textColor="@android:color/black"
                     android:gravity="center"
                     android:layout_marginTop="32dp"
@@ -60,7 +61,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Theater"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
                         android:textColor="@android:color/black"/>
                 </LinearLayout>
 

@@ -12,13 +12,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ViewCityResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetAllCitiesAPI;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
 
 public class TheaterDataProvider {
     public static List<String> getCities() {
         return Arrays.asList("TPHCM", "Hà Nội", "Huế", "Đà Nẵng", "Cần Thơ", "Nha Trang", "Đà Lạt", "Vũng Tàu");
+    }
+
+    private static final String BASE_URL = "http://192.168.1.100:8080/";
+    private static GetAllCitiesAPI apiService;
+
+    static {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        apiService = retrofit.create(GetAllCitiesAPI.class);
+    }
+
+    public static void getCities(Callback<ViewCityResponse> callback) {
+        Call<ViewCityResponse> call = apiService.getAllCities();
+        call.enqueue(callback);
     }
 
     private static final Map<String, List<TheaterInfo>> CITY_THEATERS = new HashMap<String, List<TheaterInfo>>() {{

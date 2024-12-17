@@ -5,10 +5,17 @@ import java.util.List;
 public class ViewCinemaResponse {
     private List<Integer> cinemaIdList;
     private List<String> cinemaNameList;
+    private List<String> cityNameList;
 
     public ViewCinemaResponse(List<Integer> cinemaIdList, List<String> cinemaNameList) {
         this.cinemaIdList = cinemaIdList;
         this.cinemaNameList = cinemaNameList;
+    }
+
+    public ViewCinemaResponse(List<Integer> cinemaIdList, List<String> cinemaNameList, List<String> cityNameList) {
+        this.cinemaIdList = cinemaIdList;
+        this.cinemaNameList = cinemaNameList;
+        this.cityNameList = cityNameList;
     }
 
     public List<Integer> getCinemaIdList() {
@@ -25,6 +32,14 @@ public class ViewCinemaResponse {
 
     public void setCinemaNameList(List<String> cinemaNameList) {
         this.cinemaNameList = cinemaNameList;
+    }
+
+    public List<String> getCityNameList() {
+        return cityNameList;
+    }
+
+    public void setCityNameList(List<String> cityNameList) {
+        this.cityNameList = cityNameList;
     }
 }
 
