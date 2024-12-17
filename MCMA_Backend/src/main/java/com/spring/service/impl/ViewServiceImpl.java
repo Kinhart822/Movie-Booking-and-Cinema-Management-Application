@@ -70,9 +70,11 @@ public class ViewServiceImpl implements ViewService {
         List<String> cinemaNameList = cinemaList.stream()
                 .map(Cinema::getName)
                 .toList();
+        List<String> cityNameList = cinemaList.stream()
+                .map(cinema -> cinema.getCity().getName())
+                .toList();
 
-        return new ViewCinemaResponse(cinemaIdList, cinemaNameList);
-    }
+        return new ViewCinemaResponse(cinemaIdList, cinemaNameList, cityNameList);    }
 
     @Override
     public List<ScreenResponse> getAllScreens() {
@@ -105,8 +107,11 @@ public class ViewServiceImpl implements ViewService {
         List<String> cinemaNameList = cinemaList.stream()
                 .map(Cinema::getName)
                 .toList();
+        List<String> cityNameList = cinemaList.stream()
+                .map(cinema -> cinema.getCity().getName())
+                .toList();
 
-        return new ViewCinemaResponse(cinemaIdList, cinemaNameList);
+        return new ViewCinemaResponse(cinemaIdList, cinemaNameList, cityNameList);
     }
 
     @Override

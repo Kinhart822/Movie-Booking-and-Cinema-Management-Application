@@ -31,15 +31,17 @@ public class MovieServiceImpl implements MovieService {
                         (Integer) result[0],        // id
                         (String) result[1],         // name
                         (Integer) result[2],        // length
-                        (String) result[3],         // image Url
-                        (String) result[4],         // trailerLink
-                        result[5] != null ? dateFormat.format((Date) result[5]) : null, //  datePublish
-                        result[6] != null ? Arrays.asList(result[6].toString().split(",")) : new ArrayList<>(), // ratingNameList
-                        result[7] != null ? Arrays.asList(result[7].toString().split(",")) : new ArrayList<>(), // ratingDescriptionList
-                        result[8] != null ? Arrays.asList(result[8].toString().split(",")) : new ArrayList<>(), // genreNameList
-                        result[9] != null ? Arrays.asList(result[9].toString().split(",")) : new ArrayList<>(), // performerNameList
-                        result[10] != null ? Arrays.asList(result[10].toString().split(",")) : new ArrayList<>(), // performerType
-                        result[11] != null ? Arrays.asList(result[11].toString().split(",")) : new ArrayList<>() // performerSex
+                        (String) result[3],         // description
+                        (String) result[4],         // image Url
+                        (String) result[5],         // backgroundImageUrl
+                        (String) result[6],         // trailerLink
+                        result[7] != null ? dateFormat.format((Date) result[7]) : null, //  datePublish
+                        result[8] != null ? Arrays.asList(result[8].toString().split(",")) : new ArrayList<>(), // ratingNameList
+                        result[9] != null ? Arrays.asList(result[9].toString().split(",")) : new ArrayList<>(), // ratingDescriptionList
+                        result[10] != null ? Arrays.asList(result[10].toString().split(",")) : new ArrayList<>(), // genreNameList
+                        result[11] != null ? Arrays.asList(result[11].toString().split(",")) : new ArrayList<>(), // performerNameList
+                        result[12] != null ? Arrays.asList(result[12].toString().split(",")) : new ArrayList<>(), // performerType
+                        result[13] != null ? Arrays.asList(result[13].toString().split(",")) : new ArrayList<>() // performerSex
                 ))
                 .collect(Collectors.toList());
     }
@@ -53,15 +55,17 @@ public class MovieServiceImpl implements MovieService {
                         (Integer) result[0],        // id
                         (String) result[1],         // name
                         (Integer) result[2],        // length
-                        (String) result[3],         // image Url
-                        (String) result[4],         // trailerLink
-                        result[5] != null ? dateFormat.format((Date) result[5]) : null, //  datePublish
-                        result[6] != null ? Arrays.asList(result[6].toString().split(",")) : new ArrayList<>(), // ratingNameList
-                        result[7] != null ? Arrays.asList(result[7].toString().split(",")) : new ArrayList<>(), // ratingDescriptionList
-                        result[8] != null ? Arrays.asList(result[8].toString().split(",")) : new ArrayList<>(), // genreNameList
-                        result[9] != null ? Arrays.asList(result[9].toString().split(",")) : new ArrayList<>(), // performerNameList
-                        result[10] != null ? Arrays.asList(result[10].toString().split(",")) : new ArrayList<>(), // performerType
-                        result[11] != null ? Arrays.asList(result[11].toString().split(",")) : new ArrayList<>() // performerSex
+                        (String) result[3],         // description
+                        (String) result[4],         // image Url
+                        (String) result[5],         // backgroundImageUrl
+                        (String) result[6],         // trailerLink
+                        result[7] != null ? dateFormat.format((Date) result[7]) : null, //  datePublish
+                        result[8] != null ? Arrays.asList(result[8].toString().split(",")) : new ArrayList<>(), // ratingNameList
+                        result[9] != null ? Arrays.asList(result[9].toString().split(",")) : new ArrayList<>(), // ratingDescriptionList
+                        result[10] != null ? Arrays.asList(result[10].toString().split(",")) : new ArrayList<>(), // genreNameList
+                        result[11] != null ? Arrays.asList(result[11].toString().split(",")) : new ArrayList<>(), // performerNameList
+                        result[12] != null ? Arrays.asList(result[12].toString().split(",")) : new ArrayList<>(), // performerType
+                        result[13] != null ? Arrays.asList(result[13].toString().split(",")) : new ArrayList<>() // performerSex
                 ))
                 .collect(Collectors.toList());
     }
@@ -75,15 +79,17 @@ public class MovieServiceImpl implements MovieService {
                         (Integer) result[0],        // id
                         (String) result[1],         // name
                         (Integer) result[2],        // length
-                        (String) result[3],         // imageUrl
-                        (String) result[4],         // trailerLink
-                        result[5] != null ? dateFormat.format((Date) result[5]) : null, // datePublish
-                        result[6] != null ? Arrays.asList(result[6].toString().split(",")) : new ArrayList<>(), // ratingNameList
-                        result[7] != null ? Arrays.asList(result[7].toString().split(",")) : new ArrayList<>(), // ratingDescriptionList
-                        result[8] != null ? Arrays.asList(result[8].toString().split(",")) : new ArrayList<>(), // genreNameList
-                        result[9] != null ? Arrays.asList(result[9].toString().split(",")) : new ArrayList<>(), // performerNameList
-                        result[10] != null ? Arrays.asList(result[10].toString().split(",")) : new ArrayList<>(), // performerType
-                        result[11] != null ? Arrays.asList(result[11].toString().split(",")) : new ArrayList<>() // performerSex
+                        (String) result[3],         // description
+                        (String) result[4],         // image Url
+                        (String) result[5],         // backgroundImageUrl
+                        (String) result[6],         // trailerLink
+                        result[7] != null ? dateFormat.format((Date) result[7]) : null, //  datePublish
+                        result[8] != null ? Arrays.asList(result[8].toString().split(",")) : new ArrayList<>(), // ratingNameList
+                        result[9] != null ? Arrays.asList(result[9].toString().split(",")) : new ArrayList<>(), // ratingDescriptionList
+                        result[10] != null ? Arrays.asList(result[10].toString().split(",")) : new ArrayList<>(), // genreNameList
+                        result[11] != null ? Arrays.asList(result[11].toString().split(",")) : new ArrayList<>(), // performerNameList
+                        result[12] != null ? Arrays.asList(result[12].toString().split(",")) : new ArrayList<>(), // performerType
+                        result[13] != null ? Arrays.asList(result[13].toString().split(",")) : new ArrayList<>() // performerSex
                 ))
                 .collect(Collectors.toList());    }
 }

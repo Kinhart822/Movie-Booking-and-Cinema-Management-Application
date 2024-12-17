@@ -12,10 +12,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SearchMovieByGenreResponse {
-    private int id;
+    private Integer id;
     private String name;
     private Integer length;
+    private String description;
     private String imageUrl;
+    private String backgroundImageUrl;
     private String trailerLink;
     private String datePublish;
     private List<String> ratingNameList;

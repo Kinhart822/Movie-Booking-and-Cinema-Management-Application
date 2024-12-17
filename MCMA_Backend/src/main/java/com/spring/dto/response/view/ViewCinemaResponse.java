@@ -14,4 +14,5 @@ import java.util.List;
 public class ViewCinemaResponse {
     private List<Integer> cinemaIdList;
     private List<String> cinemaNameList;
+    private List<String> cityNameList;
 }
