@@ -64,11 +64,14 @@ public class ViewServiceImpl implements ViewService {
     @Override
     public ViewCinemaResponse getAvailableCinemaList() {
         List<Cinema> cinemaList = cinemaRepository.findAll();
+        List<Integer> cinemaIdList = cinemaList.stream()
+                .map(Cinema::getId)
+                .toList();
         List<String> cinemaNameList = cinemaList.stream()
                 .map(Cinema::getName)
                 .toList();
 
-        return new ViewCinemaResponse(cinemaNameList);
+        return new ViewCinemaResponse(cinemaIdList, cinemaNameList);
     }
 
     @Override
@@ -96,11 +99,14 @@ public class ViewServiceImpl implements ViewService {
         if (cinemaList == null || cinemaList.isEmpty()) {
             throw new IllegalArgumentException("No cinemas found for given city.");
         }
+        List<Integer> cinemaIdList = cinemaList.stream()
+                .map(Cinema::getId)
+                .toList();
         List<String> cinemaNameList = cinemaList.stream()
                 .map(Cinema::getName)
                 .toList();
 
-        return new ViewCinemaResponse(cinemaNameList);
+        return new ViewCinemaResponse(cinemaIdList, cinemaNameList);
     }
 
     @Override
