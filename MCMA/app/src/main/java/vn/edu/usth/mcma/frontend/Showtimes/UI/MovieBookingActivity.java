@@ -56,12 +56,9 @@ public class MovieBookingActivity extends AppCompatActivity {
 
         // Get movie title and theater type from intent
         movieTitle = getIntent().getStringExtra("MOVIE_TITLE");
-
         citiesSection = findViewById(R.id.cities_section);
         theatersSection = findViewById(R.id.theaters_section);
         citiesContainer = findViewById(R.id.cities_container);
-
-        movieTitle = getIntent().getStringExtra("MOVIE_TITLE");
         selectedCity = TheaterDataProvider.getCities().get(0); // Default to first city
 
         setupToolbarAndBanner();
@@ -247,8 +244,10 @@ public class MovieBookingActivity extends AppCompatActivity {
                 intent.putExtra(TicketSelectionActivity.EXTRA_MOVIE, selectedMovie);
                 intent.putExtra("SELECTED_SHOWTIME", showtime);
                 intent.putExtra("SELECTED_SCREEN_ROOM", screenRoom);
+                intent.putExtra("THEATER_NAME", theater.getName());
                 int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
                 intent.putExtra("MOVIE_BANNER", movieBannerResId);
+                intent.putExtra("MOVIE_TITLE", movieTitle);
                 startActivity(intent);
             }
 
