@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -250,6 +251,7 @@ public class BookingServiceImpl implements BookingService {
                     city.getName(),
                     cinema.getId(),
                     cinema.getName(),
+                    cinema.getAddress(),
                     screenType,
                     screenDescription,
                     foodName,
@@ -312,11 +314,13 @@ public class BookingServiceImpl implements BookingService {
         DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
 
         for (MovieSchedule schedule : movieSchedules) {
+            String dayOfWeek = schedule.getStartTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
             ScheduleResponse scheduleResponse = new ScheduleResponse(
                     movie.getName(),
                     cinema.getName(),
                     screen.getName(),
                     schedule.getId(),
+                    dayOfWeek,
                     schedule.getStartTime().format(formatterDate),
                     schedule.getStartTime().format(formatterTime)
             );

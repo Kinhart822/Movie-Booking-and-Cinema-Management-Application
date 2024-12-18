@@ -15,6 +15,7 @@ public class CinemaResponse {
     private String cityName;
     private Integer cinemaId;
     private String cinemaName;
+    private String cinemaAddress;
     private List<String> screenType;
     private List<String> screenDescription;
     private List<String> foodName;

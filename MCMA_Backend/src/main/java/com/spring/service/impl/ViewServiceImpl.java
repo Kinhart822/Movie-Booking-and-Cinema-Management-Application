@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.*;
 
 @Service
@@ -73,8 +74,11 @@ public class ViewServiceImpl implements ViewService {
         List<String> cityNameList = cinemaList.stream()
                 .map(cinema -> cinema.getCity().getName())
                 .toList();
+        List<String> cinemaAddressList = cinemaList.stream()
+                .map(Cinema::getAddress)
+                .toList();
 
-        return new ViewCinemaResponse(cinemaIdList, cinemaNameList, cityNameList);    }
+        return new ViewCinemaResponse(cinemaIdList, cinemaNameList, cityNameList, cinemaAddressList);    }
 
     @Override
     public List<ScreenResponse> getAllScreens() {
@@ -110,9 +114,39 @@ public class ViewServiceImpl implements ViewService {
         List<String> cityNameList = cinemaList.stream()
                 .map(cinema -> cinema.getCity().getName())
                 .toList();
+        List<String> cinemaAddressList = cinemaList.stream()
+                .map(Cinema::getAddress)
+                .toList();
 
-        return new ViewCinemaResponse(cinemaIdList, cinemaNameList, cityNameList);
+        return new ViewCinemaResponse(cinemaIdList, cinemaNameList, cityNameList, cinemaAddressList);
     }
+
+    @Override
+    public List<ScheduleResponse> getAllSchedulesBySelectedCinema(Integer cinemaId) {
+        List<MovieSchedule> movieSchedules = movieScheduleRepository.findMovieSchedulesByCinemaId(cinemaId);
+        if (movieSchedules == null || movieSchedules.isEmpty()) {
+            throw new IllegalArgumentException("No schedules found for given cinema.");
+        }
+        List<ScheduleResponse> scheduleResponses = new ArrayList<>();
+
+        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
+
+        for (MovieSchedule schedule : movieSchedules) {
+            String dayOfWeek = schedule.getStartTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+            ScheduleResponse scheduleResponse = new ScheduleResponse(
+                    schedule.getMovie().getName(),
+                    schedule.getCinema().getName(),
+                    schedule.getScreen().getName(),
+                    schedule.getId(),
+                    dayOfWeek,
+                    schedule.getStartTime().format(formatterDate),
+                    schedule.getStartTime().format(formatterTime)
+            );
+            scheduleResponses.add(scheduleResponse);
+        }
+
+        return scheduleResponses;    }
 
     @Override
     public List<ScheduleResponse> getAllSchedulesBySelectedMovieAndSelectedCinema(Integer movieId, Integer cinemaId) {
@@ -128,11 +162,13 @@ public class ViewServiceImpl implements ViewService {
         DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
 
         for (MovieSchedule schedule : movieSchedules) {
+            String dayOfWeek = schedule.getStartTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
             ScheduleResponse scheduleResponse = new ScheduleResponse(
                     schedule.getMovie().getName(),
                     schedule.getCinema().getName(),
                     schedule.getScreen().getName(),
                     schedule.getId(),
+                    dayOfWeek,
                     schedule.getStartTime().format(formatterDate),
                     schedule.getStartTime().format(formatterTime)
             );

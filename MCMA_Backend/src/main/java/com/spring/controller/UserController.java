@@ -242,11 +242,17 @@ public class UserController {
     }
 
     @GetMapping("/view/allScheduleByCinemaAndMovie")
-    public ResponseEntity<List<ScheduleResponse>> getAllScreenByCinemaAndMovie(
+    public ResponseEntity<List<ScheduleResponse>> getAllScheduleByCinemaAndMovie(
             @RequestParam Integer movieId,
             @RequestParam Integer cinemaId
     ) {
         List<ScheduleResponse> screenResponses = viewService.getAllSchedulesBySelectedMovieAndSelectedCinema(movieId, cinemaId);
+        return ResponseEntity.ok(screenResponses);
+    }
+
+    @GetMapping("/view/allScheduleByCinema/{cinemaId}")
+    public ResponseEntity<List<ScheduleResponse>> getAllScheduleByCinema(@PathVariable Integer cinemaId) {
+        List<ScheduleResponse> screenResponses = viewService.getAllSchedulesBySelectedCinema(cinemaId);
         return ResponseEntity.ok(screenResponses);
     }
 

@@ -14,6 +14,7 @@ public class ScheduleResponse {
     private String cinemaName;
     private String screenName;
     private Integer scheduleId;
+    private String dayOfWeek;
     private String date;
     private String time;
 }
