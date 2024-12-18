@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -106,11 +108,14 @@ public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHol
 //            quantityText.setText(String.valueOf(item.getQuantity()));
 
             // Load image from drawable resource
-            try {
-                int resourceId = Integer.parseInt(item.getImageUrl());
-                comboImage.setImageResource(resourceId);
-            } catch (NumberFormatException | Resources.NotFoundException e) {
-                comboImage.setImageResource(R.drawable.default_combo_image);
+            if (item.getImageUrl() == null || item.getImageUrl().isEmpty()) {
+                comboImage.setImageResource(R.drawable.combo_image_1);
+            } else {
+                Glide.with(itemView.getContext())
+                        .load(item.getImageUrl())
+                        .placeholder(R.drawable.combo_image_1) // Placeholder while loading image
+                        .error(R.drawable.combo_image_1) // Fallback image if image URL fails to load
+                        .into(comboImage);
             }
         }
     }

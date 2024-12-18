@@ -27,7 +27,7 @@ public class TheaterDataProvider {
         return Arrays.asList("TPHCM", "Hà Nội", "Huế", "Đà Nẵng", "Cần Thơ", "Nha Trang", "Đà Lạt", "Vũng Tàu");
     }
 
-    private static final String BASE_URL = "http://192.168.1.100:8080/";
+    private static final String BASE_URL = "http://192.168.1.103:8080/";
     private static GetAllCitiesAPI apiService;
 
     static {
@@ -120,7 +120,7 @@ public class TheaterDataProvider {
 
         for (TheaterInfo info : allTheaters) {
             theaters.add(new Theater(
-                    "theater_" + city.toLowerCase() + "_" + info.name.hashCode(),
+                    info.id,
                     info.name,
                     info.address,
                     city,
@@ -174,13 +174,22 @@ public class TheaterDataProvider {
     }
 
     private static class TheaterInfo {
+        int id;
+        String idCity;
         String name;
         String address;
         int imageResId;
 
-        TheaterInfo(String name, String address, int imageResId) {
-            this.name = name;
+        public TheaterInfo(String address, int id, int imageResId, String name) {
             this.address = address;
+            this.id = id;
+            this.imageResId = imageResId;
+            this.name = name;
+        }
+
+        public TheaterInfo(String address, String idCity, int imageResId) {
+            this.address = address;
+            this.idCity = idCity;
             this.imageResId = imageResId;
         }
     }

@@ -16,6 +16,10 @@ public class Movie implements Serializable {
         this.showtimes = showtimes;
     }
 
+    public Movie(String title) {
+        this.title = title;
+    }
+
     // Getters and Setters
     public String getId() {
         return id;

@@ -4,13 +4,13 @@ import java.io.Serializable;
 import java.util.Set;
 
 public class Theater implements Serializable {
-    private String id;
+    private int id;
     private String name;
     private String address;
     private String city;
     private int imageResId;
 
-    public Theater(String id, String name, String address, String city, int imageResId) {
+    public Theater(int id, String name, String address, String city, int imageResId) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -19,11 +19,11 @@ public class Theater implements Serializable {
     }
 
     // Getters and setters
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

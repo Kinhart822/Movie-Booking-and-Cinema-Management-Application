@@ -66,21 +66,21 @@ public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdap
             movieTitle.setText(movie.getTitle());
             timeContainer.removeAllViews();
 
-            List<String> showtimes = movie.getShowtimes();
-            for (String time : showtimes) {
-                Button timeButton = new Button(itemView.getContext());
-                timeButton.setText(time);
-                timeButton.setOnClickListener(v -> listener.onShowtimeClick(movie, time));
-
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                        itemView.getContext().getResources().getDimensionPixelSize(R.dimen.time_button_width),
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                );
-                params.setMargins(8, 0, 8, 0);
-                timeButton.setLayoutParams(params);
-
-                timeContainer.addView(timeButton);
-            }
+//            List<String> showtimes = movie.getShowtimes();
+//            for (String time : showtimes) {
+//                Button timeButton = new Button(itemView.getContext());
+//                timeButton.setText(time);
+//                timeButton.setOnClickListener(v -> listener.onShowtimeClick(movie, time));
+//
+//                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+//                        itemView.getContext().getResources().getDimensionPixelSize(R.dimen.time_button_width),
+//                        LinearLayout.LayoutParams.WRAP_CONTENT
+//                );
+//                params.setMargins(8, 0, 8, 0);
+//                timeButton.setLayoutParams(params);
+//
+//                timeContainer.addView(timeButton);
+//            }
 
             viewDetails.setOnClickListener(v -> {
                 Intent intent = new Intent(itemView.getContext(), MovieDetailsActivity.class);
