@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.PerformerType;
+import vn.edu.usth.mcma.frontend.Home.OnlyDetailsActivity;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.UI.MovieDetailsActivity;
 
@@ -41,6 +43,10 @@ public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdap
         holder.bind(movie);
     }
 
+    public void setOnShowtimeClickListener(OnShowtimeClickListener listener) {
+        this.listener = listener;
+    }
+
     @Override
     public int getItemCount() {
         return movies.size();
@@ -50,6 +56,7 @@ public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdap
         this.movies = movies;
         notifyDataSetChanged();
     }
+
     class MovieViewHolder extends RecyclerView.ViewHolder {
         private TextView movieTitle;
         private TextView viewDetails;
@@ -70,7 +77,11 @@ public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdap
 //            for (String time : showtimes) {
 //                Button timeButton = new Button(itemView.getContext());
 //                timeButton.setText(time);
-//                timeButton.setOnClickListener(v -> listener.onShowtimeClick(movie, time));
+//                timeButton.setOnClickListener(v -> {
+//                    if (listener != null) {
+//                        listener.onShowtimeClick(movie, time);
+//                    }
+//                });
 //
 //                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 //                        itemView.getContext().getResources().getDimensionPixelSize(R.dimen.time_button_width),
@@ -83,11 +94,31 @@ public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdap
 //            }
 
             viewDetails.setOnClickListener(v -> {
-                Intent intent = new Intent(itemView.getContext(), MovieDetailsActivity.class);
-                intent.putExtra("MOVIE_TITLE", movie.getTitle());
+                Intent intent = new Intent(itemView.getContext(), OnlyDetailsActivity.class);
+                intent.putExtra("MOVIE_NAME", movie.getTitle());
+                intent.putExtra("MOVIE_GENRES", new ArrayList<>(movie.getMovieGenreNameList()));
+                intent.putExtra("MOVIE_LENGTH", movie.getMovieLength());
+                intent.putExtra("MOVIE_DESCRIPTION", movie.getDescription());
+                intent.putExtra("PUBLISHED_DATE", movie.getPublishedDate());
+                intent.putExtra("IMAGE_URL", movie.getImageUrl());
+                intent.putExtra("BACKGROUND_IMAGE_URL", movie.getBackgroundImAageUrl());
+                intent.putExtra("TRAILER", movie.getTrailerLink());
+                intent.putExtra("MOVIE_RATING", new ArrayList<>(movie.getMovieRatingDetailNameList()));
+                intent.putExtra("MOVIE_PERFORMER_NAME", new ArrayList<>(movie.getMoviePerformerNameList()));
+
+                List<String> performerTypeStrings = new ArrayList<>();
+                for (PerformerType performerType : movie.getMoviePerformerType()) {
+                    performerTypeStrings.add(performerType.toString());
+                }
+                intent.putStringArrayListExtra("MOVIE_PERFORMER_TYPE", new ArrayList<>(performerTypeStrings));
+
+                intent.putExtra("MOVIE_COMMENT", new ArrayList<>(movie.getComments()));
+                intent.putExtra("AVERAGE_STAR", movie.getAverageRating());
+
                 itemView.getContext().startActivity(intent);
             });
         }
+
     }
 
     public interface OnShowtimeClickListener {

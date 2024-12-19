@@ -75,7 +75,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.tv_director)).setText(movie.getDirector());
         ((TextView)findViewById(R.id.tv_cast)).setText(String.join(", ", movie.getCast()));
         ((TextView)findViewById(R.id.tv_classification)).setText(movie.getClassification());
-//        ((TextView)findViewById(R.id.tv_language)).setText(movie.getLanguage());
     }
 
     private void setupSynopsisExpansion() {

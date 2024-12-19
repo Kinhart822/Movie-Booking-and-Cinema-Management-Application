@@ -9,9 +9,11 @@ public class MovieResponse {
     private Integer movieId;
     private String movieName;
     private Integer movieLength;
+    private String description;
     private String publishedDate;
     private String trailerLink;
     private String imageUrl;
+    private String backgroundImageUrl;
 
     private List<String> movieGenreNameList;
     private List<String> imageUrlList;
@@ -21,15 +23,18 @@ public class MovieResponse {
     private List<String> moviePerformerDobList;
     private List<PerformerSex> moviePerformerSex;
     private List<PerformerType> moviePerformerType;
+
     private List<String> movieRatingDetailNameList;
     private List<String> movieRatingDetailDescriptions;
 
     private  List<String> comments;
     private  Double averageRating;
 
-    public MovieResponse(Double averageRating, List<String> comments, String imageUrl, List<String> imageUrlList, List<String> movieGenreDescriptions, List<String> movieGenreNameList, Integer movieId, Integer movieLength, String movieName, List<String> moviePerformerDobList, List<String> moviePerformerNameList, List<PerformerSex> moviePerformerSex, List<PerformerType> moviePerformerType, List<String> movieRatingDetailDescriptions, List<String> movieRatingDetailNameList, String publishedDate, String trailerLink) {
+    public MovieResponse(Double averageRating, String backgroundImageUrl, List<String> comments, String description, String imageUrl, List<String> imageUrlList, List<String> movieGenreDescriptions, List<String> movieGenreNameList, Integer movieId, Integer movieLength, String movieName, List<String> moviePerformerDobList, List<String> moviePerformerNameList, List<PerformerSex> moviePerformerSex, List<PerformerType> moviePerformerType, List<String> movieRatingDetailDescriptions, List<String> movieRatingDetailNameList, String publishedDate, String trailerLink) {
         this.averageRating = averageRating;
+        this.backgroundImageUrl = backgroundImageUrl;
         this.comments = comments;
+        this.description = description;
         this.imageUrl = imageUrl;
         this.imageUrlList = imageUrlList;
         this.movieGenreDescriptions = movieGenreDescriptions;
@@ -45,6 +50,22 @@ public class MovieResponse {
         this.movieRatingDetailNameList = movieRatingDetailNameList;
         this.publishedDate = publishedDate;
         this.trailerLink = trailerLink;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getBackgroundImageUrl() {
+        return backgroundImageUrl;
+    }
+
+    public void setBackgroundImageUrl(String backgroundImageUrl) {
+        this.backgroundImageUrl = backgroundImageUrl;
     }
 
     public Double getAverageRating() {
