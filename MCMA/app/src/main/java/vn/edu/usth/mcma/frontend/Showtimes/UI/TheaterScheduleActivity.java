@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -16,9 +17,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -33,7 +36,9 @@ import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.PerformerType;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.MovieResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ScheduleResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ScheduleSelectedByCinemaResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetAllInformationOfSelectedMovie;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetAllMovieAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetScheduleAPI;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.MovieScheduleAdapter;
@@ -79,6 +84,7 @@ public class TheaterScheduleActivity extends AppCompatActivity
 
     private void setupDateButtons(int theaterId) {
         LinearLayout daysContainer = findViewById(R.id.days_container);
+        daysContainer.removeAllViews();
 
         GetScheduleAPI apiService = new Retrofit.Builder()
                 .baseUrl("http://192.168.1.103:8080/")
@@ -86,33 +92,45 @@ public class TheaterScheduleActivity extends AppCompatActivity
                 .build()
                 .create(GetScheduleAPI.class);
 
-        Call<List<ScheduleResponse>> call = apiService.getScheduleByCinema(theaterId);
-        call.enqueue(new Callback<List<ScheduleResponse>>() {
+        Call<ScheduleSelectedByCinemaResponse> call = apiService.getScheduleByCinema(theaterId);
+        call.enqueue(new Callback<ScheduleSelectedByCinemaResponse>() {
             @Override
-            public void onResponse(Call<List<ScheduleResponse>> call, Response<List<ScheduleResponse>> response) {
+            public void onResponse(Call<ScheduleSelectedByCinemaResponse> call, Response<ScheduleSelectedByCinemaResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<ScheduleResponse> schedules = response.body();
-                    List<String> uniqueDates = new ArrayList<>();
+                    ScheduleSelectedByCinemaResponse scheduleResponse = response.body();
 
-                    // Lấy danh sách ngày duy nhất từ API
-                    for (ScheduleResponse schedule : schedules) {
-                        String uniqueDateKey = schedule.getDayOfWeek() + schedule.getDate();
-                        if (!uniqueDates.contains(uniqueDateKey)) {
-                            uniqueDates.add(uniqueDateKey);
+                    List<String> uniqueDates = new ArrayList<>();
+                    List<String> uniqueDateEntries = new ArrayList<>();
+
+                    if (scheduleResponse.getDate() != null && scheduleResponse.getDayOfWeek() != null
+                            && scheduleResponse.getDate().size() == scheduleResponse.getDayOfWeek().size()) {
+
+                        for (int i = 0; i < scheduleResponse.getDate().size(); i++) {
+                            String date = scheduleResponse.getDate().get(i);
+                            String dayOfWeek = scheduleResponse.getDayOfWeek().get(i);
+                            String uniqueKey = dayOfWeek + "\n" + date;
+
+                            if (!uniqueDateEntries.contains(uniqueKey)) {
+                                uniqueDateEntries.add(uniqueKey);
+                                uniqueDates.add(date);
+                            }
                         }
                     }
 
-                    // Khởi tạo các nút cho từng ngày
+                    if (uniqueDates.isEmpty()) {
+                        Toast.makeText(TheaterScheduleActivity.this, "No schedule found for this cinema.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     for (int i = 0; i < uniqueDates.size(); i++) {
-                        ScheduleResponse schedule = schedules.get(i);
-                        String formattedDate = schedule.getDate();
-                        String dayOfWeek = schedule.getDayOfWeek();
-                        String buttonText = dayOfWeek + "\n" + formattedDate; // Hiển thị dạng "Thứ Ba\n17/12/2024"
+                        final String originalDate = uniqueDates.get(i); // Dạng yyyy-MM-dd
+                        final String formattedDate = convertDateFormat(originalDate); // Chuyển thành dd/MM/yyyy
+                        final String buttonText = uniqueDateEntries.get(i);
 
                         Button dayButton = new Button(TheaterScheduleActivity.this);
-                        dayButton.setText(buttonText); // Hiển thị cả ngày và thứ
-                        dayButton.setAllCaps(false); // Tắt chữ in hoa của text
-                        dayButton.setGravity(Gravity.CENTER); // Căn giữa cả hai dòng
+                        dayButton.setText(buttonText);
+                        dayButton.setAllCaps(false);
+                        dayButton.setGravity(Gravity.CENTER);
 
                         // Thiết lập giao diện cho button
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -120,6 +138,13 @@ public class TheaterScheduleActivity extends AppCompatActivity
                                 LinearLayout.LayoutParams.WRAP_CONTENT
                         );
                         params.setMargins(8, 0, 8, 0);
+                        int paddingInDp = 10;
+                        int paddingInPx = (int) TypedValue.applyDimension(
+                                TypedValue.COMPLEX_UNIT_DIP,
+                                paddingInDp,
+                                getResources().getDisplayMetrics()
+                        );
+                        dayButton.setPadding(paddingInPx, paddingInPx, paddingInPx, paddingInPx);
                         dayButton.setLayoutParams(params);
                         dayButton.setBackground(getDrawable(R.drawable.date_button_selector));
                         dayButton.setTextColor(Color.BLACK);
@@ -151,7 +176,7 @@ public class TheaterScheduleActivity extends AppCompatActivity
             }
 
             @Override
-            public void onFailure(Call<List<ScheduleResponse>> call, Throwable t) {
+            public void onFailure(Call<ScheduleSelectedByCinemaResponse> call, Throwable t) {
                 Log.e("TheaterScheduleError", "Error fetching schedule", t);
                 Toast.makeText(TheaterScheduleActivity.this, "Failed to load schedule. Please try again.", Toast.LENGTH_SHORT).show();
             }
@@ -159,51 +184,49 @@ public class TheaterScheduleActivity extends AppCompatActivity
     }
 
     private void loadMovieSchedule(String date) {
-        GetScheduleAPI apiService = new Retrofit.Builder()
+        GetAllMovieAPI apiService = new Retrofit.Builder()
                 .baseUrl("http://192.168.1.103:8080/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-                .create(GetScheduleAPI.class);
+                .create(GetAllMovieAPI.class);
 
-        Call<List<ScheduleResponse>> call = apiService.getScheduleByCinema(theaterId);
-        call.enqueue(new Callback<List<ScheduleResponse>>() {
+        Call<List<MovieResponse>> call = apiService.getAllMovieBySelectedDate(date);
+        call.enqueue(new Callback<List<MovieResponse>>() {
             @Override
-            public void onResponse(Call<List<ScheduleResponse>> call, Response<List<ScheduleResponse>> response) {
+            public void onResponse(Call<List<MovieResponse>> call, Response<List<MovieResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<ScheduleResponse> schedules = response.body();
+                    List<MovieResponse> movieSchedules = response.body();
 
                     // Lọc lịch chiếu theo ngày đã chọn
                     List<Movie> movies = new ArrayList<>();
                     Map<Integer, Integer> movieIdMap = new HashMap<>();
 
-                    for (ScheduleResponse schedule : schedules) {
-                        if (date.equals(schedule.getDate())) {
-                            Movie movie = new Movie(
-                                    schedule.getMovieId(),
-                                    schedule.getMovieName(),
-                                    schedule.getMovieName(),
-                                    schedule.getMovieLength(),
-                                    schedule.getDescription(),
-                                    schedule.getPublishedDate(),
-                                    schedule.getTrailerLink(),
-                                    schedule.getImageUrl(),
-                                    schedule.getBackgroundImAageUrl(),
-                                    schedule.getMovieGenreNameList(),
-                                    schedule.getImageUrlList(),
-                                    schedule.getMovieGenreDescriptions(),
-                                    schedule.getMoviePerformerNameList(),
-                                    schedule.getMoviePerformerType(),
-                                    schedule.getMovieRatingDetailNameList(),
-                                    schedule.getMovieRatingDetailDescriptions(),
-                                    schedule.getComments(),
-                                    schedule.getAverageRating()
-                            );
-                            movies.add(movie);
+                    for (MovieResponse movieSchedule : movieSchedules) {
+                        Movie movie = new Movie(
+                                movieSchedule.getMovieId(),
+                                movieSchedule.getMovieName(),
+                                movieSchedule.getMovieName(),
+                                movieSchedule.getMovieLength(),
+                                movieSchedule.getDescription(),
+                                movieSchedule.getPublishedDate(),
+                                movieSchedule.getTrailerLink(),
+                                movieSchedule.getImageUrl(),
+                                movieSchedule.getBackgroundImageUrl(),
+                                movieSchedule.getTime(),
+                                movieSchedule.getMovieGenreNameList(),
+                                movieSchedule.getImageUrlList(),
+                                movieSchedule.getMovieGenreDescriptions(),
+                                movieSchedule.getMoviePerformerNameList(),
+                                movieSchedule.getMoviePerformerType(),
+                                movieSchedule.getMovieRatingDetailNameList(),
+                                movieSchedule.getMovieRatingDetailDescriptions(),
+                                movieSchedule.getComments(),
+                                movieSchedule.getAverageRating()
+                        );
+                        movies.add(movie);
 
-                            movieIdMap.put(movies.size() - 1, schedule.getMovieId());
-                        }
+                        movieIdMap.put(movies.size() - 1, movieSchedule.getMovieId());
                     }
-
                     movieAdapter.setMovies(movies); // Cập nhật adapter với danh sách phim
 
                     movieAdapter.setOnShowtimeClickListener((movie, showtime) -> {
@@ -213,13 +236,15 @@ public class TheaterScheduleActivity extends AppCompatActivity
                             fetchMovieDetails(movieId); // Fetch additional details
                         }
                     });
+
+
                 } else {
                     Toast.makeText(TheaterScheduleActivity.this, "No schedule found for this date.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<List<ScheduleResponse>> call, Throwable t) {
+            public void onFailure(Call<List<MovieResponse>> call, Throwable t) {
                 Log.e("TheaterScheduleError", "Error fetching schedule", t);
                 Toast.makeText(TheaterScheduleActivity.this, "Failed to load schedule. Please try again.", Toast.LENGTH_SHORT).show();
             }
@@ -261,8 +286,6 @@ public class TheaterScheduleActivity extends AppCompatActivity
 
                     intent.putExtra("MOVIE_COMMENT", new ArrayList<>(movieResponse.getComments()));
                     intent.putExtra("AVERAGE_STAR", movieResponse.getAverageRating());
-                } else {
-                    Toast.makeText(TheaterScheduleActivity.this, "Failed to fetch movie details.", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -274,21 +297,23 @@ public class TheaterScheduleActivity extends AppCompatActivity
         });
     }
 
-    private List<Movie> getMoviesForDate(String date) {
-        Activity activity = this;
-
-        List<Movie> movies = TheaterDataProvider.getMoviesForTheater(date, activity);
-
-        // Make sure movie titles match those in MovieDataProvider
-        // This ensures MovieDetailsActivity can find the correct movie details
-        return movies;
-    }
-
     @Override
     public void onShowtimeClick(Movie movie, String showtime) {
         // Handle showtime selection
         Toast.makeText(this,
-                "Selected: " + movie.getTitle() + " at " + showtime,
+                "Selected: " + movie.getMovieName() + " at " + showtime,
                 Toast.LENGTH_SHORT).show();
+    }
+
+    private String convertDateFormat(String originalDate) {
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        try {
+            Date date = inputFormat.parse(originalDate);
+            return outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return originalDate; // Nếu có lỗi, trả về ngày gốc không thay đổi
+        }
     }
 }

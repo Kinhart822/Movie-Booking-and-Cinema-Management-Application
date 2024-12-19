@@ -22,6 +22,10 @@ public class Movie implements Serializable {
     private String imageUrl;
     private String backgroundImAageUrl;
 
+    private List<String> dayOfWeek;
+    private List<String> date;
+    private List<String> time;
+
     private List<String> movieGenreNameList;
     private List<String> imageUrlList;
     private List<String> movieGenreDescriptions;
@@ -62,6 +66,52 @@ public class Movie implements Serializable {
         this.movieRatingDetailNameList = movieRatingDetailNameList;
         this.publishedDate = publishedDate;
         this.trailerLink = trailerLink;
+    }
+
+    public Movie(Integer movieId, String title,String movieName, Integer movieLength, String description, String publishedDate, String trailerLink, String imageUrl, String backgroundImAageUrl, List<String> time, List<String> movieGenreNameList, List<String> imageUrlList, List<String> movieGenreDescriptions, List<String> moviePerformerNameList, List<PerformerType> moviePerformerType, List<String> movieRatingDetailNameList, List<String> movieRatingDetailDescriptions, List<String> comments, Double averageRating) {
+        this.title = title;
+        this.averageRating = averageRating;
+        this.comments = comments;
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.backgroundImAageUrl = backgroundImAageUrl;
+        this.time = time;
+        this.imageUrlList = imageUrlList;
+        this.movieGenreDescriptions = movieGenreDescriptions;
+        this.movieGenreNameList = movieGenreNameList;
+        this.movieId = movieId;
+        this.movieLength = movieLength;
+        this.movieName = movieName;
+        this.moviePerformerNameList = moviePerformerNameList;
+        this.moviePerformerType = moviePerformerType;
+        this.movieRatingDetailDescriptions = movieRatingDetailDescriptions;
+        this.movieRatingDetailNameList = movieRatingDetailNameList;
+        this.publishedDate = publishedDate;
+        this.trailerLink = trailerLink;
+    }
+
+    public List<String> getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(List<String> dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
+    }
+
+    public List<String> getDate() {
+        return date;
+    }
+
+    public void setDate(List<String> date) {
+        this.date = date;
+    }
+
+    public List<String> getTime() {
+        return time;
+    }
+
+    public void setTime(List<String> time) {
+        this.time = time;
     }
 
     public String getBackgroundImAageUrl() {

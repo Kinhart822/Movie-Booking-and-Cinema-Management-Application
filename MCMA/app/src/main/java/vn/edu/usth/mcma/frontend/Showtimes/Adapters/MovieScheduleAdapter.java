@@ -1,6 +1,8 @@
 package vn.edu.usth.mcma.frontend.Showtimes.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +13,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.PerformerType;
@@ -73,25 +80,48 @@ public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdap
             movieTitle.setText(movie.getTitle());
             timeContainer.removeAllViews();
 
-//            List<String> showtimes = movie.getShowtimes();
-//            for (String time : showtimes) {
-//                Button timeButton = new Button(itemView.getContext());
-//                timeButton.setText(time);
-//                timeButton.setOnClickListener(v -> {
-//                    if (listener != null) {
-//                        listener.onShowtimeClick(movie, time);
-//                    }
-//                });
-//
-//                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-//                        itemView.getContext().getResources().getDimensionPixelSize(R.dimen.time_button_width),
-//                        LinearLayout.LayoutParams.WRAP_CONTENT
-//                );
-//                params.setMargins(8, 0, 8, 0);
-//                timeButton.setLayoutParams(params);
-//
-//                timeContainer.addView(timeButton);
-//            }
+            // 1. Lấy danh sách thời gian
+            List<String> showtimes = movie.getTime();
+
+            // 2. Sắp xếp thời gian theo định dạng HH:mm (hoặc HH)
+            @SuppressLint({"NewApi", "LocalSuppress"}) List<LocalTime> sortedTimes = showtimes.stream()
+                    .map(time -> {
+                        try {
+                            // Giả sử định dạng là HH:mm, nếu chỉ có HH thì đổi thành time + ":00"
+                            return LocalTime.parse(time.length() == 2 ? time + ":00" : time);
+                        } catch (Exception  e) {
+                            Log.e("TimeParseError", "Lỗi khi phân tích thời gian: " + time);
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .sorted()
+                    .collect(Collectors.toList());
+
+            // 3. Chuyển đổi LocalTime về định dạng chuỗi HH:mm để hiển thị
+            @SuppressLint({"NewApi", "LocalSuppress"}) List<String> formattedTimes = sortedTimes.stream()
+                    .map(time -> time.format(DateTimeFormatter.ofPattern("HH:mm")))
+                    .collect(Collectors.toList());
+
+            // 4. Tạo nút (Button) cho mỗi thời gian đã sắp xếp
+            for (String time : formattedTimes) {
+                Button timeButton = new Button(itemView.getContext());
+                timeButton.setText(time);
+                timeButton.setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onShowtimeClick(movie, time);
+                    }
+                });
+
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        itemView.getContext().getResources().getDimensionPixelSize(R.dimen.time_button_width),
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                params.setMargins(8, 0, 8, 0);
+                timeButton.setLayoutParams(params);
+
+                timeContainer.addView(timeButton);
+            }
 
             viewDetails.setOnClickListener(v -> {
                 Intent intent = new Intent(itemView.getContext(), OnlyDetailsActivity.class);
@@ -118,6 +148,7 @@ public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdap
                 itemView.getContext().startActivity(intent);
             });
         }
+
 
     }
 

@@ -15,6 +15,10 @@ public class MovieResponse {
     private String imageUrl;
     private String backgroundImageUrl;
 
+    private List<String> dayOfWeek;
+    private List<String> date;
+    private List<String> time;
+
     private List<String> movieGenreNameList;
     private List<String> imageUrlList;
     private List<String> movieGenreDescriptions;
@@ -30,26 +34,53 @@ public class MovieResponse {
     private  List<String> comments;
     private  Double averageRating;
 
-    public MovieResponse(Double averageRating, String backgroundImageUrl, List<String> comments, String description, String imageUrl, List<String> imageUrlList, List<String> movieGenreDescriptions, List<String> movieGenreNameList, Integer movieId, Integer movieLength, String movieName, List<String> moviePerformerDobList, List<String> moviePerformerNameList, List<PerformerSex> moviePerformerSex, List<PerformerType> moviePerformerType, List<String> movieRatingDetailDescriptions, List<String> movieRatingDetailNameList, String publishedDate, String trailerLink) {
-        this.averageRating = averageRating;
-        this.backgroundImageUrl = backgroundImageUrl;
-        this.comments = comments;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.imageUrlList = imageUrlList;
-        this.movieGenreDescriptions = movieGenreDescriptions;
-        this.movieGenreNameList = movieGenreNameList;
+    public MovieResponse(Integer movieId, String movieName, Integer movieLength, String description, String publishedDate, String trailerLink, String imageUrl, String backgroundImageUrl, List<String> dayOfWeek, List<String> date, List<String> time, List<String> movieGenreNameList, List<String> imageUrlList, List<String> movieGenreDescriptions, List<String> moviePerformerNameList, List<String> moviePerformerDobList, List<PerformerSex> moviePerformerSex, List<PerformerType> moviePerformerType, List<String> movieRatingDetailNameList, List<String> movieRatingDetailDescriptions, List<String> comments, Double averageRating) {
         this.movieId = movieId;
-        this.movieLength = movieLength;
         this.movieName = movieName;
-        this.moviePerformerDobList = moviePerformerDobList;
-        this.moviePerformerNameList = moviePerformerNameList;
-        this.moviePerformerSex = moviePerformerSex;
-        this.moviePerformerType = moviePerformerType;
-        this.movieRatingDetailDescriptions = movieRatingDetailDescriptions;
-        this.movieRatingDetailNameList = movieRatingDetailNameList;
+        this.movieLength = movieLength;
+        this.description = description;
         this.publishedDate = publishedDate;
         this.trailerLink = trailerLink;
+        this.imageUrl = imageUrl;
+        this.backgroundImageUrl = backgroundImageUrl;
+        this.dayOfWeek = dayOfWeek;
+        this.date = date;
+        this.time = time;
+        this.movieGenreNameList = movieGenreNameList;
+        this.imageUrlList = imageUrlList;
+        this.movieGenreDescriptions = movieGenreDescriptions;
+        this.moviePerformerNameList = moviePerformerNameList;
+        this.moviePerformerDobList = moviePerformerDobList;
+        this.moviePerformerSex = moviePerformerSex;
+        this.moviePerformerType = moviePerformerType;
+        this.movieRatingDetailNameList = movieRatingDetailNameList;
+        this.movieRatingDetailDescriptions = movieRatingDetailDescriptions;
+        this.comments = comments;
+        this.averageRating = averageRating;
+    }
+
+    public List<String> getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(List<String> dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
+    }
+
+    public List<String> getDate() {
+        return date;
+    }
+
+    public void setDate(List<String> date) {
+        this.date = date;
+    }
+
+    public List<String> getTime() {
+        return time;
+    }
+
+    public void setTime(List<String> time) {
+        this.time = time;
     }
 
     public String getDescription() {
