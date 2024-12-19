@@ -88,12 +88,12 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
                     m.background_image_url,
                     m.trailer_link,
                     m.date_publish,
-                    GROUP_CONCAT(DISTINCT mrd.name SEPARATOR ',') AS rating_name, 
-                    GROUP_CONCAT(DISTINCT mrd.description SEPARATOR ',') AS rating_description, 
-                    GROUP_CONCAT(DISTINCT mgd.name SEPARATOR ',') AS genre_name, 
-                    GROUP_CONCAT(DISTINCT mpd.name SEPARATOR ',') AS performer_name, 
-                    GROUP_CONCAT(DISTINCT mpd.performer_type SEPARATOR ',') AS performer_type, 
-                    GROUP_CONCAT(DISTINCT mpd.performer_sex SEPARATOR ',') AS performer_sex 
+                    GROUP_CONCAT(DISTINCT mrd.name SEPARATOR ',') AS rating_name,
+                    GROUP_CONCAT(DISTINCT mrd.description SEPARATOR ',') AS rating_description,
+                    GROUP_CONCAT(DISTINCT mgd.name SEPARATOR ',') AS genre_name,
+                    GROUP_CONCAT(DISTINCT mpd.name SEPARATOR ',') AS performer_name,
+                    GROUP_CONCAT(DISTINCT mpd.performer_type SEPARATOR ',') AS performer_type,
+                    GROUP_CONCAT(DISTINCT mpd.performer_sex SEPARATOR ',') AS performer_sex
                 FROM movie m
                 LEFT JOIN set_movie_rating_detail srd ON m.id = srd.movie_id
                 LEFT JOIN movie_rating_detail mrd ON srd.movie_rating_detail_id = mrd.id
@@ -125,5 +125,15 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
             "GROUP BY m.id " +
             "HAVING AVG(r.ratingStar) BETWEEN :minRating AND :maxRating")
     List<Movie> findHighestRatingMovies(@Param("minRating") Double minRating, @Param("maxRating") Double maxRating);
+
+    @Query("""
+                SELECT m
+                FROM Movie m
+                JOIN m.movieScheduleList ms
+                WHERE FUNCTION('DATE', ms.startTime) = :date
+            """)
+    List<Movie> findMoviesBySelectedDateSchedule(@Param("date") String date);
+
+
 }
 

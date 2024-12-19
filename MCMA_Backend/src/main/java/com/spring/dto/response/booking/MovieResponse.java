@@ -23,6 +23,10 @@ public class MovieResponse {
     private String imageUrl;
     private String backgroundImageUrl;
 
+    private List<String> dayOfWeek;
+    private List<String> date;
+    private List<String> time;
+
     private List<String> movieGenreNameList;
     private List<String> imageUrlList;
     private List<String> movieGenreDescriptions;

@@ -13,7 +13,7 @@ public interface BookingService {
     List<CityResponse> getAllCitiesBySelectedMovie(Integer movieId);
     List<CinemaResponse> getAllCinemasBySelectedCity(Integer cityId);
     List<ScreenResponse> getAllScreensBySelectedCinema(Integer cinemaId);
-    List<ScheduleResponse> getAllSchedulesBySelectedMovieAndSelectedCinemaAndSelectedScreen(
+    ScheduleResponse getAllSchedulesBySelectedMovieAndSelectedCinemaAndSelectedScreen(
             Integer movieId,
             Integer cinemaId,
             Integer screenId

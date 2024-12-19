@@ -105,12 +105,12 @@ public class UserController {
     }
 
     @GetMapping("/booking/allSchedulesByMovieAndCinemaAndScreen")
-    public ResponseEntity<List<ScheduleResponse>> getAllScheduleByScreen(
+    public ResponseEntity<ScheduleResponse> getAllScheduleByScreen(
             @RequestParam(required = false, name = "movieId") Integer movieId,
             @RequestParam(required = false, name = "cinemaId") Integer cinemaId,
             @RequestParam(required = false, name = "screenId") Integer screenId
     ) {
-        List<ScheduleResponse> scheduleResponses = bookingService.getAllSchedulesBySelectedMovieAndSelectedCinemaAndSelectedScreen(
+        ScheduleResponse scheduleResponses = bookingService.getAllSchedulesBySelectedMovieAndSelectedCinemaAndSelectedScreen(
                 movieId, cinemaId, screenId
         );
         return ResponseEntity.ok(scheduleResponses);
@@ -247,19 +247,25 @@ public class UserController {
         return ResponseEntity.ok(screenResponses);
     }
 
+    @GetMapping("/view/allScheduleByCinema/{cinemaId}")
+    public ResponseEntity<ScheduleSelectedByCinemaResponse> getAllSchedulesBySelectedCinema(@PathVariable Integer cinemaId) {
+        ScheduleSelectedByCinemaResponse scheduleResponses = viewService.getAllSchedulesBySelectedCinema(cinemaId);
+        return ResponseEntity.ok(scheduleResponses);
+    }
+
     @GetMapping("/view/allScheduleByCinemaAndMovie")
-    public ResponseEntity<List<ScheduleResponse>> getAllScheduleByCinemaAndMovie(
+    public ResponseEntity<ScheduleResponse> getAllScheduleByCinemaAndMovie(
             @RequestParam Integer movieId,
             @RequestParam Integer cinemaId
     ) {
-        List<ScheduleResponse> screenResponses = viewService.getAllSchedulesBySelectedMovieAndSelectedCinema(movieId, cinemaId);
+        ScheduleResponse screenResponses = viewService.getAllSchedulesBySelectedMovieAndSelectedCinema(movieId, cinemaId);
         return ResponseEntity.ok(screenResponses);
     }
 
-    @GetMapping("/view/allScheduleByCinema/{cinemaId}")
-    public ResponseEntity<List<ScheduleResponse>> getAllScheduleByCinema(@PathVariable Integer cinemaId) {
-        List<ScheduleResponse> screenResponses = viewService.getAllSchedulesBySelectedCinema(cinemaId);
-        return ResponseEntity.ok(screenResponses);
+    @GetMapping("/view/getAllMovieInformationBySelectedDateSchedule")
+    public ResponseEntity<List<MovieResponse>> getAllMovieInformationBySelectedDateSchedule(@RequestParam String date) {
+        List<MovieResponse> listFoodAndDrinkToOrderingResponse = viewService.getAllMovieInformationBySelectedDateSchedule(date);
+        return ResponseEntity.ok(listFoodAndDrinkToOrderingResponse);
     }
 
     @GetMapping("/view/getAllFoodsAndDrinksByCinema/{cinemaId}")

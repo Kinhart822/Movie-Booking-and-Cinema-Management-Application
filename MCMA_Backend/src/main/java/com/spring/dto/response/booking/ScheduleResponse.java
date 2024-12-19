@@ -1,6 +1,5 @@
 package com.spring.dto.response.booking;
 
-import com.spring.enums.PerformerSex;
 import com.spring.enums.PerformerType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,9 +37,9 @@ public class ScheduleResponse {
     private  Double averageRating;
 
     private String cinemaName;
-    private String screenName;
-    private Integer scheduleId;
-    private String dayOfWeek;
-    private String date;
-    private String time;
+    private List<String> screenName;
+    private List<Integer> scheduleId;
+    private List<String> dayOfWeek;
+    private List<String> date;
+    private List<String> time;
 }

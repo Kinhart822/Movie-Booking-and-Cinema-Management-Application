@@ -14,9 +14,11 @@ public interface ViewService {
 
     List<ScreenResponse> getAllScreens();
 
-    List<ScheduleResponse> getAllSchedulesBySelectedCinema(Integer cinemaId);
+    ScheduleSelectedByCinemaResponse getAllSchedulesBySelectedCinema(Integer cinemaId);
 
-    List<ScheduleResponse> getAllSchedulesBySelectedMovieAndSelectedCinema(Integer movieId, Integer cinemaId);
+    ScheduleResponse getAllSchedulesBySelectedMovieAndSelectedCinema(Integer movieId, Integer cinemaId);
+
+    List<MovieResponse> getAllMovieInformationBySelectedDateSchedule(String date);
 
     List<ListFoodAndDrinkToOrderingResponse> getAllFoodsAndDrinksByCinema(Integer cinemaId);
 
