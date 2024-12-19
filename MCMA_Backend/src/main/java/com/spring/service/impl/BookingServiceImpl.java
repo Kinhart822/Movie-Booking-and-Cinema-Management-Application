@@ -168,6 +168,7 @@ public class BookingServiceImpl implements BookingService {
                     formattedDatePublish,
                     movie.getTrailerLink(),
                     movie.getImageUrl(),
+                    movie.getBackgroundImageUrl(),
                     movieGenreNameList,
                     movieGenreImageUrls,
                     movieGenreDescriptions,
@@ -184,6 +185,100 @@ public class BookingServiceImpl implements BookingService {
         }
 
         return bookingMovieResponses;
+    }
+
+    @Override
+    public MovieResponse getAllInformationOfSelectedMovie(Integer movieId) {
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid movie"));
+
+        // Fetch Movie Genres
+        List<MovieGenre> movieGenres = movieGenreRepository.findMovieGenresByMovie(movie.getId());
+        List<String> movieGenreNameList = movieGenres.stream()
+                .map(movieGenre -> movieGenre.getMovieGenreDetail().getName())
+                .toList();
+        List<String> movieGenreImageUrls = movieGenres.stream()
+                .map(movieGenre -> movieGenre.getMovieGenreDetail().getImageUrl())
+                .toList();
+        List<String> movieGenreDescriptions = movieGenres.stream()
+                .map(movieGenre -> movieGenre.getMovieGenreDetail().getDescription())
+                .toList();
+
+        // Fetch Movie Performers
+        List<MoviePerformer> moviePerformers = moviePerformerRepository.findMoviePerformersByMovieId(movie.getId());
+        List<String> moviePerformerNameList = moviePerformers.stream()
+                .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getName())
+                .toList();
+
+        SimpleDateFormat formatterDate = new SimpleDateFormat("dd/MM/yyyy");
+        List<Date> moviePerformerDobList = moviePerformers.stream()
+                .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getDob())
+                .toList();
+        List<String> formatMoviePerformerDobList = new ArrayList<>();
+        for (Date dob : moviePerformerDobList) {
+            formatMoviePerformerDobList.add(formatterDate.format(dob));
+        }
+
+        List<PerformerSex> moviePerformerSex = moviePerformers.stream()
+                .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getPerformerSex())
+                .toList();
+        List<PerformerType> moviePerformerType = moviePerformers.stream()
+                .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getPerformerType())
+                .toList();
+
+        // Fetch Movie Rating Details
+        List<MovieRatingDetail> movieRatingDetails = movieRatingDetailRepository.findMovieRatingDetailsByMovieId(movie.getId());
+        List<String> movieRatingDetailNameList = movieRatingDetails.stream()
+                .map(MovieRatingDetail::getName)
+                .toList();
+        List<String> movieRatingDetailDescriptions = movieRatingDetails.stream()
+                .map(MovieRatingDetail::getDescription)
+                .toList();
+
+        // Format date
+        SimpleDateFormat publishDateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+        String formattedDatePublish = publishDateFormatter.format(movie.getDatePublish());
+
+        // Movie Respond
+        List<Comment> comments = commentRepository.findByMovieId(movie.getId());
+        List<String> contents = comments.stream()
+                .map(Comment::getContent)
+                .toList();
+
+        List<Rating> ratings = ratingRepository.findByMovieId(movie.getId());
+        OptionalDouble averageRating = ratings.stream()
+                .mapToDouble(Rating::getRatingStar)
+                .average();
+
+        double avg = 0;
+        if (averageRating.isPresent()) {
+            avg = averageRating.getAsDouble();
+            System.out.printf("Average rating: %s%n", avg);
+        } else {
+            System.out.println("No ratings available.");
+        }
+
+        return new MovieResponse(
+                movie.getId(),
+                movie.getName(),
+                movie.getLength(),
+                movie.getDescription(),
+                formattedDatePublish,
+                movie.getTrailerLink(),
+                movie.getImageUrl(),
+                movie.getBackgroundImageUrl(),
+                movieGenreNameList,
+                movieGenreImageUrls,
+                movieGenreDescriptions,
+                moviePerformerNameList,
+                formatMoviePerformerDobList,
+                moviePerformerSex,
+                moviePerformerType,
+                movieRatingDetailNameList,
+                movieRatingDetailDescriptions,
+                contents,
+                avg
+        );
     }
 
     @Override
@@ -314,9 +409,78 @@ public class BookingServiceImpl implements BookingService {
         DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
 
         for (MovieSchedule schedule : movieSchedules) {
+            List<MovieGenre> movieGenres = movieGenreRepository.findMovieGenresByMovie(schedule.getMovie().getId());
+            List<String> movieGenreNameList = movieGenres.stream()
+                    .map(movieGenre -> movieGenre.getMovieGenreDetail().getName())
+                    .toList();
+            List<String> movieGenreImageUrls = movieGenres.stream()
+                    .map(movieGenre -> movieGenre.getMovieGenreDetail().getImageUrl())
+                    .toList();
+            List<String> movieGenreDescriptions = movieGenres.stream()
+                    .map(movieGenre -> movieGenre.getMovieGenreDetail().getDescription())
+                    .toList();
+
+            // Fetch Movie Performers
+            List<MoviePerformer> moviePerformers = moviePerformerRepository.findMoviePerformersByMovieId(schedule.getMovie().getId());
+            List<String> moviePerformerNameList = moviePerformers.stream()
+                    .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getName())
+                    .toList();
+
+            List<PerformerType> moviePerformerType = moviePerformers.stream()
+                    .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getPerformerType())
+                    .toList();
+
+            // Fetch Movie Rating Details
+            List<MovieRatingDetail> movieRatingDetails = movieRatingDetailRepository.findMovieRatingDetailsByMovieId(schedule.getMovie().getId());
+            List<String> movieRatingDetailNameList = movieRatingDetails.stream()
+                    .map(MovieRatingDetail::getName)
+                    .toList();
+            List<String> movieRatingDetailDescriptions = movieRatingDetails.stream()
+                    .map(MovieRatingDetail::getDescription)
+                    .toList();
+
+            // Format date
+            SimpleDateFormat publishDateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+            String formattedDatePublish = publishDateFormatter.format(schedule.getMovie().getDatePublish());
+
+            // Movie Respond
+            List<Comment> comments = commentRepository.findByMovieId(schedule.getMovie().getId());
+            List<String> contents = comments.stream()
+                    .map(Comment::getContent)
+                    .toList();
+
+            List<Rating> ratings = ratingRepository.findByMovieId(schedule.getMovie().getId());
+            OptionalDouble averageRating = ratings.stream()
+                    .mapToDouble(Rating::getRatingStar)
+                    .average();
+
+            double avg = 0;
+            if (averageRating.isPresent()) {
+                avg = averageRating.getAsDouble();
+                System.out.printf("Average rating: %s%n", avg);
+            } else {
+                System.out.println("No ratings available.");
+            }
+
             String dayOfWeek = schedule.getStartTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
             ScheduleResponse scheduleResponse = new ScheduleResponse(
-                    movie.getName(),
+                    schedule.getMovie().getId(),
+                    schedule.getMovie().getName(),
+                    schedule.getMovie().getLength(),
+                    schedule.getMovie().getDescription(),
+                    formattedDatePublish,
+                    schedule.getMovie().getTrailerLink(),
+                    schedule.getMovie().getImageUrl(),
+                    schedule.getMovie().getBackgroundImageUrl(),
+                    movieGenreNameList,
+                    movieGenreImageUrls,
+                    movieGenreDescriptions,
+                    moviePerformerNameList,
+                    moviePerformerType,
+                    movieRatingDetailNameList,
+                    movieRatingDetailDescriptions,
+                    contents,
+                    avg,
                     cinema.getName(),
                     screen.getName(),
                     schedule.getId(),

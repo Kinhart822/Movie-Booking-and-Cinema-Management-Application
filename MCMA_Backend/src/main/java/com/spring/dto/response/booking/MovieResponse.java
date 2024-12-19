@@ -21,6 +21,7 @@ public class MovieResponse {
     private String publishedDate;
     private String trailerLink;
     private String imageUrl;
+    private String backgroundImageUrl;
 
     private List<String> movieGenreNameList;
     private List<String> imageUrlList;

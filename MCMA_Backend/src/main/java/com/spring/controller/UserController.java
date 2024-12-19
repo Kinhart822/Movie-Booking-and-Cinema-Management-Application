@@ -80,6 +80,12 @@ public class UserController {
         return ResponseEntity.ok(movieResponds);
     }
 
+    @GetMapping("/information/movieInformation/{movieId}")
+    public ResponseEntity<MovieResponse> getAllInformationOfSelectedMovie(@PathVariable Integer movieId) {
+        MovieResponse movieRespond = bookingService.getAllInformationOfSelectedMovie(movieId);
+        return ResponseEntity.ok(movieRespond);
+    }
+
     @GetMapping("/booking/allCitiesByMovie/{movieId}")
     public ResponseEntity<List<CityResponse>> getAllCitiesByMovie(@PathVariable Integer movieId) {
         List<CityResponse> cityResponses = bookingService.getAllCitiesBySelectedMovie(movieId);
