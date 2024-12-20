@@ -1,6 +1,6 @@
 package vn.edu.usth.mcma.backend.service;
 
-import constants.EntityStatus;
+import constants.CommonStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +30,7 @@ public class CityService extends AbstractService<City, Long> {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         City city = new City();
         city.setName(request.getName());
-        city.setStatus(EntityStatus.CREATED.getStatus());
+        city.setStatus(CommonStatus.ACTIVE.getStatus());
         city.setCreatedBy(userId);
         city.setLastModifiedBy(userId);
         cityRepository.save(city);
@@ -51,7 +51,7 @@ public class CityService extends AbstractService<City, Long> {
     public ApiResponse deleteCity(Long id, HttpServletRequest hsRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         City city = findById(id);
-        city.setStatus(EntityStatus.DELETED.getStatus());
+        city.setStatus(CommonStatus.DELETED.getStatus());
         city.setLastModifiedBy(userId);
         city.setLastModifiedDate(Instant.now());
         cityRepository.save(city);

@@ -1,7 +1,7 @@
 package vn.edu.usth.mcma.backend.service;
 
 import constants.ApiResponseCode;
-import constants.EntityStatus;
+import constants.CommonStatus;
 import constants.UserType;
 import jakarta.transaction.Transactional;
 import org.apache.commons.text.RandomStringGenerator;
@@ -63,7 +63,7 @@ public class UserService extends AbstractService<User, Long> {
     public Optional<User> resetPasswordRequest(String email, Integer type) {
         return userRepository
                 .findOneByEmailIgnoreCaseAndUserType(email, type)
-                .filter(u -> u.getStatus().equals(EntityStatus.CREATED.getStatus()))
+                .filter(u -> u.getStatus().equals(CommonStatus.ACTIVE.getStatus()))
                 .map(u -> {
                     u.setResetKey(numericGenerator.generate(6));
                     u.setResetDate(Instant.now());

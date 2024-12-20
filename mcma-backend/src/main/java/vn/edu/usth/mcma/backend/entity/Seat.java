@@ -25,4 +25,6 @@ public class Seat extends AbstractAuditing implements Serializable {
     private Integer typeId;
     @Column
     private String name;
+    @Column
+    private Boolean isAvailable;
 }

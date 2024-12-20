@@ -1,6 +1,6 @@
 package vn.edu.usth.mcma.backend.service;
 
-import constants.EntityStatus;
+import constants.CommonStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +33,7 @@ public class FoodService extends AbstractService<Food, Long> {
         food.setImageUrl(request.getImageUrl());
         food.setSize(request.getSize());
         food.setPrice(request.getPrice());
-        food.setStatus(EntityStatus.CREATED.getStatus());
+        food.setStatus(CommonStatus.ACTIVE.getStatus());
         food.setCreatedBy(userId);
         food.setLastModifiedBy(userId);
         foodRepository.save(food);
@@ -58,7 +58,7 @@ public class FoodService extends AbstractService<Food, Long> {
     public ApiResponse deleteFood(Long id, HttpServletRequest hsRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         Food food = findById(id);
-        food.setStatus(EntityStatus.DELETED.getStatus());
+        food.setStatus(CommonStatus.DELETED.getStatus());
         food.setLastModifiedBy(userId);
         food.setLastModifiedDate(Instant.now());
         foodRepository.save(food);

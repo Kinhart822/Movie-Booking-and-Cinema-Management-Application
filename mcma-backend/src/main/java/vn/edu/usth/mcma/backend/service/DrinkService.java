@@ -1,6 +1,6 @@
 package vn.edu.usth.mcma.backend.service;
 
-import constants.EntityStatus;
+import constants.CommonStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +34,7 @@ public class DrinkService extends AbstractService<Drink, Long> {
         drink.setSize(request.getSize());
         drink.setVolume(request.getVolume());
         drink.setPrice(request.getPrice());
-        drink.setStatus(EntityStatus.CREATED.getStatus());
+        drink.setStatus(CommonStatus.ACTIVE.getStatus());
         drink.setCreatedBy(userId);
         drink.setLastModifiedBy(userId);
         drinkRepository.save(drink);
@@ -60,7 +60,7 @@ public class DrinkService extends AbstractService<Drink, Long> {
     public ApiResponse deleteDrink(Long id, HttpServletRequest hsRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         Drink drink = findById(id);
-        drink.setStatus(EntityStatus.DELETED.getStatus());
+        drink.setStatus(CommonStatus.DELETED.getStatus());
         drink.setLastModifiedBy(userId);
         drink.setLastModifiedDate(Instant.now());
         drinkRepository.save(drink);

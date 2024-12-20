@@ -1,6 +1,6 @@
 package vn.edu.usth.mcma.backend.service;
 
-import constants.EntityStatus;
+import constants.CommonStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +30,7 @@ public class CinemaService extends AbstractService<Cinema, Long> {
         Cinema cinema = new Cinema();
         cinema.setCityId(request.getCityId());
         cinema.setName(request.getName());
-        cinema.setStatus(EntityStatus.CREATED.getStatus());
+        cinema.setStatus(CommonStatus.ACTIVE.getStatus());
         cinema.setCreatedBy(userId);
         cinema.setLastModifiedBy(userId);
         cinemaRepository.save(cinema);
@@ -52,7 +52,7 @@ public class CinemaService extends AbstractService<Cinema, Long> {
     public ApiResponse deleteCinema(Long id, HttpServletRequest hsRequest) {
         Long userId = jwtUtil.getUserIdFromToken(hsRequest);
         Cinema cinema = findById(id);
-        cinema.setStatus(EntityStatus.DELETED.getStatus());
+        cinema.setStatus(CommonStatus.DELETED.getStatus());
         cinema.setLastModifiedBy(userId);
         cinema.setLastModifiedDate(Instant.now());
         cinemaRepository.save(cinema);

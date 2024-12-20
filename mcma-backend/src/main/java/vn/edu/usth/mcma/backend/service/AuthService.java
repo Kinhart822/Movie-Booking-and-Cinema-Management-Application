@@ -1,7 +1,7 @@
 package vn.edu.usth.mcma.backend.service;
 
 import constants.ApiResponseCode;
-import constants.EntityStatus;
+import constants.CommonStatus;
 import constants.UserType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -72,7 +72,7 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.setAddress(signUpRequest.getAddress());
         user.setUserType(type);
-        user.setStatus(EntityStatus.CREATED.getStatus());
+        user.setStatus(CommonStatus.ACTIVE.getStatus());
         Instant now = Instant.now();
         user.setCreatedDate(now);
         user.setLastModifiedDate(now);
