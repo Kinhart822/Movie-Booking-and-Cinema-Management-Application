@@ -10,5 +10,5 @@ import java.util.Map;
 
 @Repository
 public interface SeatTypeRepository extends JpaRepository<SeatType, Long> {
-    List<SeatType> findAllByStatusIn(List<Long> statuses);
+    List<SeatType> findAllByStatusIn(List<Integer> statuses);
 }

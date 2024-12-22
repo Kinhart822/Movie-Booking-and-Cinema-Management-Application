@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public class SeatPositionValidate implements Comparable<SeatPositionValidate> {
     private int row;
     private int col;
-    private long typeId;
+    private int typeId;
     @Builder.Default
     private boolean isChecked = false;
 

@@ -3,12 +3,15 @@ package vn.edu.usth.mcma.backend.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
 
 @Embeddable
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class SeatPK implements Serializable {
     @Serial
