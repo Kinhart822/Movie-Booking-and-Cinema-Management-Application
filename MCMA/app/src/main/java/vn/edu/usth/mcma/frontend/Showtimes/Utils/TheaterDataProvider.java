@@ -1,16 +1,12 @@
 package vn.edu.usth.mcma.frontend.Showtimes.Utils;
 
 import android.app.Activity;
-import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,7 +14,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ViewCityResponse;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetAllCitiesAPI;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.BookingProcessAPIs.GetAllCitiesAPI;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
 
@@ -27,7 +23,7 @@ public class TheaterDataProvider {
         return Arrays.asList("TPHCM", "Hà Nội", "Huế", "Đà Nẵng", "Cần Thơ", "Nha Trang", "Đà Lạt", "Vũng Tàu");
     }
 
-    private static final String BASE_URL = "http://192.168.1.103:8080/";
+    private static final String BASE_URL = "http://192.168.12.215:8080/";
     private static GetAllCitiesAPI apiService;
 
     static {

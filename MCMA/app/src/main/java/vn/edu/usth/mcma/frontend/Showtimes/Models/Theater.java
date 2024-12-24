@@ -10,6 +10,12 @@ public class Theater implements Serializable {
     private String city;
     private int imageResId;
 
+    public Theater(int id, String name, String address) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+    }
+
     public Theater(int id, String name, String address, String city, int imageResId) {
         this.id = id;
         this.name = name;

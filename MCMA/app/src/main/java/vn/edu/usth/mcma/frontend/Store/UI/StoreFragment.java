@@ -130,7 +130,7 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
                     updateComboList(comboItems);
                 } else {
                     Log.e("StoreFragment", "Failed to load combos: " + response.message());
-                    Toast.makeText(requireActivity(), "Failed to load combo items", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), "No available combos", Toast.LENGTH_SHORT).show();
                     showNoDataView();
                 }
             }
@@ -230,7 +230,8 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
             @Override
             public void onFailure(Call<ViewCinemaResponse> call, Throwable t) {
                 Log.e("StoreFragment", "API Call Failed: " + t.getMessage(), t);
-                Toast.makeText(requireActivity(), "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();            }
+                Toast.makeText(requireActivity(), "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
         });
     }
 

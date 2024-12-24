@@ -47,6 +47,7 @@ public class NowShowingFragment extends Fragment {
             @Override
             public void onBookingClicked(int position) {
                 openMovieBookingActivity(position);
+
             }
         });
         recyclerView.setAdapter(adapter);
@@ -65,6 +66,7 @@ public class NowShowingFragment extends Fragment {
             @Override
             public void onResponse(Call<List<NowShowingResponse>> call, Response<List<NowShowingResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
+
                     Log.d("NowShowingFragment", "Movies received: " + response.body().size());
                     updateMovieList(response.body());
                 } else {
@@ -116,9 +118,11 @@ public class NowShowingFragment extends Fragment {
     }
 
     private void openMovieBookingActivity(int position) {
+
         NowShowingResponse selectedFilm = nowShowingResponseList.get(position);
         Intent intent = new Intent(requireContext(), MovieBookingActivity.class);
         intent.putExtra("MOVIE_TITLE", selectedFilm.getMovieName());
+        intent.putExtra("MOVIE_ID", selectedFilm.getMovieId());
         startActivity(intent);
     }
 }

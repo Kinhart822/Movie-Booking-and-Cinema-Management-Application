@@ -94,15 +94,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- Dates Section -->
-            <TextView
-                android:id="@+id/select_date_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="Select Date"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
