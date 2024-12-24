@@ -115,11 +115,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private void setupBookingButtons(String movieTitle) {
         Button bookingButton = findViewById(R.id.bookingButton);
-
+        MovieDetails movieDetails = MovieDataProvider.getMovieDetails(movieTitle);
         bookingButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, MovieBookingActivity.class);
             intent.putExtra("MOVIE_TITLE", movieTitle);
-            MovieDetails movieDetails = MovieDataProvider.getMovieDetails(movieTitle);
             if (movieDetails != null) {
                 intent.putExtra("MOVIE_BANNER", movieDetails.getBannerImageResId());
             }

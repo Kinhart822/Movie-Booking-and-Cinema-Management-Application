@@ -87,8 +87,9 @@ public class ComboSelectionActivity extends AppCompatActivity {
 
             // Theater name handling
             Theater selectedTheater = (Theater) getIntent().getSerializableExtra(EXTRA_THEATER);
+            String theaterName = getIntent().getStringExtra("THEATER_NAME");
             if (selectedTheater != null && theaterNameTV != null) {
-                theaterNameTV.setText(selectedTheater.getName());
+                theaterNameTV.setText(theaterName != null ? theaterName : selectedTheater.getName());
             }
 
             // Movie name handling
@@ -179,6 +180,7 @@ public class ComboSelectionActivity extends AppCompatActivity {
         theaterNameTV = findViewById(R.id.theater_name);
         releaseDateTV = findViewById(R.id.movie_release_date);
         screenRoomTV = findViewById(R.id.screen_number);
+        movieNameTV = findViewById(R.id.movie_name2);
         if (checkoutButton == null) {
             Log.e("ComboSelectionActivity", "checkoutButton is null");
         }
@@ -259,12 +261,15 @@ public class ComboSelectionActivity extends AppCompatActivity {
             intent.putParcelableArrayListExtra("TICKET_ITEMS", new ArrayList<>(ticketItems));
             intent.putExtra("SELECTED_MOVIE", getIntent().getSerializableExtra("SELECTED_MOVIE"));
             intent.putExtra("SELECTED_THEATER", getIntent().getSerializableExtra("SELECTED_THEATER"));
+            intent.putExtra("THEATER_NAME", getIntent().getStringExtra("THEATER_NAME"));
             intent.putExtra("SELECTED_SHOWTIME", getIntent().getStringExtra("SELECTED_SHOWTIME"));
+            intent.putExtra("SELECTED_SCREEN_ROOM", getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
             intent.putParcelableArrayListExtra("SELECTED_SEATS", new ArrayList<>(selectedSeats));
             intent.putParcelableArrayListExtra("SELECTED_COMBO_ITEMS", new ArrayList<>(selectedComboItems));
             intent.putExtra("TOTAL_PRICE", totalPrice);
             int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
             intent.putExtra("MOVIE_BANNER", movieBannerResId);
+            intent.putExtra("MOVIE_TITLE", getIntent().getStringExtra("MOVIE_TITLE"));
             startActivity(intent);
         });
     }

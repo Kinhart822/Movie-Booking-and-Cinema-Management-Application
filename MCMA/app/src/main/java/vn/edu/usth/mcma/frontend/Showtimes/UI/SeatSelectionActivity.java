@@ -172,7 +172,12 @@ public class SeatSelectionActivity extends AppCompatActivity {
         Button checkoutButton = findViewById(R.id.checkout_button);
         checkoutButton.setOnClickListener(v -> {
             Set<Seat> selectedSeats = seatAdapter.getSelectedSeats();
-            if (selectedSeats.size() != guestQuantity) {
+            // Calculate seat count with special handling for COUPLE seats
+            int seatCount = selectedSeats.stream()
+                    .mapToInt(seat -> seat.getType() == SeatType.COUPLE ? 2 : 1)
+                    .sum();
+
+            if (seatCount != guestQuantity) {
                 Toast.makeText(this, "Please choose the correct number of seats", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -187,18 +192,18 @@ public class SeatSelectionActivity extends AppCompatActivity {
             Intent intent = new Intent(this, ComboSelectionActivity.class);
 
             intent.putParcelableArrayListExtra("TICKET_ITEMS", new ArrayList<>(ticketItems));
-            // Pass all necessary extras
             intent.putExtra(ComboSelectionActivity.EXTRA_SEAT_PRICE, totalPrice);
             intent.putExtra(ComboSelectionActivity.EXTRA_SEAT_COUNT, guestQuantity);
             intent.putParcelableArrayListExtra(ComboSelectionActivity.EXTRA_SELECTED_SEATS, new ArrayList<>(selectedSeats));
             // Pass through extras from previous activities
             intent.putExtra(ComboSelectionActivity.EXTRA_THEATER, getIntent().getSerializableExtra("SELECTED_THEATER"));
+            intent.putExtra("THEATER_NAME", getIntent().getStringExtra("THEATER_NAME"));
             intent.putExtra(ComboSelectionActivity.EXTRA_MOVIE, getIntent().getSerializableExtra("SELECTED_MOVIE"));
             intent.putExtra("SELECTED_SHOWTIME", getIntent().getStringExtra("SELECTED_SHOWTIME"));
             intent.putExtra("SELECTED_SCREEN_ROOM", getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
             int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
             intent.putExtra("MOVIE_BANNER", movieBannerResId);
-
+            intent.putExtra("MOVIE_TITLE", getIntent().getStringExtra("MOVIE_TITLE"));
             startActivity(intent);
         });
     }
@@ -212,8 +217,10 @@ public class SeatSelectionActivity extends AppCompatActivity {
         // Get selected seats from adapter
         Set<Seat> selectedSeats = seatAdapter.getSelectedSeats();
 
-        // Update number of seats
-        int seatCount = selectedSeats.size();
+        // Update number of seats with special handling for couple seats
+        int seatCount = selectedSeats.stream()
+                .mapToInt(seat -> seat.getType() == SeatType.COUPLE ? 2 : 1)
+                .sum();
         noOfSeatsTV.setText(seatCount + " ghế");
 
         // Calculate seat price

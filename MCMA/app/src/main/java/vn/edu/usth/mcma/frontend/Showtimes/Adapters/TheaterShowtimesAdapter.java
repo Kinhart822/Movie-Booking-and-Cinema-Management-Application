@@ -176,7 +176,6 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
 
         private void populateShowtimes(Theater theater) {
             showtimesContainer.removeAllViews();
-            // Get showtimes based on theater type
             List<String> showtimes = new ArrayList<>();
             List<Movie> movies = TheaterDataProvider.getMoviesForTheater(selectedDate, (Activity) itemView.getContext());
 

@@ -63,6 +63,46 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
         }
     }
 
+    private boolean canSelectCoupleSeat() {
+        // Calculate max couple seats based on guest quantity
+        int maxCoupleSeatCount;
+        if (maxSeats == 1) {
+            // If only 1 guest, cannot select couple seats
+            return false;
+        } else if (maxSeats % 2 == 0) {
+            // If even number of guests, can select half as couple seats
+            maxCoupleSeatCount = maxSeats / 2;
+        } else {
+            // If odd number of guests, can select (n-1)/2 couple seats
+            maxCoupleSeatCount = (maxSeats - 1) / 2;
+        }
+
+        // Count currently selected couple seats
+        long currentCoupleSeatCount = selectedSeats.stream()
+                .filter(seat -> seat.getType() == SeatType.COUPLE)
+                .count();
+
+        return currentCoupleSeatCount < maxCoupleSeatCount;
+    }
+
+    private boolean canSelectSeat(Seat seat) {
+        // Current selected seats count
+        int currentSelectedCount = selectedSeats.size();
+
+        // Special handling for couple seats
+        if (seat.getType() == SeatType.COUPLE) {
+            // Check if guest quantity allows couple seats
+            if (maxSeats == 1) return false;
+
+            // Check if can select more couple seats
+            return canSelectCoupleSeat() &&
+                    (currentSelectedCount + 2 <= maxSeats);
+        }
+
+        // For standard and VIP seats
+        return currentSelectedCount + 1 <= maxSeats;
+    }
+
     private void updateSeatBackground(SeatViewHolder holder, Seat seat) {
         // Default background based on seat type
         int backgroundResId = seat.getType().getDrawableResId();
@@ -80,9 +120,12 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
         if (selectedSeats.contains(seat)) {
             selectedSeats.remove(seat);
         } else {
-            // Prevent selecting more than max kid seats
-            if (selectedSeats.size() < maxSeats) {
+            // Check if seat can be selected
+            if (canSelectSeat(seat)) {
                 selectedSeats.add(seat);
+            } else {
+                // Optional: Show toast or message about seat selection limit
+                return;
             }
         }
 

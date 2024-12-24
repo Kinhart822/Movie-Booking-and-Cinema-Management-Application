@@ -8,6 +8,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -283,10 +284,6 @@ public class MovieBookingActivity extends AppCompatActivity {
 //        }
 //    }
 
-
-
-
-
     // Add new method to MovieBookingActivity.java
     private void showQuantityTicketDialog(Theater theater, String showtime, String screenRoom) {
         QuantityTicketDialog dialog = new QuantityTicketDialog(this, new QuantityTicketDialog.OnDialogActionListener() {
@@ -306,8 +303,10 @@ public class MovieBookingActivity extends AppCompatActivity {
                 intent.putExtra(TicketSelectionActivity.EXTRA_MOVIE, selectedMovie);
                 intent.putExtra("SELECTED_SHOWTIME", showtime);
                 intent.putExtra("SELECTED_SCREEN_ROOM", screenRoom);
+//                intent.putExtra("THEATER_NAME", theater.getName());
                 int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
                 intent.putExtra("MOVIE_BANNER", movieBannerResId);
+//                intent.putExtra("MOVIE_TITLE", movieTitle);
                 startActivity(intent);
             }
 

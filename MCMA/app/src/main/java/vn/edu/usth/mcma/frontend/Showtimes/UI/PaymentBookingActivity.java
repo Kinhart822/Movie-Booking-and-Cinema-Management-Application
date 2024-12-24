@@ -172,42 +172,47 @@ public class PaymentBookingActivity extends AppCompatActivity {
     private void retrieveIntentExtras() {
         selectedMovie = (Movie) getIntent().getSerializableExtra("SELECTED_MOVIE");
         selectedTheater = (Theater) getIntent().getSerializableExtra("SELECTED_THEATER");
+        String theaterName = getIntent().getStringExtra("THEATER_NAME");
+        // Use the passed theater name if available
+        if (selectedTheater != null) {
+            selectedTheater.setName(theaterName != null ? theaterName : selectedTheater.getName());
+        }
         selectedSeats = getIntent().getParcelableArrayListExtra("SELECTED_SEATS");
         selectedComboItems = getIntent().getParcelableArrayListExtra("SELECTED_COMBO_ITEMS");
         totalPrice = getIntent().getDoubleExtra("TOTAL_PRICE", 0);
     }
     private void initializeViews()   {
         // Movie Details
+        TextView screenNumberTV = findViewById(R.id.screen_number);
         TextView movieTitleTV = findViewById(R.id.movieTitle);
         ImageView moviePosterIV = findViewById(R.id.moviePoster);
         TextView theaterNameTV = findViewById(R.id.theaterName);
         buttonCoupon = findViewById(R.id.coupon_button);
         totalPriceTV = findViewById(R.id.total_price);
         totalPriceCouponTV = findViewById(R.id.total_price_coupon);
+        String selectedScreenRoom = getIntent().getStringExtra("SELECTED_SCREEN_ROOM");
+        if (selectedScreenRoom != null) {
+            screenNumberTV.setText(selectedScreenRoom);
+        } else {
+            screenNumberTV.setText("Screen 1"); // Default fallback
+        }
+        // Retrieve movie title
+        String movieTitle = getIntent().getStringExtra("MOVIE_TITLE");
+        movieTitleTV.setText(movieTitle);
 
-        // Set movie title and poster
-        if (selectedMovie != null) {
-            // Always prefer the passed banner resource ID
-            int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
-
-            if (movieBannerResId != 0) {
-                // Use the banner passed through intent
-                moviePosterIV.setImageResource(movieBannerResId);
-            } else {
-                // Fallback to MovieDataProvider if no banner passed
-                MovieDetails movieDetails = MovieDataProvider.getMovieDetails(selectedMovie.getTitle());
-                if (movieDetails != null) {
-                    moviePosterIV.setImageResource(movieDetails.getBannerImageResId());
-                }
-            }
-
-            // Set movie title from selected movie
-            movieTitleTV.setText(selectedMovie.getTitle());
+        // Retrieve and set movie poster
+        int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
+        if (movieBannerResId != 0) {
+            moviePosterIV.setImageResource(movieBannerResId);
         }
 
-        // Set theater name
+        // Retrieve and set theater name
         if (selectedTheater != null) {
             theaterNameTV.setText(selectedTheater.getName());
+        } else {
+            // Fallback to intent extra
+            String theaterName = getIntent().getStringExtra("THEATER_NAME");
+            theaterNameTV.setText(theaterName != null ? theaterName : "Unknown Theater");
         }
         // Set date and showtime
         setDateAndShowtime();

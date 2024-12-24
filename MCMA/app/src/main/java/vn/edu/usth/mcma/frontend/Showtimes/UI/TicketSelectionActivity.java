@@ -254,6 +254,7 @@ public class TicketSelectionActivity extends AppCompatActivity {
     private TextView theaterNameTV;
     private TextView releaseDateTV;
     private TextView screenRoomTV;
+    private Movie selectedMovie;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -274,6 +275,7 @@ public class TicketSelectionActivity extends AppCompatActivity {
         screenRoomTV = findViewById(R.id.screen_number);
         totalTicketPriceTV = findViewById(R.id.total_price_ticket);
         totalTicketCountTV = findViewById(R.id.total_ticket_count);
+        movieNameTV = findViewById(R.id.movie_name2);
     }
 
     private void handleIntentExtras() {
@@ -281,8 +283,9 @@ public class TicketSelectionActivity extends AppCompatActivity {
 
         // Theater name handling
         Theater selectedTheater = (Theater) getIntent().getSerializableExtra(EXTRA_THEATER);
+        String theaterName = getIntent().getStringExtra("THEATER_NAME");
         if (selectedTheater != null && theaterNameTV != null) {
-            theaterNameTV.setText(selectedTheater.getName());
+            theaterNameTV.setText(theaterName != null ? theaterName : selectedTheater.getName());
         }
 
         // Movie name handling
@@ -385,11 +388,13 @@ public class TicketSelectionActivity extends AppCompatActivity {
                 intent.putParcelableArrayListExtra("TICKET_ITEMS", new ArrayList<>(ticketAdapter.getSelectedTicketItems()));
                 // Pass other extras as you were doing before
                 intent.putExtra("SELECTED_THEATER", getIntent().getSerializableExtra(EXTRA_THEATER));
+                intent.putExtra("THEATER_NAME", getIntent().getStringExtra("THEATER_NAME"));
                 intent.putExtra("SELECTED_MOVIE", getIntent().getSerializableExtra(EXTRA_MOVIE));
                 intent.putExtra("SELECTED_SHOWTIME", getIntent().getStringExtra("SELECTED_SHOWTIME"));
                 intent.putExtra("SELECTED_SCREEN_ROOM", getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
                 int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
                 intent.putExtra("MOVIE_BANNER", movieBannerResId);
+                intent.putExtra("MOVIE_TITLE", getIntent().getStringExtra("MOVIE_TITLE"));
                 startActivity(intent);
             } else {
                 Toast.makeText(this, "Please order the correct number of seats", Toast.LENGTH_SHORT).show();
