@@ -23,7 +23,7 @@ public class TheaterDataProvider {
         return Arrays.asList("TPHCM", "Hà Nội", "Huế", "Đà Nẵng", "Cần Thơ", "Nha Trang", "Đà Lạt", "Vũng Tàu");
     }
 
-    private static final String BASE_URL = "http://192.168.12.215:8080/";
+    private static final String BASE_URL = "http://10.10.12.183:8080/";
     private static GetAllCitiesAPI apiService;
 
     static {

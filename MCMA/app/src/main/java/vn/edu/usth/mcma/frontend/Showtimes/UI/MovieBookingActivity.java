@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -114,7 +115,7 @@ public class MovieBookingActivity extends AppCompatActivity {
             public void onResponse(Call<List<CinemaResponse>> call, Response<List<CinemaResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<CinemaResponse> cinemas = response.body();
-//                    updateTheatersList(cinemas); // Populate theaters dynamically
+                    updateTheatersList(cinemas); // Populate theaters dynamically
                 } else {
                     Toast.makeText(MovieBookingActivity.this, "Failed to fetch cinemas", Toast.LENGTH_SHORT).show();
                 }
@@ -134,6 +135,7 @@ public class MovieBookingActivity extends AppCompatActivity {
         ColorStateList textColorStateList = ContextCompat.getColorStateList(this, R.color.button_text_selector);
 
         for (CityResponse cityResponse : cityResponses) {
+            Integer cityId = cityResponse.getCityId();
             String city = cityResponse.getCityName(); // Use cityName from API response
 
             Button cityButton = new Button(this);
@@ -163,14 +165,16 @@ public class MovieBookingActivity extends AppCompatActivity {
                 cityButton.setSelected(true);
                 selectedCityButton = cityButton;
                 selectedCity = city;
+
+                if (cityId != -1) {
+                    fetchCinemasByCity(cityId);  // Fetch cinemas for selected city
+                }
 //                updateTheatersList();
             });
 
             citiesContainer.addView(cityButton);
         }
     }
-
-
 
     private void setupToolbarAndBanner() {
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -220,12 +224,21 @@ public class MovieBookingActivity extends AppCompatActivity {
             durationTextView.setText("1 tiếng");
         }
     }
+    private void updateTheatersList(List<CinemaResponse> cinemas) {
+        List<Theater> cityTheaters = new ArrayList<>();
 
-//    private void updateTheatersList() {
-//        // Pass the current theater type when getting theaters
-//        List<Theater> cityTheaters = TheaterDataProvider.getTheatersForCity(selectedCity);
-//        theaterAdapter.setTheaters(cityTheaters, selectedDate, movieTitle);
-//    }
+        for (CinemaResponse cinema : cinemas) {
+            Theater theater = new Theater(
+                    cinema.getCinemaId(),
+                    cinema.getCinemaName(),
+                    cinema.getCinemaAddress()
+            );
+            cityTheaters.add(theater);
+        }
+
+        theaterAdapter.setTheaters(cityTheaters, selectedDate, movieTitle);
+    }
+
 
 
     private void setupTheatersList() {
@@ -235,54 +248,11 @@ public class MovieBookingActivity extends AppCompatActivity {
             public void onShowtimeClick(Theater theater, String showtime, String screenRoom) {
                 showQuantityTicketDialog(theater, showtime, screenRoom);
             }
-        });
+        },movieId);
         theatersRecyclerView.setAdapter(theaterAdapter);
         theatersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-//    private void setupDateButtons() {
-//        LinearLayout datesContainer = findViewById(R.id.dates_container);
-//        SimpleDateFormat dayFormat = new SimpleDateFormat("E\ndd/MM", Locale.getDefault());
-//        Calendar calendar = Calendar.getInstance();
-//
-//        ColorStateList textColorStateList = ContextCompat.getColorStateList(this, R.color.button_text_selector);
-//
-//        for (int i = 0; i < 7; i++) {
-//            Button dateButton = new Button(this);
-//            dateButton.setText(dayFormat.format(calendar.getTime()));
-//
-//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-//                    LinearLayout.LayoutParams.WRAP_CONTENT,
-//                    LinearLayout.LayoutParams.WRAP_CONTENT
-//            );
-//            params.setMargins(8, 0, 8, 0);
-//            dateButton.setLayoutParams(params);
-//            dateButton.setBackground(getDrawable(R.drawable.date_button_selector));
-//            dateButton.setTextColor(textColorStateList);
-//            dateButton.setAllCaps(false);
-//            dateButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-//
-//            // Select first date by default
-//            if (i == 0) {
-//                dateButton.setSelected(true);
-//                selectedDateButton = dateButton;
-//                selectedDate = dayFormat.format(calendar.getTime());
-//            }
-//
-//            dateButton.setOnClickListener(v -> {
-//                if (selectedDateButton != null) {
-//                    selectedDateButton.setSelected(false);
-//                }
-//                dateButton.setSelected(true);
-//                selectedDateButton = dateButton;
-//                selectedDate = dateButton.getText().toString();
-//                updateTheatersList();
-//            });
-//
-//            datesContainer.addView(dateButton);
-//            calendar.add(Calendar.DAY_OF_YEAR, 1);
-//        }
-//    }
 
     // Add new method to MovieBookingActivity.java
     private void showQuantityTicketDialog(Theater theater, String showtime, String screenRoom) {
