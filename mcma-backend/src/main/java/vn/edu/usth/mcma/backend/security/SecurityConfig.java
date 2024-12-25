@@ -20,6 +20,7 @@ import org.springframework.security.config.annotation.web.configurers.CorsConfig
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,11 +28,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import vn.edu.usth.mcma.backend.service.UserService;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Configuration
 @EnableWebSecurity
@@ -115,11 +115,12 @@ public class SecurityConfig {
     @Bean
     public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
         return (request, response, authentication) -> {
-            String role = authentication.getAuthorities().stream()
+            Optional<String> roleOptional = authentication.getAuthorities().stream()
                     .findFirst()
-                    .get()
-                    .getAuthority();
+                    .map(GrantedAuthority::getAuthority);
 
+            String role = roleOptional.orElse(null);
+            assert role != null;
             if (role.equals(UserType.USER.name())) {
                 response.sendRedirect("/api/v1/user");
             } else if (role.equals(UserType.ADMIN.name())) {

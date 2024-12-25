@@ -7,7 +7,6 @@ import vn.edu.usth.mcma.backend.entity.Seat;
 import vn.edu.usth.mcma.backend.entity.SeatPK;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.repository.SeatRepository;
-import vn.edu.usth.mcma.backend.security.JwtUtil;
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ public class SeatService extends AbstractService<Seat, SeatPK> {
     private final SeatRepository seatRepository;
     private final ScreenService screenService;
 
-    public SeatService(SeatRepository seatRepository, JwtUtil jwtUtil, ScreenService screenService) {
+    public SeatService(SeatRepository seatRepository, ScreenService screenService) {
         super(seatRepository);
         this.seatRepository = seatRepository;
         this.screenService = screenService;
