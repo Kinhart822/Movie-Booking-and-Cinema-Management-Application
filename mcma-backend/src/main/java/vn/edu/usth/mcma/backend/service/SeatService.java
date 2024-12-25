@@ -1,6 +1,5 @@
 package vn.edu.usth.mcma.backend.service;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.SeatMapRequest;
@@ -25,7 +24,6 @@ public class SeatService extends AbstractService<Seat, SeatPK> {
     }
 
     public ApiResponse createSeatMap(SeatMapRequest request) {
-        Long userId = jwtUtil.getUserIdFromToken();
         List<Seat> seats = request
                 .getNamedSeatPositions() // sorted btw
                 .stream()

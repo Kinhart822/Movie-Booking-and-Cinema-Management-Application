@@ -1,6 +1,5 @@
 package vn.edu.usth.mcma.backend.controller.admin;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
