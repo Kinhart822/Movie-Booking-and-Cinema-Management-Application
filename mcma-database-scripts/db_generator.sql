@@ -244,18 +244,6 @@ create table if not exists mcma.seat
     last_modified_date timestamp default utc_timestamp() null,
     primary key (screen_id, row, col)
 );
-create table if not exists mcma.seat_type
-(
-    id                 bigint unsigned auto_increment
-        primary key,
-    name               varchar(20)                       null,
-    description        text                              null,
-    status             tinyint                           null comment '-1, 1',
-    created_by         bigint unsigned                   null,
-    last_modified_by   bigint unsigned                   null,
-    created_date       timestamp default utc_timestamp() null,
-    last_modified_date timestamp default utc_timestamp() null
-);
 create table if not exists mcma.token
 (
     id            bigint unsigned auto_increment
