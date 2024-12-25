@@ -18,8 +18,8 @@ import java.util.List;
 public class ScreenController {
     private final ScreenService screenService;
     @PostMapping("/screen")
-    public ApiResponse createScreen(@RequestBody ScreenRequest request, HttpServletRequest hsRequest) {
-        return screenService.createScreen(request, hsRequest);
+    public ApiResponse createScreen(@RequestBody ScreenRequest request) {
+        return screenService.createScreen(request);
     }
     @GetMapping("/screen")
     public List<Screen> findAll(@RequestParam String query, @PageableDefault Pageable pageable) {
@@ -30,11 +30,11 @@ public class ScreenController {
         return screenService.findById(id);
     }
     @PutMapping("/screen/{id}")
-    public ApiResponse updateScreen(@PathVariable Long id, @RequestBody ScreenRequest request, HttpServletRequest hsRequest) {
-        return screenService.updateScreen(id, request, hsRequest);
+    public ApiResponse updateScreen(@PathVariable Long id, @RequestBody ScreenRequest request) {
+        return screenService.updateScreen(id, request);
     }
     @DeleteMapping("/screen/{id}")
-    public ApiResponse deleteScreen(@PathVariable Long id, HttpServletRequest hsRequest) {
-        return screenService.deleteScreen(id, hsRequest);
+    public ApiResponse deleteScreen(@PathVariable Long id) {
+        return screenService.deleteScreen(id);
     }
 }

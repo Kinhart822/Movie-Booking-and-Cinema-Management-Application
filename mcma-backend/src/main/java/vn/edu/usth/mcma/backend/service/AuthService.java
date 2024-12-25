@@ -56,7 +56,7 @@ public class AuthService {
     public ApiResponse signUp(SignUpRequest signUpRequest) {
         Integer type = signUpRequest.getType();
         if (type != UserType.ADMIN.getValue() && type != UserType.USER.getValue()) {
-            throw new BusinessException(ApiResponseCode.ILLEGAL_TYPE);
+            throw new BusinessException(ApiResponseCode.INVALID_TYPE);
         }
         String email = signUpRequest.getEmail();
         if (userService.checkEmailExistence(email)) {
@@ -141,7 +141,7 @@ public class AuthService {
     public ApiResponse resetPasswordRequest(ResetPasswordRequest request) {
         Integer type = request.getType();
         if (type != UserType.ADMIN.getValue() && type != UserType.USER.getValue()) {
-            throw new BusinessException(ApiResponseCode.ILLEGAL_TYPE);
+            throw new BusinessException(ApiResponseCode.INVALID_TYPE);
         }
         Optional<User> user = userService.resetPasswordRequest(request.getEmail(), type);
         if (user.isEmpty()) {
@@ -157,7 +157,7 @@ public class AuthService {
     public Map<String, Boolean> resetPasswordCheck(ResetPasswordCheck check) {
         Integer type = check.getType();
         if (type != UserType.ADMIN.getValue() && type != UserType.USER.getValue()) {
-            throw new BusinessException(ApiResponseCode.ILLEGAL_TYPE);
+            throw new BusinessException(ApiResponseCode.INVALID_TYPE);
         }
         Map<String, Boolean> response = new HashMap<>();
         Optional<User> user = userService.resetPasswordCheck(check.getResetKey(), type);
@@ -167,7 +167,7 @@ public class AuthService {
     public ApiResponse resetPasswordFinish(ResetPasswordFinish finish) {
         Integer type = finish.getType();
         if (type != UserType.ADMIN.getValue() && type != UserType.USER.getValue()) {
-            throw new BusinessException(ApiResponseCode.ILLEGAL_TYPE);
+            throw new BusinessException(ApiResponseCode.INVALID_TYPE);
         }
         Optional<User> user = userService.resetPasswordFinish(finish.getResetKey(), type, passwordEncoder.encode(finish.getNewPassword()));
         if (user.isEmpty()) {

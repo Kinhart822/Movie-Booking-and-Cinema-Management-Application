@@ -18,8 +18,8 @@ import java.util.List;
 public class FoodController {
     private final FoodService foodService;
     @PostMapping("/food")
-    public ApiResponse createFood(@RequestBody FoodRequest request, HttpServletRequest hsRequest) {
-        return foodService.createFood(request, hsRequest);
+    public ApiResponse createFood(@RequestBody FoodRequest request) {
+        return foodService.createFood(request);
     }
     @GetMapping("/food")
     public List<Food> findAll(@RequestParam String query, @PageableDefault Pageable pageable) {
@@ -30,11 +30,11 @@ public class FoodController {
         return foodService.findById(id);
     }
     @PutMapping("/food/{id}")
-    public ApiResponse updateFood(@PathVariable Long id, @RequestBody FoodRequest request, HttpServletRequest hsRequest) {
-        return foodService.updateFood(id, request, hsRequest);
+    public ApiResponse updateFood(@PathVariable Long id, @RequestBody FoodRequest request) {
+        return foodService.updateFood(id, request);
     }
     @DeleteMapping("/food/{id}")
-    public ApiResponse deleteFood(@PathVariable Long id, HttpServletRequest hsRequest) {
-        return foodService.deleteFood(id, hsRequest);
+    public ApiResponse deleteFood(@PathVariable Long id) {
+        return foodService.deleteFood(id);
     }
 }

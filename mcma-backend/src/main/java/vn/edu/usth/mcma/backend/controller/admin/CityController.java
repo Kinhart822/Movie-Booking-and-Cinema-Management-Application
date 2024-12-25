@@ -18,8 +18,8 @@ import java.util.List;
 public class CityController {
     private final CityService cityService;
     @PostMapping("/city")
-    public ApiResponse createCity(@RequestBody CityRequest request, HttpServletRequest hsRequest) {
-        return cityService.createCity(request, hsRequest);
+    public ApiResponse createCity(@RequestBody CityRequest request) {
+        return cityService.createCity(request);
     }
     @GetMapping("/city")
     public List<City> findAll(@RequestParam String query, @PageableDefault Pageable pageable) {
@@ -30,11 +30,11 @@ public class CityController {
         return cityService.findById(id);
     }
     @PutMapping("/city/{id}")
-    public ApiResponse updateCity(@PathVariable Long id, @RequestBody CityRequest request, HttpServletRequest hsRequest) {
-        return cityService.updateCity(id, request, hsRequest);
+    public ApiResponse updateCity(@PathVariable Long id, @RequestBody CityRequest request) {
+        return cityService.updateCity(id, request);
     }
     @DeleteMapping("/city/{id}")
-    public ApiResponse deleteCity(@PathVariable Long id, HttpServletRequest hsRequest) {
-        return cityService.deleteCity(id, hsRequest);
+    public ApiResponse deleteCity(@PathVariable Long id) {
+        return cityService.deleteCity(id);
     }
 }

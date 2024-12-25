@@ -25,8 +25,8 @@ public class DrinkService extends AbstractService<Drink, Long> {
         this.drinkRepository = drinkRepository;
         this.jwtUtil = jwtUtil;
     }
-    public ApiResponse createDrink(DrinkRequest request, HttpServletRequest hsRequest) {
-        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
+    public ApiResponse createDrink(DrinkRequest request) {
+        Long userId = jwtUtil.getUserIdFromToken();
         Drink drink = new Drink();
         drink.setName(request.getName());
         drink.setDescription(request.getDescription());
@@ -43,8 +43,8 @@ public class DrinkService extends AbstractService<Drink, Long> {
     public List<Drink> findAll(String query, Pageable pageable) {
         return drinkRepository.findAllByNameContaining(query, pageable);
     }
-    public ApiResponse updateDrink(Long id, DrinkRequest request, HttpServletRequest hsRequest) {
-        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
+    public ApiResponse updateDrink(Long id, DrinkRequest request) {
+        Long userId = jwtUtil.getUserIdFromToken();
         Drink drink = findById(id);
         drink.setName(request.getName());
         drink.setDescription(request.getDescription());
@@ -57,8 +57,8 @@ public class DrinkService extends AbstractService<Drink, Long> {
         drinkRepository.save(drink);
         return this.successResponse();
     }
-    public ApiResponse deleteDrink(Long id, HttpServletRequest hsRequest) {
-        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
+    public ApiResponse deleteDrink(Long id) {
+        Long userId = jwtUtil.getUserIdFromToken();
         Drink drink = findById(id);
         drink.setStatus(CommonStatus.DELETED.getStatus());
         drink.setLastModifiedBy(userId);

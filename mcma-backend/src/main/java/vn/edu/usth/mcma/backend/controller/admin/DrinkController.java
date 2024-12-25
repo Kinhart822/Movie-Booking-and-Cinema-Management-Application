@@ -18,8 +18,8 @@ import java.util.List;
 public class DrinkController {
     private final DrinkService drinkService;
     @PostMapping("/drink")
-    public ApiResponse createDrink(@RequestBody DrinkRequest request, HttpServletRequest hsRequest) {
-        return drinkService.createDrink(request, hsRequest);
+    public ApiResponse createDrink(@RequestBody DrinkRequest request) {
+        return drinkService.createDrink(request);
     }
     @GetMapping("/drink")
     public List<Drink> findAll(@RequestParam String query, @PageableDefault Pageable pageable) {
@@ -30,11 +30,11 @@ public class DrinkController {
         return drinkService.findById(id);
     }
     @PutMapping("/drink/{id}")
-    public ApiResponse updateDrink(@PathVariable Long id, @RequestBody DrinkRequest request, HttpServletRequest hsRequest) {
-        return drinkService.updateDrink(id, request, hsRequest);
+    public ApiResponse updateDrink(@PathVariable Long id, @RequestBody DrinkRequest request) {
+        return drinkService.updateDrink(id, request);
     }
     @DeleteMapping("/drink/{id}")
-    public ApiResponse deleteDrink(@PathVariable Long id, HttpServletRequest hsRequest) {
-        return drinkService.deleteDrink(id, hsRequest);
+    public ApiResponse deleteDrink(@PathVariable Long id) {
+        return drinkService.deleteDrink(id);
     }
 }

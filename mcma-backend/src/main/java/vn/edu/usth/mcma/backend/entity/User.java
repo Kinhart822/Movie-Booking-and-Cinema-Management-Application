@@ -3,6 +3,8 @@ package vn.edu.usth.mcma.backend.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,7 +17,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User extends AbstractAuditing implements Serializable {
+public class User implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @Id
@@ -49,4 +51,13 @@ public class User extends AbstractAuditing implements Serializable {
     @Column(columnDefinition = "TINYINT")
     @JsonIgnore
     private Integer status;
+    @Column(updatable = false)
+    private Long createdBy;
+    private Long lastModifiedBy;
+    @CreatedDate
+    @Column(updatable = false)
+    private Instant createdDate;
+    @LastModifiedDate
+    @Column
+    private Instant lastModifiedDate;
 }

@@ -1,6 +1,5 @@
 package vn.edu.usth.mcma.backend.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +23,8 @@ public class AuthController {
     private final UserService userService;
 
     @GetMapping("/auth/profile")
-    public ResponseEntity<User> getProfile(HttpServletRequest request) {
-        return ResponseEntity.ok(userService.findById(jwtUtil.getUserIdFromToken(request)));
+    public ResponseEntity<User> getProfile() {
+        return ResponseEntity.ok(userService.findById(jwtUtil.getUserIdFromToken()));
     }
 
     @PostMapping("/auth/sign-up")
@@ -64,8 +63,8 @@ public class AuthController {
     // TODO
     @Transactional
     @RequestMapping(value = "/update-password", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResponseEntity<String> updatePassword(HttpServletRequest hsRequest,  @RequestBody UpdatePasswordRequest updatePasswordRequest) {
-        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
+    public ResponseEntity<String> updatePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest) {
+        Long userId = jwtUtil.getUserIdFromToken();
         authService.changeNewPassword(userId, updatePasswordRequest);
         return ResponseEntity.ok("Password updated successfully");
     }

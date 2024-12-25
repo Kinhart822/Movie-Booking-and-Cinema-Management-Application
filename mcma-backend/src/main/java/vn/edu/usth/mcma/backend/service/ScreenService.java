@@ -24,8 +24,8 @@ public class ScreenService extends AbstractService<Screen, Long> {
         this.screenRepository = screenRepository;
         this.jwtUtil = jwtUtil;
     }
-    public ApiResponse createScreen(ScreenRequest request, HttpServletRequest hsRequest) {
-        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
+    public ApiResponse createScreen(ScreenRequest request) {
+        Long userId = jwtUtil.getUserIdFromToken();
         Screen screen = new Screen();
         screen.setCinemaId(request.getCinemaId());
         screen.setName(request.getName());
@@ -39,8 +39,8 @@ public class ScreenService extends AbstractService<Screen, Long> {
     public List<Screen> findAll(String query, Pageable pageable) {
         return screenRepository.findAllByNameContaining(query, pageable);
     }
-    public ApiResponse updateScreen(Long id, ScreenRequest request, HttpServletRequest hsRequest) {
-        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
+    public ApiResponse updateScreen(Long id, ScreenRequest request) {
+        Long userId = jwtUtil.getUserIdFromToken();
         Screen screen = findById(id);
         // changing cinemaId is not allowed think about it :)
         screen.setName(request.getName());
@@ -50,8 +50,8 @@ public class ScreenService extends AbstractService<Screen, Long> {
         screenRepository.save(screen);
         return this.successResponse();
     }
-    public ApiResponse deleteScreen(Long id, HttpServletRequest hsRequest) {
-        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
+    public ApiResponse deleteScreen(Long id) {
+        Long userId = jwtUtil.getUserIdFromToken();
         Screen screen = findById(id);
         screen.setStatus(CommonStatus.DELETED.getStatus());
         screen.setLastModifiedBy(userId);

@@ -25,8 +25,8 @@ public class CinemaService extends AbstractService<Cinema, Long> {
         this.cinemaRepository = cinemaRepository;
         this.jwtUtil = jwtUtil;
     }
-    public ApiResponse createCinema(CinemaRequest request, HttpServletRequest hsRequest) {
-        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
+    public ApiResponse createCinema(CinemaRequest request) {
+        Long userId = jwtUtil.getUserIdFromToken();
         Cinema cinema = new Cinema();
         cinema.setCityId(request.getCityId());
         cinema.setName(request.getName());
@@ -39,8 +39,8 @@ public class CinemaService extends AbstractService<Cinema, Long> {
     public List<Cinema> findAll(String query, Pageable pageable) {
         return cinemaRepository.findAllByNameContaining(query, pageable);
     }
-    public ApiResponse updateCinema(Long id, CinemaRequest request, HttpServletRequest hsRequest) {
-        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
+    public ApiResponse updateCinema(Long id, CinemaRequest request) {
+        Long userId = jwtUtil.getUserIdFromToken();
         Cinema cinema = findById(id);
         // changing cityId is not allowed think about it :)
         cinema.setName(request.getName());
@@ -49,8 +49,8 @@ public class CinemaService extends AbstractService<Cinema, Long> {
         cinemaRepository.save(cinema);
         return this.successResponse();
     }
-    public ApiResponse deleteCinema(Long id, HttpServletRequest hsRequest) {
-        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
+    public ApiResponse deleteCinema(Long id) {
+        Long userId = jwtUtil.getUserIdFromToken();
         Cinema cinema = findById(id);
         cinema.setStatus(CommonStatus.DELETED.getStatus());
         cinema.setLastModifiedBy(userId);

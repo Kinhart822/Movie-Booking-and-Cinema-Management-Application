@@ -18,8 +18,8 @@ import java.util.List;
 public class CinemaController {
     private final CinemaService cinemaService;
     @PostMapping("/cinema")
-    public ApiResponse createCinema(@RequestBody CinemaRequest request, HttpServletRequest hsRequest) {
-        return cinemaService.createCinema(request, hsRequest);
+    public ApiResponse createCinema(@RequestBody CinemaRequest request) {
+        return cinemaService.createCinema(request);
     }
     @GetMapping("/cinema")
     public List<Cinema> findAll(@RequestParam String query, @PageableDefault Pageable pageable) {
@@ -30,11 +30,11 @@ public class CinemaController {
         return cinemaService.findById(id);
     }
     @PutMapping("/cinema/{id}")
-    public ApiResponse updateCinema(@PathVariable Long id, @RequestBody CinemaRequest request, HttpServletRequest hsRequest) {
-        return cinemaService.updateCinema(id, request, hsRequest);
+    public ApiResponse updateCinema(@PathVariable Long id, @RequestBody CinemaRequest request) {
+        return cinemaService.updateCinema(id, request);
     }
     @DeleteMapping("/cinema/{id}")
-    public ApiResponse deleteCinema(@PathVariable Long id, HttpServletRequest hsRequest) {
-        return cinemaService.deleteCinema(id, hsRequest);
+    public ApiResponse deleteCinema(@PathVariable Long id) {
+        return cinemaService.deleteCinema(id);
     }
 }

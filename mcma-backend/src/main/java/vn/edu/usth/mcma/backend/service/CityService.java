@@ -26,8 +26,8 @@ public class CityService extends AbstractService<City, Long> {
         this.cityRepository = cityRepository;
         this.jwtUtil = jwtUtil;
     }
-    public ApiResponse createCity(CityRequest request, HttpServletRequest hsRequest) {
-        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
+    public ApiResponse createCity(CityRequest request) {
+        Long userId = jwtUtil.getUserIdFromToken();
         City city = new City();
         city.setName(request.getName());
         city.setStatus(CommonStatus.ACTIVE.getStatus());
@@ -39,8 +39,8 @@ public class CityService extends AbstractService<City, Long> {
     public List<City> findAll(String query, Pageable pageable) {
         return cityRepository.findAllByNameContaining(query, pageable);
     }
-    public ApiResponse updateCity(Long id, CityRequest request, HttpServletRequest hsRequest) {
-        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
+    public ApiResponse updateCity(Long id, CityRequest request) {
+        Long userId = jwtUtil.getUserIdFromToken();
         City city = findById(id);
         city.setName(request.getName());
         city.setLastModifiedBy(userId);
@@ -48,8 +48,8 @@ public class CityService extends AbstractService<City, Long> {
         cityRepository.save(city);
         return this.successResponse();
     }
-    public ApiResponse deleteCity(Long id, HttpServletRequest hsRequest) {
-        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
+    public ApiResponse deleteCity(Long id) {
+        Long userId = jwtUtil.getUserIdFromToken();
         City city = findById(id);
         city.setStatus(CommonStatus.DELETED.getStatus());
         city.setLastModifiedBy(userId);

@@ -25,8 +25,8 @@ public class FoodService extends AbstractService<Food, Long> {
         this.foodRepository = foodRepository;
         this.jwtUtil = jwtUtil;
     }
-    public ApiResponse createFood(FoodRequest request, HttpServletRequest hsRequest) {
-        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
+    public ApiResponse createFood(FoodRequest request) {
+        Long userId = jwtUtil.getUserIdFromToken();
         Food food = new Food();
         food.setName(request.getName());
         food.setDescription(request.getDescription());
@@ -42,8 +42,8 @@ public class FoodService extends AbstractService<Food, Long> {
     public List<Food> findAll(String query, Pageable pageable) {
         return foodRepository.findAllByNameContaining(query, pageable);
     }
-    public ApiResponse updateFood(Long id, FoodRequest request, HttpServletRequest hsRequest) {
-        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
+    public ApiResponse updateFood(Long id, FoodRequest request) {
+        Long userId = jwtUtil.getUserIdFromToken();
         Food food = findById(id);
         food.setName(request.getName());
         food.setDescription(request.getDescription());
@@ -55,8 +55,8 @@ public class FoodService extends AbstractService<Food, Long> {
         foodRepository.save(food);
         return this.successResponse();
     }
-    public ApiResponse deleteFood(Long id, HttpServletRequest hsRequest) {
-        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
+    public ApiResponse deleteFood(Long id) {
+        Long userId = jwtUtil.getUserIdFromToken();
         Food food = findById(id);
         food.setStatus(CommonStatus.DELETED.getStatus());
         food.setLastModifiedBy(userId);

@@ -18,10 +18,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SeatController {
     private final SeatService seatService;
-//    @PostMapping("/seat")
-//    public ApiResponse createSeat(@Valid @RequestBody SeatMapRequest request, HttpServletRequest hsRequest) {
-//        return seatService.createSeat(request, hsRequest);
-//    }
+    @PostMapping("/seat")
+    public ApiResponse createSeat(@Valid @RequestBody SeatMapRequest request) {
+        return seatService.createSeatMap(request);
+    }
 //    @GetMapping("/seat")
 //    public List<Seat> findAll(@RequestParam String query, @PageableDefault Pageable pageable) {
 //        return seatService.findAll(query, pageable);
@@ -31,11 +31,11 @@ public class SeatController {
 //        return seatService.findById(id);
 //    }
 //    @PutMapping("/seat/{id}")
-//    public ApiResponse updateSeat(@PathVariable Long id, @RequestBody SeatMapRequest request, HttpServletRequest hsRequest) {
-//        return seatService.updateSeat(id, request, hsRequest);
+//    public ApiResponse updateSeat(@PathVariable Long id, @RequestBody SeatMapRequest request) {
+//        return seatService.updateSeat(id, request);
 //    }
 //    @DeleteMapping("/seat/{id}")
-//    public ApiResponse deleteSeat(@PathVariable Long id, HttpServletRequest hsRequest) {
-//        return seatService.deleteSeat(id, hsRequest);
+//    public ApiResponse deleteSeat(@PathVariable Long id) {
+//        return seatService.deleteSeat(id);
 //    }
 }

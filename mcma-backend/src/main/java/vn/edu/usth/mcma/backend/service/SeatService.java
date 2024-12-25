@@ -1,23 +1,16 @@
 package vn.edu.usth.mcma.backend.service;
 
-import constants.CommonStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.SeatMapRequest;
 import vn.edu.usth.mcma.backend.entity.Seat;
 import vn.edu.usth.mcma.backend.entity.SeatPK;
-import vn.edu.usth.mcma.backend.entity.SeatType;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.repository.SeatRepository;
-import vn.edu.usth.mcma.backend.repository.SeatTypeRepository;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 
-import java.time.Instant;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -31,8 +24,8 @@ public class SeatService extends AbstractService<Seat, SeatPK> {
         this.jwtUtil = jwtUtil;
     }
 
-    public ApiResponse createSeatMap(SeatMapRequest request, HttpServletRequest hsRequest) {
-        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
+    public ApiResponse createSeatMap(SeatMapRequest request) {
+        Long userId = jwtUtil.getUserIdFromToken();
         List<Seat> seats = request
                 .getNamedSeatPositions() // sorted btw
                 .stream()
@@ -55,7 +48,7 @@ public class SeatService extends AbstractService<Seat, SeatPK> {
 //    public List<Seat> findAll(String query, Pageable pageable) {
 //        return seatRepository.findAllByNameContaining(query, pageable);
 //    }
-//    public ApiResponse updateSeat(Long id, SeatMapRequest request, HttpServletRequest hsRequest) {
+//    public ApiResponse updateSeat(Long id, SeatMapRequest request) {
 //        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
 //        Seat seat = findById(id);
 //        // changing cinemaId is not allowed think about it :)
@@ -66,7 +59,7 @@ public class SeatService extends AbstractService<Seat, SeatPK> {
 //        seatRepository.save(seat);
 //        return this.successResponse();
 //    }
-//    public ApiResponse deleteSeat(Long id, HttpServletRequest hsRequest) {
+//    public ApiResponse deleteSeat(Long id) {
 //        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
 //        Seat seat = findById(id);
 //        seat.setStatus(CommonStatus.DELETED.getStatus());
