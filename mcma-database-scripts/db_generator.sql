@@ -235,7 +235,7 @@ create table if not exists mcma.seat
     screen_id          bigint unsigned                   not null,
     row                tinyint unsigned                  not null,
     col                tinyint unsigned                  not null,
-    type_id            tinyint unsigned                  null,
+    type_id            tinyint                           null,
     name               varchar(5)                        null,
     is_available       tinyint(1)                        null,
     created_by         bigint unsigned                   null,

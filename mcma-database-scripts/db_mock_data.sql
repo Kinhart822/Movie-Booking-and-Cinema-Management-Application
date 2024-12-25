@@ -1,5 +1,7 @@
 truncate table mcma.cinema;
 truncate table mcma.city;
+truncate table mcma.city_drink;
+truncate table mcma.city_food;
 truncate table mcma.coupon;
 truncate table mcma.drink;
 truncate table mcma.food;
@@ -126,3 +128,8 @@ values ('Buttery Popcorn', 'Buttery popcorn', 'http://example.com/images/popcorn
        ('Caramel Popcorn', 'Caramel popcorn', 'http://example.com/images/popcorn.jpg', 'M', 65000, 1, 1, 1),
        ('Nachos', 'Crispy nachos with cheese dip', 'http://example.com/images/nachos.jpg', null, 40000, 1, 1, 1),
        ('Hotdog', 'Juicy hotdog in a bun', 'http://example.com/images/hotdog.jpg', null, 35000, 1, 1, 1);
+insert into mcma.screen (cinema_id, name, type_id, status)
+values (1, 'screen1', null, 1),
+       (1, 'screen2', null, 1);
+insert into mcma.user (first_name, last_name, sex, dob, email, phone, password, address, user_type, status, created_by, last_modified_by)
+values ('At', 'Nguyen', 1, '2004-11-04 00:00:00', 'at@gmail.com', '0976289114', '$2a$10$do2lQSohzuLfiSljWORi0Oc3OVG37mtPWxR/cAmJSsOLebcF4A5Oi', 'Hanoi, Viet Nam', 0, 1, 0, 0);
