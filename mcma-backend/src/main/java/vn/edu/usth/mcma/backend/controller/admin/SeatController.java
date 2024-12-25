@@ -18,24 +18,24 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SeatController {
     private final SeatService seatService;
-    @PostMapping("/seat")
-    public ApiResponse createSeat(@Valid @RequestBody SeatMapRequest request, HttpServletRequest hsRequest) {
-        return seatService.createSeat(request, hsRequest);
-    }
-    @GetMapping("/seat")
-    public List<Seat> findAll(@RequestParam String query, @PageableDefault Pageable pageable) {
-        return seatService.findAll(query, pageable);
-    }
-    @GetMapping("/seat/{id}")
-    public Seat findById(@PathVariable Long id) {
-        return seatService.findById(id);
-    }
-    @PutMapping("/seat/{id}")
-    public ApiResponse updateSeat(@PathVariable Long id, @RequestBody SeatMapRequest request, HttpServletRequest hsRequest) {
-        return seatService.updateSeat(id, request, hsRequest);
-    }
-    @DeleteMapping("/seat/{id}")
-    public ApiResponse deleteSeat(@PathVariable Long id, HttpServletRequest hsRequest) {
-        return seatService.deleteSeat(id, hsRequest);
-    }
+//    @PostMapping("/seat")
+//    public ApiResponse createSeat(@Valid @RequestBody SeatMapRequest request, HttpServletRequest hsRequest) {
+//        return seatService.createSeat(request, hsRequest);
+//    }
+//    @GetMapping("/seat")
+//    public List<Seat> findAll(@RequestParam String query, @PageableDefault Pageable pageable) {
+//        return seatService.findAll(query, pageable);
+//    }
+//    @GetMapping("/seat/{id}")
+//    public Seat findById(@PathVariable Long id) {
+//        return seatService.findById(id);
+//    }
+//    @PutMapping("/seat/{id}")
+//    public ApiResponse updateSeat(@PathVariable Long id, @RequestBody SeatMapRequest request, HttpServletRequest hsRequest) {
+//        return seatService.updateSeat(id, request, hsRequest);
+//    }
+//    @DeleteMapping("/seat/{id}")
+//    public ApiResponse deleteSeat(@PathVariable Long id, HttpServletRequest hsRequest) {
+//        return seatService.deleteSeat(id, hsRequest);
+//    }
 }
