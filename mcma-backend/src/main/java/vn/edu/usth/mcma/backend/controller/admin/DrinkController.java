@@ -21,7 +21,7 @@ public class DrinkController {
         return drinkService.createDrink(request);
     }
     @GetMapping("/drink")
-    public List<Drink> findAll(@RequestParam String query, @PageableDefault Pageable pageable) {
+    public List<Drink> findAll(@RequestParam(required = false, defaultValue = "") String query, @PageableDefault Pageable pageable) {
         return drinkService.findAll(query, pageable);
     }
     @GetMapping("/drink/{id}")

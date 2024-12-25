@@ -21,7 +21,7 @@ public class ScreenController {
         return screenService.createScreen(request);
     }
     @GetMapping("/screen")
-    public List<Screen> findAll(@RequestParam String query, @PageableDefault Pageable pageable) {
+    public List<Screen> findAll(@RequestParam(required = false, defaultValue = "") String query, @PageableDefault Pageable pageable) {
         return screenService.findAll(query, pageable);
     }
     @GetMapping("/screen/{id}")

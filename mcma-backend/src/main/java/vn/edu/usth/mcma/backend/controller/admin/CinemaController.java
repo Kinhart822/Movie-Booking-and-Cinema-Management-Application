@@ -21,7 +21,7 @@ public class CinemaController {
         return cinemaService.createCinema(request);
     }
     @GetMapping("/cinema")
-    public List<Cinema> findAll(@RequestParam String query, @PageableDefault Pageable pageable) {
+    public List<Cinema> findAll(@RequestParam(required = false, defaultValue = "") String query, @PageableDefault Pageable pageable) {
         return cinemaService.findAll(query, pageable);
     }
     @GetMapping("/cinema/{id}")

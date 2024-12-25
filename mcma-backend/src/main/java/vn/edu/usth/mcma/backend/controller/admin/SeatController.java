@@ -17,7 +17,7 @@ public class SeatController {
         return seatService.createSeatMap(request);
     }
 //    @GetMapping("/seat")
-//    public List<Seat> findAll(@RequestParam String query, @PageableDefault Pageable pageable) {
+//    public List<Seat> findAll(@RequestParam(required = false, defaultValue = "") String query, @PageableDefault Pageable pageable) {
 //        return seatService.findAll(query, pageable);
 //    }
 //    @GetMapping("/seat/{id}")

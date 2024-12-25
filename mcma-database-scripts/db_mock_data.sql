@@ -17,7 +17,6 @@ truncate table mcma.notification;
 truncate table mcma.screen;
 truncate table mcma.screen_type;
 truncate table mcma.seat;
-truncate table mcma.seat_type;
 truncate table mcma.token;
 truncate table mcma.user;
 truncate table mcma.user_coupon;

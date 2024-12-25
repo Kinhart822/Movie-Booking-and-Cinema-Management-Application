@@ -21,7 +21,7 @@ public class CityController {
         return cityService.createCity(request);
     }
     @GetMapping("/city")
-    public List<City> findAll(@RequestParam String query, @PageableDefault Pageable pageable) {
+    public List<City> findAll(@RequestParam(required = false, defaultValue = "") String query, @PageableDefault Pageable pageable) {
         return cityService.findAll(query, pageable);
     }
     @GetMapping("/city/{id}")

@@ -21,7 +21,7 @@ public class FoodController {
         return foodService.createFood(request);
     }
     @GetMapping("/food")
-    public List<Food> findAll(@RequestParam String query, @PageableDefault Pageable pageable) {
+    public List<Food> findAll(@RequestParam(required = false, defaultValue = "") String query, @PageableDefault Pageable pageable) {
         return foodService.findAll(query, pageable);
     }
     @GetMapping("/food/{id}")
