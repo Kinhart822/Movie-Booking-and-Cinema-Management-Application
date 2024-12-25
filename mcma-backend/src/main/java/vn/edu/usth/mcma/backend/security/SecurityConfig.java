@@ -70,8 +70,7 @@ public class SecurityConfig {
                 .logout(l -> l.logoutUrl("/api/v1/logout")
                         .addLogoutHandler(logoutHandler)
                         .logoutSuccessHandler(this::customLogoutSuccessHandler)
-                )
-        ;
+                );
         return http.build();
     }
 
@@ -93,6 +92,7 @@ public class SecurityConfig {
     private Customizer<CsrfConfigurer<HttpSecurity>> csrfCustomizer() {
         return AbstractHttpConfigurer::disable;  // Disable CSRF protection
     }
+
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -120,9 +120,9 @@ public class SecurityConfig {
                     .get()
                     .getAuthority();
 
-            if (role.equals("USER")) {
+            if (role.equals(UserType.USER.name())) {
                 response.sendRedirect("/api/v1/user");
-            } else if (role.equals("ADMIN")) {
+            } else if (role.equals(UserType.ADMIN.name())) {
                 response.sendRedirect("/api/v1/admin");
             } else {
                 response.sendRedirect("/signUp");

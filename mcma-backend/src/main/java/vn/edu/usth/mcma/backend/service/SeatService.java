@@ -15,15 +15,16 @@ import java.util.List;
 @Service
 public class SeatService extends AbstractService<Seat, SeatPK> {
     private final SeatRepository seatRepository;
-    private final JwtUtil jwtUtil;
+    private final ScreenService screenService;
 
-    public SeatService(SeatRepository seatRepository, JwtUtil jwtUtil) {
+    public SeatService(SeatRepository seatRepository, JwtUtil jwtUtil, ScreenService screenService) {
         super(seatRepository);
         this.seatRepository = seatRepository;
-        this.jwtUtil = jwtUtil;
+        this.screenService = screenService;
     }
 
     public ApiResponse createSeatMap(SeatMapRequest request) {
+        screenService.findById(request.getScreenId());
         List<Seat> seats = request
                 .getNamedSeatPositions() // sorted btw
                 .stream()
