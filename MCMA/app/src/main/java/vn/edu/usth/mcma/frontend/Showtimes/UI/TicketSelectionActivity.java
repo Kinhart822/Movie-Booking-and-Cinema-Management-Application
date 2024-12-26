@@ -214,6 +214,7 @@ package vn.edu.usth.mcma.frontend.Showtimes.UI;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -232,7 +233,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.TicketResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.BookingProcessAPIs.GetAllTicketsAPI;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.TicketAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
@@ -255,6 +262,7 @@ public class TicketSelectionActivity extends AppCompatActivity {
     private TextView releaseDateTV;
     private TextView screenRoomTV;
     private Movie selectedMovie;
+    private TextView showtime;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -267,79 +275,7 @@ public class TicketSelectionActivity extends AppCompatActivity {
         setupCheckoutButton();
     }
 
-    private void initializeViews() {
-        ticketRecyclerView = findViewById(R.id.ticket_recycler_view);
-        checkoutButton = findViewById(R.id.checkout_button);
-        theaterNameTV = findViewById(R.id.theater_name);
-        releaseDateTV = findViewById(R.id.movie_release_date);
-        screenRoomTV = findViewById(R.id.screen_number);
-        totalTicketPriceTV = findViewById(R.id.total_price_ticket);
-        totalTicketCountTV = findViewById(R.id.total_ticket_count);
-        movieNameTV = findViewById(R.id.movie_name2);
-    }
 
-    private void handleIntentExtras() {
-        guestQuantity = getIntent().getIntExtra(EXTRA_GUEST_QUANTITY, 0);
-
-        // Theater name handling
-        Theater selectedTheater = (Theater) getIntent().getSerializableExtra(EXTRA_THEATER);
-        String theaterName = getIntent().getStringExtra("THEATER_NAME");
-        if (selectedTheater != null && theaterNameTV != null) {
-            theaterNameTV.setText(theaterName != null ? theaterName : selectedTheater.getName());
-        }
-
-        // Movie name handling
-        Movie selectedMovie = (Movie) getIntent().getSerializableExtra(EXTRA_MOVIE);
-        if (selectedMovie != null && movieNameTV != null) {
-            movieNameTV.setText(selectedMovie.getTitle());
-        }
-
-        // Release date handling (always today's date)
-        if (releaseDateTV != null) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd'th' MMM, yyyy", Locale.getDefault());
-            Date today = new Date();
-            String formattedDate = formatDateWithOrdinal(today);
-            releaseDateTV.setText(formattedDate);
-        }
-
-        // Screen number handling
-        String selectedScreenRoom = getIntent().getStringExtra("SELECTED_SCREEN_ROOM");
-        if (screenRoomTV != null) {
-            screenRoomTV.setText(selectedScreenRoom != null ? selectedScreenRoom : "Screen 1");
-        }
-    }
-
-    // Helper method to format date with ordinal suffix
-    private String formatDateWithOrdinal(Date date) {
-        SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.getDefault());
-        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
-        SimpleDateFormat dayFormat = new SimpleDateFormat("d", Locale.getDefault());
-
-        String month = monthFormat.format(date);
-        String year = yearFormat.format(date);
-        int day = Integer.parseInt(dayFormat.format(date));
-
-        String dayWithSuffix = getDayWithOrdinal(day);
-
-        return String.format("%s %s, %s", dayWithSuffix, month, year);
-    }
-
-    // Helper method to get day with ordinal suffix
-    private String getDayWithOrdinal(int day) {
-        if (day >= 11 && day <= 13) {
-            return day + "th";
-        }
-        switch (day % 10) {
-            case 1:
-                return day + "st";
-            case 2:
-                return day + "nd";
-            case 3:
-                return day + "rd";
-            default:
-                return day + "th";
-        }
-    }
 
     private void setupTicketList() {
         List<TicketItem> ticketItems = createTicketItems();
@@ -415,6 +351,89 @@ public class TicketSelectionActivity extends AppCompatActivity {
                         R.drawable.rounded_dark_background
         );
     }
+
+    private void initializeViews() {
+        ticketRecyclerView = findViewById(R.id.ticket_recycler_view);
+        checkoutButton = findViewById(R.id.checkout_button);
+        theaterNameTV = findViewById(R.id.theater_name);
+        releaseDateTV = findViewById(R.id.movie_release_date);
+        screenRoomTV = findViewById(R.id.screen_number);
+        totalTicketPriceTV = findViewById(R.id.total_price_ticket);
+        totalTicketCountTV = findViewById(R.id.total_ticket_count);
+        movieNameTV = findViewById(R.id.movie_name2);
+        showtime = findViewById(R.id.movie_duration);
+    }
+
+    private void handleIntentExtras() {
+        guestQuantity = getIntent().getIntExtra(EXTRA_GUEST_QUANTITY, 0);
+
+        // Theater name handling
+        Theater selectedTheater = (Theater) getIntent().getSerializableExtra(EXTRA_THEATER);
+        String theaterName = getIntent().getStringExtra("THEATER_NAME");
+        if (selectedTheater != null && theaterNameTV != null) {
+            theaterNameTV.setText(theaterName != null ? theaterName : selectedTheater.getName());
+        }
+
+        // Movie name handling
+        Movie selectedMovie = (Movie) getIntent().getSerializableExtra(EXTRA_MOVIE);
+        if (selectedMovie != null && movieNameTV != null) {
+            movieNameTV.setText(selectedMovie.getTitle());
+        }
+
+        // Release date handling (always today's date)
+        String selectedDate = getIntent().getStringExtra("SELECTED_DATE");
+        if (releaseDateTV != null) {
+//            SimpleDateFormat dateFormat = new SimpleDateFormat("dd'th' MMM, yyyy", Locale.getDefault());
+//            Date today = new Date();
+//            String formattedDate = formatDateWithOrdinal(today);
+
+            releaseDateTV.setText(selectedDate);
+        }
+
+        // Screen number handling
+        String selectedScreenRoom = getIntent().getStringExtra("SELECTED_SCREEN_ROOM");
+        if (screenRoomTV != null) {
+            screenRoomTV.setText(selectedScreenRoom != null ? selectedScreenRoom : "Screen 1");
+        }
+
+        String selectedShowtime = getIntent().getStringExtra("SELECTED_SHOWTIME");
+        if(showtime != null){
+            showtime.setText(selectedShowtime);
+        }
+    }
+
+    // Helper method to format date with ordinal suffix
+    private String formatDateWithOrdinal(Date date) {
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.getDefault());
+        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
+        SimpleDateFormat dayFormat = new SimpleDateFormat("d", Locale.getDefault());
+
+        String month = monthFormat.format(date);
+        String year = yearFormat.format(date);
+        int day = Integer.parseInt(dayFormat.format(date));
+
+        String dayWithSuffix = getDayWithOrdinal(day);
+
+        return String.format("%s %s, %s", dayWithSuffix, month, year);
+    }
+
+    // Helper method to get day with ordinal suffix
+    private String getDayWithOrdinal(int day) {
+        if (day >= 11 && day <= 13) {
+            return day + "th";
+        }
+        switch (day % 10) {
+            case 1:
+                return day + "st";
+            case 2:
+                return day + "nd";
+            case 3:
+                return day + "rd";
+            default:
+                return day + "th";
+        }
+    }
+
 
     private void setupBackButton() {
         ImageButton backButton = findViewById(R.id.back_button);

@@ -245,8 +245,8 @@ public class MovieBookingActivity extends AppCompatActivity {
         theatersRecyclerView = findViewById(R.id.theaters_recycler_view);
         theaterAdapter = new TheaterShowtimesAdapter(new TheaterShowtimesAdapter.OnShowtimeClickListener() {
             @Override
-            public void onShowtimeClick(Theater theater, String showtime, String screenRoom) {
-                showQuantityTicketDialog(theater, showtime, screenRoom);
+            public void onShowtimeClick(Theater theater,String date, String showtime, String screenRoom) {
+                showQuantityTicketDialog(theater,date, showtime, screenRoom);
             }
         },movieId);
         theatersRecyclerView.setAdapter(theaterAdapter);
@@ -255,7 +255,7 @@ public class MovieBookingActivity extends AppCompatActivity {
 
 
     // Add new method to MovieBookingActivity.java
-    private void showQuantityTicketDialog(Theater theater, String showtime, String screenRoom) {
+    private void showQuantityTicketDialog(Theater theater,String date, String showtime, String screenRoom) {
         QuantityTicketDialog dialog = new QuantityTicketDialog(this, new QuantityTicketDialog.OnDialogActionListener() {
             @Override
             public void onContinueClicked(int guestQuantity) {
@@ -272,6 +272,7 @@ public class MovieBookingActivity extends AppCompatActivity {
                 intent.putExtra(TicketSelectionActivity.EXTRA_THEATER, theater);
                 intent.putExtra(TicketSelectionActivity.EXTRA_MOVIE, selectedMovie);
                 intent.putExtra("SELECTED_SHOWTIME", showtime);
+                intent.putExtra("SELECTED_DATE", date);
                 intent.putExtra("SELECTED_SCREEN_ROOM", screenRoom);
 //                intent.putExtra("THEATER_NAME", theater.getName());
                 int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);

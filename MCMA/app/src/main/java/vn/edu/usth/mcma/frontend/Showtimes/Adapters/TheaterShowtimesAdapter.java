@@ -46,6 +46,7 @@ import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.TheaterDataProvider;
 
 public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtimesAdapter.TheaterViewHolder> {
+
     private List<Theater> theaters = new ArrayList<>();
     private String selectedDate;
     private String movieTitle;
@@ -54,7 +55,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
     private Integer selectedScreenId;
     private Integer movieId;
     public interface OnShowtimeClickListener {
-        void onShowtimeClick(Theater theater, String showtime, String screenRoom);
+        void onShowtimeClick(Theater theater,String date, String showtime, String screenRoom);
     }
 
     public TheaterShowtimesAdapter(OnShowtimeClickListener listener,Integer movieId) {
@@ -68,6 +69,9 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
         this.movieTitle = movieTitle;
         expandedStates.clear();
         notifyDataSetChanged();
+    }
+    public void setOnShowtimeClickListener(OnShowtimeClickListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -320,7 +324,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                                 timeButton.setSelected(true);
 
                                                 // Pass selected scheduleId to the listener
-                                                listener.onShowtimeClick(theater, schedule.getTime(), selectedScreenRoom);
+                                                listener.onShowtimeClick(theater,date, schedule.getTime(), selectedScreenRoom);
                                             });
 
                                             timeLayout.addView(timeButton);
@@ -386,3 +390,4 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
 //        }
     }
 }
+
