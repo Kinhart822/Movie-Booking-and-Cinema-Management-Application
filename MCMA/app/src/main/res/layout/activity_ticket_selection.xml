@@ -1,208 +1,217 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical"
     tools:context=".frontend.Showtimes.UI.ComboSelectionActivity">
 
+    <!-- Top Section -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/top_section"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:background="@color/LightBlue"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Top Section -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/LightBlue"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp">
-
-            <ImageButton
-                android:id="@+id/back_button"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/left"
-                android:contentDescription="Back Button" />
-
-            <TextView
-                android:id="@+id/text_seat_selection"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ticket Selection"
-                android:textColor="@color/black"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-
-        <!-- Cinema Info Section -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="24dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/theater_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="BHD Star 3.2"
-                android:textColor="@color/black"
-                android:textSize="32sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/movie_name2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="The Dark Night"
-                android:textColor="@color/black"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/screen_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Screen 1"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/movie_release_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:text="26th Nov, 2024"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/movie_duration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:text="148 minutes"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-            </LinearLayout>
-        </LinearLayout>
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/left"
+            android:contentDescription="Back Button" />
 
         <TextView
-            android:id="@+id/concession_header"
-            android:layout_width="match_parent"
+            android:id="@+id/text_seat_selection"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingLeft="12dp"
-            android:paddingTop="12dp"
-            android:paddingRight="12dp"
-            android:text="Select Ticket Type"
+            android:text="Ticket Selection"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="24sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:layout_margin="10dp"
-            android:background="@color/light_gray" />
+    <!-- Cinema Info Section -->
+    <LinearLayout
+        android:id="@+id/cinema_info_section"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintTop_toBottomOf="@+id/top_section"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Combo menu container -->
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+        <TextView
+            android:id="@+id/theater_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BHD Star 3.2"
+            android:textColor="@color/black"
+            android:textSize="32sp"
+            android:textStyle="bold" />
 
-            <LinearLayout
-                android:id="@+id/ticket_menu_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/ticket_recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-            </LinearLayout>
-        </ScrollView>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:layout_margin="10dp"
-            android:background="@color/light_gray" />
+        <TextView
+            android:id="@+id/movie_name2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="The Dark Night"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center"
-            android:padding="16dp">
+            android:layout_marginTop="8dp">
 
             <TextView
+                android:id="@+id/screen_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="10dp"
-                android:text="Total:"
+                android:text="Screen 1"
                 android:textColor="@color/black"
-                android:textSize="20dp" />
+                android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/total_ticket_count"
+                android:id="@+id/movie_release_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp"
-                android:text="0 ghế"
+                android:layout_marginStart="24dp"
+                android:text="26th Nov, 2024"
                 android:textColor="@color/black"
-                android:textSize="15sp" />
+                android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/movie_duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp"
-                android:text="-"
+                android:layout_marginStart="24dp"
+                android:text="148 minutes"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/total_price_ticket"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp"
-                android:text="0d"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
+                android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>
 
+    <!-- Divider Above ScrollView -->
+    <View
+        android:id="@+id/divider_above_scroll"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/light_gray"
+        app:layout_constraintTop_toBottomOf="@+id/cinema_info_section"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Scrollable Ticket Menu -->
+    <ScrollView
+        android:id="@+id/ticket_scroll_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/divider_above_scroll"
+        app:layout_constraintBottom_toTopOf="@+id/divider_below_scroll"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/ticket_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Divider Between ScrollView and Total Section -->
+    <View
+        android:id="@+id/divider_below_scroll"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/light_gray"
+        app:layout_constraintTop_toBottomOf="@+id/ticket_scroll_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Total Section -->
+    <LinearLayout
+        android:id="@+id/total_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/divider_below_scroll"
+        app:layout_constraintBottom_toTopOf="@+id/checkout_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total:"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/total_ticket_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 ghế"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:layout_marginStart="8dp"/>
+
+        <TextView
+            android:layout_marginStart="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/total_price_ticket"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/_0_00"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+
+
+
+
+    <!-- Checkout Button -->
     <Button
         android:id="@+id/checkout_button"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:background="@drawable/rounded_dark_background"
-        android:padding="12dp"
-        android:text="Completed ticket type selection"
+        android:text="Complete Selection"
         android:textColor="@color/white"
-        android:textSize="16sp" />
-</LinearLayout>
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

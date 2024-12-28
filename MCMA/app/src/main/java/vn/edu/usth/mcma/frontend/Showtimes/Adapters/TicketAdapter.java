@@ -77,6 +77,12 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
             // Optional: show a toast or notification
         }
     }
+    public void updateItems(List<TicketItem> newItems) {
+        this.ticketItems.clear();
+        this.ticketItems.addAll(newItems);
+        notifyDataSetChanged();
+    }
+
 
     class TicketViewHolder extends RecyclerView.ViewHolder {
         private TextView nameText;
@@ -105,15 +111,15 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
             ticketImage.setImageResource(item.getType().getImageResourceId());
 
             // Định dạng số tiền với dấu phẩy và thêm "đ"
-            int price = item.getType().getPrice();
-            String formattedPrice = formatPrice(price);
-            ticketPrice.setText(formattedPrice);
+//            int price = item.getType().getPrice();
+//            String formattedPrice = formatPrice(price);
+            ticketPrice.setText(String.valueOf(item.getPrice()));
         }
 
         // Phương thức định dạng số tiền
-        private String formatPrice(int price) {
-            NumberFormat format = NumberFormat.getInstance(new Locale("vi", "VN"));
-            return format.format(price) + "đ";
-        }
+//        private String formatPrice(int price) {
+//            NumberFormat format = NumberFormat.getInstance(new Locale("vi", "VN"));
+//            return format.format(price) + "đ";
+//        }
     }
 }

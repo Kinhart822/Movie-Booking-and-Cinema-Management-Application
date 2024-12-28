@@ -237,7 +237,7 @@ public class PaymentBookingActivity extends AppCompatActivity {
                     .map(item -> new TicketDetailsAdapter.TicketDetailsItem(
                             item.getQuantity(),
                             item.getType().getName(),
-                            item.getTotalPrice()
+                            (int) item.getTotalPrice()
                     ))
                     .collect(Collectors.toList());
 

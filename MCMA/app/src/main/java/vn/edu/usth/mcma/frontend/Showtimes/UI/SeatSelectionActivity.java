@@ -68,8 +68,8 @@ public class SeatSelectionActivity extends AppCompatActivity {
     }
     // New method to calculate total ticket price
     private int calculateTotalTicketPrice(List<TicketItem> ticketItems) {
-        return ticketItems.stream()
-                .mapToInt(TicketItem::getTotalPrice)
+        return (int) ticketItems.stream()
+                .mapToDouble(TicketItem::getTotalPrice)
                 .sum();
     }
     private void setupTheaterInfo() {

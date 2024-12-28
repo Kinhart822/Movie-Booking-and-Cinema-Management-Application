@@ -48,5 +48,7 @@
     <string name="complete_payment">Hoàn tất thanh toán</string>
     <string name="concession">Concession</string>
     <string name="book_ticket">Booking</string>
+    <string name="_0">0$</string>
+    <string name="_0_00">$0.00</string>
 </resources>
 

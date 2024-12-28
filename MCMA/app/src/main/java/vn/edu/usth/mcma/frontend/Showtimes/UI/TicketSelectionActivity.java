@@ -225,9 +225,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Currency;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -273,8 +275,50 @@ public class TicketSelectionActivity extends AppCompatActivity {
         setupBackButton();
         setupTicketList();
         setupCheckoutButton();
+        fetchAndDisplayTickets();
     }
 
+    private void fetchAndDisplayTickets() {
+        RetrofitService retrofitService = new RetrofitService(this);
+        GetAllTicketsAPI ticketsAPI = retrofitService.getRetrofit().create(GetAllTicketsAPI.class);
+        ticketsAPI.getAllTickets().enqueue(new Callback<List<TicketResponse>>() {
+            @Override
+            public void onResponse(Call<List<TicketResponse>> call, Response<List<TicketResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<TicketItem> ticketItems = mapResponseToTicketItems(response.body());
+                    ticketAdapter.updateItems(ticketItems);
+                } else {
+                    showError("Failed to load tickets.");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TicketResponse>> call, Throwable t) {
+                showError("Error: " + t.getMessage());
+            }
+        });
+    }
+
+    private List<TicketItem> mapResponseToTicketItems(List<TicketResponse> ticketResponses) {
+        List<TicketItem> ticketItems = new ArrayList<>();
+        for (TicketResponse response : ticketResponses) {
+            for (int i = 0; i < response.getTicketIds().size(); i++) {
+                try {
+                    TicketType ticketType = TicketType.fromName(response.getTicketTypes().get(i));
+                    TicketItem item = new TicketItem(
+                            ticketType,
+                            response.getTicketPrices().get(i), // Fetch price from API
+                            response.getTicketIds().get(i)
+                    );
+                    item.setQuantity(0); // Default quantity
+                    ticketItems.add(item);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace(); // Log and handle unknown ticket types
+                }
+            }
+        }
+        return ticketItems;
+    }
 
 
     private void setupTicketList() {
@@ -289,10 +333,21 @@ public class TicketSelectionActivity extends AppCompatActivity {
         ticketRecyclerView.setAdapter(ticketAdapter);
         ticketRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
+    private List<TicketItem> createTicketItems() {
+        List<TicketItem> ticketItems = new ArrayList<>();
+        for (TicketType type : TicketType.values()) {
+            // Assuming TicketType has a method getId() to fetch the ID of the ticket
+            int ticketId = type.getId(); // Get the ticket ID from the TicketType
+            ticketItems.add(new TicketItem(type,type.getPrice(), ticketId)); // Create TicketItem with type and ID
+        }
+        return ticketItems;
+    }
+
+
 
     private void updateTicketPriceAndCount(List<TicketItem> items) {
-        int totalPrice = items.stream()
-                .mapToInt(TicketItem::getTotalPrice)
+        double totalPrice = items.stream()
+                .mapToDouble(TicketItem::getTotalPrice) // Use mapToDouble for double values
                 .sum();
 
         int totalCount = items.stream()
@@ -303,15 +358,13 @@ public class TicketSelectionActivity extends AppCompatActivity {
         totalTicketCountTV.setText(String.format("%d tickets", totalCount));
     }
 
-    private String formatCurrency(int price) {
-        return String.format("%,d đ", price);
+    private String formatCurrency(double price) {
+        NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
+//        format.setCurrency(Currency.getInstance("$"));
+//        NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        return format.format(price);
     }
 
-    private List<TicketItem> createTicketItems() {
-        return Arrays.stream(TicketType.values())
-                .map(TicketItem::new)
-                .collect(Collectors.toList());
-    }
 
     private void setupCheckoutButton() {
         checkoutButton.setOnClickListener(v -> {
@@ -319,6 +372,14 @@ public class TicketSelectionActivity extends AppCompatActivity {
                     .mapToInt(TicketItem::getQuantity)
                     .sum();
             if (totalSelectedTickets == guestQuantity) {
+                // Collect ticket IDs of the selected ticket types
+                List<Integer> selectedTicketIds = new ArrayList<>();
+                for (TicketItem item : ticketAdapter.getSelectedTicketItems()) {
+                    for (int i = 0; i < item.getQuantity(); i++) {
+                        selectedTicketIds.add(item.getTicketIds()); // Add ticket ID to the list
+                        Log.d("TicketSelection", "Selected Ticket Type ID: " + item.getTicketIds()); // Log the ID of the selected ticket
+                    }
+                }
                 Intent intent = new Intent(this, SeatSelectionActivity.class);
                 // Crucially, pass the ticket items
                 intent.putParcelableArrayListExtra("TICKET_ITEMS", new ArrayList<>(ticketAdapter.getSelectedTicketItems()));
@@ -403,40 +464,43 @@ public class TicketSelectionActivity extends AppCompatActivity {
     }
 
     // Helper method to format date with ordinal suffix
-    private String formatDateWithOrdinal(Date date) {
-        SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.getDefault());
-        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
-        SimpleDateFormat dayFormat = new SimpleDateFormat("d", Locale.getDefault());
-
-        String month = monthFormat.format(date);
-        String year = yearFormat.format(date);
-        int day = Integer.parseInt(dayFormat.format(date));
-
-        String dayWithSuffix = getDayWithOrdinal(day);
-
-        return String.format("%s %s, %s", dayWithSuffix, month, year);
-    }
-
-    // Helper method to get day with ordinal suffix
-    private String getDayWithOrdinal(int day) {
-        if (day >= 11 && day <= 13) {
-            return day + "th";
-        }
-        switch (day % 10) {
-            case 1:
-                return day + "st";
-            case 2:
-                return day + "nd";
-            case 3:
-                return day + "rd";
-            default:
-                return day + "th";
-        }
-    }
+//    private String formatDateWithOrdinal(Date date) {
+//        SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.getDefault());
+//        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
+//        SimpleDateFormat dayFormat = new SimpleDateFormat("d", Locale.getDefault());
+//
+//        String month = monthFormat.format(date);
+//        String year = yearFormat.format(date);
+//        int day = Integer.parseInt(dayFormat.format(date));
+//
+//        String dayWithSuffix = getDayWithOrdinal(day);
+//
+//        return String.format("%s %s, %s", dayWithSuffix, month, year);
+//    }
+//
+//    // Helper method to get day with ordinal suffix
+//    private String getDayWithOrdinal(int day) {
+//        if (day >= 11 && day <= 13) {
+//            return day + "th";
+//        }
+//        switch (day % 10) {
+//            case 1:
+//                return day + "st";
+//            case 2:
+//                return day + "nd";
+//            case 3:
+//                return day + "rd";
+//            default:
+//                return day + "th";
+//        }
+//    }
 
 
     private void setupBackButton() {
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> onBackPressed());
+    }
+    private void showError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
