@@ -395,6 +395,57 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public List<CinemaResponse> getAllCinemasBySelectedMovieAndSelectedCity(Integer movieId, Integer cityId) {
+        City city = cityRepository.findById(cityId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid city"));
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid movie"));
+
+        List<Cinema> cinemaList = cinemaRepository.findByMovieIdAndCityId(movie.getId(), city.getId());
+        if (cinemaList == null || cinemaList.isEmpty()) {
+            throw new IllegalArgumentException("No cinemas found for given city and movie.");
+        }
+
+        List<CinemaResponse> cinemaResponses = new ArrayList<>();
+        for (Cinema cinema : cinemaList) {
+            List<Screen> screenList = cinema.getScreenList();
+            List<String> screenType = screenList.stream()
+                    .map(screen -> screen.getScreenType().getName())
+                    .toList();
+            List<String> screenDescription = screenList.stream()
+                    .map(screen -> screen.getScreenType().getDescription())
+                    .toList();
+
+            List<Food> foodList = cinema.getFoodList();
+            List<String> foodName = foodList.stream().map(Food::getName).toList();
+
+            List<Drink> drinks = cinema.getDrinks();
+            List<String> drinkName = drinks.stream().map(Drink::getName).toList();
+
+            List<MovieSchedule> movieSchedules = movieScheduleRepository.findMovieSchedulesByCinemaId(cinema.getId());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm a");
+            List<String> formattedSchedules = movieSchedules.stream()
+                    .map(schedule -> schedule.getStartTime().format(formatter))
+                    .toList();
+
+            CinemaResponse cinemaResponse = new CinemaResponse(
+                    city.getName(),
+                    cinema.getId(),
+                    cinema.getName(),
+                    cinema.getAddress(),
+                    screenType,
+                    screenDescription,
+                    foodName,
+                    drinkName,
+                    formattedSchedules
+            );
+            cinemaResponses.add(cinemaResponse);
+        }
+
+        return cinemaResponses;
+    }
+
+    @Override
     public List<ScreenResponse> getAllScreensBySelectedCinema(Integer cinemaId) {
         Cinema cinema = cinemaRepository.findById(cinemaId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid cinema"));

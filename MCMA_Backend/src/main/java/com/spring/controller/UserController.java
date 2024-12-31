@@ -98,6 +98,15 @@ public class UserController {
         return ResponseEntity.ok(movies);
     }
 
+    @GetMapping("/booking/allCinemasByMovieAndCity")
+    public ResponseEntity<List<CinemaResponse>> getAllCinemasByMovieAndCity(
+            @RequestParam(required = false, name = "movieId") Integer movieId,
+            @RequestParam(required = false, name = "cityId") Integer cityId
+    ) {
+        List<CinemaResponse> movies = bookingService.getAllCinemasBySelectedMovieAndSelectedCity(movieId, cityId);
+        return ResponseEntity.ok(movies);
+    }
+
     @GetMapping("/booking/allScreenByCinema/{cinemaId}")
     public ResponseEntity<List<ScreenResponse>> getAllScreenByCinema(@PathVariable Integer cinemaId) {
         List<ScreenResponse> screenResponses = bookingService.getAllScreensBySelectedCinema(cinemaId);

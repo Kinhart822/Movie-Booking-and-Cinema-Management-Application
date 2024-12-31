@@ -12,4 +12,8 @@ import java.util.List;
 public interface CinemaRepository extends JpaRepository<Cinema, Integer> {
     @Query("SELECT c FROM Cinema c WHERE  c.city.id = :cityId")
     List<Cinema> findByCityId(@Param("cityId") Integer cityId);
+
+    @Query("SELECT c FROM Cinema c JOIN c.city ct JOIN ct.movie m WHERE ct.id = :cityId AND m.id = :movieId")
+    List<Cinema> findByMovieIdAndCityId(@Param("movieId") Integer movieId, @Param("cityId") Integer cityId);
+
 }
