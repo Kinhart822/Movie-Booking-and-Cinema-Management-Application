@@ -61,6 +61,7 @@ public class PaymentBookingActivity extends AppCompatActivity {
     private PaymentMethodAdapter paymentMethodAdapter;
     private CheckBox termsCheckbox;
     private Button completePaymentButton;
+    private Button paymentMethodButton;
     private PaymentMethod selectedPaymentMethod;
     private Movie selectedMovie;
     private Theater selectedTheater;
@@ -95,13 +96,13 @@ public class PaymentBookingActivity extends AppCompatActivity {
         // Update total price with coupon
         updateTotalPriceWithCoupon();
         // Initialize views
-        paymentMethodsRecyclerView = findViewById(R.id.paymentMethodsRecyclerView);
         termsCheckbox = findViewById(R.id.termsCheckbox);
         completePaymentButton = findViewById(R.id.completePaymentButton);
-        // Setup RecyclerView
-        setupPaymentMethodsRecyclerView();
         // Setup complete payment button
         completePaymentButton.setOnClickListener(v -> handlePaymentCompletion());
+        // Initialize payment method button
+        paymentMethodButton = findViewById(R.id.payment_method_button);
+        setupPaymentMethodButton();
     }
     private void setupCouponButton() {
         buttonCoupon.setOnClickListener(v -> showCouponSelectionDialog());
@@ -357,34 +358,64 @@ public class PaymentBookingActivity extends AppCompatActivity {
         }
     }
 
-    private void setupPaymentMethodsRecyclerView() {
+    private void setupPaymentMethodButton() {
+        paymentMethodButton.setOnClickListener(v -> showPaymentMethodSelectionDialog());
+    }
+
+    private void showPaymentMethodSelectionDialog() {
+        View dialogView = getLayoutInflater().inflate(R.layout.activity_payment_method_selection, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+
+        TextView cancelBtn = dialogView.findViewById(R.id.cancel_button);
+        Button confirmBtn = dialogView.findViewById(R.id.confirm_button);
+        RecyclerView paymentMethodDialogRecyclerView = dialogView.findViewById(R.id.payment_method_recycler_view);
+
+        List<PaymentMethod> paymentMethods = getPaymentMethods();
+        PaymentMethodAdapter dialogAdapter = new PaymentMethodAdapter(paymentMethods);
+
+        // Set listener for payment method selection
+        dialogAdapter.setOnPaymentMethodSelectedListener(paymentMethod -> {
+            selectedPaymentMethod = paymentMethod;
+            dialogAdapter.setSelectedPaymentMethod(paymentMethod);
+        });
+
+        // Set current selection in dialog if exists
+        if (selectedPaymentMethod != null) {
+            dialogAdapter.setSelectedPaymentMethod(selectedPaymentMethod);
+        }
+
+        paymentMethodDialogRecyclerView.setAdapter(dialogAdapter);
+        paymentMethodDialogRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        AlertDialog dialog = builder.create();
+
+        cancelBtn.setOnClickListener(v -> dialog.dismiss());
+        confirmBtn.setOnClickListener(v -> {
+            updatePaymentMethodButton();
+            dialog.dismiss();
+        });
+
+        dialog.show();
+    }
+
+    private void updatePaymentMethodButton() {
+        if (selectedPaymentMethod != null) {
+            paymentMethodButton.setText(selectedPaymentMethod.getName());
+        }
+    }
+
+    private List<PaymentMethod> getPaymentMethods() {
         List<PaymentMethod> paymentMethods = new ArrayList<>();
-        // Add payment methods
         paymentMethods.add(new PaymentMethod("Cổng VNPAY", R.drawable.ic_vnpay));
         paymentMethods.add(new PaymentMethod("Ví Momo", R.drawable.ic_momo));
         paymentMethods.add(new PaymentMethod("Ví Zalopay", R.drawable.ic_zalopay));
         paymentMethods.add(new PaymentMethod("Thẻ ATM nội địa (Internet Banking)", R.drawable.ic_atm));
         paymentMethods.add(new PaymentMethod("Thẻ quốc tế (Visa, Master, Amex, JCB)", R.drawable.ic_credit_card));
         paymentMethods.add(new PaymentMethod("Ví ShopeePay", R.drawable.ic_shopeepay));
-        // Remove duplicates while maintaining order
-        Set<String> uniqueNames = new LinkedHashSet<>();
-        List<PaymentMethod> uniquePaymentMethods = new ArrayList<>();
-        for (PaymentMethod method : paymentMethods) {
-            if (uniqueNames.add(method.getName())) {
-                uniquePaymentMethods.add(method);
-            }
-        }
-        // Setup adapter with unique payment methods
-        paymentMethodAdapter = new PaymentMethodAdapter(uniquePaymentMethods);
-        paymentMethodAdapter.setOnPaymentMethodSelectedListener(paymentMethod -> {
-            selectedPaymentMethod = paymentMethod;
-            // Optionally show a selection toast
-            Toast.makeText(this, "Selected: " + paymentMethod.getName(), Toast.LENGTH_SHORT).show();
-        });
-        paymentMethodsRecyclerView.setHasFixedSize(true);
-        paymentMethodsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        paymentMethodsRecyclerView.setAdapter(paymentMethodAdapter);
+        return paymentMethods;
     }
+
     private void handlePaymentCompletion() {
         if (selectedPaymentMethod == null) {
             Toast.makeText(this, "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show();

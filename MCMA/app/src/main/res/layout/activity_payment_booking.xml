@@ -227,19 +227,15 @@
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
-        <!-- Payment Methods Section -->
-        <TextView
+        <Button
+            android:id="@+id/payment_method_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="Payment methods"
-            android:textColor="@color/black"
-            android:textStyle="bold"/>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/paymentMethodsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"/>
+            android:layout_marginTop="16dp"
+            android:text="Select payment method"
+            android:textColor="@color/white"
+            android:background="@drawable/bg_button_enabled"/>
+
         <!-- Terms Checkbox -->
         <CheckBox
             android:id="@+id/termsCheckbox"
