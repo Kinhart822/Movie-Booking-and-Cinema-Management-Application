@@ -41,7 +41,8 @@
     <color name="disabledColor">#9E9E9E</color>
     <color name="gold">#ccac00</color>
     <color name ="dark_red">#8b0000</color>
-
+    <color name="orange_type">#FFA500</color>
+    <color name="pink">#F2D2BD</color>
     <!-- Button text selectors -->
     <color name="button_text_selector">#FF000000</color>  <!-- Black -->
     <color name="date_text_selector">#000000</color>    <!-- Black -->

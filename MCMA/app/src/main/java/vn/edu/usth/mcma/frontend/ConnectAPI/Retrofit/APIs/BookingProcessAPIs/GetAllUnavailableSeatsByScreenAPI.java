@@ -11,5 +11,4 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.U
 public interface GetAllUnavailableSeatsByScreenAPI {
     @GET("/api/v1/user/booking/allUnavailableSeatsByScreen/{screenId}")
     Call<List<UnavailableSeatResponse>> getUnavailableSeatsByScreen(@Path("screenId") int screenId);
-
 }

@@ -76,6 +76,7 @@ public class Seat implements Parcelable {
                 type == seat.type;
     }
 
+
     @Override
     public int hashCode() {
         return Objects.hash(id, type, isAvailable);
