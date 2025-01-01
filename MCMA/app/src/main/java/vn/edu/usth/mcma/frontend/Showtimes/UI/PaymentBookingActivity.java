@@ -61,7 +61,6 @@ public class PaymentBookingActivity extends AppCompatActivity {
     private PaymentMethodAdapter paymentMethodAdapter;
     private CheckBox termsCheckbox;
     private Button completePaymentButton;
-    private Button paymentMethodButton;
     private PaymentMethod selectedPaymentMethod;
     private Movie selectedMovie;
     private Theater selectedTheater;
@@ -96,13 +95,10 @@ public class PaymentBookingActivity extends AppCompatActivity {
         // Update total price with coupon
         updateTotalPriceWithCoupon();
         // Initialize views
+        paymentMethodsRecyclerView = findViewById(R.id.paymentMethodsRecyclerView);
         termsCheckbox = findViewById(R.id.termsCheckbox);
         completePaymentButton = findViewById(R.id.completePaymentButton);
-        // Setup complete payment button
-        completePaymentButton.setOnClickListener(v -> handlePaymentCompletion());
-        // Initialize payment method button
-        paymentMethodButton = findViewById(R.id.payment_method_button);
-        setupPaymentMethodButton();
+        setupCheckoutButton();
     }
     private void setupCouponButton() {
         buttonCoupon.setOnClickListener(v -> showCouponSelectionDialog());
@@ -358,85 +354,21 @@ public class PaymentBookingActivity extends AppCompatActivity {
         }
     }
 
-    private void setupPaymentMethodButton() {
-        paymentMethodButton.setOnClickListener(v -> showPaymentMethodSelectionDialog());
-    }
+    private void setupCheckoutButton() {
+        Button checkoutButton = findViewById(R.id.checkout_button);
+        checkoutButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, PayingMethodActivity.class);
 
-    private void showPaymentMethodSelectionDialog() {
-        View dialogView = getLayoutInflater().inflate(R.layout.activity_payment_method_selection, null);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(dialogView);
+            // Pass necessary data to PayingMethodActivity
+            int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
+            intent.putExtra("MOVIE_BANNER", movieBannerResId);
+            intent.putExtra("MOVIE_TITLE", getIntent().getStringExtra("MOVIE_TITLE"));
+            intent.putExtra("THEATER_NAME", getIntent().getStringExtra("THEATER_NAME"));
+            intent.putExtra("SELECTED_SHOWTIME", getIntent().getStringExtra("SELECTED_SHOWTIME"));
+            intent.putExtra("SELECTED_SCREEN_ROOM", getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
 
-        TextView cancelBtn = dialogView.findViewById(R.id.cancel_button);
-        Button confirmBtn = dialogView.findViewById(R.id.confirm_button);
-        RecyclerView paymentMethodDialogRecyclerView = dialogView.findViewById(R.id.payment_method_recycler_view);
-
-        List<PaymentMethod> paymentMethods = getPaymentMethods();
-        PaymentMethodAdapter dialogAdapter = new PaymentMethodAdapter(paymentMethods);
-
-        // Set listener for payment method selection
-        dialogAdapter.setOnPaymentMethodSelectedListener(paymentMethod -> {
-            selectedPaymentMethod = paymentMethod;
-            dialogAdapter.setSelectedPaymentMethod(paymentMethod);
+            startActivity(intent);
         });
-
-        // Set current selection in dialog if exists
-        if (selectedPaymentMethod != null) {
-            dialogAdapter.setSelectedPaymentMethod(selectedPaymentMethod);
-        }
-
-        paymentMethodDialogRecyclerView.setAdapter(dialogAdapter);
-        paymentMethodDialogRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        AlertDialog dialog = builder.create();
-
-        cancelBtn.setOnClickListener(v -> dialog.dismiss());
-        confirmBtn.setOnClickListener(v -> {
-            updatePaymentMethodButton();
-            dialog.dismiss();
-        });
-
-        dialog.show();
-    }
-
-    private void updatePaymentMethodButton() {
-        if (selectedPaymentMethod != null) {
-            paymentMethodButton.setText(selectedPaymentMethod.getName());
-        }
-    }
-
-    private List<PaymentMethod> getPaymentMethods() {
-        List<PaymentMethod> paymentMethods = new ArrayList<>();
-        paymentMethods.add(new PaymentMethod("Cổng VNPAY", R.drawable.ic_vnpay));
-        paymentMethods.add(new PaymentMethod("Ví Momo", R.drawable.ic_momo));
-        paymentMethods.add(new PaymentMethod("Ví Zalopay", R.drawable.ic_zalopay));
-        paymentMethods.add(new PaymentMethod("Thẻ ATM nội địa (Internet Banking)", R.drawable.ic_atm));
-        paymentMethods.add(new PaymentMethod("Thẻ quốc tế (Visa, Master, Amex, JCB)", R.drawable.ic_credit_card));
-        paymentMethods.add(new PaymentMethod("Ví ShopeePay", R.drawable.ic_shopeepay));
-        return paymentMethods;
-    }
-
-    private void handlePaymentCompletion() {
-        if (selectedPaymentMethod == null) {
-            Toast.makeText(this, "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!termsCheckbox.isChecked()) {
-            Toast.makeText(this, "Vui lòng đồng ý với điều khoản", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Hiển thị thông báo hoàn tất thanh toán
-        Toast.makeText(this, "Thanh toán thành công!", Toast.LENGTH_SHORT).show();
-
-        // Chuyển về HomeFragment
-        Intent intent = new Intent(this, vn.edu.usth.mcma.frontend.MainActivity.class); // Thay `MainActivity` bằng activity chứa HomeFragment
-        intent.putExtra("navigate_to", "HomeFragment"); // Gửi thông tin để chuyển đến HomeFragment
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-
-        // Kết thúc PaymentBookingActivity
-        finish();
     }
 
 }

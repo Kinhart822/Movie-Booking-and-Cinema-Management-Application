@@ -127,9 +127,6 @@ public class ComboSelectionActivity extends AppCompatActivity {
             } else {
                 Log.e("ComboSelectionActivity", "seatPriceText is null");
             }
-
-            // Initialize total price
-
         } catch (Exception e) {
             Log.e("ComboSelectionActivity", "Error in handleIntentExtras", e);
             // Optionally show a toast or handle the error appropriately
