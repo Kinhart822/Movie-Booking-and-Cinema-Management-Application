@@ -43,7 +43,7 @@ import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketItem;
 
 public class SeatSelectionActivity extends AppCompatActivity {
-    private double totalTicketPrice; // store total ticket price from previous activity
+    private double totalTicketPrice;
     private int totalTicketCount;
     private RecyclerView seatRecyclerView;
     private SeatAdapter seatAdapter;
@@ -302,6 +302,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
             intent.putExtra("MOVIE_TITLE", getIntent().getStringExtra("MOVIE_TITLE"));
             intent.putExtra("TOTAL_TICKET_AND_SEAT_PRICE", totalTicketAndSeatPrice);
             intent.putExtra("TOTAL_SEAT_COUNT", totalSeatCount);
+            intent.putExtra("TOTAL_TICKET_COUNT", totalTicketCount);
             startActivity(intent);
         });
     }

@@ -4,6 +4,7 @@ import static vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType.COUPLE;
 import static vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType.STAND;
 import static vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType.VIP;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -54,6 +55,9 @@ import vn.edu.usth.mcma.frontend.Showtimes.Utils.PriceCalculator;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.MovieDataProvider;
 
 public class PaymentBookingActivity extends AppCompatActivity {
+    public static final String EXTRA_THEATER = "extra_theater";
+    public static final String EXTRA_MOVIE = "extra_movie";
+
     private RecyclerView ticketDetailsRecyclerView;
     private RecyclerView seatDetailsRecyclerView;
     private RecyclerView comboDetailsRecyclerView;
@@ -72,6 +76,9 @@ public class PaymentBookingActivity extends AppCompatActivity {
     private TextView totalPriceTV;
     private TextView totalPriceCouponTV;
     private double originalTotalPrice;
+    private int totalTicketCount;
+    private int totalComboCount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,24 +89,16 @@ public class PaymentBookingActivity extends AppCompatActivity {
             onBackPressed();
         });
 
-        // Retrieve intent extras
-        retrieveIntentExtras();
-        // Initialize and set up views
         initializeViews();
+        retrieveIntentExtras();
         setupCouponButton();
-        // Set initial coupon to "Not use coupon"
         selectedCoupon = getCouponList().get(0);
         updateCouponButton();
-        // Store the original total price
         originalTotalPrice = totalPrice;
-        // Update total price with coupon
         updateTotalPriceWithCoupon();
-        // Initialize views
-        paymentMethodsRecyclerView = findViewById(R.id.paymentMethodsRecyclerView);
-        termsCheckbox = findViewById(R.id.termsCheckbox);
-        completePaymentButton = findViewById(R.id.completePaymentButton);
         setupCheckoutButton();
     }
+
     private void setupCouponButton() {
         buttonCoupon.setOnClickListener(v -> showCouponSelectionDialog());
     }
@@ -167,192 +166,188 @@ public class PaymentBookingActivity extends AppCompatActivity {
     }
 
     private void retrieveIntentExtras() {
-        selectedMovie = (Movie) getIntent().getSerializableExtra("SELECTED_MOVIE");
-        selectedTheater = (Theater) getIntent().getSerializableExtra("SELECTED_THEATER");
-        String theaterName = getIntent().getStringExtra("THEATER_NAME");
-        // Use the passed theater name if available
-        if (selectedTheater != null) {
-            selectedTheater.setName(theaterName != null ? theaterName : selectedTheater.getName());
-        }
+//        selectedMovie = (Movie) getIntent().getSerializableExtra("SELECTED_MOVIE");
+//        selectedTheater = (Theater) getIntent().getSerializableExtra("SELECTED_THEATER");
+//        String theaterName = getIntent().getStringExtra("CINEMA_NAME");
+//        // Use the passed theater name if available
+//        if (selectedTheater != null) {
+//            selectedTheater.setName(theaterName != null ? theaterName : selectedTheater.getName());
+//        }
         selectedSeats = getIntent().getParcelableArrayListExtra("SELECTED_SEATS");
         selectedComboItems = getIntent().getParcelableArrayListExtra("SELECTED_COMBO_ITEMS");
         totalPrice = getIntent().getDoubleExtra("TOTAL_PRICE", 0);
     }
-    private void initializeViews()   {
+
+    private void initializeViews() {
         // Movie Details
         TextView screenNumberTV = findViewById(R.id.screen_number);
         TextView movieTitleTV = findViewById(R.id.movieTitle);
-        ImageView moviePosterIV = findViewById(R.id.moviePoster);
         TextView theaterNameTV = findViewById(R.id.theaterName);
+        TextView movieDateTV = findViewById(R.id.movieDate);
+        TextView movieShowtimeTV = findViewById(R.id.movieDuration);
         buttonCoupon = findViewById(R.id.coupon_button);
         totalPriceTV = findViewById(R.id.total_price);
         totalPriceCouponTV = findViewById(R.id.total_price_coupon);
-        String selectedScreenRoom = getIntent().getStringExtra("SELECTED_SCREEN_ROOM");
-        if (selectedScreenRoom != null) {
-            screenNumberTV.setText(selectedScreenRoom);
-        } else {
-            screenNumberTV.setText("Screen 1"); // Default fallback
-        }
-        // Retrieve movie title
-        String movieTitle = getIntent().getStringExtra("MOVIE_TITLE");
-        movieTitleTV.setText(movieTitle);
 
-        // Retrieve and set movie poster
-        int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
-        if (movieBannerResId != 0) {
-            moviePosterIV.setImageResource(movieBannerResId);
+        String selectedMovie = getIntent().getStringExtra("MOVIE_NAME");
+        if (selectedMovie != null) {
+            movieTitleTV.setText(selectedMovie);
         }
 
-        // Retrieve and set theater name
+        String selectedTheater = getIntent().getStringExtra("CINEMA_NAME");
         if (selectedTheater != null) {
-            theaterNameTV.setText(selectedTheater.getName());
-        } else {
-            // Fallback to intent extra
-            String theaterName = getIntent().getStringExtra("THEATER_NAME");
-            theaterNameTV.setText(theaterName != null ? theaterName : "Unknown Theater");
+            theaterNameTV.setText(selectedTheater);
         }
-        // Set date and showtime
-        setDateAndShowtime();
+
+        String selectedDate = getIntent().getStringExtra("SELECTED_DATE");
+        if (movieDateTV != null) {
+            movieDateTV.setText(selectedDate);
+        }
+
+        // Screen number handling
+        String selectedScreenRoom = getIntent().getStringExtra("SELECTED_SCREEN_ROOM");
+        if (screenNumberTV != null) {
+            screenNumberTV.setText(selectedScreenRoom != null ? selectedScreenRoom : "Screen 1");
+        }
+
+        String selectedShowtime = getIntent().getStringExtra("SELECTED_SHOWTIME");
+        if (movieShowtimeTV != null) {
+            movieShowtimeTV.setText(selectedShowtime);
+        }
+
         // Set seats and combo details
+        //        setTicketDetails();
         setSeatsDetails();
-        setCombosDetails();
-        setTicketDetails();
+//        setCombosDetails();
 
         // Set total price
         TextView totalPriceTV = findViewById(R.id.total_price);
         totalPriceTV.setText(PriceCalculator.formatPrice(totalPrice));
     }
 
-    private void setTicketDetails() {
-        ticketDetailsRecyclerView = findViewById(R.id.ticket_details_recycler_view);
-        List<TicketItem> ticketItems = getIntent().getParcelableArrayListExtra("TICKET_ITEMS");
+//    private void setTicketDetails() {
+//        ticketDetailsRecyclerView = findViewById(R.id.ticket_details_recycler_view);
+//        List<TicketItem> ticketItems = getIntent().getParcelableArrayListExtra("TICKET_ITEMS");
+//
+//        if (ticketItems != null) {
+//            // Filter out ticket types with zero quantity and create TicketDetailsItems
+//            List<TicketDetailsAdapter.TicketDetailsItem> ticketDetailItems = ticketItems.stream()
+//                    .filter(item -> item.getQuantity() > 0)
+//                    .map(item -> new TicketDetailsAdapter.TicketDetailsItem(
+//                            item.getQuantity(),
+//                            item.getType().getName(),
+//                            (int) item.getTotalPrice()
+//                    ))
+//                    .collect(Collectors.toList());
+//
+//            // Only set up the adapter if there are ticket items
+//            if (!ticketDetailItems.isEmpty()) {
+//                TicketDetailsAdapter ticketDetailsAdapter = new TicketDetailsAdapter(ticketDetailItems);
+//                ticketDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//                ticketDetailsRecyclerView.setAdapter(ticketDetailsAdapter);
+//            }
+//        }
+//    }
 
-        if (ticketItems != null) {
-            // Filter out ticket types with zero quantity and create TicketDetailsItems
-            List<TicketDetailsAdapter.TicketDetailsItem> ticketDetailItems = ticketItems.stream()
-                    .filter(item -> item.getQuantity() > 0)
-                    .map(item -> new TicketDetailsAdapter.TicketDetailsItem(
-                            item.getQuantity(),
-                            item.getType().getName(),
-                            (int) item.getTotalPrice()
-                    ))
-                    .collect(Collectors.toList());
-
-            // Only set up the adapter if there are ticket items
-            if (!ticketDetailItems.isEmpty()) {
-                TicketDetailsAdapter ticketDetailsAdapter = new TicketDetailsAdapter(ticketDetailItems);
-                ticketDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-                ticketDetailsRecyclerView.setAdapter(ticketDetailsAdapter);
-            }
-        }
-    }
-
-    private void setDateAndShowtime() {
-        TextView movieDateTV = findViewById(R.id.movieDate);
-        TextView movieShowtimeTV = findViewById(R.id.movieDuration);
-
-        // Set today's date
-        SimpleDateFormat dateFormat = new SimpleDateFormat("d 'tháng' M, yyyy", Locale.getDefault());
-        String formattedDate = dateFormat.format(new Date());
-        movieDateTV.setText(formattedDate);
-
-        // Set showtime (assuming it's passed from previous activity)
-        String selectedShowtime = getIntent().getStringExtra("SELECTED_SHOWTIME");
-        if (selectedShowtime != null) {
-            String[] showtimeParts = selectedShowtime.split(":");
-            int startHour = Integer.parseInt(showtimeParts[0]);
-            int endHour = startHour + 2;
-            movieShowtimeTV.setText(String.format("%02d:00 - %02d:00", startHour, endHour));
-        }
-    }
-
+    @SuppressLint("DefaultLocale")
     private void setSeatsDetails() {
         TextView noOfSeatsTV = findViewById(R.id.noOfSeats);
+        totalTicketCount = getIntent().getIntExtra("TOTAL_TICKET_COUNT", 0);
         seatDetailsRecyclerView = findViewById(R.id.seat_details_recycler_view);
 
         if (selectedSeats != null) {
-            noOfSeatsTV.setText(String.format("%d vé", selectedSeats.size()));
+            noOfSeatsTV.setText(String.format("%d ticket(s)", totalTicketCount));
 
-            // Prepare seat details for the adapter
-            List<SeatDetailsAdapter.SeatDetailItem> seatDetailItems = new ArrayList<>();
-            Map<SeatType, List<Seat>> seatsByType = groupSeatsByType(selectedSeats);
-
-            for (Map.Entry<SeatType, List<Seat>> entry : seatsByType.entrySet()) {
-                SeatType seatType = entry.getKey();
-                List<Seat> typedSeats = entry.getValue();
-
-                if (!typedSeats.isEmpty() && seatType != SeatType.SOLD) {
-                    String seatPositions = typedSeats.stream()
-                            .map(Seat::getId)
-                            .collect(Collectors.joining(", "));
-
-                    String seatTypeDisplay = getSeatTypeDisplay(seatType);
-                    int seatPrice = getSeatTypePrice(seatType);
-
-                    seatDetailItems.add(new SeatDetailsAdapter.SeatDetailItem(
-                            String.format("%d x %s - 2D: %s",
-                                    typedSeats.size(), seatTypeDisplay, seatPositions),
-                            PriceCalculator.formatPrice(typedSeats.size() * seatPrice)
-                    ));
-                }
-            }
-
-            SeatDetailsAdapter seatDetailsAdapter = new SeatDetailsAdapter(seatDetailItems);
-            seatDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-            seatDetailsRecyclerView.setAdapter(seatDetailsAdapter);
+//            // Prepare seat details for the adapter
+//            List<SeatDetailsAdapter.SeatDetailItem> seatDetailItems = new ArrayList<>();
+//            Map<SeatType, List<Seat>> seatsByType = groupSeatsByType(selectedSeats);
+//
+//            for (Map.Entry<SeatType, List<Seat>> entry : seatsByType.entrySet()) {
+//                SeatType seatType = entry.getKey();
+//                List<Seat> typedSeats = entry.getValue();
+//
+//                if (!typedSeats.isEmpty() && seatType != SeatType.SOLD) {
+//                    String seatPositions = typedSeats.stream()
+//                            .map(Seat::getId)
+//                            .collect(Collectors.joining(", "));
+//
+//                    String seatTypeDisplay = getSeatTypeDisplay(seatType);
+//                    int seatPrice = getSeatTypePrice(seatType);
+//
+//                    seatDetailItems.add(new SeatDetailsAdapter.SeatDetailItem(
+//                            String.format("%d x %s - 2D: %s",
+//                                    typedSeats.size(), seatTypeDisplay, seatPositions),
+//                            PriceCalculator.formatPrice(typedSeats.size() * seatPrice)
+//                    ));
+//                }
+//            }
+//
+//            SeatDetailsAdapter seatDetailsAdapter = new SeatDetailsAdapter(seatDetailItems);
+//            seatDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//            seatDetailsRecyclerView.setAdapter(seatDetailsAdapter);
         }
     }
-
-    private Map<SeatType, List<Seat>> groupSeatsByType(List<Seat> seats) {
-        return seats.stream()
-                .collect(Collectors.groupingBy(Seat::getType));
-    }
-
+//
+//    private Map<SeatType, List<Seat>> groupSeatsByType(List<Seat> seats) {
+//        return seats.stream()
+//                .collect(Collectors.groupingBy(Seat::getType));
+//    }
+//
+    @SuppressLint("DefaultLocale")
     private void setCombosDetails() {
         TextView noOfCombosTV = findViewById(R.id.noOfCombos);
+        totalComboCount = getIntent().getIntExtra("TOTAL_COMBO_COUNT", 0);
         comboDetailsRecyclerView = findViewById(R.id.combo_details_recycler_view);
 
         if (selectedComboItems != null) {
-            // Filter and count combos with quantity > 0
-            List<ComboItem> filteredCombos = selectedComboItems.stream()
-                    .filter(combo -> combo.getQuantity() > 0)
-                    .collect(Collectors.toList());
+//            // Filter and count combos with quantity > 0
+//            List<ComboItem> filteredCombos = selectedComboItems.stream()
+//                    .filter(combo -> combo.getQuantity() > 0)
+//                    .collect(Collectors.toList());
+//
+//            int totalComboCount = filteredCombos.stream().mapToInt(ComboItem::getQuantity).sum();
+            noOfCombosTV.setText(String.format("%d combo(s)", totalComboCount));
 
-            int totalComboCount = filteredCombos.stream().mapToInt(ComboItem::getQuantity).sum();
-            noOfCombosTV.setText(String.format("%d combo", totalComboCount));
-
-            // Prepare combo details for the adapter
-            List<ComboDetailsAdapter.ComboDetailItem> comboDetailItems = filteredCombos.stream()
-                    .map(combo -> new ComboDetailsAdapter.ComboDetailItem(
-                            String.format("%d x %s", combo.getQuantity(), combo.getName()),
-                            PriceCalculator.formatPrice(combo.getQuantity() * combo.getPrice())
-                    ))
-                    .collect(Collectors.toList());
-
-            ComboDetailsAdapter comboDetailsAdapter = new ComboDetailsAdapter(comboDetailItems);
-            comboDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-            comboDetailsRecyclerView.setAdapter(comboDetailsAdapter);
+//            // Prepare combo details for the adapter
+//            List<ComboDetailsAdapter.ComboDetailItem> comboDetailItems = filteredCombos.stream()
+//                    .map(combo -> new ComboDetailsAdapter.ComboDetailItem(
+//                            String.format("%d x %s", combo.getQuantity(), combo.getName()),
+//                            PriceCalculator.formatPrice(combo.getQuantity() * combo.getPrice())
+//                    ))
+//                    .collect(Collectors.toList());
+//
+//            ComboDetailsAdapter comboDetailsAdapter = new ComboDetailsAdapter(comboDetailItems);
+//            comboDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//            comboDetailsRecyclerView.setAdapter(comboDetailsAdapter);
         }
     }
 
     // Utility methods
-    private String getSeatTypeDisplay(SeatType seatType) {
-        switch (seatType) {
-            case VIP: return "VIP";
-            case COUPLE: return "Couple";
-            case STAND: return "Stand";
-            default: return "Standard";
-        }
-    }
-
-    private int getSeatTypePrice(SeatType seatType) {
-        switch (seatType) {
-            case VIP: return 150000;
-            case COUPLE: return 200000;
-            case STAND: return 100000;
-            default: return 100000;
-        }
-    }
+//    private String getSeatTypeDisplay(SeatType seatType) {
+//        switch (seatType) {
+//            case VIP:
+//                return "VIP";
+//            case COUPLE:
+//                return "Couple";
+//            case STAND:
+//                return "Stand";
+//            default:
+//                return "Standard";
+//        }
+//    }
+//
+//    private int getSeatTypePrice(SeatType seatType) {
+//        switch (seatType) {
+//            case VIP:
+//                return 150000;
+//            case COUPLE:
+//                return 200000;
+//            case STAND:
+//                return 100000;
+//            default:
+//                return 100000;
+//        }
+//    }
 
     private void setupCheckoutButton() {
         Button checkoutButton = findViewById(R.id.checkout_button);

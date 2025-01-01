@@ -268,6 +268,7 @@ public class TicketSelectionActivity extends AppCompatActivity {
     private TextView showtime;
     private double totalTicketPrice;
     private int totalCount;
+    private List<TicketItem> ticketItemList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -376,6 +377,8 @@ public class TicketSelectionActivity extends AppCompatActivity {
                 // Collect ticket IDs of the selected ticket types
                 List<Integer> selectedTicketIds = new ArrayList<>();
                 for (TicketItem item : ticketAdapter.getSelectedTicketItems()) {
+                    ticketItemList.add(item);
+
                     for (int i = 0; i < item.getQuantity(); i++) {
                         selectedTicketIds.add(item.getTicketIds()); // Add ticket ID to the list
                         Log.d("TicketSelection", "Selected Ticket Type ID: " + item.getTicketIds()); // Log the ID of the selected ticket
@@ -384,6 +387,8 @@ public class TicketSelectionActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, SeatSelectionActivity.class);
                 // Crucially, pass the ticket items
                 intent.putParcelableArrayListExtra("TICKET_ITEMS", new ArrayList<>(ticketAdapter.getSelectedTicketItems()));
+                intent.putParcelableArrayListExtra("SELECTED_TICKET_ITEMS", new ArrayList<>(ticketItemList));
+
                 // Pass other extras as you were doing before
                 intent.putExtra("SELECTED_THEATER", getIntent().getSerializableExtra(EXTRA_THEATER));
                 intent.putExtra("THEATER_NAME", getIntent().getStringExtra("THEATER_NAME"));

@@ -68,6 +68,7 @@ public class MovieBookingActivity extends AppCompatActivity {
         citiesContainer = findViewById(R.id.cities_container);
 
         movieTitle = getIntent().getStringExtra("MOVIE_TITLE");
+
         selectedCity = TheaterDataProvider.getCities().get(0);
 
         setupToolbarAndBanner();

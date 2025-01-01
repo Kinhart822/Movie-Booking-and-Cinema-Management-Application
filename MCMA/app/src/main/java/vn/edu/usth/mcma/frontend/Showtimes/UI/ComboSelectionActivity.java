@@ -46,11 +46,15 @@ public class ComboSelectionActivity extends AppCompatActivity {
     private TextView comboPriceText;
     private TextView totalPriceText;
     private TextView theaterNameTV;
+    private String cinemaName;
     private TextView movieNameTV;
+    private String movieName;
     private TextView releaseDateTV;
     private TextView showtime;
     private TextView screenRoomTV;
     private int movieId;
+    private int totalTicketCount;
+    private int totalComboCount;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,6 +62,7 @@ public class ComboSelectionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_combo_selection);
 
         movieId = getIntent().getIntExtra("CINEMA_ID", 0);
+        totalTicketCount = getIntent().getIntExtra("TOTAL_TICKET_COUNT", 0);
 
         initializeViews();
         handleIntentExtras();
@@ -78,12 +83,14 @@ public class ComboSelectionActivity extends AppCompatActivity {
             String theaterName = getIntent().getStringExtra("THEATER_NAME");
             if (selectedTheater != null && theaterNameTV != null) {
                 theaterNameTV.setText(theaterName != null ? theaterName : selectedTheater.getName());
+                cinemaName = selectedTheater.getName();
             }
 
             // Movie name handling
             Movie selectedMovie = (Movie) getIntent().getSerializableExtra(EXTRA_MOVIE);
             if (selectedMovie != null && movieNameTV != null) {
                 movieNameTV.setText(selectedMovie.getTitle());
+                movieName = selectedMovie.getTitle();
             }
 
             String selectedDate = getIntent().getStringExtra("SELECTED_DATE");
@@ -214,6 +221,10 @@ public class ComboSelectionActivity extends AppCompatActivity {
                     .mapToDouble(ComboItem::getTotalPrice)
                     .sum();
 
+            totalComboCount = comboItems.stream()
+                    .mapToInt(ComboItem::getQuantity)
+                    .sum();
+
             // Tính tổng giá toàn bộ
             double totalPrice = seatPriceTotal + comboPriceTotal;
 
@@ -242,7 +253,6 @@ public class ComboSelectionActivity extends AppCompatActivity {
         Button checkoutButton = findViewById(R.id.checkout_button);
         checkoutButton.setOnClickListener(v -> {
             List<TicketItem> ticketItems = getIntent().getParcelableArrayListExtra("TICKET_ITEMS");
-            // Retrieve selected seats from previous activity
             List<Seat> selectedSeats = getIntent().getParcelableArrayListExtra(EXTRA_SELECTED_SEATS);
 
             // Get selected combo items
@@ -261,10 +271,14 @@ public class ComboSelectionActivity extends AppCompatActivity {
             intent.putExtra("SELECTED_SCREEN_ROOM", getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
 //            intent.putParcelableArrayListExtra("SELECTED_SEATS", new ArrayList<>(selectedSeats));
 //            intent.putParcelableArrayListExtra("SELECTED_COMBO_ITEMS", new ArrayList<>(selectedComboItems));
+            intent.putExtra("SELECTED_DATE", getIntent().getStringExtra("SELECTED_DATE"));
             intent.putExtra("TOTAL_PRICE", totalPrice);
             int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
             intent.putExtra("MOVIE_BANNER", movieBannerResId);
-            intent.putExtra("MOVIE_TITLE", getIntent().getStringExtra("MOVIE_TITLE"));
+            intent.putExtra("MOVIE_NAME", movieName);
+            intent.putExtra("CINEMA_NAME", cinemaName);
+            intent.putExtra("TOTAL_TICKET_COUNT", totalTicketCount);
+            intent.putExtra("TOTAL_COMBO_COUNT", totalComboCount);
             startActivity(intent);
         });
     }

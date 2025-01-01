@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.frontend.Showtimes.UI;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -64,6 +65,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setupToolbarBehavior(appBarLayout, toolbar);
     }
 
+    @SuppressLint("SetTextI18n")
     private void populateMovieDetails(MovieDetails movie) {
         // Populate all TextViews with movie details
         ((TextView)findViewById(R.id.tv_movie_title)).setText(movie.getTitle());

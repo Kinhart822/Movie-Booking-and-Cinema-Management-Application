@@ -52,7 +52,6 @@ public class PayingMethodActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        moviePosterIV = findViewById(R.id.moviePoster);
         movieTitleTV = findViewById(R.id.movieTitle);
         theaterNameTV = findViewById(R.id.theaterName);
         screenNumberTV = findViewById(R.id.screen_number);
