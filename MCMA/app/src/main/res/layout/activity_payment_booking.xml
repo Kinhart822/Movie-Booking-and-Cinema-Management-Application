@@ -34,7 +34,7 @@
                 android:id="@+id/text_seat_selection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Payment"
+                android:text="Payment Details"
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -227,43 +227,15 @@
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
-        <!-- Payment Methods Section -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="Payment methods"
-            android:textColor="@color/black"
-            android:textStyle="bold"/>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/paymentMethodsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"/>
-        <!-- Terms Checkbox -->
-        <CheckBox
-            android:id="@+id/termsCheckbox"
+        <Button
+            android:id="@+id/checkout_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="I have read and accepted the requirements"
-            android:textColor="@color/black"
-            android:buttonTint="@drawable/checkbox_selector"
-            android:padding="8dp" />
-
-        <!-- Complete Payment Button -->
-        <Button
-            android:id="@+id/completePaymentButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginBottom="25dp"
-            android:padding="20dp"
-            android:backgroundTint="@color/LightBlue"
-            android:text="Complete payment booking"
-            android:textSize="16sp"
-            android:textAllCaps="false"/>
+            android:background="@drawable/rounded_dark_background"
+            android:padding="12dp"
+            android:text="Process to get payment check ?"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
     </LinearLayout>
 </ScrollView>

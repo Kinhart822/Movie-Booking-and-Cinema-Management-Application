@@ -21,6 +21,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".frontend.Showtimes.UI.PayingMethodActivity"
+            android:exported="false" />
+        <activity
             android:name=".frontend.Home.OnlyDetailsActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />

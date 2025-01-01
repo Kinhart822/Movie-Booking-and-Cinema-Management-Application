@@ -98,10 +98,7 @@ public class PaymentBookingActivity extends AppCompatActivity {
         paymentMethodsRecyclerView = findViewById(R.id.paymentMethodsRecyclerView);
         termsCheckbox = findViewById(R.id.termsCheckbox);
         completePaymentButton = findViewById(R.id.completePaymentButton);
-        // Setup RecyclerView
-        setupPaymentMethodsRecyclerView();
-        // Setup complete payment button
-        completePaymentButton.setOnClickListener(v -> handlePaymentCompletion());
+        setupCheckoutButton();
     }
     private void setupCouponButton() {
         buttonCoupon.setOnClickListener(v -> showCouponSelectionDialog());
@@ -357,55 +354,21 @@ public class PaymentBookingActivity extends AppCompatActivity {
         }
     }
 
-    private void setupPaymentMethodsRecyclerView() {
-        List<PaymentMethod> paymentMethods = new ArrayList<>();
-        // Add payment methods
-        paymentMethods.add(new PaymentMethod("Cổng VNPAY", R.drawable.ic_vnpay));
-        paymentMethods.add(new PaymentMethod("Ví Momo", R.drawable.ic_momo));
-        paymentMethods.add(new PaymentMethod("Ví Zalopay", R.drawable.ic_zalopay));
-        paymentMethods.add(new PaymentMethod("Thẻ ATM nội địa (Internet Banking)", R.drawable.ic_atm));
-        paymentMethods.add(new PaymentMethod("Thẻ quốc tế (Visa, Master, Amex, JCB)", R.drawable.ic_credit_card));
-        paymentMethods.add(new PaymentMethod("Ví ShopeePay", R.drawable.ic_shopeepay));
-        // Remove duplicates while maintaining order
-        Set<String> uniqueNames = new LinkedHashSet<>();
-        List<PaymentMethod> uniquePaymentMethods = new ArrayList<>();
-        for (PaymentMethod method : paymentMethods) {
-            if (uniqueNames.add(method.getName())) {
-                uniquePaymentMethods.add(method);
-            }
-        }
-        // Setup adapter with unique payment methods
-        paymentMethodAdapter = new PaymentMethodAdapter(uniquePaymentMethods);
-        paymentMethodAdapter.setOnPaymentMethodSelectedListener(paymentMethod -> {
-            selectedPaymentMethod = paymentMethod;
-            // Optionally show a selection toast
-            Toast.makeText(this, "Selected: " + paymentMethod.getName(), Toast.LENGTH_SHORT).show();
+    private void setupCheckoutButton() {
+        Button checkoutButton = findViewById(R.id.checkout_button);
+        checkoutButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, PayingMethodActivity.class);
+
+            // Pass necessary data to PayingMethodActivity
+            int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
+            intent.putExtra("MOVIE_BANNER", movieBannerResId);
+            intent.putExtra("MOVIE_TITLE", getIntent().getStringExtra("MOVIE_TITLE"));
+            intent.putExtra("THEATER_NAME", getIntent().getStringExtra("THEATER_NAME"));
+            intent.putExtra("SELECTED_SHOWTIME", getIntent().getStringExtra("SELECTED_SHOWTIME"));
+            intent.putExtra("SELECTED_SCREEN_ROOM", getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
+
+            startActivity(intent);
         });
-        paymentMethodsRecyclerView.setHasFixedSize(true);
-        paymentMethodsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        paymentMethodsRecyclerView.setAdapter(paymentMethodAdapter);
-    }
-    private void handlePaymentCompletion() {
-        if (selectedPaymentMethod == null) {
-            Toast.makeText(this, "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!termsCheckbox.isChecked()) {
-            Toast.makeText(this, "Vui lòng đồng ý với điều khoản", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Hiển thị thông báo hoàn tất thanh toán
-        Toast.makeText(this, "Thanh toán thành công!", Toast.LENGTH_SHORT).show();
-
-        // Chuyển về HomeFragment
-        Intent intent = new Intent(this, vn.edu.usth.mcma.frontend.MainActivity.class); // Thay `MainActivity` bằng activity chứa HomeFragment
-        intent.putExtra("navigate_to", "HomeFragment"); // Gửi thông tin để chuyển đến HomeFragment
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-
-        // Kết thúc PaymentBookingActivity
-        finish();
     }
 
 }
