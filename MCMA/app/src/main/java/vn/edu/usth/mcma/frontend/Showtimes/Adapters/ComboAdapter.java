@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.frontend.Showtimes.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,15 +63,18 @@ public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHol
 
     // Updates the quantity of a ComboItem and recalculates the total price
     private void updateQuantity(int position, int delta) {
-
         ComboItem item = comboItems.get(position);
         int newQuantity = Math.max(0, item.getQuantity() + delta);
-        item.setQuantity(newQuantity);
-        notifyItemChanged(position);
-        if (listener != null) {
-            listener.onTotalPriceChanged(comboItems);
+
+        if (newQuantity != item.getQuantity()) {
+            item.setQuantity(newQuantity);
+            notifyItemChanged(position); // Update only the modified item
+            if (listener != null) {
+                listener.onTotalPriceChanged(comboItems); // Notify the listener to update the total price
+            }
         }
     }
+
     // ViewHolder class for ComboItem
     class ComboViewHolder extends RecyclerView.ViewHolder {
         private TextView nameText;
@@ -95,9 +99,10 @@ public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHol
         }
 
         // Binds data to the view holder elements
+        @SuppressLint({"SetTextI18n", "DefaultLocale"})
         void bind(ComboItem item) {
             nameText.setText(item.getName());
-            priceText.setText(String.format(Locale.getDefault(), "%,.0fđ", item.getPrice()));
+            priceText.setText(String.format("$%.2f", item.getPrice()));
             quantityText.setText(String.valueOf(item.getQuantity()));
 
             // Check if image URL is null or empty, then load default image, otherwise load from URL

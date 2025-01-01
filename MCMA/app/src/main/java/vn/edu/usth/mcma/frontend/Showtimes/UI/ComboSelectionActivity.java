@@ -1,61 +1,43 @@
 package vn.edu.usth.mcma.frontend.Showtimes.UI;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ImageButton;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ListFoodAndDrinkToOrderingResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.ViewAllFoodsAndDrinksByCinemaAPI;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Seat;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.ComboAdapter;
-import vn.edu.usth.mcma.frontend.Showtimes.Adapters.TheaterAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.ComboItem;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketItem;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.PriceCalculator;
 
 public class ComboSelectionActivity extends AppCompatActivity {
-
-    public static final String EXTRA_SEAT_PRICE = "extra_seat_price";
-    public static final String EXTRA_SEAT_COUNT = "extra_seat_count";
     public static final String EXTRA_SELECTED_SEATS = "extra_selected_seats";
     public static final String EXTRA_THEATER = "extra_theater";
     public static final String EXTRA_MOVIE = "extra_movie";
 
-    private int seatCount = 0;
-    private int seatPriceTotal = 0;
+    private double seatPriceTotal;
     private RecyclerView comboRecyclerView;
     private Button checkoutButton;
     private ComboAdapter comboAdapter;
@@ -66,24 +48,30 @@ public class ComboSelectionActivity extends AppCompatActivity {
     private TextView theaterNameTV;
     private TextView movieNameTV;
     private TextView releaseDateTV;
+    private TextView showtime;
     private TextView screenRoomTV;
+    private int movieId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_combo_selection);
+
+        movieId = getIntent().getIntExtra("CINEMA_ID", 0);
+
         initializeViews();
         handleIntentExtras();
         setupBackButton();
-        setupComboList();
         setupCheckoutButton();
+        fetchComboItems(movieId);
     }
 
+    @SuppressLint("DefaultLocale")
     private void handleIntentExtras() {
         try {
             // Parse seat price and count
-            seatPriceTotal = getIntent().getIntExtra(EXTRA_SEAT_PRICE, 0);
-            seatCount = getIntent().getIntExtra(EXTRA_SEAT_COUNT, 0);
+            seatPriceTotal = getIntent().getDoubleExtra("TOTAL_TICKET_AND_SEAT_PRICE", 0.0);
+            int seatCount = getIntent().getIntExtra("TOTAL_SEAT_COUNT", 0);
 
             // Theater name handling
             Theater selectedTheater = (Theater) getIntent().getSerializableExtra(EXTRA_THEATER);
@@ -98,12 +86,9 @@ public class ComboSelectionActivity extends AppCompatActivity {
                 movieNameTV.setText(selectedMovie.getTitle());
             }
 
-            // Release date handling (always today's date)
+            String selectedDate = getIntent().getStringExtra("SELECTED_DATE");
             if (releaseDateTV != null) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd'th' MMM, yyyy", Locale.getDefault());
-                Date today = new Date();
-                String formattedDate = formatDateWithOrdinal(today);
-                releaseDateTV.setText(formattedDate);
+                releaseDateTV.setText(selectedDate);
             }
 
             // Screen number handling
@@ -112,12 +97,17 @@ public class ComboSelectionActivity extends AppCompatActivity {
                 screenRoomTV.setText(selectedScreenRoom != null ? selectedScreenRoom : "Screen 1");
             }
 
+            String selectedShowtime = getIntent().getStringExtra("SELECTED_SHOWTIME");
+            if (showtime != null) {
+                showtime.setText(selectedShowtime);
+            }
+
             // Find TextView references with null checks
             TextView seatCountText = findViewById(R.id.no_of_seats);
             TextView seatPriceText = findViewById(R.id.seat_price_total);
 
             if (seatCountText != null) {
-                seatCountText.setText(String.format("%d ghế", seatCount));
+                seatCountText.setText(String.format("%d seat(s)", seatCount));
             } else {
                 Log.e("ComboSelectionActivity", "seatCountText is null");
             }
@@ -137,38 +127,6 @@ public class ComboSelectionActivity extends AppCompatActivity {
         }
     }
 
-    // Helper method to format date with ordinal suffix
-    private String formatDateWithOrdinal(Date date) {
-        SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.getDefault());
-        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
-        SimpleDateFormat dayFormat = new SimpleDateFormat("d", Locale.getDefault());
-
-        String month = monthFormat.format(date);
-        String year = yearFormat.format(date);
-        int day = Integer.parseInt(dayFormat.format(date));
-
-        String dayWithSuffix = getDayWithOrdinal(day);
-
-        return String.format("%s %s, %s", dayWithSuffix, month, year);
-    }
-
-    // Helper method to get day with ordinal suffix
-    private String getDayWithOrdinal(int day) {
-        if (day >= 11 && day <= 13) {
-            return day + "th";
-        }
-        switch (day % 10) {
-            case 1:
-                return day + "st";
-            case 2:
-                return day + "nd";
-            case 3:
-                return day + "rd";
-            default:
-                return day + "th";
-        }
-    }
-
     @SuppressLint("WrongViewCast")
     private void initializeViews() {
         comboRecyclerView = findViewById(R.id.combo_recycler_view);
@@ -180,58 +138,97 @@ public class ComboSelectionActivity extends AppCompatActivity {
         theaterNameTV = findViewById(R.id.theater_name);
         releaseDateTV = findViewById(R.id.movie_release_date);
         screenRoomTV = findViewById(R.id.screen_number);
+        showtime = findViewById(R.id.movie_duration);
+
         movieNameTV = findViewById(R.id.movie_name2);
         if (checkoutButton == null) {
             Log.e("ComboSelectionActivity", "checkoutButton is null");
         }
     }
 
-    private void setupComboList() {
-        List<ComboItem> comboItems = getComboItems();
-        comboAdapter = new ComboAdapter(comboItems);
+    private void fetchComboItems(int cinemaId) {
+        RetrofitService retrofitService = new RetrofitService(this);
+        ViewAllFoodsAndDrinksByCinemaAPI apiService = retrofitService.getRetrofit().create(ViewAllFoodsAndDrinksByCinemaAPI.class);
 
-//         Ensure listener is set before calling updateTotalPrice
+        apiService.ViewFoodsAndDrinks(cinemaId).enqueue(new Callback<List<ListFoodAndDrinkToOrderingResponse>>() {
+            @Override
+            public void onResponse(Call<List<ListFoodAndDrinkToOrderingResponse>> call, Response<List<ListFoodAndDrinkToOrderingResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<ListFoodAndDrinkToOrderingResponse> comboData = response.body();
+                    List<ComboItem> comboItems = convertResponseToComboItems(comboData);
+                    updateComboList(comboItems);
+                } else {
+                    Log.e("ComboSelectionActivity", "Failed to load combos: " + response.message());
+                    Toast.makeText(ComboSelectionActivity.this, "No available combos", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ListFoodAndDrinkToOrderingResponse>> call, Throwable t) {
+                Log.e("StoreFragment", "API Call Failed: " + t.getMessage(), t);
+                Toast.makeText(ComboSelectionActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private List<ComboItem> convertResponseToComboItems(List<ListFoodAndDrinkToOrderingResponse> comboData) {
+        List<ComboItem> items = new ArrayList<>();
+        for (ListFoodAndDrinkToOrderingResponse response : comboData) {
+            for (int i = 0; i < response.getFoodNameList().size(); i++) {
+                items.add(new ComboItem(
+                        response.getFoodNameList().get(i),
+                        response.getImageUrlFoodList().get(i),
+                        response.getFoodPriceList().get(i)
+                ));
+            }
+            for (int i = 0; i < response.getDrinkNameList().size(); i++) {
+                items.add(new ComboItem(
+                        response.getDrinkNameList().get(i),
+                        response.getImageUrlDrinkList().get(i),
+                        response.getDrinkPriceList().get(i)
+                ));
+            }
+        }
+        return items;
+    }
+
+    private void updateComboList(List<ComboItem> comboItems) {
+        comboAdapter = new ComboAdapter(comboItems); // Gán giá trị cho biến toàn cục
         comboAdapter.setTotalPriceChangedListener(items -> {
             if (totalPriceText != null) {
-                updateTotalPrice();
+                updateTotalPrice(comboItems);
             }
         });
 
         comboRecyclerView.setAdapter(comboAdapter);
-        comboRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // Initial total price update
-        updateTotalPrice();
+        comboRecyclerView.setLayoutManager(new LinearLayoutManager(ComboSelectionActivity.this));
+        updateTotalPrice(comboItems);
     }
 
-    private void updateTotalPrice() {
+    private void updateTotalPrice(List<ComboItem> comboItems) {
         try {
-            // Ensure comboAdapter is not null
             if (comboAdapter == null) {
                 Log.e("ComboSelectionActivity", "ComboAdapter is null");
                 return;
             }
 
-            // Calculate combo price
-            List<ComboItem> selectedComboItems = comboAdapter.getSelectedComboItems();
-            double comboPriceTotal = selectedComboItems.stream()
+            // Tính tổng giá combo
+            double comboPriceTotal = comboItems.stream()
                     .mapToDouble(ComboItem::getTotalPrice)
                     .sum();
 
-            // Calculate total price
+            // Tính tổng giá toàn bộ
             double totalPrice = seatPriceTotal + comboPriceTotal;
 
-            // Update combo price
+            // Cập nhật UI
             if (comboPriceText != null) {
-                comboPriceText.setText(PriceCalculator.formatPrice(comboPriceTotal));
+                comboPriceText.setText(String.format("$%.2f", comboPriceTotal));
             }
-
-            // Update total price
             if (totalPriceText != null) {
-                totalPriceText.setText(PriceCalculator.formatPrice(totalPrice));
+                totalPriceText.setText(String.format("$%.2f", totalPrice));
             }
 
-            // Enable/disable checkout button
+            // Bật hoặc tắt nút thanh toán dựa trên tổng giá
             if (checkoutButton != null) {
                 checkoutButton.setEnabled(totalPrice > 0);
                 checkoutButton.setBackgroundResource(
@@ -242,6 +239,7 @@ public class ComboSelectionActivity extends AppCompatActivity {
             Log.e("ComboSelectionActivity", "Error in updateTotalPrice", e);
         }
     }
+
 
     private void setupCheckoutButton() {
         Button checkoutButton = findViewById(R.id.checkout_button);
@@ -264,8 +262,8 @@ public class ComboSelectionActivity extends AppCompatActivity {
             intent.putExtra("THEATER_NAME", getIntent().getStringExtra("THEATER_NAME"));
             intent.putExtra("SELECTED_SHOWTIME", getIntent().getStringExtra("SELECTED_SHOWTIME"));
             intent.putExtra("SELECTED_SCREEN_ROOM", getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
-            intent.putParcelableArrayListExtra("SELECTED_SEATS", new ArrayList<>(selectedSeats));
-            intent.putParcelableArrayListExtra("SELECTED_COMBO_ITEMS", new ArrayList<>(selectedComboItems));
+//            intent.putParcelableArrayListExtra("SELECTED_SEATS", new ArrayList<>(selectedSeats));
+//            intent.putParcelableArrayListExtra("SELECTED_COMBO_ITEMS", new ArrayList<>(selectedComboItems));
             intent.putExtra("TOTAL_PRICE", totalPrice);
             int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
             intent.putExtra("MOVIE_BANNER", movieBannerResId);
@@ -277,19 +275,5 @@ public class ComboSelectionActivity extends AppCompatActivity {
     private void setupBackButton() {
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> onBackPressed());
-    }
-
-    private List<ComboItem> getComboItems() {
-        // Sample data - replace with actual data from your backend
-        List<ComboItem> items = new ArrayList<>();
-        items.add(new ComboItem("OL Combo1 Sweet32oz - Pepsi22oz", String.valueOf(R.drawable.combo_image_1), 80000));
-        items.add(new ComboItem("OL Combo2 Sweet32oz - Pepsi22oz", String.valueOf(R.drawable.combo_image_1), 107000));
-        items.add(new ComboItem("OL Combo Special Bap nam Ga (Sweet)", String.valueOf(R.drawable.combo_image_1), 135000));
-        items.add(new ComboItem("OL Special Combo1 Khoai Lac (Sweet)", String.valueOf(R.drawable.combo_image_1), 135000));
-        items.add(new ComboItem("OL Combo Special Bap nam XX loc xoay (Sweet)", String.valueOf(R.drawable.combo_image_1), 135000));
-        items.add(new ComboItem("OL Special Combo2 Bap nam Ga Lac (Sweet)", String.valueOf(R.drawable.combo_image_1), 162900));
-        items.add(new ComboItem("OL Special Combo2 Khoai Lac (Sweet)", String.valueOf(R.drawable.combo_image_1), 162900));
-        items.add(new ComboItem("OL Special Combo2 Bap nam XX loc xoay (Sweet)", String.valueOf(R.drawable.combo_image_1), 162900));
-        return items;
     }
 }

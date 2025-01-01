@@ -29,11 +29,37 @@ public class ScheduleResponse {
     private  Double averageRating;
 
     private String cinemaName;
-    private String screenName;
-    private Integer scheduleId;
-    private String dayOfWeek;
-    private String date;
-    private String time;
+    private List<String> screenName;
+    private List<Integer> scheduleId;
+    private List<String> dayOfWeek;
+    private List<String> date;
+    private List<String> time;
+
+    public ScheduleResponse(Integer movieId, String movieName, Integer movieLength, String description, String publishedDate, String trailerLink, String imageUrl, String backgroundImageUrl, List<String> movieGenreNameList, List<String> imageUrlList, List<String> movieGenreDescriptions, List<String> moviePerformerNameList, List<PerformerType> moviePerformerType, List<String> movieRatingDetailNameList, List<String> movieRatingDetailDescriptions, List<String> comments, Double averageRating, String cinemaName, List<String> screenName, List<Integer> scheduleId, List<String> dayOfWeek, List<String> date, List<String> time) {
+        this.movieId = movieId;
+        this.movieName = movieName;
+        this.movieLength = movieLength;
+        this.description = description;
+        this.publishedDate = publishedDate;
+        this.trailerLink = trailerLink;
+        this.imageUrl = imageUrl;
+        this.backgroundImageUrl = backgroundImageUrl;
+        this.movieGenreNameList = movieGenreNameList;
+        this.imageUrlList = imageUrlList;
+        this.movieGenreDescriptions = movieGenreDescriptions;
+        this.moviePerformerNameList = moviePerformerNameList;
+        this.moviePerformerType = moviePerformerType;
+        this.movieRatingDetailNameList = movieRatingDetailNameList;
+        this.movieRatingDetailDescriptions = movieRatingDetailDescriptions;
+        this.comments = comments;
+        this.averageRating = averageRating;
+        this.cinemaName = cinemaName;
+        this.screenName = screenName;
+        this.scheduleId = scheduleId;
+        this.dayOfWeek = dayOfWeek;
+        this.date = date;
+        this.time = time;
+    }
 
     public Integer getMovieId() {
         return movieId;
@@ -179,43 +205,43 @@ public class ScheduleResponse {
         this.cinemaName = cinemaName;
     }
 
-    public String getScreenName() {
+    public List<String> getScreenName() {
         return screenName;
     }
 
-    public void setScreenName(String screenName) {
+    public void setScreenName(List<String> screenName) {
         this.screenName = screenName;
     }
 
-    public Integer getScheduleId() {
+    public List<Integer> getScheduleId() {
         return scheduleId;
     }
 
-    public void setScheduleId(Integer scheduleId) {
+    public void setScheduleId(List<Integer> scheduleId) {
         this.scheduleId = scheduleId;
     }
 
-    public String getDayOfWeek() {
+    public List<String> getDayOfWeek() {
         return dayOfWeek;
     }
 
-    public void setDayOfWeek(String dayOfWeek) {
+    public void setDayOfWeek(List<String> dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
     }
 
-    public String getDate() {
+    public List<String> getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(List<String> date) {
         this.date = date;
     }
 
-    public String getTime() {
+    public List<String> getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(List<String> time) {
         this.time = time;
     }
 }

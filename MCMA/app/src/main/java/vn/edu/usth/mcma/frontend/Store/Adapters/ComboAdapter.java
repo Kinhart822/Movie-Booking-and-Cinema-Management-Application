@@ -63,7 +63,7 @@ public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHol
         // Binds data to the view holder elements
         void bind(ComboItem item) {
             nameText.setText(item.getName());
-            priceText.setText(String.format(Locale.getDefault(), "%,.0f$", item.getPrice()));
+            priceText.setText(String.format(Locale.getDefault(), "$%,.2f", item.getPrice()));
 
             if (item.getImageUrl() == null || item.getImageUrl().isEmpty()) {
                 comboImage.setImageResource(R.drawable.combo_image_1);

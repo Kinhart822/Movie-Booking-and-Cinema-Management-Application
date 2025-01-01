@@ -212,6 +212,7 @@
 
 package vn.edu.usth.mcma.frontend.Showtimes.UI;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -265,6 +266,8 @@ public class TicketSelectionActivity extends AppCompatActivity {
     private TextView screenRoomTV;
     private Movie selectedMovie;
     private TextView showtime;
+    private double totalTicketPrice;
+    private int totalCount;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -307,7 +310,7 @@ public class TicketSelectionActivity extends AppCompatActivity {
                     TicketType ticketType = TicketType.fromName(response.getTicketTypes().get(i));
                     TicketItem item = new TicketItem(
                             ticketType,
-                            response.getTicketPrices().get(i), // Fetch price from API
+                            response.getTicketPriceList().get(i), // Fetch price from API
                             response.getTicketIds().get(i)
                     );
                     item.setQuantity(0); // Default quantity
@@ -319,7 +322,6 @@ public class TicketSelectionActivity extends AppCompatActivity {
         }
         return ticketItems;
     }
-
 
     private void setupTicketList() {
         List<TicketItem> ticketItems = createTicketItems();
@@ -333,35 +335,34 @@ public class TicketSelectionActivity extends AppCompatActivity {
         ticketRecyclerView.setAdapter(ticketAdapter);
         ticketRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
+
     private List<TicketItem> createTicketItems() {
         List<TicketItem> ticketItems = new ArrayList<>();
         for (TicketType type : TicketType.values()) {
-            // Assuming TicketType has a method getId() to fetch the ID of the ticket
-            int ticketId = type.getId(); // Get the ticket ID from the TicketType
-            ticketItems.add(new TicketItem(type,type.getPrice(), ticketId)); // Create TicketItem with type and ID
+            int ticketId = type.getId();
+            ticketItems.add(new TicketItem(type,type.getPrice(), ticketId));
         }
         return ticketItems;
     }
 
-
-
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void updateTicketPriceAndCount(List<TicketItem> items) {
         double totalPrice = items.stream()
                 .mapToDouble(TicketItem::getTotalPrice) // Use mapToDouble for double values
                 .sum();
 
-        int totalCount = items.stream()
+        int totalTicketCount = items.stream()
                 .mapToInt(TicketItem::getQuantity)
                 .sum();
 
+        totalTicketPrice = totalPrice;
+        totalCount = totalTicketCount;
         totalTicketPriceTV.setText(formatCurrency(totalPrice));
-        totalTicketCountTV.setText(String.format("%d tickets", totalCount));
+        totalTicketCountTV.setText(String.format("%d tickets", totalTicketCount));
     }
 
     private String formatCurrency(double price) {
         NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
-//        format.setCurrency(Currency.getInstance("$"));
-//        NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         return format.format(price);
     }
 
@@ -391,6 +392,9 @@ public class TicketSelectionActivity extends AppCompatActivity {
                 intent.putExtra("SELECTED_SCREEN_ROOM", getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
                 int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
                 intent.putExtra("MOVIE_BANNER", movieBannerResId);
+                intent.putExtra("TOTAL_TICKET_PRICE", totalTicketPrice);
+                intent.putExtra("TOTAL_TICKET_COUNT", totalCount);
+                intent.putExtra("SELECTED_DATE", getIntent().getStringExtra("SELECTED_DATE"));
                 intent.putExtra("MOVIE_TITLE", getIntent().getStringExtra("MOVIE_TITLE"));
                 startActivity(intent);
             } else {
@@ -444,10 +448,6 @@ public class TicketSelectionActivity extends AppCompatActivity {
         // Release date handling (always today's date)
         String selectedDate = getIntent().getStringExtra("SELECTED_DATE");
         if (releaseDateTV != null) {
-//            SimpleDateFormat dateFormat = new SimpleDateFormat("dd'th' MMM, yyyy", Locale.getDefault());
-//            Date today = new Date();
-//            String formattedDate = formatDateWithOrdinal(today);
-
             releaseDateTV.setText(selectedDate);
         }
 
@@ -462,39 +462,6 @@ public class TicketSelectionActivity extends AppCompatActivity {
             showtime.setText(selectedShowtime);
         }
     }
-
-    // Helper method to format date with ordinal suffix
-//    private String formatDateWithOrdinal(Date date) {
-//        SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.getDefault());
-//        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
-//        SimpleDateFormat dayFormat = new SimpleDateFormat("d", Locale.getDefault());
-//
-//        String month = monthFormat.format(date);
-//        String year = yearFormat.format(date);
-//        int day = Integer.parseInt(dayFormat.format(date));
-//
-//        String dayWithSuffix = getDayWithOrdinal(day);
-//
-//        return String.format("%s %s, %s", dayWithSuffix, month, year);
-//    }
-//
-//    // Helper method to get day with ordinal suffix
-//    private String getDayWithOrdinal(int day) {
-//        if (day >= 11 && day <= 13) {
-//            return day + "th";
-//        }
-//        switch (day % 10) {
-//            case 1:
-//                return day + "st";
-//            case 2:
-//                return day + "nd";
-//            case 3:
-//                return day + "rd";
-//            default:
-//                return day + "th";
-//        }
-//    }
-
 
     private void setupBackButton() {
         ImageButton backButton = findViewById(R.id.back_button);

@@ -61,7 +61,6 @@ public class MovieBookingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_booking);
 
-        // Get movie title and theater type from intent
         movieTitle = getIntent().getStringExtra("MOVIE_TITLE");
         movieId = getIntent().getIntExtra("MOVIE_ID", -1);
         citiesSection = findViewById(R.id.cities_section);
@@ -69,29 +68,38 @@ public class MovieBookingActivity extends AppCompatActivity {
         citiesContainer = findViewById(R.id.cities_container);
 
         movieTitle = getIntent().getStringExtra("MOVIE_TITLE");
-        selectedCity = TheaterDataProvider.getCities().get(0); // Default to first city
+        selectedCity = TheaterDataProvider.getCities().get(0);
 
         setupToolbarAndBanner();
         setupMovieInfo();
-//        setupDateButtons();
         fetchCitiesByMovie(movieId);
         setupTheatersList();
 
         citiesSection.setVisibility(View.VISIBLE);
         theatersSection.setVisibility(View.VISIBLE);
-        // Initialize with default data
-//        updateTheatersList();
     }
 
     private void fetchCitiesByMovie(int movieId) {
         RetrofitService retrofitService = new RetrofitService(this);
         GetAllCitiesAPI getAllCitiesAPI = retrofitService.getRetrofit().create(GetAllCitiesAPI.class);
+
         getAllCitiesAPI.getCitiesByMovieId(movieId).enqueue(new Callback<List<CityResponse>>() {
             @Override
             public void onResponse(Call<List<CityResponse>> call, Response<List<CityResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<CityResponse> cities = response.body();
-                    setupCityButtons(cities); // Populate cities dynamically
+
+                    if (!cities.isEmpty()) {
+                        // Chọn thành phố đầu tiên làm mặc định
+                        CityResponse defaultCity = cities.get(0);
+                        selectedCity = defaultCity.getCityName();
+                        int defaultCityId = defaultCity.getCityId();
+
+                        fetchCinemasByCity(movieId, defaultCityId);
+                    }
+
+                    setupCityButtons(movieId, cities);
+
                 } else {
                     Toast.makeText(MovieBookingActivity.this, "Failed to fetch cities", Toast.LENGTH_SHORT).show();
                 }
@@ -104,12 +112,11 @@ public class MovieBookingActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchCinemasByCity(int cityId) {
-        // Use RetrofitService directly
+    private void fetchCinemasByCity(int movieId, int cityId) {
         RetrofitService retrofitService = new RetrofitService(this);
         GetCinemaByCityIdAPI apiService = retrofitService.getRetrofit().create(GetCinemaByCityIdAPI.class);
 
-        Call<List<CinemaResponse>> call = apiService.getCinemasByCityId(cityId);
+        Call<List<CinemaResponse>> call = apiService.getCinemasByMovieIdAndCityId(movieId, cityId);
         call.enqueue(new Callback<List<CinemaResponse>>() {
             @Override
             public void onResponse(Call<List<CinemaResponse>> call, Response<List<CinemaResponse>> response) {
@@ -129,14 +136,15 @@ public class MovieBookingActivity extends AppCompatActivity {
     }
 
 
-    private void setupCityButtons(List<CityResponse> cityResponses) {
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private void setupCityButtons(int movieId, List<CityResponse> cityResponses) {
         citiesContainer.removeAllViews();
 
         ColorStateList textColorStateList = ContextCompat.getColorStateList(this, R.color.button_text_selector);
 
         for (CityResponse cityResponse : cityResponses) {
             Integer cityId = cityResponse.getCityId();
-            String city = cityResponse.getCityName(); // Use cityName from API response
+            String city = cityResponse.getCityName();
 
             Button cityButton = new Button(this);
             cityButton.setText(city);
@@ -152,6 +160,7 @@ public class MovieBookingActivity extends AppCompatActivity {
             cityButton.setAllCaps(false);
             cityButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
 
+            // Đặt trạng thái `selected` cho nút mặc định
             if (selectedCity == null || city.equals(selectedCity)) {
                 cityButton.setSelected(true);
                 selectedCityButton = cityButton;
@@ -160,21 +169,21 @@ public class MovieBookingActivity extends AppCompatActivity {
 
             cityButton.setOnClickListener(v -> {
                 if (selectedCityButton != null) {
-                    selectedCityButton.setSelected(false);
+                    selectedCityButton.setSelected(false); // Bỏ chọn nút trước đó
                 }
-                cityButton.setSelected(true);
+                cityButton.setSelected(true); // Chọn nút hiện tại
                 selectedCityButton = cityButton;
                 selectedCity = city;
 
                 if (cityId != -1) {
-                    fetchCinemasByCity(cityId);  // Fetch cinemas for selected city
+                    fetchCinemasByCity(movieId, cityId);
                 }
-//                updateTheatersList();
             });
 
             citiesContainer.addView(cityButton);
         }
     }
+
 
     private void setupToolbarAndBanner() {
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -206,24 +215,10 @@ public class MovieBookingActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void setupMovieInfo() {
-        MovieDetails movieDetails = MovieDataProvider.getMovieDetails(movieTitle);
-
         TextView titleTextView = findViewById(R.id.movie_title);
-        TextView durationTextView = findViewById(R.id.movie_duration);
-
         titleTextView.setText(movieTitle);
-
-        if (movieDetails != null) {
-            int duration = movieDetails.getDuration();
-            if (duration > 0) {
-                durationTextView.setText(duration + " minutes");
-            } else {
-                durationTextView.setText(" tiếng");
-            }
-        } else {
-            durationTextView.setText("1 tiếng");
-        }
     }
+
     private void updateTheatersList(List<CinemaResponse> cinemas) {
         List<Theater> cityTheaters = new ArrayList<>();
 
@@ -239,14 +234,12 @@ public class MovieBookingActivity extends AppCompatActivity {
         theaterAdapter.setTheaters(cityTheaters, selectedDate, movieTitle);
     }
 
-
-
     private void setupTheatersList() {
         theatersRecyclerView = findViewById(R.id.theaters_recycler_view);
         theaterAdapter = new TheaterShowtimesAdapter(new TheaterShowtimesAdapter.OnShowtimeClickListener() {
             @Override
-            public void onShowtimeClick(Theater theater,String date, String showtime, String screenRoom) {
-                showQuantityTicketDialog(theater,date, showtime, screenRoom);
+            public void onShowtimeClick(Theater theater,String date, String showtime, Integer screenId, String screenRoom) {
+                showQuantityTicketDialog(theater,date, showtime, screenId, screenRoom);
             }
         },movieId);
         theatersRecyclerView.setAdapter(theaterAdapter);
@@ -255,7 +248,7 @@ public class MovieBookingActivity extends AppCompatActivity {
 
 
     // Add new method to MovieBookingActivity.java
-    private void showQuantityTicketDialog(Theater theater,String date, String showtime, String screenRoom) {
+    private void showQuantityTicketDialog(Theater theater,String date, String showtime, Integer screenId, String screenRoom) {
         QuantityTicketDialog dialog = new QuantityTicketDialog(this, new QuantityTicketDialog.OnDialogActionListener() {
             @Override
             public void onContinueClicked(int guestQuantity) {
@@ -273,6 +266,7 @@ public class MovieBookingActivity extends AppCompatActivity {
                 intent.putExtra(TicketSelectionActivity.EXTRA_MOVIE, selectedMovie);
                 intent.putExtra("SELECTED_SHOWTIME", showtime);
                 intent.putExtra("SELECTED_DATE", date);
+                intent.putExtra("SELECTED_SCREEN", screenId);
                 intent.putExtra("SELECTED_SCREEN_ROOM", screenRoom);
 //                intent.putExtra("THEATER_NAME", theater.getName());
                 int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
@@ -283,7 +277,6 @@ public class MovieBookingActivity extends AppCompatActivity {
 
             @Override
             public void onCloseClicked() {
-                // Dialog will be automatically dismissed
             }
         });
         dialog.show();

@@ -99,8 +99,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
+                    android:layout_marginTop="10dp"
                     android:text=""
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
@@ -163,7 +164,7 @@
                     android:id="@+id/view_sold_seat"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:background="@drawable/ic_seat_sold" />
+                    android:background="@drawable/ic_seat_unavailable" />
 
                 <TextView
                     android:id="@+id/text_sold_seat"
@@ -332,7 +333,7 @@
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="4dp"
-                    android:text="0d"
+                    android:text="$0.00"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
             </LinearLayout>

@@ -8,6 +8,7 @@ public class TicketItem implements Parcelable {
     private int quantity;
     private double price;
     private int ticketIds;
+
     public TicketItem(TicketType type, double price, int ticketIds) {
         this.type = type;
         this.price = price;

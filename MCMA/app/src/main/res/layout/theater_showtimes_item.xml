@@ -69,6 +69,7 @@
         app:flexWrap="wrap"
         app:justifyContent="flex_start" />
 
+
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"

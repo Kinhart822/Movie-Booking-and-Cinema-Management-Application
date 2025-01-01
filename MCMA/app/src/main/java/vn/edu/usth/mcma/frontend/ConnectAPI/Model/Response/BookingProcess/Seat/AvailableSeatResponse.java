@@ -4,6 +4,7 @@ public class AvailableSeatResponse {
     private String screenName;
     private Integer seatId;
     private String availableSeat;
+    private String seatStatus;
     private Integer seatColumn;
     private Integer seatRow;
     private String availableSeatsType;
@@ -63,5 +64,13 @@ public class AvailableSeatResponse {
 
     public void setSeatPrice(Double seatPrice) {
         this.seatPrice = seatPrice;
+    }
+
+    public String getSeatStatus() {
+        return seatStatus;
+    }
+
+    public void setSeatStatus(String seatStatus) {
+        this.seatStatus = seatStatus;
     }
 }

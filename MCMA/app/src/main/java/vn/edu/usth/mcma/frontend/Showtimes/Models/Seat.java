@@ -5,10 +5,19 @@ import android.os.Parcel;
 
 import java.util.Objects;
 
+import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.SeatStatus;
+
 public class Seat implements Parcelable {
     private String id;
     private SeatType type;
+    private SeatStatus status;
     private boolean isAvailable;
+
+    public Seat(String id, SeatStatus status, boolean isAvailable) {
+        this.id = id;
+        this.status = status;
+        this.isAvailable = isAvailable;
+    }
 
     public Seat(String id, SeatType type, boolean isAvailable) {
         this.id = id;
@@ -17,6 +26,16 @@ public class Seat implements Parcelable {
     }
 
     // Getters and setters
+
+
+    public SeatStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(SeatStatus status) {
+        this.status = status;
+    }
+
     public String getId() {
         return id;
     }

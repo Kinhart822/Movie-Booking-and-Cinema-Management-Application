@@ -5,15 +5,15 @@ import java.util.List;
 public class TicketResponse {
     private List<Integer> ticketIds;
     private List<String> ticketTypes;
-    private List<Double> ticketPrices;
     private List<String> ticketDescriptions;
-    public List<Double> getTicketPrices() {
-        return ticketPrices;
+    private List<Double> ticketPriceList;
+
+    public List<Double> getTicketPriceList() {
+        return ticketPriceList;
     }
 
-
-    public void setTicketPrices(List<Double> ticketPrices) {
-        this.ticketPrices = ticketPrices;
+    public void setTicketPriceList(List<Double> ticketPriceList) {
+        this.ticketPriceList = ticketPriceList;
     }
 
     public List<Integer> getTicketIds() {

@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.frontend.Showtimes.Adapters;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,21 +106,12 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
             minusButton.setOnClickListener(v -> updateQuantity(getAdapterPosition(), -1));
         }
 
+        @SuppressLint("DefaultLocale")
         void bind(TicketItem item) {
             nameText.setText(item.getType().getName());
             quantityText.setText(String.valueOf(item.getQuantity()));
             ticketImage.setImageResource(item.getType().getImageResourceId());
-
-            // Định dạng số tiền với dấu phẩy và thêm "đ"
-//            int price = item.getType().getPrice();
-//            String formattedPrice = formatPrice(price);
-            ticketPrice.setText(String.valueOf(item.getPrice()));
+            ticketPrice.setText(String.format("$%.2f", item.getPrice()));
         }
-
-        // Phương thức định dạng số tiền
-//        private String formatPrice(int price) {
-//            NumberFormat format = NumberFormat.getInstance(new Locale("vi", "VN"));
-//            return format.format(price) + "đ";
-//        }
     }
 }

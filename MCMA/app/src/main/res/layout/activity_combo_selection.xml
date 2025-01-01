@@ -80,6 +80,7 @@
                     android:id="@+id/screen_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="Screen 1"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
@@ -89,6 +90,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
+                    android:layout_marginTop="10dp"
                     android:text="26th Nov, 2024"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
@@ -98,6 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
+                    android:layout_marginTop="10dp"
                     android:text="148 minutes"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
@@ -166,9 +169,10 @@
                     android:id="@+id/no_of_seats"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="4dp"
-                    android:text="0 ghế"
+                    android:text="0 seat(s)"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
 
@@ -177,6 +181,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="8dp"
+                    android:layout_marginTop="2dp"
                     android:paddingVertical="4dp"
                     android:text="-"
                     android:textColor="@color/black"
@@ -190,7 +195,7 @@
                     android:layout_marginStart="1dp"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="4dp"
-                    android:text="0đ"
+                    android:text="$0.00"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:visibility="gone" />
@@ -208,10 +213,11 @@
                     android:id="@+id/total_price_0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
                     android:layout_marginRight="5dp"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="4dp"
-                    android:text="0d"
+                    android:text="$0.00"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
             </LinearLayout>

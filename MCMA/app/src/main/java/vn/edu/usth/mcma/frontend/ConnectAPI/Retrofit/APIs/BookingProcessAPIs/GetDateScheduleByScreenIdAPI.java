@@ -9,7 +9,7 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Schedu
 
 public interface GetDateScheduleByScreenIdAPI {
     @GET("/api/v1/user/booking/allSchedulesByMovieAndCinemaAndScreen")
-    Call<List<ScheduleResponse>> getAllSchedulesByMovieAndCinemaAndScreen(
+    Call<ScheduleResponse> getAllSchedulesByMovieAndCinemaAndScreen(
             @Query("movieId") Integer movieId,
             @Query("cinemaId") Integer cinemaId,
             @Query("screenId") Integer screenId

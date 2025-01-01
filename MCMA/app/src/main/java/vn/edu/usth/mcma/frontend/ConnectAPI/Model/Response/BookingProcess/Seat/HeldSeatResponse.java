@@ -3,10 +3,11 @@ package vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat;
 public class HeldSeatResponse {
     private  String screenName;
     private Integer seatId;
-    private String heldSeats;
+    private String heldSeat;
+    private String seatStatus;
     private Integer seatColumn;
     private Integer seatRow;
-    private String heldSeatsTypeList;
+    private String heldSeatsType;
 
     public String getScreenName() {
         return screenName;
@@ -24,12 +25,20 @@ public class HeldSeatResponse {
         this.seatId = seatId;
     }
 
-    public String getHeldSeats() {
-        return heldSeats;
+    public String getHeldSeat() {
+        return heldSeat;
     }
 
-    public void setHeldSeats(String heldSeats) {
-        this.heldSeats = heldSeats;
+    public void setHeldSeat(String heldSeat) {
+        this.heldSeat = heldSeat;
+    }
+
+    public String getSeatStatus() {
+        return seatStatus;
+    }
+
+    public void setSeatStatus(String seatStatus) {
+        this.seatStatus = seatStatus;
     }
 
     public Integer getSeatColumn() {
@@ -48,11 +57,11 @@ public class HeldSeatResponse {
         this.seatRow = seatRow;
     }
 
-    public String getHeldSeatsTypeList() {
-        return heldSeatsTypeList;
+    public String getHeldSeatsType() {
+        return heldSeatsType;
     }
 
-    public void setHeldSeatsTypeList(String heldSeatsTypeList) {
-        this.heldSeatsTypeList = heldSeatsTypeList;
+    public void setHeldSeatsType(String heldSeatsType) {
+        this.heldSeatsType = heldSeatsType;
     }
 }
