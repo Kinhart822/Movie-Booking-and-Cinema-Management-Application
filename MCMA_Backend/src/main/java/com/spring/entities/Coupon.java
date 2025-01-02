@@ -67,7 +67,7 @@ public class Coupon {
 
     @ManyToMany(mappedBy = "movieCouponSet")
     private Set<Movie> movieSet;
-
+    //TODO import
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "coupon")
     private List<BookingCoupon> coupons;
 }
