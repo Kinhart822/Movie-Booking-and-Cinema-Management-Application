@@ -21,8 +21,9 @@ public class MovieSchedule extends AbstractAuditing implements Serializable {
     private Long id;
     @Column
     private Long screenId;
-    @Column
-    private Long movieId;
+    @ManyToOne
+    @JoinColumn(name = "movie_id", nullable = false)
+    private Movie movie;
     @Column
     private Instant startTime;
     @Column(columnDefinition = "TINYINT")
