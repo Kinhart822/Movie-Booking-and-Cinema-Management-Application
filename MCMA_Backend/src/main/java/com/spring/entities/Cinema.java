@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Deprecated
 public class Cinema {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
