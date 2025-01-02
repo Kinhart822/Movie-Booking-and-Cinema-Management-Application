@@ -308,24 +308,24 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_cast_label" />
 
-            <Button
-                android:id="@+id/bookingButton"
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="16dp"
-                android:backgroundTint="@color/LightBlue"
-                android:drawableLeft="@drawable/ic_ticket"
-                android:drawablePadding="8dp"
-                android:drawableTint="@color/white"
-                android:text="Booking"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_cast"
-                app:layout_constraintWidth_percent="0.75" />
+<!--            <Button-->
+<!--                android:id="@+id/bookingButton"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="60dp"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:layout_marginBottom="16dp"-->
+<!--                android:backgroundTint="@color/LightBlue"-->
+<!--                android:drawableLeft="@drawable/ic_ticket"-->
+<!--                android:drawablePadding="8dp"-->
+<!--                android:drawableTint="@color/white"-->
+<!--                android:text="Booking"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textColor="#FFFFFF"-->
+<!--                android:textSize="16sp"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/tv_cast"-->
+<!--                app:layout_constraintWidth_percent="0.75" />-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

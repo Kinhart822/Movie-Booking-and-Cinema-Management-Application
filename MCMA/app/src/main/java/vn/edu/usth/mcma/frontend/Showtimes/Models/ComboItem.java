@@ -22,17 +22,14 @@ public class ComboItem implements Parcelable {
     public double getPrice() { return price; }
     public int getQuantity() { return quantity; }
 
-    // Modify setter to ensure quantity doesn't go below 0
     public void setQuantity(int quantity) {
         this.quantity = Math.max(0, quantity);
     }
 
-    // Calculate total price for this combo item
     public double getTotalPrice() {
         return price * quantity;
     }
 
-    // Parcelable implementation
     protected ComboItem(Parcel in) {
         name = in.readString();
         imageUrl = in.readString();

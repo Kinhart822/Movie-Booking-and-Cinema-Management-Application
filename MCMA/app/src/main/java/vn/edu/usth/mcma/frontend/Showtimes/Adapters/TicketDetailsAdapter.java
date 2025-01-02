@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.frontend.Showtimes.Adapters;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import vn.edu.usth.mcma.R;
@@ -21,9 +24,9 @@ public class TicketDetailsAdapter extends RecyclerView.Adapter<TicketDetailsAdap
     public static class TicketDetailsItem {
         private int quantity;
         private String ticketType;
-        private int totalPrice;
+        private double totalPrice;
 
-        public TicketDetailsItem(int quantity, String ticketType, int totalPrice) {
+        public TicketDetailsItem(int quantity, String ticketType, double totalPrice) {
             this.quantity = quantity;
             this.ticketType = ticketType;
             this.totalPrice = totalPrice;
@@ -31,7 +34,7 @@ public class TicketDetailsAdapter extends RecyclerView.Adapter<TicketDetailsAdap
 
         public int getQuantity() { return quantity; }
         public String getTicketType() { return ticketType; }
-        public int getTotalPrice() { return totalPrice; }
+        public double getTotalPrice() { return totalPrice; }
     }
 
     public TicketDetailsAdapter(List<TicketDetailsItem> ticketDetailsItems) {
@@ -46,12 +49,14 @@ public class TicketDetailsAdapter extends RecyclerView.Adapter<TicketDetailsAdap
         return new TicketDetailsViewHolder(view);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull TicketDetailsViewHolder holder, int position) {
         TicketDetailsItem item = ticketDetailsItems.get(position);
         holder.quantityAndTypeTicket.setText(String.format("%d x %s",
                 item.getQuantity(), item.getTicketType()));
-        holder.ticketPricePerQuantity.setText(PriceCalculator.formatPrice(item.getTotalPrice()));
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        holder.ticketPricePerQuantity.setText(currencyFormat.format(item.getTotalPrice()));
     }
 
     @Override

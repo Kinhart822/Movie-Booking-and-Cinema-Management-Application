@@ -17,7 +17,6 @@ public class TicketItem implements Parcelable {
     }
 
     // Getters and Setters
-
     public int getTicketIds() {
         return ticketIds;
     }
@@ -34,31 +33,36 @@ public class TicketItem implements Parcelable {
         this.price = price;
     }
 
-    public TicketType getType() { return type; }
-    public int getQuantity() { return quantity; }
+    public TicketType getType() {
+        return type;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
 
     public void setQuantity(int quantity) {
         this.quantity = Math.max(0, quantity);
     }
 
-    // Add a method to calculate price for this ticket type
-    public double getTotalPrice() { // Update to use the API-fetched price
+    public double getTotalPrice() {
         return price * quantity;
     }
-//    public int getTotalPrice() {
-//        return type.getPrice() * quantity;
-//    }
 
-    // Parcelable implementation (same as ComboItem)
+    // Parcelable implementation
     protected TicketItem(Parcel in) {
-        type = TicketType.valueOf(in.readString());
-        quantity = in.readInt();
+        type = TicketType.valueOf(in.readString()); // Read type
+        quantity = in.readInt();                  // Read quantity
+        price = in.readDouble();                  // Read price
+        ticketIds = in.readInt();                 // Read ticketIds
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(type.name());
-        dest.writeInt(quantity);
+        dest.writeString(type.name());            // Write type
+        dest.writeInt(quantity);                  // Write quantity
+        dest.writeDouble(price);                  // Write price
+        dest.writeInt(ticketIds);                 // Write ticketIds
     }
 
     @Override

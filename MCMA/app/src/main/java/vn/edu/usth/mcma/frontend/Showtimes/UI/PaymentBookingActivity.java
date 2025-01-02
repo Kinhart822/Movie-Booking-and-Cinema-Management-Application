@@ -1,74 +1,49 @@
 package vn.edu.usth.mcma.frontend.Showtimes.UI;
 
-import static vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType.COUPLE;
-import static vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType.STAND;
-import static vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType.VIP;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.GravityCompat;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.SimpleDateFormat;
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.CouponResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.AvailableSeatResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.BookingProcessAPIs.GetAllCouponAPI;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.ComboDetailsAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.CouponAdapter;
-import vn.edu.usth.mcma.frontend.Showtimes.Adapters.PaymentMethodAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.SeatDetailsAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.TicketDetailsAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.ComboItem;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Coupon;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.MovieDetails;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.PaymentMethod;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Seat;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketItem;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.PriceCalculator;
-import vn.edu.usth.mcma.frontend.Showtimes.Utils.MovieDataProvider;
 
 public class PaymentBookingActivity extends AppCompatActivity {
-    public static final String EXTRA_THEATER = "extra_theater";
-    public static final String EXTRA_MOVIE = "extra_movie";
-
     private RecyclerView ticketDetailsRecyclerView;
     private RecyclerView seatDetailsRecyclerView;
     private RecyclerView comboDetailsRecyclerView;
-    private RecyclerView paymentMethodsRecyclerView;
-    private PaymentMethodAdapter paymentMethodAdapter;
-    private CheckBox termsCheckbox;
-    private Button completePaymentButton;
-    private PaymentMethod selectedPaymentMethod;
-    private Movie selectedMovie;
-    private Theater selectedTheater;
-    private List<Seat> selectedSeats;
+    private List<AvailableSeatResponse> selectedSeats = new ArrayList<>();
     private List<ComboItem> selectedComboItems;
     private double totalPrice;
     private Button buttonCoupon;
@@ -78,6 +53,11 @@ public class PaymentBookingActivity extends AppCompatActivity {
     private double originalTotalPrice;
     private int totalTicketCount;
     private int totalComboCount;
+    private List<TicketItem> ticketItems = new ArrayList<>();
+    private double totalTicketPrice;
+    private List<ComboItem> comboItems = new ArrayList<>();
+    private int movieId;
+    private List<Coupon> couponList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,10 +69,30 @@ public class PaymentBookingActivity extends AppCompatActivity {
             onBackPressed();
         });
 
+        movieId = getIntent().getIntExtra("MOVIE_ID", -1);
+
+        totalTicketCount = getIntent().getIntExtra("TOTAL_TICKET_COUNT", 0);
+        Log.d("PaymentBookingActivity", "Total Ticket Count: " + totalTicketCount);
+
+        ticketItems = getIntent().getParcelableArrayListExtra("SELECTED_TICKET_ITEMS");
+        Log.d("PaymentBookingActivity", "SELECTED_TICKET_ITEMS received: " + ticketItems);
+
+        totalTicketPrice = getIntent().getDoubleExtra("TOTAL_TICKET_PRICE", 0.0);
+        Log.d("PaymentBookingActivity", "TOTAL_TICKET_PRICE received: " + totalTicketPrice);
+
+        totalComboCount = getIntent().getIntExtra("TOTAL_COMBO_COUNT", 0);
+        Log.d("PaymentBookingActivity", "Total Combo Count: " + totalComboCount);
+
+        comboItems = getIntent().getParcelableArrayListExtra("SELECTED_COMBO_ITEMS");
+        Log.d("PaymentBookingActivity", "SELECTED_COMBO_ITEMS received: " + comboItems);
+
+        selectedSeats = getIntent().getParcelableArrayListExtra("SELECTED_SEAT_ITEMS");
+        Log.d("PaymentBookingActivity", "SELECTED_SEAT_ITEMS received: " + selectedSeats);
+
         initializeViews();
         retrieveIntentExtras();
+        couponList = fetchCoupons(movieId);
         setupCouponButton();
-        selectedCoupon = getCouponList().get(0);
         updateCouponButton();
         originalTotalPrice = totalPrice;
         updateTotalPriceWithCoupon();
@@ -112,7 +112,7 @@ public class PaymentBookingActivity extends AppCompatActivity {
         Button confirmBtn = dialogView.findViewById(R.id.confirm_button);
         RecyclerView couponDialogRecyclerView = dialogView.findViewById(R.id.coupon_recycler_view);
 
-        List<Coupon> couponList = getCouponList();
+        // Wait until coupons are fetched before showing the dialog
         CouponAdapter dialogAdapter = new CouponAdapter(couponList);
         dialogAdapter.setOnCouponClickListener(coupon -> {
             selectedCoupon = coupon;
@@ -137,45 +137,88 @@ public class PaymentBookingActivity extends AppCompatActivity {
     }
 
     private void updateCouponButton() {
-        buttonCoupon.setText(selectedCoupon.getName());
+        if (selectedCoupon != null) {
+            buttonCoupon.setText(selectedCoupon.getName());
+        }
     }
 
+    @SuppressLint("DefaultLocale")
     private void updateTotalPriceWithCoupon() {
-        // Calculate discounted price
-        double discountPercentage = selectedCoupon.getDiscountPercentage();
-        double discountAmount = originalTotalPrice * discountPercentage;
-        double discountedPrice = originalTotalPrice - discountAmount;
+        if (selectedCoupon != null) {
+            // Calculate discounted price
+            double discountPercentage = selectedCoupon.getDiscountPercentage();
+            double discountAmount = originalTotalPrice * discountPercentage;
+            double discountedPrice = originalTotalPrice - discountAmount;
 
-        // Update total price with coupon TextView
-        totalPriceCouponTV.setText(PriceCalculator.formatPrice(discountedPrice));
+            // Update total price with coupon TextView
+            totalPriceCouponTV.setText(String.format("$%.2f", discountedPrice));
+        }
     }
 
-    private List<Coupon> getCouponList() {
+    private List<Coupon> fetchCoupons(int movieId) {
         List<Coupon> coupons = new ArrayList<>();
-        coupons.add(new Coupon("1", "Not use coupon"));
-        coupons.add(new Coupon("2", "10%"));
-        coupons.add(new Coupon("3", "20%"));
-        coupons.add(new Coupon("4", "30%"));
-        coupons.add(new Coupon("5", "40%"));
-        coupons.add(new Coupon("6", "50%"));
-        coupons.add(new Coupon("7", "60%"));
-        coupons.add(new Coupon("8", "70%"));
-        coupons.add(new Coupon("9", "80%"));
-        coupons.add(new Coupon("10", "90%"));
+        RetrofitService retrofitService = new RetrofitService(this);
+        GetAllCouponAPI apiService = retrofitService.getRetrofit().create(GetAllCouponAPI.class);
+
+        // Fetch coupons by user
+        Call<List<CouponResponse>> userCouponsCall = apiService.getAllCouponByUser();
+        userCouponsCall.enqueue(new Callback<List<CouponResponse>>() {
+            @Override
+            public void onResponse(Call<List<CouponResponse>> call, Response<List<CouponResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<CouponResponse> userCouponResponses = response.body();
+                    processCoupons(coupons, userCouponResponses);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CouponResponse>> call, Throwable t) {
+                Log.e("CouponFetch", "Error fetching user coupons", t);
+            }
+        });
+
+        // Fetch coupons by movie
+        Call<List<CouponResponse>> movieCouponsCall = apiService.getAllCouponsByMovie(movieId);
+        movieCouponsCall.enqueue(new Callback<List<CouponResponse>>() {
+            @Override
+            public void onResponse(Call<List<CouponResponse>> call, Response<List<CouponResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<CouponResponse> movieCouponResponses = response.body();
+                    processCoupons(coupons, movieCouponResponses);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CouponResponse>> call, Throwable t) {
+                Log.e("CouponFetch", "Error fetching movie coupons", t);
+            }
+        });
+
         return coupons;
     }
 
+    private void processCoupons(List<Coupon> coupons, List<CouponResponse> couponResponses) {
+        for (CouponResponse response : couponResponses) {
+            List<String> names = response.getCouponNameList();
+            List<String> descriptions = response.getCouponDescriptionList();
+            List<BigDecimal> discountRates = response.getDiscountRateList();
+
+            for (int i = 0; i < names.size(); i++) {
+                String name = names.get(i);
+                String description = descriptions.get(i);
+                double discountRate = discountRates.get(i).doubleValue();
+
+                String couponName = String.format("%s - %s - %s%%", name, description, discountRate * 100);
+                coupons.add(new Coupon(couponName));
+            }
+        }
+    }
+
+    @SuppressLint("DefaultLocale")
     private void retrieveIntentExtras() {
-//        selectedMovie = (Movie) getIntent().getSerializableExtra("SELECTED_MOVIE");
-//        selectedTheater = (Theater) getIntent().getSerializableExtra("SELECTED_THEATER");
-//        String theaterName = getIntent().getStringExtra("CINEMA_NAME");
-//        // Use the passed theater name if available
-//        if (selectedTheater != null) {
-//            selectedTheater.setName(theaterName != null ? theaterName : selectedTheater.getName());
-//        }
-        selectedSeats = getIntent().getParcelableArrayListExtra("SELECTED_SEATS");
-        selectedComboItems = getIntent().getParcelableArrayListExtra("SELECTED_COMBO_ITEMS");
-        totalPrice = getIntent().getDoubleExtra("TOTAL_PRICE", 0);
+        totalPrice = getIntent().getDoubleExtra("TOTAL_PRICE_OF_SELECTED_CHOICE", 0.0);
+        totalPriceTV.setText(String.format("$%.2f", totalPrice));
+        totalPriceCouponTV.setText(String.format("$%.2f", totalPrice));
     }
 
     private void initializeViews() {
@@ -216,138 +259,101 @@ public class PaymentBookingActivity extends AppCompatActivity {
         }
 
         // Set seats and combo details
-        //        setTicketDetails();
+        setTicketDetails();
         setSeatsDetails();
-//        setCombosDetails();
+        setCombosDetails();
 
         // Set total price
         TextView totalPriceTV = findViewById(R.id.total_price);
         totalPriceTV.setText(PriceCalculator.formatPrice(totalPrice));
     }
 
-//    private void setTicketDetails() {
-//        ticketDetailsRecyclerView = findViewById(R.id.ticket_details_recycler_view);
-//        List<TicketItem> ticketItems = getIntent().getParcelableArrayListExtra("TICKET_ITEMS");
-//
-//        if (ticketItems != null) {
-//            // Filter out ticket types with zero quantity and create TicketDetailsItems
-//            List<TicketDetailsAdapter.TicketDetailsItem> ticketDetailItems = ticketItems.stream()
-//                    .filter(item -> item.getQuantity() > 0)
-//                    .map(item -> new TicketDetailsAdapter.TicketDetailsItem(
-//                            item.getQuantity(),
-//                            item.getType().getName(),
-//                            (int) item.getTotalPrice()
-//                    ))
-//                    .collect(Collectors.toList());
-//
-//            // Only set up the adapter if there are ticket items
-//            if (!ticketDetailItems.isEmpty()) {
-//                TicketDetailsAdapter ticketDetailsAdapter = new TicketDetailsAdapter(ticketDetailItems);
-//                ticketDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-//                ticketDetailsRecyclerView.setAdapter(ticketDetailsAdapter);
-//            }
-//        }
-//    }
+    private void setTicketDetails() {
+        ticketDetailsRecyclerView = findViewById(R.id.ticket_details_recycler_view);
+        if (ticketItems != null) {
+            // Filter out ticket types with zero quantity and create TicketDetailsItems
+            List<TicketDetailsAdapter.TicketDetailsItem> ticketDetailItems = ticketItems.stream()
+                    .filter(item -> item.getQuantity() > 0)
+                    .map(item -> new TicketDetailsAdapter.TicketDetailsItem(
+                            item.getQuantity(),
+                            item.getType().getName(),
+                            item.getTotalPrice()
+                    ))
+                    .collect(Collectors.toList());
 
-    @SuppressLint("DefaultLocale")
+            // Only set up the adapter if there are ticket items
+            if (!ticketDetailItems.isEmpty()) {
+                TicketDetailsAdapter ticketDetailsAdapter = new TicketDetailsAdapter(ticketDetailItems);
+                ticketDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+                ticketDetailsRecyclerView.setAdapter(ticketDetailsAdapter);
+            }
+        }
+    }
+
+    @SuppressLint({"DefaultLocale", "SetTextI18n"})
     private void setSeatsDetails() {
         TextView noOfSeatsTV = findViewById(R.id.noOfSeats);
-        totalTicketCount = getIntent().getIntExtra("TOTAL_TICKET_COUNT", 0);
+        noOfSeatsTV.setText(String.format("%d ticket(s)", totalTicketCount));
         seatDetailsRecyclerView = findViewById(R.id.seat_details_recycler_view);
 
         if (selectedSeats != null) {
-            noOfSeatsTV.setText(String.format("%d ticket(s)", totalTicketCount));
+            List<SeatDetailsAdapter.SeatDetailItem> seatDetailItems = new ArrayList<>();
 
-//            // Prepare seat details for the adapter
-//            List<SeatDetailsAdapter.SeatDetailItem> seatDetailItems = new ArrayList<>();
-//            Map<SeatType, List<Seat>> seatsByType = groupSeatsByType(selectedSeats);
-//
-//            for (Map.Entry<SeatType, List<Seat>> entry : seatsByType.entrySet()) {
-//                SeatType seatType = entry.getKey();
-//                List<Seat> typedSeats = entry.getValue();
-//
-//                if (!typedSeats.isEmpty() && seatType != SeatType.SOLD) {
-//                    String seatPositions = typedSeats.stream()
-//                            .map(Seat::getId)
-//                            .collect(Collectors.joining(", "));
-//
-//                    String seatTypeDisplay = getSeatTypeDisplay(seatType);
-//                    int seatPrice = getSeatTypePrice(seatType);
-//
-//                    seatDetailItems.add(new SeatDetailsAdapter.SeatDetailItem(
-//                            String.format("%d x %s - 2D: %s",
-//                                    typedSeats.size(), seatTypeDisplay, seatPositions),
-//                            PriceCalculator.formatPrice(typedSeats.size() * seatPrice)
-//                    ));
-//                }
-//            }
-//
-//            SeatDetailsAdapter seatDetailsAdapter = new SeatDetailsAdapter(seatDetailItems);
-//            seatDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-//            seatDetailsRecyclerView.setAdapter(seatDetailsAdapter);
+            Map<String, List<AvailableSeatResponse>> seatsByType = selectedSeats.stream()
+                    .filter(seat -> !"Unavailable".equalsIgnoreCase(seat.getSeatStatus()) && !"Held".equalsIgnoreCase(seat.getSeatStatus()))
+                    .collect(Collectors.groupingBy(AvailableSeatResponse::getAvailableSeatsType));
+
+            for (Map.Entry<String, List<AvailableSeatResponse>> entry : seatsByType.entrySet()) {
+                String seatType = entry.getKey();
+                List<AvailableSeatResponse> typedSeats = entry.getValue();
+
+                if (!typedSeats.isEmpty()) {
+                    String seatPositions = typedSeats.stream()
+                            .map(seat -> String.valueOf(seat.getAvailableSeat()))
+                            .collect(Collectors.joining(", "));
+
+                    double seatPrice = typedSeats.get(0).getSeatPrice();
+
+                    seatDetailItems.add(new SeatDetailsAdapter.SeatDetailItem(
+                            String.format("%d x %s - %s",
+                                    typedSeats.size(), seatType, seatPositions),
+                            PriceCalculator.formatPrice(typedSeats.size() * seatPrice)
+                    ));
+                }
+            }
+
+            // Gắn adapter và RecyclerView
+            SeatDetailsAdapter seatDetailsAdapter = new SeatDetailsAdapter(seatDetailItems);
+            seatDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            seatDetailsRecyclerView.setAdapter(seatDetailsAdapter);
         }
     }
-//
-//    private Map<SeatType, List<Seat>> groupSeatsByType(List<Seat> seats) {
-//        return seats.stream()
-//                .collect(Collectors.groupingBy(Seat::getType));
-//    }
-//
+
+    private Map<SeatType, List<Seat>> groupSeatsByType(List<Seat> seats) {
+        return seats.stream()
+                .collect(Collectors.groupingBy(Seat::getType));
+    }
+
     @SuppressLint("DefaultLocale")
     private void setCombosDetails() {
         TextView noOfCombosTV = findViewById(R.id.noOfCombos);
-        totalComboCount = getIntent().getIntExtra("TOTAL_COMBO_COUNT", 0);
+        noOfCombosTV.setText(String.format("%d combo(s)", totalComboCount));
         comboDetailsRecyclerView = findViewById(R.id.combo_details_recycler_view);
 
-        if (selectedComboItems != null) {
-//            // Filter and count combos with quantity > 0
-//            List<ComboItem> filteredCombos = selectedComboItems.stream()
-//                    .filter(combo -> combo.getQuantity() > 0)
-//                    .collect(Collectors.toList());
-//
-//            int totalComboCount = filteredCombos.stream().mapToInt(ComboItem::getQuantity).sum();
-            noOfCombosTV.setText(String.format("%d combo(s)", totalComboCount));
+        if (comboItems != null) {
+            List<ComboDetailsAdapter.ComboDetailItem> comboDetailItems = comboItems.stream()
+                    .filter(combo -> combo.getQuantity() > 0)
+                    .map(combo -> new ComboDetailsAdapter.ComboDetailItem(
+                            String.format("%d x %s", combo.getQuantity(), combo.getName()),
+                            combo.getQuantity() * combo.getPrice()
+                    ))
+                    .collect(Collectors.toList());
 
-//            // Prepare combo details for the adapter
-//            List<ComboDetailsAdapter.ComboDetailItem> comboDetailItems = filteredCombos.stream()
-//                    .map(combo -> new ComboDetailsAdapter.ComboDetailItem(
-//                            String.format("%d x %s", combo.getQuantity(), combo.getName()),
-//                            PriceCalculator.formatPrice(combo.getQuantity() * combo.getPrice())
-//                    ))
-//                    .collect(Collectors.toList());
-//
-//            ComboDetailsAdapter comboDetailsAdapter = new ComboDetailsAdapter(comboDetailItems);
-//            comboDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-//            comboDetailsRecyclerView.setAdapter(comboDetailsAdapter);
+            ComboDetailsAdapter comboDetailsAdapter = new ComboDetailsAdapter(comboDetailItems);
+            comboDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            comboDetailsRecyclerView.setAdapter(comboDetailsAdapter);
         }
     }
-
-    // Utility methods
-//    private String getSeatTypeDisplay(SeatType seatType) {
-//        switch (seatType) {
-//            case VIP:
-//                return "VIP";
-//            case COUPLE:
-//                return "Couple";
-//            case STAND:
-//                return "Stand";
-//            default:
-//                return "Standard";
-//        }
-//    }
-//
-//    private int getSeatTypePrice(SeatType seatType) {
-//        switch (seatType) {
-//            case VIP:
-//                return 150000;
-//            case COUPLE:
-//                return 200000;
-//            case STAND:
-//                return 100000;
-//            default:
-//                return 100000;
-//        }
-//    }
 
     private void setupCheckoutButton() {
         Button checkoutButton = findViewById(R.id.checkout_button);

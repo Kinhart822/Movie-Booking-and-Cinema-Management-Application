@@ -8,7 +8,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import vn.edu.usth.mcma.R;
 
@@ -17,9 +19,9 @@ public class ComboDetailsAdapter extends RecyclerView.Adapter<ComboDetailsAdapte
 
     public static class ComboDetailItem {
         private String name;
-        private String price;
+        private double price;
 
-        public ComboDetailItem(String name, String price) {
+        public ComboDetailItem(String name, double price) {
             this.name = name;
             this.price = price;
         }
@@ -28,7 +30,7 @@ public class ComboDetailsAdapter extends RecyclerView.Adapter<ComboDetailsAdapte
             return name;
         }
 
-        public String getPrice() {
+        public double getPrice() {
             return price;
         }
     }
@@ -49,7 +51,8 @@ public class ComboDetailsAdapter extends RecyclerView.Adapter<ComboDetailsAdapte
     public void onBindViewHolder(@NonNull ComboDetailsViewHolder holder, int position) {
         ComboDetailItem item = comboDetails.get(position);
         holder.nameTV.setText(item.getName());
-        holder.priceTV.setText(item.getPrice());
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        holder.priceTV.setText(currencyFormat.format(item.getPrice()));
     }
 
     @Override

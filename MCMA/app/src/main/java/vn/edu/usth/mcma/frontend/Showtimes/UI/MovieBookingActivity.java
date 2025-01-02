@@ -272,6 +272,8 @@ public class MovieBookingActivity extends AppCompatActivity {
 //                intent.putExtra("THEATER_NAME", theater.getName());
                 int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
                 intent.putExtra("MOVIE_BANNER", movieBannerResId);
+                intent.putExtra("MOVIE_ID", movieId);
+
 //                intent.putExtra("MOVIE_TITLE", movieTitle);
                 startActivity(intent);
             }

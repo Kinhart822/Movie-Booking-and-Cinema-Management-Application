@@ -21,6 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.AvailableSeatResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ListFoodAndDrinkToOrderingResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.ViewAllFoodsAndDrinksByCinemaAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
@@ -52,23 +53,37 @@ public class ComboSelectionActivity extends AppCompatActivity {
     private TextView releaseDateTV;
     private TextView showtime;
     private TextView screenRoomTV;
+    private int cinemaId;
     private int movieId;
     private int totalTicketCount;
+    private List<ComboItem> comboItemList = new ArrayList<>();
     private int totalComboCount;
+    private List<TicketItem> items = new ArrayList<>();
+    private List<AvailableSeatResponse> seatItems = new ArrayList<>();
+    private double totalTicketPrice;
+    private double totalPriceOfSelectedChoice;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_combo_selection);
 
-        movieId = getIntent().getIntExtra("CINEMA_ID", 0);
+        cinemaId = getIntent().getIntExtra("CINEMA_ID", 0);
+        movieId = getIntent().getIntExtra("MOVIE_ID", -1);
         totalTicketCount = getIntent().getIntExtra("TOTAL_TICKET_COUNT", 0);
+        Log.d("ComboSelection", "TOTAL_TICKET_COUNT received: " + totalTicketCount);
+        totalTicketPrice = getIntent().getDoubleExtra("TOTAL_TICKET_PRICE", 0.0);
+        Log.d("ComboSelection", "TOTAL_TICKET_PRICE received: " + totalTicketPrice);
+        items = getIntent().getParcelableArrayListExtra("SELECTED_TICKET_ITEMS");
+        Log.d("ComboSelection", "SELECTED_TICKET_ITEMS received: " + items);
+        seatItems = getIntent().getParcelableArrayListExtra("SELECTED_SEAT_ITEMS");
+        Log.d("ComboSelection", "SELECTED_SEAT_ITEMS received: " + seatItems);
 
         initializeViews();
         handleIntentExtras();
         setupBackButton();
         setupCheckoutButton();
-        fetchComboItems(movieId);
+        fetchComboItems(cinemaId);
     }
 
     @SuppressLint("DefaultLocale")
@@ -161,6 +176,7 @@ public class ComboSelectionActivity extends AppCompatActivity {
                     List<ListFoodAndDrinkToOrderingResponse> comboData = response.body();
                     List<ComboItem> comboItems = convertResponseToComboItems(comboData);
                     updateComboList(comboItems);
+                    comboItemList.addAll(comboItems);
                 } else {
                     Log.e("ComboSelectionActivity", "Failed to load combos: " + response.message());
                     Toast.makeText(ComboSelectionActivity.this, "No available combos", Toast.LENGTH_SHORT).show();
@@ -209,6 +225,7 @@ public class ComboSelectionActivity extends AppCompatActivity {
         updateTotalPrice(comboItems);
     }
 
+    @SuppressLint("DefaultLocale")
     private void updateTotalPrice(List<ComboItem> comboItems) {
         try {
             if (comboAdapter == null) {
@@ -224,9 +241,11 @@ public class ComboSelectionActivity extends AppCompatActivity {
             totalComboCount = comboItems.stream()
                     .mapToInt(ComboItem::getQuantity)
                     .sum();
+            Log.d("ComboSelectionActivity", "Combo Count:" + totalComboCount);
 
             // Tính tổng giá toàn bộ
             double totalPrice = seatPriceTotal + comboPriceTotal;
+            totalPriceOfSelectedChoice = totalPrice;
 
             // Cập nhật UI
             if (comboPriceText != null) {
@@ -258,8 +277,6 @@ public class ComboSelectionActivity extends AppCompatActivity {
             // Get selected combo items
             List<ComboItem> selectedComboItems = comboAdapter.getSelectedComboItems();
 
-            // Calculate total price
-            double totalPrice = PriceCalculator.calculateTotalPrice(seatPriceTotal, selectedComboItems);
 
             // Create intent to PaymentBookingActivity
             Intent intent = new Intent(this, PaymentBookingActivity.class);
@@ -269,16 +286,20 @@ public class ComboSelectionActivity extends AppCompatActivity {
             intent.putExtra("THEATER_NAME", getIntent().getStringExtra("THEATER_NAME"));
             intent.putExtra("SELECTED_SHOWTIME", getIntent().getStringExtra("SELECTED_SHOWTIME"));
             intent.putExtra("SELECTED_SCREEN_ROOM", getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
-//            intent.putParcelableArrayListExtra("SELECTED_SEATS", new ArrayList<>(selectedSeats));
-//            intent.putParcelableArrayListExtra("SELECTED_COMBO_ITEMS", new ArrayList<>(selectedComboItems));
             intent.putExtra("SELECTED_DATE", getIntent().getStringExtra("SELECTED_DATE"));
-            intent.putExtra("TOTAL_PRICE", totalPrice);
             int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
             intent.putExtra("MOVIE_BANNER", movieBannerResId);
             intent.putExtra("MOVIE_NAME", movieName);
             intent.putExtra("CINEMA_NAME", cinemaName);
             intent.putExtra("TOTAL_TICKET_COUNT", totalTicketCount);
             intent.putExtra("TOTAL_COMBO_COUNT", totalComboCount);
+            intent.putParcelableArrayListExtra("SELECTED_COMBO_ITEMS", new ArrayList<>(comboItemList));
+            intent.putExtra("TOTAL_PRICE_OF_SELECTED_CHOICE", totalPriceOfSelectedChoice);
+            intent.putParcelableArrayListExtra("SELECTED_TICKET_ITEMS", new ArrayList<>(items));
+            intent.putExtra("TOTAL_TICKET_PRICE", totalTicketPrice);
+            intent.putParcelableArrayListExtra("SELECTED_SEAT_ITEMS", new ArrayList<>(seatItems));
+            intent.putExtra("MOVIE_ID", movieId);
+
             startActivity(intent);
         });
     }

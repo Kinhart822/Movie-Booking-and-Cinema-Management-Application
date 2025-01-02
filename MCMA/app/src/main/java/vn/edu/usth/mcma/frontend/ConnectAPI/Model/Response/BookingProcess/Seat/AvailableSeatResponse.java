@@ -1,6 +1,13 @@
 package vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat;
 
-public class AvailableSeatResponse {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType;
+import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketItem;
+import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketType;
+
+public class AvailableSeatResponse implements Parcelable{
     private String screenName;
     private Integer seatId;
     private String availableSeat;
@@ -73,4 +80,37 @@ public class AvailableSeatResponse {
     public void setSeatStatus(String seatStatus) {
         this.seatStatus = seatStatus;
     }
+
+    // Parcelable implementation
+    protected AvailableSeatResponse(Parcel in) {
+        availableSeatsType = in.readString();
+        seatPrice = in.readDouble();
+        seatId = in.readInt();
+        availableSeat = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(availableSeatsType);
+        dest.writeDouble(seatPrice);
+        dest.writeInt(seatId);
+        dest.writeString(availableSeat);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Parcelable.Creator<AvailableSeatResponse> CREATOR = new Parcelable.Creator<AvailableSeatResponse>() {
+        @Override
+        public AvailableSeatResponse createFromParcel(Parcel in) {
+            return new AvailableSeatResponse(in);
+        }
+
+        @Override
+        public AvailableSeatResponse[] newArray(int size) {
+            return new AvailableSeatResponse[size];
+        }
+    };
 }

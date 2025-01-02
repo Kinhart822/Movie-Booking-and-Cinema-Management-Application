@@ -2,6 +2,7 @@ package vn.edu.usth.mcma.frontend.Showtimes.UI;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -54,13 +55,22 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private int guestQuantity;
     private double totalTicketAndSeatPrice;
     private int totalSeatCount;
-
+    private List<TicketItem> tickets;
+    private int movieId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seat_selection);
+
+        movieId = getIntent().getIntExtra("MOVIE_ID", -1);
+
         totalTicketCount = getIntent().getIntExtra("TOTAL_TICKET_COUNT", 0);
+        Log.d("SeatSelection", "TOTAL_TICKET_COUNT received: " + totalTicketCount);
+
+        tickets = getIntent().getParcelableArrayListExtra("SELECTED_TICKET_ITEMS");
+        Log.d("SeatSelection", "SELECTED_TICKET_ITEMS received: " + tickets);
+
         totalTicketPrice = getIntent().getDoubleExtra("TOTAL_TICKET_PRICE", 0.0);
         selectedTheater = (Theater) getIntent().getSerializableExtra("SELECTED_THEATER");
         selectedShowtime = getIntent().getStringExtra("SELECTED_SHOWTIME");
@@ -276,6 +286,8 @@ public class SeatSelectionActivity extends AppCompatActivity {
                 return;
             }
 
+            List<AvailableSeatResponse> selectedSeatsList = new ArrayList<>(selectedSeats);
+
             // Calculate total seat price
             double seatPriceAdditional = calculateTotalPrice(selectedSeats);
             double totalPrice = totalTicketPrice + seatPriceAdditional;
@@ -303,6 +315,11 @@ public class SeatSelectionActivity extends AppCompatActivity {
             intent.putExtra("TOTAL_TICKET_AND_SEAT_PRICE", totalTicketAndSeatPrice);
             intent.putExtra("TOTAL_SEAT_COUNT", totalSeatCount);
             intent.putExtra("TOTAL_TICKET_COUNT", totalTicketCount);
+            intent.putParcelableArrayListExtra("SELECTED_TICKET_ITEMS", new ArrayList<>(tickets));
+            intent.putExtra("TOTAL_TICKET_PRICE", totalTicketPrice);
+            intent.putParcelableArrayListExtra("SELECTED_SEAT_ITEMS", new ArrayList<>(selectedSeatsList));
+            intent.putExtra("MOVIE_ID", movieId);
+
             startActivity(intent);
         });
     }

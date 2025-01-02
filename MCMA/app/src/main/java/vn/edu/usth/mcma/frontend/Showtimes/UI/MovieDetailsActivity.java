@@ -58,7 +58,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         // Setup booking buttons based on theater type
-        setupBookingButtons(movieTitle);
+//        setupBookingButtons(movieTitle);
         // Populate movie details
         populateMovieDetails(movieDetails);
         setupSynopsisExpansion();
@@ -115,16 +115,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void setupBookingButtons(String movieTitle) {
-        Button bookingButton = findViewById(R.id.bookingButton);
-        MovieDetails movieDetails = MovieDataProvider.getMovieDetails(movieTitle);
-        bookingButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MovieBookingActivity.class);
-            intent.putExtra("MOVIE_TITLE", movieTitle);
-            if (movieDetails != null) {
-                intent.putExtra("MOVIE_BANNER", movieDetails.getBannerImageResId());
-            }
-            startActivity(intent);
-        });
-    }
+//    private void setupBookingButtons(String movieTitle) {
+//        Button bookingButton = findViewById(R.id.bookingButton);
+//        MovieDetails movieDetails = MovieDataProvider.getMovieDetails(movieTitle);
+//        bookingButton.setOnClickListener(v -> {
+//            Intent intent = new Intent(this, MovieBookingActivity.class);
+//            intent.putExtra("MOVIE_TITLE", movieTitle);
+//            if (movieDetails != null) {
+//                intent.putExtra("MOVIE_BANNER", movieDetails.getBannerImageResId());
+//            }
+//            startActivity(intent);
+//        });
+//    }
 }
