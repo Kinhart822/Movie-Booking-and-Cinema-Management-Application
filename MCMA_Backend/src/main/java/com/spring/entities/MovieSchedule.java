@@ -53,7 +53,7 @@ public class MovieSchedule {
     @ManyToOne
     @JoinColumn(name = "screen_id", nullable = false)
     private Screen screen;
-
+    //TODO import
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movieSchedule")
     private List<Booking> bookings;
 }

@@ -19,8 +19,9 @@ public class MovieSchedule extends AbstractAuditing implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
-    private Long screenId;
+    @ManyToOne
+    @JoinColumn(name = "screen_id", nullable = false)
+    private Screen screen;
     @ManyToOne
     @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
