@@ -16,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Deprecated
 public class MovieRatingDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
