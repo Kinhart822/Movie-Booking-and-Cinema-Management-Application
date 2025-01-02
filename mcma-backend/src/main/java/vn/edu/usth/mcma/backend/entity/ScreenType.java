@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Getter
@@ -24,4 +25,10 @@ public class ScreenType extends AbstractAuditing implements Serializable {
     private String description;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
+    @Column
+    private Double price;
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "screenType")
+    private List<Screen> screenList;
 }
