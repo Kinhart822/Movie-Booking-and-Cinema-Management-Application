@@ -2,8 +2,8 @@ package vn.edu.usth.mcma.backend.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import vn.edu.usth.mcma.backend.entity.MovieGenreDetail;
+import vn.edu.usth.mcma.backend.entity.Genre;
 
 @Repository
-public interface MovieGenreDetailRepository extends JpaRepository<MovieGenreDetail, Long> {
+public interface GenreRepository extends JpaRepository<Genre, Long> {
 }

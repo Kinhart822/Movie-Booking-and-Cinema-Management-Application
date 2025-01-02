@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -12,7 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MovieGenreDetail extends AbstractAuditing implements Serializable {
+public class Genre extends AbstractAuditing implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @Id
@@ -26,4 +27,7 @@ public class MovieGenreDetail extends AbstractAuditing implements Serializable {
     private String imageUrl;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
+
+    @ManyToMany(mappedBy = "genreSet")
+    private Set<Movie> movieSet;
 }

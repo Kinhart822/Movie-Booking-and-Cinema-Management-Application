@@ -41,6 +41,12 @@ public class Movie extends AbstractAuditing implements Serializable {
     private Integer status;
     @ManyToMany
     @JoinTable(
+            name = "map_movie_genre",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    private Set<Genre> genreSet;
+    @ManyToMany
+    @JoinTable(
             name = "map_movie_performer",
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "performer_id"))
