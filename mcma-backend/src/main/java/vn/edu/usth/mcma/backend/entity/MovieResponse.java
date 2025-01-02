@@ -1,6 +1,8 @@
 package vn.edu.usth.mcma.backend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import java.io.Serial;
@@ -18,14 +20,19 @@ public class MovieResponse extends AbstractAuditing implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
-    private Long userId;
-    @Column
-    private Long movieId;
+    @Min(value = 1, message = "Vote cannot be less than 1")
+    @Max(value = 10, message = "Vote cannot be more than 10")
     @Column(columnDefinition = "TINYINT")
     private Integer userVote;
     @Column
     private String userComment;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+    @ManyToOne
+    @JoinColumn(name = "movie_id", nullable = false)
+    private Movie movie;
 }

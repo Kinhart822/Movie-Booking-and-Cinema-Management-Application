@@ -39,6 +39,11 @@ public class Movie extends AbstractAuditing implements Serializable {
     private String trailerUrl;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "movie",
+            cascade = CascadeType.ALL)
+    private List<MovieResponse> movieResponseList;
     @ManyToMany
     @JoinTable(
             name = "map_movie_genre",
