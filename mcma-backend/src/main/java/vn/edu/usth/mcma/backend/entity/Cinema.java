@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,10 +19,13 @@ public class Cinema extends AbstractAuditing implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
-    private Long cityId;
+    @ManyToOne
+    @JoinColumn(name = "city_id", nullable = false)
+    private City city;
     @Column
     private String name;
+    @Column
+    private String address;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
 }

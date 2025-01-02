@@ -55,10 +55,10 @@ public class Cinema {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cinema")
     private List<Drink> drinks;
-
+    //haven't imported: unused
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cinema")
     private List<Booking> bookings;
-
+    //haven't imported: unused
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cinema")
     private List<MovieSchedule> movieSchedules;
 }
