@@ -93,10 +93,10 @@ public class Movie {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie", cascade = CascadeType.ALL)
     private List<MovieRespond> movieResponds;
-
+    //TODO import
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie", cascade = CascadeType.ALL)
     private List<City> cityList;
-
+    //TODO import
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
     private List<Booking> bookings;
 }
