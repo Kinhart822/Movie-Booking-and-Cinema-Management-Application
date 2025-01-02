@@ -6,6 +6,7 @@ import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -13,7 +14,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MoviePerformerDetail extends AbstractAuditing implements Serializable {
+public class Performer extends AbstractAuditing implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @Id
@@ -21,7 +22,7 @@ public class MoviePerformerDetail extends AbstractAuditing implements Serializab
     private Long id;
     @Column
     private String name;
-    @Column(columnDefinition = "TINYINT UNSIGNED")
+    @Column(columnDefinition = "TINYINT")
     private Integer typeId;
     @Column(columnDefinition = "TINYINT")
     private Integer sex;
@@ -29,4 +30,7 @@ public class MoviePerformerDetail extends AbstractAuditing implements Serializab
     private Instant dateOfBirth;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
+
+    @ManyToMany(mappedBy = "performerSet")
+    private Set<Movie> movieSet;
 }

@@ -6,6 +6,8 @@ import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -33,6 +35,12 @@ public class Movie extends AbstractAuditing implements Serializable {
     private String trailerUrl;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
+    @ManyToMany
+    @JoinTable(
+            name = "map_movie_performer",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "performer_id"))
+    private Set<Performer> performerSet;
     @ManyToMany
     @JoinTable(
             name = "map_movie_rating",
