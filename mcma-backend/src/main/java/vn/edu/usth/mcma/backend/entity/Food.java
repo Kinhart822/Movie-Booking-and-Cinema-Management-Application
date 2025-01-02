@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.backend.entity;
 
+import constants.RefreshmentSize;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,9 +26,13 @@ public class Food extends AbstractAuditing implements Serializable {
     @Column
     private String imageUrl;
     @Column
-    private String size;
+    @Enumerated(EnumType.STRING)
+    private RefreshmentSize size;
     @Column
-    private Integer price;
+    private Double price;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
+    @ManyToOne
+    @JoinColumn(name = "cinema_id", nullable = false)
+    private Cinema cinema;
 }

@@ -30,4 +30,6 @@ public class Cinema extends AbstractAuditing implements Serializable {
     private Integer status;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cinema")
     private List<Screen> screenList;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cinema")
+    private List<Food> foodList;
 }
