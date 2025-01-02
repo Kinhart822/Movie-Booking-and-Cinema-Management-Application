@@ -18,12 +18,14 @@ public class Screen extends AbstractAuditing implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
-    private Long cinemaId;
+    @ManyToOne
+    @JoinColumn(name = "cinema_id", nullable = false)
+    private Cinema cinema;
     @Column
     private String name;
-    @Column(columnDefinition = "TINYINT UNSIGNED")
-    private Integer typeId;
+    @ManyToOne
+    @JoinColumn(name = "type_id", columnDefinition = "TINYINT UNSIGNED")
+    private ScreenType screenType;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
 }
