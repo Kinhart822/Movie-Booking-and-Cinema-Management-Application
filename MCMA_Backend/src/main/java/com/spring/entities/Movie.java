@@ -17,6 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Deprecated
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -93,10 +94,10 @@ public class Movie {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie", cascade = CascadeType.ALL)
     private List<MovieRespond> movieResponds;
-    //TODO import
+    //haven't imported: unused
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie", cascade = CascadeType.ALL)
     private List<City> cityList;
-    //TODO import
+    //haven't imported: unused
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
     private List<Booking> bookings;
 }
