@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.time.Instant;
 
 @Entity
-@Table(name = "movie")
 @Getter
 @Setter
 @NoArgsConstructor

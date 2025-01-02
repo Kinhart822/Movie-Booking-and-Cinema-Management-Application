@@ -9,7 +9,6 @@ import java.io.Serial;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "movie_genre")
 @Getter
 @Setter
 @NoArgsConstructor

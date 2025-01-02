@@ -7,7 +7,6 @@ import java.io.Serial;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "city")
 @Getter
 @Setter
 @NoArgsConstructor

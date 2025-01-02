@@ -9,7 +9,6 @@ import java.io.Serial;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "user_coupon")
 @Getter
 @Setter
 @NoArgsConstructor

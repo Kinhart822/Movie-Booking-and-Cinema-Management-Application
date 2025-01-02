@@ -7,7 +7,6 @@ import java.io.Serial;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "screen_type")
 @Getter
 @Setter
 @NoArgsConstructor

@@ -9,7 +9,6 @@ import java.io.Serial;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "city_drink")
 @Getter
 @Setter
 @NoArgsConstructor
