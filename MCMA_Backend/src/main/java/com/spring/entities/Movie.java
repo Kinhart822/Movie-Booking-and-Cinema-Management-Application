@@ -94,10 +94,9 @@ public class Movie {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie", cascade = CascadeType.ALL)
     private List<MovieRespond> movieResponds;
 
-    //TODO:USER
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie", cascade = CascadeType.ALL)
     private List<City> cityList;
-    //TODO:USER
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
     private List<Booking> bookings;
 }

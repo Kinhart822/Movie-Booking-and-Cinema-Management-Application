@@ -62,7 +62,12 @@ public class Coupon {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateUpdated;
 
-    //TODO USER
+    @ManyToMany(mappedBy = "userCoupons")
+    private Set<User> userSet;
+
+    @ManyToMany(mappedBy = "movieCouponSet")
+    private Set<Movie> movieSet;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "coupon")
     private List<BookingCoupon> coupons;
 }

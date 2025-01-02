@@ -9,7 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @Entity
-@Deprecated
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

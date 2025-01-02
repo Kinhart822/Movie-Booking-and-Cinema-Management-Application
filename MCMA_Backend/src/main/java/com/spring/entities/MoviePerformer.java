@@ -13,7 +13,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Deprecated
 public class MoviePerformer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

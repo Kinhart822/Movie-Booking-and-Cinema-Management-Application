@@ -12,7 +12,6 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @Entity
-@Deprecated
 public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
