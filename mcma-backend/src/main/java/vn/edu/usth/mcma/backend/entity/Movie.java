@@ -24,7 +24,11 @@ public class Movie extends AbstractAuditing implements Serializable {
     @Column
     private String name;
     @Column
+    private String description;
+    @Column
     private String imageUrl;
+    @Column
+    private String backgroundImageUrl;
     @Column
     private Integer length;
     @Column

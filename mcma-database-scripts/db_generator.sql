@@ -86,19 +86,21 @@ create table if not exists mcma.food
 );
 create table if not exists mcma.movie
 (
-    id                 bigint unsigned auto_increment
+    id                   bigint unsigned auto_increment
         primary key,
-    name               varchar(50)                       null,
-    image_url          text                              null,
-    length             int                               null,
-    publish_date       timestamp                         null,
-    rating_id          bigint unsigned                   null,
-    trailer_url        text                              null,
-    status             tinyint                           null comment '-1, 1',
-    created_by         bigint unsigned                   null,
-    last_modified_by   bigint unsigned                   null,
-    created_date       timestamp default utc_timestamp() null,
-    last_modified_date timestamp default utc_timestamp() null
+    name                 varchar(50)                       null,
+    description          text                              null,
+    image_url            text                              null,
+    background_image_url text                              null,
+    length               int                               null,
+    publish_date         timestamp                         null,
+    rating_id            bigint unsigned                   null,
+    trailer_url          text                              null,
+    status               tinyint                           null comment '-1, 1',
+    created_by           bigint unsigned                   null,
+    last_modified_by     bigint unsigned                   null,
+    created_date         timestamp default utc_timestamp() null,
+    last_modified_date   timestamp default utc_timestamp() null
 );
 create table if not exists mcma.movie_coupon
 (
