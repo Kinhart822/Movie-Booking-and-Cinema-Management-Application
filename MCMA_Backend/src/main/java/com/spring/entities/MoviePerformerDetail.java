@@ -17,6 +17,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Deprecated
 public class MoviePerformerDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

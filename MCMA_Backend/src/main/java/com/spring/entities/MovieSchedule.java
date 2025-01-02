@@ -43,10 +43,6 @@ public class MovieSchedule {
     private Date dateUpdated;
 
     @ManyToOne
-    @JoinColumn(name = "movie_id", nullable = false)
-    private Movie movie;
-
-    @ManyToOne
     @JoinColumn(name = "cinema_id")
     private Cinema cinema;
 

@@ -58,13 +58,6 @@ public class User implements UserDetails {
     @Column(name = "Date_Updated")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateUpdated;
-
-    @ManyToMany
-    @JoinTable(
-            name = "coupons_that_user_has",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "coupon_id"))
-    private Set<Coupon> userCoupons;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Token> tokens;

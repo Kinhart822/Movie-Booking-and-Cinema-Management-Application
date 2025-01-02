@@ -1,13 +1,10 @@
-package com.spring.service.impl;
+package vn.edu.usth.mcma.backend.service;
 
-import com.spring.dto.response.SearchMovieByGenreResponse;
-import com.spring.dto.response.SearchMovieByNameResponse;
-import com.spring.enums.PerformerSex;
-import com.spring.enums.PerformerType;
-import com.spring.repository.MovieRepository;
-import com.spring.service.MovieService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import vn.edu.usth.mcma.backend.dto.SearchMovieByNameResponse;
+import vn.edu.usth.mcma.backend.entity.Movie;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,13 +13,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
-public class MovieServiceImpl implements MovieService {
+public class MovieService extends AbstractService<Movie, Long> {
 
-    @Autowired
-    private MovieRepository movieRepository;
+    public MovieService(JpaRepository<Movie, Long> repository) {
+        super(repository);
+    }
 
-    @Override
+    // TODO: USER
     public List<SearchMovieByNameResponse> getAllMovies(String title, Integer limit, Integer offset) {
         List<Object[]> results = movieRepository.getAllMovies(title, limit, offset);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -46,7 +45,6 @@ public class MovieServiceImpl implements MovieService {
                 .collect(Collectors.toList());
     }
 
-    @Override
     public List<SearchMovieByGenreResponse> getAllMoviesByMovieGenreSet(Integer movieGenreId) {
         List<Object[]> results = movieRepository.getAllMoviesByMovieGenreSet(movieGenreId);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -70,7 +68,6 @@ public class MovieServiceImpl implements MovieService {
                 .collect(Collectors.toList());
     }
 
-    @Override
     public List<SearchMovieByGenreResponse> getAllMoviesByMovieGenreName(String name, Integer limit, Integer offset) {
         List<Object[]> results = movieRepository.getAllMoviesByMovieGenreName(name, limit, offset);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");

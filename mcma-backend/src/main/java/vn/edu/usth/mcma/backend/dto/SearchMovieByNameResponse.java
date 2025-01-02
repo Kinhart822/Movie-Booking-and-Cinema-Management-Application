@@ -1,4 +1,4 @@
-package com.spring.dto.response;
+package vn.edu.usth.mcma.backend.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

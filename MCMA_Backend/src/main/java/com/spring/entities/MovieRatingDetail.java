@@ -16,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Deprecated
 public class MovieRatingDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,8 +43,5 @@ public class MovieRatingDetail {
     @Column(name = "Date_Updated")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateUpdated;
-
-    @ManyToMany(mappedBy = "movieRatingDetailSet")
-    private Set<Movie> movieSet;
 
 }

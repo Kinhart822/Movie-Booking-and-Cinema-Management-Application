@@ -1,22 +1,11 @@
-package com.spring.controller;
+package vn.edu.usth.mcma.backend.controller.user;
 
-import com.spring.config.JwtUtil;
-import com.spring.dto.request.booking.BookingRequest;
-import com.spring.dto.request.respond.MovieRespondRequest;
-import com.spring.dto.response.booking.BookingResponse;
-import com.spring.dto.response.SearchMovieByGenreResponse;
-import com.spring.dto.response.SearchMovieByNameResponse;
-import com.spring.dto.response.booking.*;
-import com.spring.dto.response.movieRespond.CommentResponse;
-import com.spring.dto.response.movieRespond.MovieRespondResponse;
-import com.spring.dto.response.movieRespond.RatingResponse;
-import com.spring.dto.response.view.*;
-import com.spring.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.usth.mcma.backend.security.JwtUtil;
+import vn.edu.usth.mcma.backend.service.MovieService;
 
 import java.util.List;
 
@@ -24,28 +13,17 @@ import java.util.List;
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 public class UserController {
-
-    @Autowired
-    private MovieService movieService;
-
-    @Autowired
-    private BookingService bookingService;
-
-    @Autowired
-    private NotificationService notificationService;
-
-    @Autowired
-    private ViewService viewService;
-
-    @Autowired
-    private MovieRespondService movieRespondService;
-
-    @Autowired
-    private JwtUtil jwtUtil;
+    //TODO: USER
+    private final MovieService movieService;
+    private final BookingService bookingService;
+    private final NotificationService notificationService;
+    private final ViewService viewService;
+    private final MovieRespondService movieRespondService;
+    private final JwtUtil jwtUtil;
 
     @GetMapping
-    public ResponseEntity<String> sayHello(HttpServletRequest request) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+    public ResponseEntity<String> sayHello() {
+        Long userId = jwtUtil.getUserIdFromToken();
         return ResponseEntity.ok("Hello, User! Your ID is: %d".formatted(userId));
     }
 
@@ -157,7 +135,7 @@ public class UserController {
 
     @GetMapping("/booking/allCouponsByUser")
     public ResponseEntity<List<CouponResponse>> getAllCouponsByUser(HttpServletRequest request) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Long userId = jwtUtil.getUserIdFromToken(request);
         List<CouponResponse> couponResponses = bookingService.getAllCouponsByUser(userId);
         return ResponseEntity.ok(couponResponses);
     }
@@ -170,14 +148,14 @@ public class UserController {
 
     @PostMapping("/booking/processingBooking")
     public ResponseEntity<SendBookingResponse> processingBooking(HttpServletRequest request, @RequestBody BookingRequest bookingRequest) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Long userId = jwtUtil.getUserIdFromToken(request);
         SendBookingResponse bookingResponse = bookingService.processingBooking(userId, bookingRequest);
         return ResponseEntity.ok(bookingResponse);
     }
 
     @PostMapping("/booking/completeBooking")
     public ResponseEntity<BookingResponse> completeBooking(HttpServletRequest request, @RequestBody BookingRequest bookingRequest) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Long userId = jwtUtil.getUserIdFromToken(request);
         BookingResponse bookingResponse = bookingService.completeBooking(userId, bookingRequest);
         return ResponseEntity.ok(bookingResponse);
     }
@@ -190,21 +168,21 @@ public class UserController {
 
     @PostMapping("/booking/cancel-booking/{bookingId}")
     public ResponseEntity<String> cancelBooking(HttpServletRequest request, @PathVariable Integer bookingId) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Long userId = jwtUtil.getUserIdFromToken(request);
         bookingService.cancelBooking(bookingId, userId);
         return ResponseEntity.ok("Booking canceled successfully");
     }
 
     @PostMapping("/booking/revoke-cancel-booking/{bookingId}")
     public ResponseEntity<String> revokeCancelBooking(HttpServletRequest request, @PathVariable Integer bookingId) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Long userId = jwtUtil.getUserIdFromToken(request);
         bookingService.cancelBooking(bookingId, userId);
         return ResponseEntity.ok("Booking reinstated successfully");
     }
 
     @DeleteMapping("booking/delete-booking/{bookingId}")
     public ResponseEntity<String> deleteBooking(HttpServletRequest request, @PathVariable Integer bookingId) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Long userId = jwtUtil.getUserIdFromToken(request);
         bookingService.deleteBooking(bookingId, userId);
         return ResponseEntity.ok("Booking deleted successfully");
     }
@@ -212,21 +190,21 @@ public class UserController {
     // TODO: Comments and Ratings for a Movie
     @PostMapping("/movieRespond/add")
     public ResponseEntity<MovieRespondResponse> addRespond(HttpServletRequest request, @RequestBody MovieRespondRequest movieRespondRequest) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Long userId = jwtUtil.getUserIdFromToken(request);
         MovieRespondResponse movieRespondResponse = movieRespondService.createMovieRespond(userId, movieRespondRequest);
         return ResponseEntity.ok(movieRespondResponse);
     }
 
     @PutMapping("/movieRespond/update")
     public ResponseEntity<MovieRespondResponse> updateRespond(HttpServletRequest request, @RequestBody MovieRespondRequest movieRespondRequest) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Long userId = jwtUtil.getUserIdFromToken(request);
         MovieRespondResponse movieRespondResponse = movieRespondService.updateMovieRespond(userId, movieRespondRequest);
         return ResponseEntity.ok(movieRespondResponse);
     }
 
     @DeleteMapping("/movieRespond/delete/{movieId}")
     public ResponseEntity<String> deleteRespond(HttpServletRequest request, @PathVariable Integer movieId) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Long userId = jwtUtil.getUserIdFromToken(request);
         movieRespondService.deleteMovieRespond(userId, movieId);
         return ResponseEntity.ok("Delete Movie Respond Successfully");
     }
@@ -291,7 +269,7 @@ public class UserController {
 
     @GetMapping("/view/couponsByUser")
     public ResponseEntity<ViewCouponsResponse> getCoupons(HttpServletRequest request) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Long userId = jwtUtil.getUserIdFromToken(request);
         ViewCouponsResponse viewCouponsResponse = viewService.getAvailableCouponsForUser(userId);
         return ResponseEntity.ok(viewCouponsResponse);
     }
@@ -328,7 +306,7 @@ public class UserController {
 
     @GetMapping("/view/notifications")
     public ResponseEntity<NotificationResponse> getNotifications(HttpServletRequest request) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Long userId = jwtUtil.getUserIdFromToken(request);
         NotificationResponse notificationResponse = notificationService.getNotificationsByUserId(userId);
         return ResponseEntity.ok(notificationResponse);
     }
@@ -341,21 +319,21 @@ public class UserController {
 
     @GetMapping("/view/allBookingsByUser")
     public ResponseEntity<List<BookingResponse>> getAllBookingsByUser(HttpServletRequest request) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Long userId = jwtUtil.getUserIdFromToken(request);
         List<BookingResponse> bookingResponses = viewService.getAllBookingsByUser(userId);
         return ResponseEntity.ok(bookingResponses);
     }
 
     @GetMapping("/view/viewCommentByUserAndMovie/{movieId}")
     public ResponseEntity<CommentResponse> viewCommentByUserAndMovie(HttpServletRequest request, @PathVariable Integer movieId) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Long userId = jwtUtil.getUserIdFromToken(request);
         CommentResponse commentResponse = movieRespondService.getMovieCommentByUserIdAndMovieId(userId, movieId);
         return ResponseEntity.ok(commentResponse);
     }
 
     @GetMapping("/view/viewCommentByUser")
     public ResponseEntity<List<CommentResponse>> viewCommentByUser(HttpServletRequest request) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Long userId = jwtUtil.getUserIdFromToken(request);
         List<CommentResponse> commentResponses = movieRespondService.getMovieCommentsByUserId(userId);
         return ResponseEntity.ok(commentResponses);
     }
@@ -368,14 +346,14 @@ public class UserController {
 
     @GetMapping("/view/viewRatingByUserAndMovie/{movieId}")
     public ResponseEntity<RatingResponse> viewRatingByUserAndMovie(HttpServletRequest request, @PathVariable Integer movieId) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Long userId = jwtUtil.getUserIdFromToken(request);
         RatingResponse ratingResponse = movieRespondService.getMovieRatingByUserIdAndMovieId(userId, movieId);
         return ResponseEntity.ok(ratingResponse);
     }
 
     @GetMapping("/view/viewRatingByUser")
     public ResponseEntity<List<RatingResponse>> viewRatingByUser(HttpServletRequest request) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Long userId = jwtUtil.getUserIdFromToken(request);
         List<RatingResponse> ratingResponses = movieRespondService.getMovieRatingsByUserId(userId);
         return ResponseEntity.ok(ratingResponses);
     }
@@ -388,14 +366,14 @@ public class UserController {
 
     @GetMapping("/view/viewMovieRespondByUserAndMovie/{movieId}")
     public ResponseEntity<MovieRespondResponse> viewMovieRespondByUserAndMovie(HttpServletRequest request, @PathVariable Integer movieId) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Long userId = jwtUtil.getUserIdFromToken(request);
         MovieRespondResponse movieRespondResponse = movieRespondService.getMovieRespondsByUserIdAndMovieId(userId, movieId);
         return ResponseEntity.ok(movieRespondResponse);
     }
 
     @GetMapping("/view/viewMovieRespondByUser")
     public ResponseEntity<List<MovieRespondResponse>> viewMovieRespondByUser(HttpServletRequest request) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Long userId = jwtUtil.getUserIdFromToken(request);
         List<MovieRespondResponse> movieRespondResponses = movieRespondService.getAllMovieRespondsByUserId(userId);
         return ResponseEntity.ok(movieRespondResponses);
     }
