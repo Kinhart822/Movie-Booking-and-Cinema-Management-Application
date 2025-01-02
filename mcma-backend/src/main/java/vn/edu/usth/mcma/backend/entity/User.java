@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -59,4 +60,11 @@ public class User implements Serializable {
     @LastModifiedDate
     @Column
     private Instant lastModifiedDate;
+
+    @ManyToMany
+    @JoinTable(
+            name = "map_user_coupon",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "coupon_id"))
+    private Set<Coupon> couponSet;
 }

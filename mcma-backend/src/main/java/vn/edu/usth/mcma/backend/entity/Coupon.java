@@ -6,6 +6,7 @@ import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -35,4 +36,10 @@ public class Coupon extends AbstractAuditing implements Serializable {
     private Instant expiredDate;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
+
+    @ManyToMany(mappedBy = "couponSet")
+    private Set<User> userSet;
+
+    @ManyToMany(mappedBy = "couponSet")
+    private Set<Movie> movieSet;
 }

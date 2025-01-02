@@ -33,4 +33,10 @@ public class Movie extends AbstractAuditing implements Serializable {
     private String trailerUrl;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
+    @ManyToMany
+    @JoinTable(
+            name = "map_movie_coupon",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "coupon_id"))
+    private Set<Coupon> couponSet;
 }
