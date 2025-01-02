@@ -14,7 +14,11 @@ public interface ViewService {
 
     List<ScreenResponse> getAllScreens();
 
-    List<ScheduleResponse> getAllSchedulesBySelectedMovieAndSelectedCinema(Integer movieId, Integer cinemaId);
+    ScheduleSelectedByCinemaResponse getAllSchedulesBySelectedCinema(Integer cinemaId);
+
+    ScheduleResponse getAllSchedulesBySelectedMovieAndSelectedCinema(Integer movieId, Integer cinemaId);
+
+    List<MovieResponse> getAllMovieInformationBySelectedDateSchedule(String date);
 
     List<ListFoodAndDrinkToOrderingResponse> getAllFoodsAndDrinksByCinema(Integer cinemaId);
 
@@ -29,6 +33,8 @@ public interface ViewService {
     List<ComingSoonResponse> getAvailableComingSoonMovies();
 
     List<HighRatingMovieResponse> getHighRatingMovies();
+
+    List<MovieGenreResponse> getAllMovieGenres();
 
     List<BookingResponse> getAllBookings();
 

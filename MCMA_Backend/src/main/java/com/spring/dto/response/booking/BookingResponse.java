@@ -13,7 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 public class BookingResponse {
     private String bookingNo;
+    private Integer movieId;
     private String movieName;
+    private List<String> movieGenre;
     private String imageUrlMovie;
     private String cityName;
     private String cinemaName;

@@ -53,7 +53,7 @@ public class UserController {
     @GetMapping("/search-movie-by-name")
     public ResponseEntity<List<SearchMovieByNameResponse>> getAllMovies(
             @RequestParam(required = false, name = "title") String title,
-            @RequestParam(required = false, name = "limit", defaultValue = "10") Integer limit,
+            @RequestParam(required = false, name = "limit", defaultValue = "100") Integer limit,
             @RequestParam(required = false, name = "offset", defaultValue = "0") Integer offset) {
         return ResponseEntity.ok(movieService.getAllMovies(title, limit, offset));
     }
@@ -67,7 +67,7 @@ public class UserController {
     @GetMapping("/search-movie-by-movie-genre-name")
     public ResponseEntity<List<SearchMovieByGenreResponse>> getAllMoviesByMovieGenreName(
             @RequestParam(required = false, name = "name") String name,
-            @RequestParam(required = false, name = "limit", defaultValue = "10") Integer limit,
+            @RequestParam(required = false, name = "limit", defaultValue = "100") Integer limit,
             @RequestParam(required = false, name = "offset", defaultValue = "0") Integer offset
     ) {
         return ResponseEntity.ok(movieService.getAllMoviesByMovieGenreName(name, limit, offset));
@@ -78,6 +78,12 @@ public class UserController {
     public ResponseEntity<List<MovieResponse>> getAllMovies() {
         List<MovieResponse> movieResponds = bookingService.getAllMovies();
         return ResponseEntity.ok(movieResponds);
+    }
+
+    @GetMapping("/information/movieInformation/{movieId}")
+    public ResponseEntity<MovieResponse> getAllInformationOfSelectedMovie(@PathVariable Integer movieId) {
+        MovieResponse movieRespond = bookingService.getAllInformationOfSelectedMovie(movieId);
+        return ResponseEntity.ok(movieRespond);
     }
 
     @GetMapping("/booking/allCitiesByMovie/{movieId}")
@@ -92,6 +98,15 @@ public class UserController {
         return ResponseEntity.ok(movies);
     }
 
+    @GetMapping("/booking/allCinemasByMovieAndCity")
+    public ResponseEntity<List<CinemaResponse>> getAllCinemasByMovieAndCity(
+            @RequestParam(required = false, name = "movieId") Integer movieId,
+            @RequestParam(required = false, name = "cityId") Integer cityId
+    ) {
+        List<CinemaResponse> movies = bookingService.getAllCinemasBySelectedMovieAndSelectedCity(movieId, cityId);
+        return ResponseEntity.ok(movies);
+    }
+
     @GetMapping("/booking/allScreenByCinema/{cinemaId}")
     public ResponseEntity<List<ScreenResponse>> getAllScreenByCinema(@PathVariable Integer cinemaId) {
         List<ScreenResponse> screenResponses = bookingService.getAllScreensBySelectedCinema(cinemaId);
@@ -99,12 +114,12 @@ public class UserController {
     }
 
     @GetMapping("/booking/allSchedulesByMovieAndCinemaAndScreen")
-    public ResponseEntity<List<ScheduleResponse>> getAllScheduleByScreen(
+    public ResponseEntity<ScheduleResponse> getAllScheduleByScreen(
             @RequestParam(required = false, name = "movieId") Integer movieId,
             @RequestParam(required = false, name = "cinemaId") Integer cinemaId,
             @RequestParam(required = false, name = "screenId") Integer screenId
     ) {
-        List<ScheduleResponse> scheduleResponses = bookingService.getAllSchedulesBySelectedMovieAndSelectedCinemaAndSelectedScreen(
+        ScheduleResponse scheduleResponses = bookingService.getAllSchedulesBySelectedMovieAndSelectedCinemaAndSelectedScreen(
                 movieId, cinemaId, screenId
         );
         return ResponseEntity.ok(scheduleResponses);
@@ -167,7 +182,7 @@ public class UserController {
         return ResponseEntity.ok(bookingResponse);
     }
 
-    @DeleteMapping("booking/edit-booking-seat")
+    @PostMapping("/booking/updateBookingSeat")
     public ResponseEntity<String> updateBookingSeat(@RequestBody BookingRequest bookingRequest) {
         bookingService.updateBookingSeat(bookingRequest);
         return ResponseEntity.ok("Seat(s) updated successfully");
@@ -241,13 +256,25 @@ public class UserController {
         return ResponseEntity.ok(screenResponses);
     }
 
+    @GetMapping("/view/allScheduleByCinema/{cinemaId}")
+    public ResponseEntity<ScheduleSelectedByCinemaResponse> getAllSchedulesBySelectedCinema(@PathVariable Integer cinemaId) {
+        ScheduleSelectedByCinemaResponse scheduleResponses = viewService.getAllSchedulesBySelectedCinema(cinemaId);
+        return ResponseEntity.ok(scheduleResponses);
+    }
+
     @GetMapping("/view/allScheduleByCinemaAndMovie")
-    public ResponseEntity<List<ScheduleResponse>> getAllScreenByCinemaAndMovie(
+    public ResponseEntity<ScheduleResponse> getAllScheduleByCinemaAndMovie(
             @RequestParam Integer movieId,
             @RequestParam Integer cinemaId
     ) {
-        List<ScheduleResponse> screenResponses = viewService.getAllSchedulesBySelectedMovieAndSelectedCinema(movieId, cinemaId);
+        ScheduleResponse screenResponses = viewService.getAllSchedulesBySelectedMovieAndSelectedCinema(movieId, cinemaId);
         return ResponseEntity.ok(screenResponses);
+    }
+
+    @GetMapping("/view/getAllMovieInformationBySelectedDateSchedule")
+    public ResponseEntity<List<MovieResponse>> getAllMovieInformationBySelectedDateSchedule(@RequestParam String date) {
+        List<MovieResponse> listFoodAndDrinkToOrderingResponse = viewService.getAllMovieInformationBySelectedDateSchedule(date);
+        return ResponseEntity.ok(listFoodAndDrinkToOrderingResponse);
     }
 
     @GetMapping("/view/getAllFoodsAndDrinksByCinema/{cinemaId}")
@@ -291,6 +318,12 @@ public class UserController {
     public ResponseEntity<List<HighRatingMovieResponse>> getHighRatingMovies() {
         List<HighRatingMovieResponse> highRatingMovieResponses = viewService.getHighRatingMovies();
         return ResponseEntity.ok(highRatingMovieResponses);
+    }
+
+    @GetMapping("/view/allMovieGenres")
+    public ResponseEntity<List<MovieGenreResponse>> getAllMovieGenres() {
+        List<MovieGenreResponse> movieGenreResponses = viewService.getAllMovieGenres();
+        return ResponseEntity.ok(movieGenreResponses);
     }
 
     @GetMapping("/view/notifications")

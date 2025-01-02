@@ -40,11 +40,11 @@ public class Screen {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateUpdated;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "cinema_id", nullable = false)
     private Cinema cinema;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "screen_type_id")
     private ScreenType screenType;
 

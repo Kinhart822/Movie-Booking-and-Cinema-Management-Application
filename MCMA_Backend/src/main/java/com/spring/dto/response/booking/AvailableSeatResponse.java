@@ -12,10 +12,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AvailableSeatResponse {
-    private  String screenName;
+    private String screenName;
     private Integer seatId;
     private String availableSeat;
     private Integer seatColumn;
     private Integer seatRow;
     private String availableSeatsType;
+    private Double seatPrice;
 }

@@ -36,11 +36,11 @@ public class MovieRespond {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateUpdated;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "users_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
 

@@ -24,6 +24,9 @@ public class Cinema {
     @Column(name = "Name", length = 50)
     private String name;
 
+    @Column(name = "Address", length = 255)
+    private String address;
+
     @Column(name = "Created_By")
     @Enumerated(EnumType.ORDINAL)
     private Type createdBy;
@@ -40,7 +43,7 @@ public class Cinema {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateUpdated;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "city_id", nullable = false)
     private City city;
 

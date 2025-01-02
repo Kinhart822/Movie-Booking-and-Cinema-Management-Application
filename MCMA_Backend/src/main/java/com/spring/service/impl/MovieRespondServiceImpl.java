@@ -67,19 +67,21 @@ public class MovieRespondServiceImpl implements MovieRespondService {
                 .orElseThrow(() -> new IllegalArgumentException("Movie not found"));
         movieRespond.setMovie(movie);
 
+        movieRespond = movieRespondRepository.save(movieRespond);
+
         if (movieRespondRequest.getComment() != null) {
             Comment newComment = new Comment();
             newComment.setContent(movieRespondRequest.getComment());
-            commentRepository.save(newComment);
             newComment.setMovieRespond(movieRespond);
+            commentRepository.save(newComment);
             movieRespond.setComment(newComment);
         }
 
         if (movieRespondRequest.getSelectedRatingStar() != null) {
             Rating newRating = new Rating();
             newRating.setRatingStar(movieRespondRequest.getSelectedRatingStar());
-            ratingRepository.save(newRating);
             newRating.setMovieRespond(movieRespond);
+            ratingRepository.save(newRating);
             movieRespond.setRating(newRating);
         }
 

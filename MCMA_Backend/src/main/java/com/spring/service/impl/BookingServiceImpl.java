@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -84,15 +85,15 @@ public class BookingServiceImpl implements BookingService {
     private BookingTicketRepository bookingTicketRepository;
 
     @Autowired
-    private BookingSeatRepository bookingSeatRepository;
-
-    @Autowired
     private EmailService emailService;
 
     @Override
     public List<MovieResponse> getAllMovies() {
         List<Movie> movies = movieRepository.findAll();
         List<MovieResponse> bookingMovieResponses = new ArrayList<>();
+
+        DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("HH:mm");
 
         for (Movie movie : movies) {
             // Fetch Movie Genres
@@ -161,14 +162,30 @@ public class BookingServiceImpl implements BookingService {
                 System.out.println("No ratings available.");
             }
 
+            List<String> dayOfWeekList = new ArrayList<>();
+            List<String> dayList = new ArrayList<>();
+            List<String> timeList = new ArrayList<>();
+            for (MovieSchedule schedule : movie.getMovieScheduleList()) {
+                String dayOfWeek = schedule.getStartTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+                String day = schedule.getStartTime().format(formatDate);
+                String time = schedule.getStartTime().format(formatTime);
+                dayOfWeekList.add(dayOfWeek);
+                dayList.add(day);
+                timeList.add(time);
+            }
             // Create and add MovieResponse object
             MovieResponse movieResponse = new MovieResponse(
                     movie.getId(),
                     movie.getName(),
                     movie.getLength(),
+                    movie.getDescription(),
                     formattedDatePublish,
                     movie.getTrailerLink(),
                     movie.getImageUrl(),
+                    movie.getBackgroundImageUrl(),
+                    dayOfWeekList,
+                    dayList,
+                    timeList,
                     movieGenreNameList,
                     movieGenreImageUrls,
                     movieGenreDescriptions,
@@ -185,6 +202,118 @@ public class BookingServiceImpl implements BookingService {
         }
 
         return bookingMovieResponses;
+    }
+
+    @Override
+    public MovieResponse getAllInformationOfSelectedMovie(Integer movieId) {
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid movie"));
+
+        DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("HH:mm");
+
+        // Fetch Movie Genres
+        List<MovieGenre> movieGenres = movieGenreRepository.findMovieGenresByMovie(movie.getId());
+        List<String> movieGenreNameList = movieGenres.stream()
+                .map(movieGenre -> movieGenre.getMovieGenreDetail().getName())
+                .toList();
+        List<String> movieGenreImageUrls = movieGenres.stream()
+                .map(movieGenre -> movieGenre.getMovieGenreDetail().getImageUrl())
+                .toList();
+        List<String> movieGenreDescriptions = movieGenres.stream()
+                .map(movieGenre -> movieGenre.getMovieGenreDetail().getDescription())
+                .toList();
+
+        // Fetch Movie Performers
+        List<MoviePerformer> moviePerformers = moviePerformerRepository.findMoviePerformersByMovieId(movie.getId());
+        List<String> moviePerformerNameList = moviePerformers.stream()
+                .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getName())
+                .toList();
+
+        SimpleDateFormat formatterDate = new SimpleDateFormat("dd/MM/yyyy");
+        List<Date> moviePerformerDobList = moviePerformers.stream()
+                .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getDob())
+                .toList();
+        List<String> formatMoviePerformerDobList = new ArrayList<>();
+        for (Date dob : moviePerformerDobList) {
+            formatMoviePerformerDobList.add(formatterDate.format(dob));
+        }
+
+        List<PerformerSex> moviePerformerSex = moviePerformers.stream()
+                .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getPerformerSex())
+                .toList();
+        List<PerformerType> moviePerformerType = moviePerformers.stream()
+                .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getPerformerType())
+                .toList();
+
+        // Fetch Movie Rating Details
+        List<MovieRatingDetail> movieRatingDetails = movieRatingDetailRepository.findMovieRatingDetailsByMovieId(movie.getId());
+        List<String> movieRatingDetailNameList = movieRatingDetails.stream()
+                .map(MovieRatingDetail::getName)
+                .toList();
+        List<String> movieRatingDetailDescriptions = movieRatingDetails.stream()
+                .map(MovieRatingDetail::getDescription)
+                .toList();
+
+        // Format date
+        SimpleDateFormat publishDateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+        String formattedDatePublish = publishDateFormatter.format(movie.getDatePublish());
+
+        // Movie Respond
+        List<Comment> comments = commentRepository.findByMovieId(movie.getId());
+        List<String> contents = comments.stream()
+                .map(Comment::getContent)
+                .toList();
+
+        List<Rating> ratings = ratingRepository.findByMovieId(movie.getId());
+        OptionalDouble averageRating = ratings.stream()
+                .mapToDouble(Rating::getRatingStar)
+                .average();
+
+        double avg = 0;
+        if (averageRating.isPresent()) {
+            avg = averageRating.getAsDouble();
+            System.out.printf("Average rating: %s%n", avg);
+        } else {
+            System.out.println("No ratings available.");
+        }
+
+        List<String> dayOfWeekList = new ArrayList<>();
+        List<String> dayList = new ArrayList<>();
+        List<String> timeList = new ArrayList<>();
+        for (MovieSchedule schedule : movie.getMovieScheduleList()) {
+            String dayOfWeek = schedule.getStartTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+            String day = schedule.getStartTime().format(formatDate);
+            String time = schedule.getStartTime().format(formatTime);
+            dayOfWeekList.add(dayOfWeek);
+            dayList.add(day);
+            timeList.add(time);
+        }
+
+        return new MovieResponse(
+                movie.getId(),
+                movie.getName(),
+                movie.getLength(),
+                movie.getDescription(),
+                formattedDatePublish,
+                movie.getTrailerLink(),
+                movie.getImageUrl(),
+                movie.getBackgroundImageUrl(),
+                dayOfWeekList,
+                dayList,
+                timeList,
+                movieGenreNameList,
+                movieGenreImageUrls,
+                movieGenreDescriptions,
+                moviePerformerNameList,
+                formatMoviePerformerDobList,
+                moviePerformerSex,
+                moviePerformerType,
+                movieRatingDetailNameList,
+                movieRatingDetailDescriptions,
+                contents,
+                avg
+        );
     }
 
     @Override
@@ -252,6 +381,58 @@ public class BookingServiceImpl implements BookingService {
                     city.getName(),
                     cinema.getId(),
                     cinema.getName(),
+                    cinema.getAddress(),
+                    screenType,
+                    screenDescription,
+                    foodName,
+                    drinkName,
+                    formattedSchedules
+            );
+            cinemaResponses.add(cinemaResponse);
+        }
+
+        return cinemaResponses;
+    }
+
+    @Override
+    public List<CinemaResponse> getAllCinemasBySelectedMovieAndSelectedCity(Integer movieId, Integer cityId) {
+        City city = cityRepository.findById(cityId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid city"));
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid movie"));
+
+        List<Cinema> cinemaList = cinemaRepository.findByMovieIdAndCityId(movie.getId(), city.getId());
+        if (cinemaList == null || cinemaList.isEmpty()) {
+            throw new IllegalArgumentException("No cinemas found for given city and movie.");
+        }
+
+        List<CinemaResponse> cinemaResponses = new ArrayList<>();
+        for (Cinema cinema : cinemaList) {
+            List<Screen> screenList = cinema.getScreenList();
+            List<String> screenType = screenList.stream()
+                    .map(screen -> screen.getScreenType().getName())
+                    .toList();
+            List<String> screenDescription = screenList.stream()
+                    .map(screen -> screen.getScreenType().getDescription())
+                    .toList();
+
+            List<Food> foodList = cinema.getFoodList();
+            List<String> foodName = foodList.stream().map(Food::getName).toList();
+
+            List<Drink> drinks = cinema.getDrinks();
+            List<String> drinkName = drinks.stream().map(Drink::getName).toList();
+
+            List<MovieSchedule> movieSchedules = movieScheduleRepository.findMovieSchedulesByCinemaId(cinema.getId());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm a");
+            List<String> formattedSchedules = movieSchedules.stream()
+                    .map(schedule -> schedule.getStartTime().format(formatter))
+                    .toList();
+
+            CinemaResponse cinemaResponse = new CinemaResponse(
+                    city.getName(),
+                    cinema.getId(),
+                    cinema.getName(),
+                    cinema.getAddress(),
                     screenType,
                     screenDescription,
                     foodName,
@@ -290,7 +471,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<ScheduleResponse> getAllSchedulesBySelectedMovieAndSelectedCinemaAndSelectedScreen(
+    public ScheduleResponse getAllSchedulesBySelectedMovieAndSelectedCinemaAndSelectedScreen(
             Integer movieId, Integer cinemaId, Integer screenId
     ) {
         Movie movie = movieRepository.findById(movieId)
@@ -310,22 +491,108 @@ public class BookingServiceImpl implements BookingService {
         }
 
         List<ScheduleResponse> scheduleResponses = new ArrayList<>();
-        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
+        List<MovieGenre> movieGenres = movieGenreRepository.findMovieGenresByMovie(movie.getId());
+        List<String> movieGenreNameList = movieGenres.stream()
+                .map(movieGenre -> movieGenre.getMovieGenreDetail().getName())
+                .toList();
+        List<String> movieGenreImageUrls = movieGenres.stream()
+                .map(movieGenre -> movieGenre.getMovieGenreDetail().getImageUrl())
+                .toList();
+        List<String> movieGenreDescriptions = movieGenres.stream()
+                .map(movieGenre -> movieGenre.getMovieGenreDetail().getDescription())
+                .toList();
 
-        for (MovieSchedule schedule : movieSchedules) {
-            ScheduleResponse scheduleResponse = new ScheduleResponse(
-                    movie.getName(),
-                    cinema.getName(),
-                    screen.getName(),
-                    schedule.getId(),
-                    schedule.getStartTime().format(formatterDate),
-                    schedule.getStartTime().format(formatterTime)
-            );
-            scheduleResponses.add(scheduleResponse);
+        // Fetch Movie Performers
+        List<MoviePerformer> moviePerformers = moviePerformerRepository.findMoviePerformersByMovieId(movie.getId());
+        List<String> moviePerformerNameList = moviePerformers.stream()
+                .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getName())
+                .toList();
+
+        List<PerformerType> moviePerformerType = moviePerformers.stream()
+                .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getPerformerType())
+                .toList();
+
+        // Fetch Movie Rating Details
+        List<MovieRatingDetail> movieRatingDetails = movieRatingDetailRepository.findMovieRatingDetailsByMovieId(movie.getId());
+        List<String> movieRatingDetailNameList = movieRatingDetails.stream()
+                .map(MovieRatingDetail::getName)
+                .toList();
+        List<String> movieRatingDetailDescriptions = movieRatingDetails.stream()
+                .map(MovieRatingDetail::getDescription)
+                .toList();
+
+        // Format date
+        SimpleDateFormat publishDateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+        String formattedDatePublish = publishDateFormatter.format(movie.getDatePublish());
+
+        // Movie Respond
+        List<Comment> comments = commentRepository.findByMovieId(movie.getId());
+        List<String> contents = comments.stream()
+                .map(Comment::getContent)
+                .toList();
+
+        List<Rating> ratings = ratingRepository.findByMovieId(movie.getId());
+        OptionalDouble averageRating = ratings.stream()
+                .mapToDouble(Rating::getRatingStar)
+                .average();
+
+        double avg = 0;
+        if (averageRating.isPresent()) {
+            avg = averageRating.getAsDouble();
+            System.out.printf("Average rating: %s%n", avg);
+        } else {
+            System.out.println("No ratings available.");
         }
 
-        return scheduleResponses;
+        DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("HH:mm");
+
+        List<String> dayOfWeekList = new ArrayList<>();
+        List<String> dayList = new ArrayList<>();
+        List<String> timeList = new ArrayList<>();
+        for (MovieSchedule schedule : movie.getMovieScheduleList()) {
+            String dayOfWeek = schedule.getStartTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+            String day = schedule.getStartTime().format(formatDate);
+            String time = schedule.getStartTime().format(formatTime);
+            dayOfWeekList.add(dayOfWeek);
+            dayList.add(day);
+            timeList.add(time);
+        }
+
+        List<Integer> scheduleIdList = new ArrayList<>();
+        List<String> screenNameList = new ArrayList<>();
+        for (MovieSchedule schedule : movie.getMovieScheduleList()) {
+            Integer scheduleId = schedule.getId();
+            String screenName = schedule.getScreen().getName();
+            scheduleIdList.add(scheduleId);
+            screenNameList.add(screenName);
+        }
+
+        return new ScheduleResponse(
+                movie.getId(),
+                movie.getName(),
+                movie.getLength(),
+                movie.getDescription(),
+                formattedDatePublish,
+                movie.getTrailerLink(),
+                movie.getImageUrl(),
+                movie.getBackgroundImageUrl(),
+                movieGenreNameList,
+                movieGenreImageUrls,
+                movieGenreDescriptions,
+                moviePerformerNameList,
+                moviePerformerType,
+                movieRatingDetailNameList,
+                movieRatingDetailDescriptions,
+                contents,
+                avg,
+                cinema.getName(),
+                screenNameList,
+                scheduleIdList,
+                dayOfWeekList,
+                dayList,
+                timeList
+        );
     }
 
     @Override
@@ -406,7 +673,6 @@ public class BookingServiceImpl implements BookingService {
         }
         List<AvailableSeatResponse> seatResponses = new ArrayList<>();
 
-
         for (Seat seat : availableSeats) {
             AvailableSeatResponse seatResponse = new AvailableSeatResponse(
                     screen.getName(),
@@ -414,7 +680,8 @@ public class BookingServiceImpl implements BookingService {
                     seat.getName(),
                     seat.getColumn(),
                     seat.getRow(),
-                    seat.getSeatType().getName()
+                    seat.getSeatType().getName(),
+                    seat.getSeatType().getPrice()
             );
             seatResponses.add(seatResponse);
         }
@@ -441,12 +708,14 @@ public class BookingServiceImpl implements BookingService {
         List<String> imageUrlFoodList = new ArrayList<>();
         List<String> descriptionFoodList = new ArrayList<>();
         List<SizeFoodOrDrink> sizeFoodList = new ArrayList<>();
+        List<Double> foodPriceList = new ArrayList<>();
 
         List<Integer> drinkIds = new ArrayList<>();
         List<String> drinkNameList = new ArrayList<>();
         List<String> imageUrlDrinkList = new ArrayList<>();
         List<String> descriptionDrinkList = new ArrayList<>();
         List<SizeFoodOrDrink> sizeDrinkList = new ArrayList<>();
+        List<Double> drinkPriceList = new ArrayList<>();
 
         for (Food food : foods) {
             foodIds.add(food.getId());
@@ -454,6 +723,7 @@ public class BookingServiceImpl implements BookingService {
             imageUrlFoodList.add(food.getImageUrl());
             descriptionFoodList.add(food.getDescription());
             sizeFoodList.add(food.getSize());
+            foodPriceList.add(food.getPrice());
         }
 
         for (Drink drink : drinks) {
@@ -462,6 +732,7 @@ public class BookingServiceImpl implements BookingService {
             imageUrlDrinkList.add(drink.getImageUrl());
             descriptionDrinkList.add(drink.getDescription());
             sizeDrinkList.add(drink.getSize());
+            drinkPriceList.add(drink.getPrice());
         }
 
         ListFoodAndDrinkToOrderingResponse listFoodAndDrinkToOrderingResponse = new ListFoodAndDrinkToOrderingResponse(
@@ -471,11 +742,13 @@ public class BookingServiceImpl implements BookingService {
                 imageUrlFoodList,
                 descriptionFoodList,
                 sizeFoodList,
+                foodPriceList,
                 drinkIds,
                 drinkNameList,
                 imageUrlDrinkList,
                 descriptionDrinkList,
-                sizeDrinkList
+                sizeDrinkList,
+                drinkPriceList
         );
 
         return List.of(listFoodAndDrinkToOrderingResponse);
@@ -853,6 +1126,10 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingRequest.getBookingId())));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found for ID: %d".formatted(userId)));
+        List<MovieGenre> movieGenres = movieGenreRepository.findMovieGenresByMovie(booking.getMovie().getId());
+        if (movieGenres.isEmpty()) {
+            throw new IllegalArgumentException("Movie does not have any genre.");
+        }
 
         if (isBookingIncomplete(booking)) {
             deleteBooking(booking.getId(), userId);
@@ -916,7 +1193,11 @@ public class BookingServiceImpl implements BookingService {
 
         return new BookingResponse(
                 booking.getBookingNo(),
+                booking.getMovie().getId(),
                 booking.getMovie().getName(),
+                movieGenres.stream()
+                        .map(movieGenre -> movieGenre.getMovieGenreDetail().getName())
+                        .toList(),
                 booking.getMovie().getImageUrl(),
                 booking.getCity().getName(),
                 booking.getCinema().getName(),
@@ -933,71 +1214,6 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public void updateBookingSeat(BookingRequest bookingRequest) {
-        Booking booking = bookingRepository.findById(bookingRequest.getBookingId())
-                .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingRequest.getBookingId())));
-        if (bookingRequest.getSeatIds() == null || bookingRequest.getSeatIds().isEmpty()) return;
-
-        double oldTotalPrice = booking.getTotalPrice();
-        double oldTotalPriceSeat = booking.getSeatList().stream()
-                .mapToDouble(draftSeat -> draftSeat.getSeatType().getPrice())
-                .sum();
-
-        for (BookingSeat bookingSeat : booking.getSeatList()) {
-            bookingSeat.setSeat(null);
-            bookingSeatRepository.delete(bookingSeat);
-        }
-
-        int ticketCount = booking.getTickets().stream()
-                .mapToInt(BookingTicket::getQuantity)
-                .sum();
-        int seatCount = bookingRequest.getSeatIds().size();
-        if (seatCount != ticketCount) {
-            throw new IllegalArgumentException("The number of selected seats (%d) does not match the number of tickets (%d).".formatted(seatCount, ticketCount));
-        }
-
-        Set<Integer> seatIdSet = new HashSet<>(bookingRequest.getSeatIds());
-        if (seatIdSet.size() != bookingRequest.getSeatIds().size()) {
-            throw new IllegalArgumentException("Duplicate seat IDs detected in the request.");
-        }
-
-        List<Seat> selectedSeats = seatRepository.findAllById(bookingRequest.getSeatIds())
-                .stream()
-                .toList();
-        if (selectedSeats.size() != seatCount) {
-            throw new IllegalArgumentException("One or more selected seats are unavailable.");
-        }
-        if (selectedSeats.stream().anyMatch(seat -> seat.getScreen().getId() != booking.getScreen().getId())) {
-            throw new IllegalArgumentException("The selected seats do not match the specified screen!");
-        }
-        if (selectedSeats.stream().anyMatch(seat -> seat.getSeatStatus() == SeatStatus.Unavailable)) {
-            throw new IllegalArgumentException("Selected seats are already unavailable, please select a different seat.");
-        }
-
-        if (bookingRequest.getSeatIds() != null && !bookingRequest.getSeatIds().isEmpty()) {
-            Map<Integer, BookingSeat> seatMap = new HashMap<>();
-
-            for (Seat seat : selectedSeats) {
-                BookingSeat bookingSeat = seatMap.computeIfAbsent(seat.getId(), id -> {
-                    BookingSeat newBookingSeat = new BookingSeat();
-                    newBookingSeat.setBooking(booking);
-                    newBookingSeat.setSeat(seat);
-                    newBookingSeat.setSeatType(seat.getSeatType());
-                    return newBookingSeat;
-                });
-                seat.setSeatStatus(SeatStatus.Held);
-            }
-            booking.setSeatList(new ArrayList<>(seatMap.values()));
-        }
-        double newTotalSeatPrice = booking.getSeatList().stream()
-                .mapToDouble(draftSeat -> draftSeat.getSeatType().getPrice())
-                .sum();
-
-        double updatedTotalPrice = oldTotalPrice - oldTotalPriceSeat + newTotalSeatPrice;
-        booking.setTotalPrice(updatedTotalPrice);
-    }
-
-    @Override
     public void cancelBooking(Integer bookingId, Integer userId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingId)));
@@ -1005,32 +1221,37 @@ public class BookingServiceImpl implements BookingService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
 
-        List<Seat> seatListChangeToAvailable = new ArrayList<>();
-        for (BookingSeat seat : booking.getSeatList()) {
-            seat.getSeat().setSeatStatus(SeatStatus.Available);
-            seatListChangeToAvailable.add(seat.getSeat());
+        if (booking.getStatus() == BookingStatus.Pending_Payment) {
+            if (booking.getPaymentMethod() == PaymentMethod.Cash) {
+                List<Seat> seatListChangeToAvailable = new ArrayList<>();
+                for (BookingSeat seat : booking.getSeatList()) {
+                    seat.getSeat().setSeatStatus(SeatStatus.Available);
+                    seatListChangeToAvailable.add(seat.getSeat());
+                }
+                seatRepository.saveAll(seatListChangeToAvailable);
+
+                booking.setStatus(BookingStatus.CANCELLED);
+                bookingRepository.save(booking);
+
+                try {
+                    Notification notification = new Notification();
+                    notification.setUser(user);
+                    notification.setMessage("Booking Number: %s, Your booking for %s is canceled. You will have the money that you pay for the booking return to your wallet".formatted(booking.getBookingNo(), booking.getMovie().getName()));
+                    notification.setDateCreated(LocalDateTime.now());
+                    notificationRepository.save(notification);
+
+                    emailService.sendCancelMailMessage(user.getEmail());
+                    System.out.printf("Notification sent to %s%n", user.getEmail());
+                } catch (Exception e) {
+                    System.out.println("Failed to send email notification. Please try again later.");
+                }
+
+                // Schedule the booking deletion 10 minutes after cancellation
+                try (ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor()) {
+                    scheduler.schedule(() -> deleteBooking(bookingId, userId), 10, TimeUnit.MINUTES);
+                }
+            }
         }
-        seatRepository.saveAll(seatListChangeToAvailable);
-
-        booking.setStatus(BookingStatus.CANCELLED);
-        bookingRepository.save(booking);
-
-        try {
-            Notification notification = new Notification();
-            notification.setUser(user);
-            notification.setMessage("Booking Number: %s, Your booking for %s is canceled. You will have the money that you pay for the booking return to your wallet".formatted(booking.getBookingNo(), booking.getMovie().getName()));
-            notification.setDateCreated(LocalDateTime.now());
-            notificationRepository.save(notification);
-
-            emailService.sendCancelMailMessage(user.getEmail());
-            System.out.printf("Notification sent to %s%n", user.getEmail());
-        } catch (Exception e) {
-            System.out.println("Failed to send email notification. Please try again later.");
-        }
-
-        // Schedule the booking deletion 10 minutes after cancellation
-        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.schedule(() -> deleteBooking(bookingId, userId), 10, TimeUnit.MINUTES);
     }
 
     @Override
@@ -1075,9 +1296,9 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingId)));
 
-        if (booking.getStartDateTime().isBefore(LocalDateTime.now().plusHours(1))) {
-            throw new IllegalArgumentException("You cannot delete a booking within 1 hour of the start time.");
-        }
+//        if (booking.getStartDateTime().isBefore(LocalDateTime.now().plusHours(1))) {
+//            throw new IllegalArgumentException("You cannot delete a booking within 1 hour of the start time.");
+//        }
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
@@ -1107,6 +1328,75 @@ public class BookingServiceImpl implements BookingService {
         } catch (Exception e) {
             System.out.println("Failed to send email notification. Please try again later.");
         }
+    }
+
+    // TODO: Check Xem có Update đc Seat ko (Ko cần thiết)
+    @Override
+    public void updateBookingSeat(BookingRequest bookingRequest) {
+        Booking booking = bookingRepository.findById(bookingRequest.getBookingId())
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingRequest.getBookingId())));
+        if (bookingRequest.getSeatIds() == null || bookingRequest.getSeatIds().isEmpty()) return;
+
+        int ticketCount = booking.getTickets().stream()
+                .mapToInt(BookingTicket::getQuantity)
+                .sum();
+        int seatCount = bookingRequest.getSeatIds().size();
+        if (seatCount != ticketCount) {
+            throw new IllegalArgumentException("The number of selected seats (%d) does not match the number of tickets (%d).".formatted(seatCount, ticketCount));
+        }
+
+        List<Seat> selectedSeats = seatRepository.findAllById(bookingRequest.getSeatIds())
+                .stream()
+                .toList();
+        if (selectedSeats.size() != seatCount) {
+            throw new IllegalArgumentException("The size of the updated booking list does not match the number of the size of the old booking list");
+        }
+        if (selectedSeats.stream().anyMatch(seat -> seat.getScreen().getId() != booking.getScreen().getId())) {
+            throw new IllegalArgumentException("The selected seats do not match the specified screen!");
+        }
+        if (selectedSeats.stream().anyMatch(seat -> seat.getSeatStatus() == SeatStatus.Unavailable)) {
+            throw new IllegalArgumentException("Selected seats are already unavailable, please select a different seat.");
+        }
+
+        List<Integer> newSeatIds = selectedSeats.stream()
+                .map(Seat::getId)
+                .sorted()
+                .toList();
+        List<Integer> oldSeatIds = booking.getSeatList().stream()
+                .map(bookingSeat -> bookingSeat.getSeat().getId())
+                .toList();
+        if (newSeatIds.equals(oldSeatIds)) {
+            throw new IllegalArgumentException("The updated booking list matches the original booking list. Please make a valid change!");
+        }
+
+        // Chuyển trạng thái ghế cũ thành Available
+        List<Seat> seatListChangeToAvailable = new ArrayList<>();
+        for (BookingSeat seat : booking.getSeatList()) {
+            seat.getSeat().setSeatStatus(SeatStatus.Available);
+            seatListChangeToAvailable.add(seat.getSeat());
+        }
+        seatRepository.saveAll(seatListChangeToAvailable);
+
+        // Cập nhập ghế mới và trạng thái
+        List<BookingSeat> existingBookingSeats = booking.getSeatList();
+        for (int i = 0; i < existingBookingSeats.size(); i++) {
+            BookingSeat existingBookingSeat = existingBookingSeats.get(i);
+            Seat newSeat = selectedSeats.get(i);
+
+            existingBookingSeat.setSeat(newSeat);
+            existingBookingSeat.setSeatType(newSeat.getSeatType());
+            newSeat.setSeatStatus(SeatStatus.Held);
+        }
+
+        seatRepository.saveAll(selectedSeats);
+        booking.setSeatList(existingBookingSeats);
+
+        double newTotalPrice = booking.getSeatList().stream()
+                .mapToDouble(bookingSeat -> bookingSeat.getSeat().getSeatType().getPrice())
+                .sum();
+        booking.setTotalPrice(newTotalPrice);
+
+        bookingRepository.save(booking);
     }
 
     // TODO: Additional methods

@@ -28,7 +28,7 @@ public class Seat {
     @Column(name = "Seat_Column")
     private Integer column;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "seat_type_id")
     private SeatType seatType;
 
@@ -55,10 +55,10 @@ public class Seat {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateUpdated;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "screen_id", nullable = false)
     private Screen screen;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "seat")
+    @OneToMany(mappedBy = "seat", cascade = CascadeType.ALL)
     private List<BookingSeat> seatList;
 }

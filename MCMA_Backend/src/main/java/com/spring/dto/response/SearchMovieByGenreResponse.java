@@ -5,21 +5,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class SearchMovieByGenreResponse {
-    private int id;
+    private Integer id;
     private String name;
     private Integer length;
+    private String description;
+    private String imageUrl;
+    private String backgroundImageUrl;
     private String trailerLink;
     private String datePublish;
-    private String ratingName;
-    private String ratingDescription;
-    private String genreName;
-    private String performerName;
-    private String performerType;
-    private String performerSex;
+    private List<String> ratingNameList;
+    private List<String> ratingDescriptionList;
+    private List<String> genreNameList;
+    private List<String> performerNameList;
+    private List<String> performerType;
+    private List<String> performerSex;
 }
 

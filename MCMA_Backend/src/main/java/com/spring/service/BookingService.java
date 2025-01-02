@@ -9,10 +9,12 @@ import java.util.List;
 public interface BookingService {
     // TODO: Get Information for a Booking process
     List<MovieResponse> getAllMovies();
+    MovieResponse getAllInformationOfSelectedMovie(Integer movieId);
     List<CityResponse> getAllCitiesBySelectedMovie(Integer movieId);
     List<CinemaResponse> getAllCinemasBySelectedCity(Integer cityId);
+    List<CinemaResponse> getAllCinemasBySelectedMovieAndSelectedCity(Integer movieId, Integer cityId);
     List<ScreenResponse> getAllScreensBySelectedCinema(Integer cinemaId);
-    List<ScheduleResponse> getAllSchedulesBySelectedMovieAndSelectedCinemaAndSelectedScreen(
+    ScheduleResponse getAllSchedulesBySelectedMovieAndSelectedCinemaAndSelectedScreen(
             Integer movieId,
             Integer cinemaId,
             Integer screenId

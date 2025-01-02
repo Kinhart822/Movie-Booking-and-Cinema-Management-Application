@@ -17,9 +17,15 @@ public class MovieResponse {
     private Integer movieId;
     private String movieName;
     private Integer movieLength;
+    private String description;
     private String publishedDate;
     private String trailerLink;
     private String imageUrl;
+    private String backgroundImageUrl;
+
+    private List<String> dayOfWeek;
+    private List<String> date;
+    private List<String> time;
 
     private List<String> movieGenreNameList;
     private List<String> imageUrlList;
