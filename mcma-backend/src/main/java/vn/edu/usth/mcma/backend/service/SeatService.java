@@ -3,6 +3,8 @@ package vn.edu.usth.mcma.backend.service;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.SeatMapRequest;
+import vn.edu.usth.mcma.backend.dto.SeatMapResponse;
+import vn.edu.usth.mcma.backend.dto.SeatPosition;
 import vn.edu.usth.mcma.backend.entity.Seat;
 import vn.edu.usth.mcma.backend.entity.SeatPK;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
@@ -29,7 +31,7 @@ public class SeatService extends AbstractService<Seat, SeatPK> {
                 .stream()
                 .map(pos -> Seat
                         .builder()
-                        .id(SeatPK
+                        .pk(SeatPK
                                 .builder()
                                 .screenId(request.getScreenId())
                                 .row(pos.getRow())
@@ -42,6 +44,24 @@ public class SeatService extends AbstractService<Seat, SeatPK> {
                 .toList();
         seatRepository.saveAll(seats);
         return this.successResponse();
+    }
+
+    public SeatMapResponse findSeatMapByScreenId(Long screenId) {
+        List<Seat> seats = seatRepository.findAllByScreenId(screenId);
+        return SeatMapResponse
+                .builder()
+                .seatPositions(seats
+                        .stream()
+                        .map(s -> SeatPosition
+                                .builder()
+                                .row(s.getPk().getRow())
+                                .col(s.getPk().getColumn())
+                                .typeId(s.getTypeId())
+                                .name(s.getName())
+                                .build())
+                        .sorted()
+                        .toList())
+                .build();
     }
 //    public List<Seat> findAll(String query, Pageable pageable) {
 //        return seatRepository.findAllByNameContaining(query, pageable);

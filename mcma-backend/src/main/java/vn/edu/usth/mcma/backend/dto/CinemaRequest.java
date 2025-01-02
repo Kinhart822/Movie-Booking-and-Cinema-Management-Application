@@ -6,4 +6,5 @@ import lombok.Data;
 public class CinemaRequest {
     private Long cityId;
     private String name;
+    private String address;
 }

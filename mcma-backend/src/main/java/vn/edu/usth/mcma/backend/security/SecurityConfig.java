@@ -79,7 +79,7 @@ public class SecurityConfig {
         return (cors) -> cors
                 .configurationSource(request -> {
                     var corsConfig = new CorsConfiguration();
-                    corsConfig.addAllowedOrigin("http://localhost:5173"); // Frontend origin
+                    corsConfig.addAllowedOrigin("http://localhost:3000"); // Frontend origin
                     corsConfig.addAllowedMethod("*"); // All HTTP methods
                     corsConfig.addAllowedHeader("*"); // All headers allowed
                     corsConfig.setAllowCredentials(true); // Allow credentials
