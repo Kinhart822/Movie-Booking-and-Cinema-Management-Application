@@ -2,8 +2,8 @@ package vn.edu.usth.mcma.backend.service;
 
 import constants.CommonStatus;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import vn.edu.usth.mcma.backend.dto.CinemaProjection;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.dto.CinemaRequest;
@@ -35,8 +35,8 @@ public class CinemaService extends AbstractService<Cinema, Long> {
         cinemaRepository.save(cinema);
         return this.successResponse();
     }
-    public List<Cinema> findAll(String query, Pageable pageable) {
-        return cinemaRepository.findAllByNameContaining(query, pageable);
+    public List<CinemaProjection> findAll(String query) {
+        return cinemaRepository.findAllProjectionByQuery(query);
     }
     public ApiResponse updateCinema(Long id, CinemaRequest request) {
         Long userId = jwtUtil.getUserIdFromToken();

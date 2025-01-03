@@ -1,9 +1,8 @@
 package vn.edu.usth.mcma.backend.controller.admin;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.usth.mcma.backend.dto.CinemaProjection;
 import vn.edu.usth.mcma.backend.dto.CinemaRequest;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.service.CinemaService;
@@ -21,8 +20,8 @@ public class CinemaController {
         return cinemaService.createCinema(request);
     }
     @GetMapping("/cinema")
-    public List<Cinema> findAll(@RequestParam(required = false, defaultValue = "") String query, @PageableDefault Pageable pageable) {
-        return cinemaService.findAll(query, pageable);
+    public List<CinemaProjection> findAll(@RequestParam(required = false, defaultValue = "") String query) {
+        return cinemaService.findAll(query);
     }
     @GetMapping("/cinema/{id}")
     public Cinema findById(@PathVariable Long id) {
