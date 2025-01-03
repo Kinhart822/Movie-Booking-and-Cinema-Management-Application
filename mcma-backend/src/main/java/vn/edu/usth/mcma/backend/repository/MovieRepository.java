@@ -1,17 +1,12 @@
-//package vn.edu.usth.mcma.backend.repository;
-//
-//import org.springframework.data.jpa.repository.JpaRepository;
-//import org.springframework.data.jpa.repository.Query;
-//import org.springframework.data.repository.query.Param;
-//import org.springframework.stereotype.Repository;
-//import vn.edu.usth.mcma.backend.entity.Movie;
-//
-//import java.util.Date;
-//import java.util.List;
-//
-//@Repository
-//public interface MovieRepository extends JpaRepository<Movie, Integer> {
-//    // TODO: USER
+package vn.edu.usth.mcma.backend.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import vn.edu.usth.mcma.backend.entity.Movie;
+
+@Repository
+public interface MovieRepository extends JpaRepository<Movie, Long> {
+    // TODO: USER
 //    @Query(nativeQuery = true, value = """
 //                 SELECT
 //                        m.id,
@@ -133,7 +128,5 @@
 //                WHERE FUNCTION('DATE', ms.startTime) = :date
 //            """)
 //    List<Movie> findMoviesBySelectedDateSchedule(@Param("date") String date);
-//
-//
-//}
-//
+}
+

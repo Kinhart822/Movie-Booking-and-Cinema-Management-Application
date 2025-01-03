@@ -1,27 +1,67 @@
-//package vn.edu.usth.mcma.backend.service;
-//
-//import jakarta.transaction.Transactional;
-//import org.springframework.data.jpa.repository.JpaRepository;
-//import org.springframework.stereotype.Service;
-//import vn.edu.usth.mcma.backend.dto.SearchMovieByNameResponse;
-//import vn.edu.usth.mcma.backend.entity.Movie;
-//
-//import java.text.SimpleDateFormat;
-//import java.util.ArrayList;
-//import java.util.Arrays;
-//import java.util.Date;
-//import java.util.List;
-//import java.util.stream.Collectors;
-//
-//@Transactional
-//@Service
-//public class MovieService extends AbstractService<Movie, Long> {
-//
-//    public MovieService(JpaRepository<Movie, Long> repository) {
-//        super(repository);
-//    }
-//
-//    // TODO: USER
+package vn.edu.usth.mcma.backend.service;
+
+import constants.ApiResponseCode;
+import constants.CommonStatus;
+import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
+import vn.edu.usth.mcma.backend.dto.MovieScheduleRequest;
+import vn.edu.usth.mcma.backend.entity.Movie;
+import vn.edu.usth.mcma.backend.entity.MovieSchedule;
+import vn.edu.usth.mcma.backend.exception.ApiResponse;
+import vn.edu.usth.mcma.backend.exception.BusinessException;
+import vn.edu.usth.mcma.backend.repository.MovieRepository;
+import vn.edu.usth.mcma.backend.repository.MovieScheduleRepository;
+import vn.edu.usth.mcma.backend.repository.ScreenRepository;
+
+import java.time.Instant;
+
+@Transactional
+@Service
+public class MovieService extends AbstractService<Movie, Long> {
+    private final MovieRepository movieRepository;
+    private final ScreenRepository screenRepository;
+    private final MovieScheduleRepository movieScheduleRepository;
+
+    public MovieService(MovieRepository movieRepository, ScreenRepository screenRepository, MovieScheduleRepository movieScheduleRepository) {
+        super(movieRepository);
+        this.movieRepository = movieRepository;
+        this.screenRepository = screenRepository;
+        this.movieScheduleRepository = movieScheduleRepository;
+    }
+    /*
+     * ========
+     * schedule
+     * ========
+     */
+    public ApiResponse addMovieToSchedule(MovieScheduleRequest request) {
+        Movie movie = movieRepository
+                .findById(request.getMovieId())
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+        Instant startTime = request.getStartTime();
+        Instant endTime = startTime.plusSeconds(movie.getLength());
+        if (movie.getPublishDate().isAfter(Instant.now())) {
+            throw new BusinessException(ApiResponseCode.MOVIE_NOT_PUBLISHED);
+        }
+        if (startTime.isBefore(Instant.now())) {
+            throw new BusinessException(ApiResponseCode.INVALID_START_TIME);
+        }
+        if (!movieScheduleRepository.eventsInRange(startTime, endTime).isEmpty()) {
+            throw new BusinessException(ApiResponseCode.SCREEN_OCCUPIED);
+        }
+        movieScheduleRepository.save(MovieSchedule
+                .builder()
+                .screen(screenRepository
+                        .findById(request.getScreenId())
+                        .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND)))
+                .movie(movie)
+                .startTime(startTime)
+                .endTime(endTime)
+                .status(CommonStatus.ACTIVE.getStatus())
+                .build());
+        return this.successResponse();
+    }
+
+    // TODO: USER
 //    public List<SearchMovieByNameResponse> getAllMovies(String title, Integer limit, Integer offset) {
 //        List<Object[]> results = movieRepository.getAllMovies(title, limit, offset);
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -89,4 +129,4 @@
 //                        result[13] != null ? Arrays.asList(result[13].toString().split(",")) : new ArrayList<>() // performerSex
 //                ))
 //                .collect(Collectors.toList());    }
-//}
+}

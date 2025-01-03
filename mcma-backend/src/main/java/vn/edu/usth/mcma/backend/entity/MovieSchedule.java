@@ -27,6 +27,8 @@ public class MovieSchedule extends AbstractAuditing implements Serializable {
     private Movie movie;
     @Column
     private Instant startTime;
+    @Column
+    private Instant endTime;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
 }
