@@ -22,5 +22,5 @@ public enum ApiResponseCode {
     BAD_REQUEST("400", "BAD_REQUEST"),
     RESET_KEY_NOT_FOUND("404", "RESET_KEY_NOT_FOUND"),;
     private final String status;
-    private final String message;
+    private final String description;
 }

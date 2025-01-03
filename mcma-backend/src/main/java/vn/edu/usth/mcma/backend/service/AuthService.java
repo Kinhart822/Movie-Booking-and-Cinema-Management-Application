@@ -151,7 +151,7 @@ public class AuthService {
         return ApiResponse
                 .builder()
                 .status(ApiResponseCode.SUCCESS.getStatus())
-                .message(ApiResponseCode.SUCCESS.getMessage())
+                .message(ApiResponseCode.SUCCESS.getDescription())
                 .build();
     }
     public Map<String, Boolean> resetPasswordCheck(ResetPasswordCheck check) {
@@ -176,7 +176,7 @@ public class AuthService {
         return ApiResponse
                 .builder()
                 .status(ApiResponseCode.SUCCESS.getStatus())
-                .message(ApiResponseCode.SUCCESS.getMessage())
+                .message(ApiResponseCode.SUCCESS.getDescription())
                 .build();
     }
 

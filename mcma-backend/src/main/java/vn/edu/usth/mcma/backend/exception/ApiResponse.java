@@ -13,4 +13,5 @@ public class ApiResponse {
     private String status;
     private String message;
     private String description;
+    private String stackTrace;
 }

@@ -18,7 +18,7 @@ public abstract class AbstractService<T, ID> {
         return ApiResponse
                 .builder()
                 .status(ApiResponseCode.SUCCESS.getStatus())
-                .message(ApiResponseCode.SUCCESS.getMessage())
+                .message(ApiResponseCode.SUCCESS.getDescription())
                 .build();
     }
 }

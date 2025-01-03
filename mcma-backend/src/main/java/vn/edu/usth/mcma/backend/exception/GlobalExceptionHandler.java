@@ -21,10 +21,10 @@ public class GlobalExceptionHandler extends RuntimeException {
     public ResponseEntity<Object> handleBusinessException(BusinessException be, HttpServletRequest request) {
         log.error("BusinessException occurred: {}", be.toString());
         int status = Integer.parseInt(be.getStatus());
-        String description = ExceptionUtils.getMessage(messageSource, request, be.getMessage());
+        String stackTrace = ExceptionUtils.getStackTrace(messageSource, request, be.getMessage());
         return ResponseEntity
                 .status(status)
-                .body(new ApiResponse(be.getStatus(), be.getMessage(), description));
+                .body(new ApiResponse(be.getStatus(), be.getMessage(), be.getDescription(), stackTrace));
     }
     // fallback
     @ExceptionHandler(Exception.class)

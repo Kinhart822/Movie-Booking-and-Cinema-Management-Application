@@ -24,10 +24,10 @@ public class ExceptionUtils {
             return Locale.forLanguageTag("en");
         }
     }
-    public static String getMessage(MessageSource messageSource, HttpServletRequest request, String message) {
+    public static String getStackTrace(MessageSource messageSource, HttpServletRequest request, String stackTrace) {
         try {
             Locale locale = ExceptionUtils.getLocaleResolver(request);
-            return messageSource.getMessage(message, null, locale);
+            return messageSource.getMessage(stackTrace, null, locale);
         } catch (Exception e) {
             return null;
         }
