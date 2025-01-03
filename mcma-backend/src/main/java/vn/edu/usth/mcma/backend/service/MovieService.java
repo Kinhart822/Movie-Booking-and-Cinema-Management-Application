@@ -3,6 +3,7 @@ package vn.edu.usth.mcma.backend.service;
 import constants.ApiResponseCode;
 import constants.CommonStatus;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.MovieScheduleRequest;
 import vn.edu.usth.mcma.backend.entity.Movie;
@@ -17,17 +18,11 @@ import java.time.Instant;
 
 @Transactional
 @Service
-public class MovieService extends AbstractService<Movie, Long> {
+@AllArgsConstructor
+public class MovieService {
     private final MovieRepository movieRepository;
     private final ScreenRepository screenRepository;
     private final MovieScheduleRepository movieScheduleRepository;
-
-    public MovieService(MovieRepository movieRepository, ScreenRepository screenRepository, MovieScheduleRepository movieScheduleRepository) {
-        super(movieRepository);
-        this.movieRepository = movieRepository;
-        this.screenRepository = screenRepository;
-        this.movieScheduleRepository = movieScheduleRepository;
-    }
     /*
      * ========
      * schedule

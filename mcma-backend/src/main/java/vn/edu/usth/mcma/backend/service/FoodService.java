@@ -1,12 +1,15 @@
 package vn.edu.usth.mcma.backend.service;
 
+import constants.ApiResponseCode;
 import constants.CommonStatus;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.entity.Food;
 import vn.edu.usth.mcma.backend.dto.FoodRequest;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
+import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.FoodRepository;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 
@@ -15,15 +18,10 @@ import java.util.List;
 
 @Transactional
 @Service
-public class FoodService extends AbstractService<Food, Long> {
+@AllArgsConstructor
+public class FoodService {
     private final FoodRepository foodRepository;
     private final JwtUtil jwtUtil;
-
-    public FoodService(FoodRepository foodRepository, JwtUtil jwtUtil) {
-        super(foodRepository);
-        this.foodRepository = foodRepository;
-        this.jwtUtil = jwtUtil;
-    }
     public ApiResponse createFood(FoodRequest request) {
         Long userId = jwtUtil.getUserIdFromToken();
         Food food = new Food();
@@ -43,7 +41,9 @@ public class FoodService extends AbstractService<Food, Long> {
     }
     public ApiResponse updateFood(Long id, FoodRequest request) {
         Long userId = jwtUtil.getUserIdFromToken();
-        Food food = findById(id);
+        Food food = foodRepository
+                .findById(id)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         food.setName(request.getName());
         food.setDescription(request.getDescription());
         food.setImageUrl(request.getImageUrl());
@@ -56,7 +56,9 @@ public class FoodService extends AbstractService<Food, Long> {
     }
     public ApiResponse deleteFood(Long id) {
         Long userId = jwtUtil.getUserIdFromToken();
-        Food food = findById(id);
+        Food food = foodRepository
+                .findById(id)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         food.setStatus(CommonStatus.DELETED.getStatus());
         food.setLastModifiedBy(userId);
         food.setLastModifiedDate(Instant.now());

@@ -2,6 +2,7 @@ package vn.edu.usth.mcma.backend.service;
 
 import constants.ApiResponseCode;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.SeatMapRequest;
 import vn.edu.usth.mcma.backend.dto.SeatMapResponse;
@@ -18,18 +19,16 @@ import java.util.List;
 
 @Transactional
 @Service
-public class SeatService extends AbstractService<Seat, SeatPK> {
+@AllArgsConstructor
+public class SeatService {
     private final SeatRepository seatRepository;
     private final ScreenService screenService;
-
-    public SeatService(SeatRepository seatRepository, ScreenService screenService) {
-        super(seatRepository);
-        this.seatRepository = seatRepository;
-        this.screenService = screenService;
-    }
+    private final ScreenRepository screenRepository;
 
     public ApiResponse createSeatMap(SeatMapRequest request) {
-        screenService.findById(request.getScreenId());
+        Screen screen = screenRepository
+                .findById(request.getScreenId())
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         List<Seat> seats = request
                 .getNamedSeatPositions() // sorted btw
                 .stream()

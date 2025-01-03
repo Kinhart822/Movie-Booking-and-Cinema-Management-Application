@@ -1,12 +1,15 @@
 package vn.edu.usth.mcma.backend.service;
 
+import constants.ApiResponseCode;
 import constants.CommonStatus;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.ScreenRequest;
 import vn.edu.usth.mcma.backend.entity.Screen;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
+import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.ScreenRepository;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 
@@ -15,14 +18,10 @@ import java.util.List;
 
 @Transactional
 @Service
-public class ScreenService extends AbstractService<Screen, Long> {
+@AllArgsConstructor
+public class ScreenService {
     private final ScreenRepository screenRepository;
     private final JwtUtil jwtUtil;
-    public ScreenService(ScreenRepository screenRepository, JwtUtil jwtUtil) {
-        super(screenRepository);
-        this.screenRepository = screenRepository;
-        this.jwtUtil = jwtUtil;
-    }
     public ApiResponse createScreen(ScreenRequest request) {
         Long userId = jwtUtil.getUserIdFromToken();
         Screen screen = new Screen();
@@ -40,7 +39,9 @@ public class ScreenService extends AbstractService<Screen, Long> {
     }
     public ApiResponse updateScreen(Long id, ScreenRequest request) {
         Long userId = jwtUtil.getUserIdFromToken();
-        Screen screen = findById(id);
+        Screen screen = screenRepository
+                .findById(id)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         // changing cinemaId is not allowed think about it :)
         screen.setName(request.getName());
 //      debug  screen.setTypeId(request.getTypeId());
@@ -51,7 +52,9 @@ public class ScreenService extends AbstractService<Screen, Long> {
     }
     public ApiResponse deleteScreen(Long id) {
         Long userId = jwtUtil.getUserIdFromToken();
-        Screen screen = findById(id);
+        Screen screen = screenRepository
+                .findById(id)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         screen.setStatus(CommonStatus.DELETED.getStatus());
         screen.setLastModifiedBy(userId);
         screen.setLastModifiedDate(Instant.now());

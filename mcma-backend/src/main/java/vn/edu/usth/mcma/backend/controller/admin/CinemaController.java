@@ -1,10 +1,13 @@
 package vn.edu.usth.mcma.backend.controller.admin;
 
+import constants.ApiResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.dto.CinemaProjection;
 import vn.edu.usth.mcma.backend.dto.CinemaRequest;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
+import vn.edu.usth.mcma.backend.exception.BusinessException;
+import vn.edu.usth.mcma.backend.repository.CinemaRepository;
 import vn.edu.usth.mcma.backend.service.CinemaService;
 import vn.edu.usth.mcma.backend.entity.Cinema;
 
@@ -15,6 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CinemaController {
     private final CinemaService cinemaService;
+    private final CinemaRepository cinemaRepository;
+
     @PostMapping("/cinema")
     public ApiResponse createCinema(@RequestBody CinemaRequest request) {
         return cinemaService.createCinema(request);
@@ -25,7 +30,9 @@ public class CinemaController {
     }
     @GetMapping("/cinema/{id}")
     public Cinema findById(@PathVariable Long id) {
-        return cinemaService.findById(id);
+        return cinemaRepository
+                .findById(id)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
     }
     @PutMapping("/cinema/{id}")
     public ApiResponse updateCinema(@PathVariable Long id, @RequestBody CinemaRequest request) {

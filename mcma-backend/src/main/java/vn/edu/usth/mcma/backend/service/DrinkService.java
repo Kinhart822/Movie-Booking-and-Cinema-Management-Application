@@ -1,12 +1,15 @@
 package vn.edu.usth.mcma.backend.service;
 
+import constants.ApiResponseCode;
 import constants.CommonStatus;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.entity.Drink;
 import vn.edu.usth.mcma.backend.dto.DrinkRequest;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
+import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.DrinkRepository;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 
@@ -15,15 +18,10 @@ import java.util.List;
 
 @Transactional
 @Service
-public class DrinkService extends AbstractService<Drink, Long> {
+@AllArgsConstructor
+public class DrinkService {
     private final DrinkRepository drinkRepository;
     private final JwtUtil jwtUtil;
-
-    public DrinkService(DrinkRepository drinkRepository, JwtUtil jwtUtil) {
-        super(drinkRepository);
-        this.drinkRepository = drinkRepository;
-        this.jwtUtil = jwtUtil;
-    }
     public ApiResponse createDrink(DrinkRequest request) {
         Long userId = jwtUtil.getUserIdFromToken();
         Drink drink = new Drink();
@@ -44,7 +42,9 @@ public class DrinkService extends AbstractService<Drink, Long> {
     }
     public ApiResponse updateDrink(Long id, DrinkRequest request) {
         Long userId = jwtUtil.getUserIdFromToken();
-        Drink drink = findById(id);
+        Drink drink = drinkRepository
+                .findById(id)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         drink.setName(request.getName());
         drink.setDescription(request.getDescription());
         drink.setImageUrl(request.getImageUrl());
@@ -58,7 +58,9 @@ public class DrinkService extends AbstractService<Drink, Long> {
     }
     public ApiResponse deleteDrink(Long id) {
         Long userId = jwtUtil.getUserIdFromToken();
-        Drink drink = findById(id);
+        Drink drink = drinkRepository
+                .findById(id)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         drink.setStatus(CommonStatus.DELETED.getStatus());
         drink.setLastModifiedBy(userId);
         drink.setLastModifiedDate(Instant.now());

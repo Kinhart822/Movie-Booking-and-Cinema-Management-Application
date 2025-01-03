@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.backend.controller;
 
+import constants.ApiResponseCode;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.entity.User;
 import vn.edu.usth.mcma.backend.dto.*;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
+import vn.edu.usth.mcma.backend.exception.BusinessException;
+import vn.edu.usth.mcma.backend.repository.UserRepository;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.service.AuthService;
 import vn.edu.usth.mcma.backend.service.UserService;
@@ -20,11 +23,14 @@ import java.util.Map;
 public class AuthController {
     private final JwtUtil jwtUtil;
     private final AuthService authService;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     @GetMapping("/auth/profile")
     public ResponseEntity<User> getProfile() {
-        return ResponseEntity.ok(userService.findById(jwtUtil.getUserIdFromToken()));
+        return ResponseEntity
+                .ok(userRepository
+                        .findById(jwtUtil.getUserIdFromToken())
+                        .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND)));
     }
 
     @PostMapping("/auth/sign-up")

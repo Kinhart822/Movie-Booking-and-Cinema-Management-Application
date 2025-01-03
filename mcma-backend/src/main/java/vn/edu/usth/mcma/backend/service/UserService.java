@@ -2,23 +2,17 @@ package vn.edu.usth.mcma.backend.service;
 
 import constants.ApiResponseCode;
 import constants.CommonStatus;
-import constants.UserType;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.apache.commons.text.RandomStringGenerator;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.entity.User;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.UserRepository;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -26,15 +20,11 @@ import static vn.edu.usth.mcma.backend.config.AppConfig.dotenv;
 
 @Service
 @Transactional
-public class UserService extends AbstractService<User, Long> {
+@AllArgsConstructor
+public class UserService {
     private static final int resetKeyTimeout = Integer.parseInt(Objects.requireNonNull(dotenv().get("RESET_KEY_TIMEOUT")));
     private final RandomStringGenerator numericGenerator = new RandomStringGenerator.Builder().withinRange('0', '9').get();
     private final UserRepository userRepository;
-
-    public UserService(UserRepository userRepository, @Lazy PasswordEncoder passwordEncoder) {
-        super(userRepository);
-        this.userRepository = userRepository;
-    }
     public boolean checkEmailExistence(String email) {
         return userRepository.existsByEmailIgnoreCase(email);
     }

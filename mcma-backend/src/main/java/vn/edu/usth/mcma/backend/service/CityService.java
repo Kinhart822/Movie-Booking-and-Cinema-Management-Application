@@ -1,10 +1,13 @@
 package vn.edu.usth.mcma.backend.service;
 
+import constants.ApiResponseCode;
 import constants.CommonStatus;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
+import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.dto.CityRequest;
 import vn.edu.usth.mcma.backend.repository.CityRepository;
@@ -16,15 +19,10 @@ import java.util.List;
 
 @Transactional
 @Service
-public class CityService extends AbstractService<City, Long> {
+@AllArgsConstructor
+public class CityService {
     private final CityRepository cityRepository;
     private final JwtUtil jwtUtil;
-
-    public CityService(CityRepository cityRepository, JwtUtil jwtUtil) {
-        super(cityRepository);
-        this.cityRepository = cityRepository;
-        this.jwtUtil = jwtUtil;
-    }
     public ApiResponse createCity(CityRequest request) {
         Long userId = jwtUtil.getUserIdFromToken();
         City city = new City();
@@ -40,7 +38,9 @@ public class CityService extends AbstractService<City, Long> {
     }
     public ApiResponse updateCity(Long id, CityRequest request) {
         Long userId = jwtUtil.getUserIdFromToken();
-        City city = findById(id);
+        City city = cityRepository
+                .findById(id)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         city.setName(request.getName());
         city.setLastModifiedBy(userId);
         city.setLastModifiedDate(Instant.now());
@@ -49,7 +49,9 @@ public class CityService extends AbstractService<City, Long> {
     }
     public ApiResponse deleteCity(Long id) {
         Long userId = jwtUtil.getUserIdFromToken();
-        City city = findById(id);
+        City city = cityRepository
+                .findById(id)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         city.setStatus(CommonStatus.DELETED.getStatus());
         city.setLastModifiedBy(userId);
         city.setLastModifiedDate(Instant.now());

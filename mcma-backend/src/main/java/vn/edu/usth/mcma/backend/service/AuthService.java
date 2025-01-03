@@ -169,7 +169,9 @@ public class AuthService {
     }
 
     public void updateAccount(Long userId, UpdateAccountRequest updateAccountRequest) {
-        User user = userService.findById(userId);
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         if (updateAccountRequest.getEmail() != null) {
             user.setEmail(updateAccountRequest.getEmail());
         }
@@ -197,7 +199,9 @@ public class AuthService {
     }
 
     public void changeNewPassword(Long userId, UpdatePasswordRequest updatePasswordRequest) {
-        User user = userService.findById(userId);
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         if (passwordEncoder.matches(updatePasswordRequest.getNewPassword(), user.getPassword())) {
             throw new IllegalArgumentException("New password cannot be the same as the old password");
         }
@@ -206,8 +210,9 @@ public class AuthService {
     }
 
     public void deleteAccount(Long userId) {
-        User user = userService.findById(userId);
-
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         List<Token> allTokens = tokenRepository.findAllByUser(userId);
         tokenRepository.deleteAll(allTokens);
 

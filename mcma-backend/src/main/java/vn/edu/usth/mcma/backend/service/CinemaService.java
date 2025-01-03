@@ -18,15 +18,11 @@ import java.util.List;
 
 @Transactional
 @Service
-public class CinemaService extends AbstractService<Cinema, Long> {
+@AllArgsConstructor
+public class CinemaService {
     private final CinemaRepository cinemaRepository;
     private final JwtUtil jwtUtil;
-
-    public CinemaService(CinemaRepository cinemaRepository, JwtUtil jwtUtil) {
-        super(cinemaRepository);
-        this.cinemaRepository = cinemaRepository;
-        this.jwtUtil = jwtUtil;
-    }
+    private final CityRepository cityRepository;
     public ApiResponse createCinema(CinemaRequest request) {
         Long userId = jwtUtil.getUserIdFromToken();
         Cinema cinema = new Cinema();
@@ -43,7 +39,9 @@ public class CinemaService extends AbstractService<Cinema, Long> {
     }
     public ApiResponse updateCinema(Long id, CinemaRequest request) {
         Long userId = jwtUtil.getUserIdFromToken();
-        Cinema cinema = findById(id);
+        Cinema cinema = cinemaRepository
+                .findById(id)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         // changing cityId is not allowed think about it :)
         cinema.setName(request.getName());
         cinema.setLastModifiedBy(userId);
@@ -53,7 +51,9 @@ public class CinemaService extends AbstractService<Cinema, Long> {
     }
     public ApiResponse deleteCinema(Long id) {
         Long userId = jwtUtil.getUserIdFromToken();
-        Cinema cinema = findById(id);
+        Cinema cinema = cinemaRepository
+                .findById(id)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         cinema.setStatus(CommonStatus.DELETED.getStatus());
         cinema.setLastModifiedBy(userId);
         cinema.setLastModifiedDate(Instant.now());
