@@ -4,11 +4,13 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,8 +26,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Request.BookingRequest;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.CouponResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.AvailableSeatResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.SendBookingResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.BookingProcessAPIs.BookingAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.BookingProcessAPIs.GetAllCouponAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.ComboDetailsAdapter;
@@ -58,6 +63,18 @@ public class PaymentBookingActivity extends AppCompatActivity {
     private List<ComboItem> comboItems = new ArrayList<>();
     private int movieId;
     private List<Coupon> couponList = new ArrayList<>();
+    private String movieName;
+    private String cinemaName;
+    private int selectedCityId;
+    private int selectedCinemaId;
+    private int selectedScreenId;
+    private int selectedScheduleId;
+    private List<Integer> selectedTicketIds = new ArrayList<>();
+    private List<Integer> selectedSeatIds = new ArrayList<>();
+    private List<Integer> selectedFoodIds = new ArrayList<>();
+    private List<Integer> selectedDrinkIds = new ArrayList<>();
+    private int selectedMovieCouponId;
+    private int selectedUserCouponId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +87,14 @@ public class PaymentBookingActivity extends AppCompatActivity {
         });
 
         movieId = getIntent().getIntExtra("MOVIE_ID", -1);
+        selectedCityId = getIntent().getIntExtra("SELECTED_CITY_ID", -1);
+        selectedCinemaId = getIntent().getIntExtra("SELECTED_CINEMA_ID", -1);
+        selectedScreenId = getIntent().getIntExtra("SELECTED_SCREEN_ID", -1);
+        selectedScheduleId = getIntent().getIntExtra("SELECTED_SCHEDULE_ID", -1);
+        selectedTicketIds =  getIntent().getIntegerArrayListExtra("SELECTED_TICKET_IDS");
+        selectedSeatIds = getIntent().getIntegerArrayListExtra("SELECTED_SEAT_IDS");
+        selectedFoodIds = getIntent().getIntegerArrayListExtra("SELECTED_FOOD_IDS");
+        selectedDrinkIds = getIntent().getIntegerArrayListExtra("SELECTED_DRINK_IDS");
 
         totalTicketCount = getIntent().getIntExtra("TOTAL_TICKET_COUNT", 0);
         Log.d("PaymentBookingActivity", "Total Ticket Count: " + totalTicketCount);
@@ -112,11 +137,15 @@ public class PaymentBookingActivity extends AppCompatActivity {
         Button confirmBtn = dialogView.findViewById(R.id.confirm_button);
         RecyclerView couponDialogRecyclerView = dialogView.findViewById(R.id.coupon_recycler_view);
 
-        // Wait until coupons are fetched before showing the dialog
         CouponAdapter dialogAdapter = new CouponAdapter(couponList);
         dialogAdapter.setOnCouponClickListener(coupon -> {
             selectedCoupon = coupon;
             dialogAdapter.setCurrentSelection(coupon);
+            if (coupon.getType() == 0) {
+                selectedUserCouponId = coupon.getId();  // Lưu ID user coupon
+            } else {
+                selectedMovieCouponId = coupon.getId();  // Lưu ID movie coupon
+            }
         });
 
         // Set current selection in dialog
@@ -167,7 +196,21 @@ public class PaymentBookingActivity extends AppCompatActivity {
             public void onResponse(Call<List<CouponResponse>> call, Response<List<CouponResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<CouponResponse> userCouponResponses = response.body();
-                    processCoupons(coupons, userCouponResponses);
+                    for (CouponResponse couponResponse : userCouponResponses) {
+                        List<String> names = couponResponse.getCouponNameList();
+                        List<String> descriptions = couponResponse.getCouponDescriptionList();
+                        List<BigDecimal> discountRates = couponResponse.getDiscountRateList();
+
+                        for (int i = 0; i < names.size(); i++) {
+                            String name = names.get(i);
+                            String description = descriptions.get(i);
+                            double discountRate = discountRates.get(i).doubleValue();
+                            int couponId = couponResponse.getCouponIds().get(i); // Lấy ID từ response
+
+                            String couponName = String.format("%s - %s - %s%%", name, description, discountRate * 100);
+                            coupons.add(new Coupon(couponName, 0, couponId));
+                        }
+                    }
                 }
             }
 
@@ -184,7 +227,21 @@ public class PaymentBookingActivity extends AppCompatActivity {
             public void onResponse(Call<List<CouponResponse>> call, Response<List<CouponResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<CouponResponse> movieCouponResponses = response.body();
-                    processCoupons(coupons, movieCouponResponses);
+                    for (CouponResponse couponResponse : movieCouponResponses) {
+                        List<String> names = couponResponse.getCouponNameList();
+                        List<String> descriptions = couponResponse.getCouponDescriptionList();
+                        List<BigDecimal> discountRates = couponResponse.getDiscountRateList();
+
+                        for (int i = 0; i < names.size(); i++) {
+                            String name = names.get(i);
+                            String description = descriptions.get(i);
+                            double discountRate = discountRates.get(i).doubleValue();
+                            int couponId = couponResponse.getCouponIds().get(i); // Lấy ID từ response
+
+                            String couponName = String.format("%s - %s - %s%%", name, description, discountRate * 100);
+                            coupons.add(new Coupon(couponName, 1, couponId));
+                        }
+                    }
                 }
             }
 
@@ -195,23 +252,6 @@ public class PaymentBookingActivity extends AppCompatActivity {
         });
 
         return coupons;
-    }
-
-    private void processCoupons(List<Coupon> coupons, List<CouponResponse> couponResponses) {
-        for (CouponResponse response : couponResponses) {
-            List<String> names = response.getCouponNameList();
-            List<String> descriptions = response.getCouponDescriptionList();
-            List<BigDecimal> discountRates = response.getDiscountRateList();
-
-            for (int i = 0; i < names.size(); i++) {
-                String name = names.get(i);
-                String description = descriptions.get(i);
-                double discountRate = discountRates.get(i).doubleValue();
-
-                String couponName = String.format("%s - %s - %s%%", name, description, discountRate * 100);
-                coupons.add(new Coupon(couponName));
-            }
-        }
     }
 
     @SuppressLint("DefaultLocale")
@@ -235,11 +275,13 @@ public class PaymentBookingActivity extends AppCompatActivity {
         String selectedMovie = getIntent().getStringExtra("MOVIE_NAME");
         if (selectedMovie != null) {
             movieTitleTV.setText(selectedMovie);
+            movieName = selectedMovie;
         }
 
         String selectedTheater = getIntent().getStringExtra("CINEMA_NAME");
         if (selectedTheater != null) {
             theaterNameTV.setText(selectedTheater);
+            cinemaName = selectedTheater;
         }
 
         String selectedDate = getIntent().getStringExtra("SELECTED_DATE");
@@ -358,17 +400,77 @@ public class PaymentBookingActivity extends AppCompatActivity {
     private void setupCheckoutButton() {
         Button checkoutButton = findViewById(R.id.checkout_button);
         checkoutButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, PayingMethodActivity.class);
+            // Hiển thị AlertDialog để thông báo cho người dùng rằng họ có 5 phút để hoàn tất thanh toán
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("You have 5 minutes to complete the payment.\n")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", (dialog, id) -> {
+                        // Gửi API yêu cầu cập nhật booking
+                        sendBookingRequest();
+                    });
+            builder.show();
+        });
+    }
 
-            // Pass necessary data to PayingMethodActivity
-            int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
-            intent.putExtra("MOVIE_BANNER", movieBannerResId);
-            intent.putExtra("MOVIE_TITLE", getIntent().getStringExtra("MOVIE_TITLE"));
-            intent.putExtra("THEATER_NAME", getIntent().getStringExtra("THEATER_NAME"));
-            intent.putExtra("SELECTED_SHOWTIME", getIntent().getStringExtra("SELECTED_SHOWTIME"));
-            intent.putExtra("SELECTED_SCREEN_ROOM", getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
+    private void sendBookingRequest() {
+        BookingRequest.Builder builder = new BookingRequest.Builder(
+                movieId, selectedCityId, selectedCinemaId, selectedScreenId, selectedScheduleId,
+                selectedTicketIds, selectedSeatIds);
 
-            startActivity(intent);
+        if (!selectedFoodIds.isEmpty()) {
+            builder.setFoodIds(selectedFoodIds);
+        }
+        if (!selectedDrinkIds.isEmpty()) {
+            builder.setDrinkIds(selectedDrinkIds);
+        }
+        if (selectedMovieCouponId != 0) {
+            builder.setMovieCouponId(selectedMovieCouponId);
+        }
+        if (selectedUserCouponId != 0) {
+            builder.setUserCouponId(selectedUserCouponId);
+        }
+
+        // Tạo đối tượng BookingRequest
+        BookingRequest bookingRequest = builder.build();
+
+        // Tạo đối tượng API
+        RetrofitService retrofitService = new RetrofitService(this);
+        BookingAPI bookingAPI = retrofitService.getRetrofit().create(BookingAPI.class);
+        Call<SendBookingResponse> call = bookingAPI.processBooking(bookingRequest);
+
+        // Gửi yêu cầu API
+        call.enqueue(new Callback<SendBookingResponse>() {
+            @Override
+            public void onResponse(Call<SendBookingResponse> call, Response<SendBookingResponse> response) {
+                if (response.isSuccessful()) {
+                    SendBookingResponse sendBookingResponse = response.body();
+                    if (sendBookingResponse != null) {
+                        // Lưu thông tin booking nếu cần
+                        Toast.makeText(getApplicationContext(), "Process Booking successfully!", Toast.LENGTH_SHORT).show();
+
+                        int bookingId = sendBookingResponse.getBookingId();
+
+                        // Sau khi gửi API thành công, chuyển sang PayingMethodActivity
+                        Intent intent = new Intent(getApplicationContext(), PayingMethodActivity.class);
+                        intent.putExtra("MOVIE_NAME", getIntent().getStringExtra("MOVIE_NAME"));
+                        intent.putExtra("CINEMA_NAME", getIntent().getStringExtra("CINEMA_NAME"));
+                        intent.putExtra("SELECTED_DATE", getIntent().getStringExtra("SELECTED_DATE"));
+                        intent.putExtra("SELECTED_SHOWTIME", getIntent().getStringExtra("SELECTED_SHOWTIME"));
+                        intent.putExtra("SELECTED_SCREEN_ROOM", getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
+                        intent.putExtra("SELECTED_BOOKING_ID", bookingId);
+
+
+                        startActivity(intent);
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Failed to update booking.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SendBookingResponse> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
     }
 

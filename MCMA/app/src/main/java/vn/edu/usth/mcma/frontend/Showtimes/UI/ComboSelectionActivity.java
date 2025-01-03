@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,6 +26,8 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.A
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ListFoodAndDrinkToOrderingResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.ViewAllFoodsAndDrinksByCinemaAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
+import vn.edu.usth.mcma.frontend.Showtimes.Models.DrinkItem;
+import vn.edu.usth.mcma.frontend.Showtimes.Models.FoodItem;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Seat;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.ComboAdapter;
@@ -62,20 +65,30 @@ public class ComboSelectionActivity extends AppCompatActivity {
     private List<AvailableSeatResponse> seatItems = new ArrayList<>();
     private double totalTicketPrice;
     private double totalPriceOfSelectedChoice;
+    private int selectedCityId;
+    private int selectedScreenId;
+    private int selectedScheduleId;
+    private List<Integer> selectedTicketIds = new ArrayList<>();
+    private List<Integer> selectedSeatIds = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_combo_selection);
 
-        cinemaId = getIntent().getIntExtra("CINEMA_ID", 0);
         movieId = getIntent().getIntExtra("MOVIE_ID", -1);
+        selectedCityId = getIntent().getIntExtra("SELECTED_CITY_ID", -1);
+        cinemaId = getIntent().getIntExtra("SELECTED_CINEMA_ID", -1);
+        selectedScreenId = getIntent().getIntExtra("SELECTED_SCREEN_ID", -1);
+        selectedScheduleId = getIntent().getIntExtra("SELECTED_SCHEDULE_ID", -1);
+
         totalTicketCount = getIntent().getIntExtra("TOTAL_TICKET_COUNT", 0);
         Log.d("ComboSelection", "TOTAL_TICKET_COUNT received: " + totalTicketCount);
         totalTicketPrice = getIntent().getDoubleExtra("TOTAL_TICKET_PRICE", 0.0);
         Log.d("ComboSelection", "TOTAL_TICKET_PRICE received: " + totalTicketPrice);
         items = getIntent().getParcelableArrayListExtra("SELECTED_TICKET_ITEMS");
         Log.d("ComboSelection", "SELECTED_TICKET_ITEMS received: " + items);
+
         seatItems = getIntent().getParcelableArrayListExtra("SELECTED_SEAT_ITEMS");
         Log.d("ComboSelection", "SELECTED_SEAT_ITEMS received: " + seatItems);
 
@@ -193,20 +206,38 @@ public class ComboSelectionActivity extends AppCompatActivity {
 
     private List<ComboItem> convertResponseToComboItems(List<ListFoodAndDrinkToOrderingResponse> comboData) {
         List<ComboItem> items = new ArrayList<>();
+//        List<FoodItem> foodItems = new ArrayList<>();
+//        List<DrinkItem> drinkItems = new ArrayList<>();
         for (ListFoodAndDrinkToOrderingResponse response : comboData) {
             for (int i = 0; i < response.getFoodNameList().size(); i++) {
                 items.add(new ComboItem(
                         response.getFoodNameList().get(i),
                         response.getImageUrlFoodList().get(i),
-                        response.getFoodPriceList().get(i)
+                        response.getFoodPriceList().get(i),
+                        response.getFoodIds().get(i),
+                        0
                 ));
+//                foodItems.add(new FoodItem(
+//                        response.getFoodNameList().get(i),
+//                        response.getImageUrlFoodList().get(i),
+//                        response.getFoodPriceList().get(i),
+//                        response.getFoodIds().get(i)
+//                ));
             }
             for (int i = 0; i < response.getDrinkNameList().size(); i++) {
                 items.add(new ComboItem(
                         response.getDrinkNameList().get(i),
                         response.getImageUrlDrinkList().get(i),
-                        response.getDrinkPriceList().get(i)
+                        response.getDrinkPriceList().get(i),
+                        response.getDrinkIds().get(i),
+                        1
                 ));
+//                drinkItems.add(new DrinkItem(
+//                        response.getDrinkNameList().get(i),
+//                        response.getImageUrlDrinkList().get(i),
+//                        response.getDrinkPriceList().get(i),
+//                        response.getDrinkIds().get(i)
+//                ));
             }
         }
         return items;
@@ -273,9 +304,27 @@ public class ComboSelectionActivity extends AppCompatActivity {
         checkoutButton.setOnClickListener(v -> {
             List<TicketItem> ticketItems = getIntent().getParcelableArrayListExtra("TICKET_ITEMS");
             List<Seat> selectedSeats = getIntent().getParcelableArrayListExtra(EXTRA_SELECTED_SEATS);
+//            List<ComboItem> selectedComboItems = comboAdapter.getSelectedComboItems();
 
-            // Get selected combo items
-            List<ComboItem> selectedComboItems = comboAdapter.getSelectedComboItems();
+            List<Integer> selectedFoodIds = new ArrayList<>();
+            List<Integer> selectedDrinkIds = new ArrayList<>();
+            comboItemList.stream()
+                    .filter(item -> item.getType() == 0 && item.getQuantity() > 0)
+                    .forEach(item -> {
+                        for (int i = 0; i < item.getQuantity(); i++) {
+                            selectedFoodIds.add(item.getComboIds());
+                        }
+                    });
+            comboItemList.stream()
+                    .filter(item -> item.getType() == 1 && item.getQuantity() > 0)
+                    .forEach(item -> {
+                        for (int i = 0; i < item.getQuantity(); i++) {
+                            selectedDrinkIds.add(item.getComboIds());
+                        }
+                    });
+
+            selectedTicketIds =  getIntent().getIntegerArrayListExtra("SELECTED_TICKET_IDS");
+            selectedSeatIds = getIntent().getIntegerArrayListExtra("SELECTED_SEAT_IDS");
 
 
             // Create intent to PaymentBookingActivity
@@ -298,8 +347,17 @@ public class ComboSelectionActivity extends AppCompatActivity {
             intent.putParcelableArrayListExtra("SELECTED_TICKET_ITEMS", new ArrayList<>(items));
             intent.putExtra("TOTAL_TICKET_PRICE", totalTicketPrice);
             intent.putParcelableArrayListExtra("SELECTED_SEAT_ITEMS", new ArrayList<>(seatItems));
-            intent.putExtra("MOVIE_ID", movieId);
 
+            // Booking
+            intent.putExtra("MOVIE_ID", movieId);
+            intent.putExtra("SELECTED_CITY_ID", selectedCityId);
+            intent.putExtra("SELECTED_CINEMA_ID", cinemaId);
+            intent.putExtra("SELECTED_SCREEN_ID", selectedScreenId);
+            intent.putExtra("SELECTED_SCHEDULE_ID", selectedScheduleId);
+            intent.putIntegerArrayListExtra("SELECTED_TICKET_IDS", new ArrayList<>(selectedTicketIds));
+            intent.putIntegerArrayListExtra("SELECTED_SEAT_IDS", new ArrayList<>(selectedSeatIds));
+            intent.putIntegerArrayListExtra("SELECTED_FOOD_IDS", new ArrayList<>(selectedFoodIds));
+            intent.putIntegerArrayListExtra("SELECTED_DRINK_IDS", new ArrayList<>(selectedDrinkIds));
             startActivity(intent);
         });
     }

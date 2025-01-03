@@ -51,8 +51,11 @@ public class TicketSelectionActivity extends AppCompatActivity {
     private TextView showtime;
     private double totalTicketPrice;
     private int totalCount;
-    private List<TicketItem> ticketItemList = new ArrayList<>();
     private int movieId;
+    private int selectedCityId;
+    private int selectedCinemaId;
+    private int selectedScreenId;
+    private int selectedScheduleId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +63,11 @@ public class TicketSelectionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ticket_selection);
 
         movieId = getIntent().getIntExtra("MOVIE_ID", -1);
+        selectedCityId = getIntent().getIntExtra("SELECTED_CITY_ID", -1);
+        selectedCinemaId = getIntent().getIntExtra("SELECTED_CINEMA_ID", -1);
+        selectedScreenId = getIntent().getIntExtra("SELECTED_SCREEN_ID", -1);
+        selectedScheduleId = getIntent().getIntExtra("SELECTED_SCHEDULE_ID", -1);
+
         initializeViews();
         handleIntentExtras();
         setupBackButton();
@@ -127,7 +135,7 @@ public class TicketSelectionActivity extends AppCompatActivity {
         List<TicketItem> ticketItems = new ArrayList<>();
         for (TicketType type : TicketType.values()) {
             int ticketId = type.getId();
-            ticketItems.add(new TicketItem(type,type.getPrice(), ticketId));
+            ticketItems.add(new TicketItem(type, type.getPrice(), ticketId));
         }
         return ticketItems;
     }
@@ -160,12 +168,11 @@ public class TicketSelectionActivity extends AppCompatActivity {
                     .mapToInt(TicketItem::getQuantity)
                     .sum();
             if (totalSelectedTickets == guestQuantity) {
-                // Collect ticket IDs of the selected ticket types
                 List<Integer> selectedTicketIds = new ArrayList<>();
+                List<TicketItem> ticketItemList = new ArrayList<>();
                 for (TicketItem item : ticketAdapter.getSelectedTicketItems()) {
                     for (int i = 0; i < item.getQuantity(); i++) {
                         selectedTicketIds.add(item.getTicketIds()); // Add ticket ID to the list
-                        Log.d("TicketSelection", "Selected Ticket Type ID: " + item.getTicketIds()); // Log the ID of the selected ticket
                     }
                 }
                 ticketItemList.addAll(ticketAdapter.getSelectedTicketItems());
@@ -186,7 +193,14 @@ public class TicketSelectionActivity extends AppCompatActivity {
                 intent.putExtra("TOTAL_TICKET_COUNT", totalCount);
                 intent.putExtra("SELECTED_DATE", getIntent().getStringExtra("SELECTED_DATE"));
                 intent.putExtra("MOVIE_TITLE", getIntent().getStringExtra("MOVIE_TITLE"));
+
+                // Booking
                 intent.putExtra("MOVIE_ID", movieId);
+                intent.putExtra("SELECTED_CITY_ID", selectedCityId);
+                intent.putExtra("SELECTED_CINEMA_ID", selectedCinemaId);
+                intent.putExtra("SELECTED_SCREEN_ID", selectedScreenId);
+                intent.putExtra("SELECTED_SCHEDULE_ID", selectedScheduleId);
+                intent.putIntegerArrayListExtra("SELECTED_TICKET_IDS", new ArrayList<>(selectedTicketIds));
 
                 startActivity(intent);
             } else {
@@ -251,7 +265,7 @@ public class TicketSelectionActivity extends AppCompatActivity {
         }
 
         String selectedShowtime = getIntent().getStringExtra("SELECTED_SHOWTIME");
-        if(showtime != null){
+        if (showtime != null) {
             showtime.setText(selectedShowtime);
         }
     }
@@ -260,6 +274,7 @@ public class TicketSelectionActivity extends AppCompatActivity {
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> onBackPressed());
     }
+
     private void showError(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }

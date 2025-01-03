@@ -48,9 +48,11 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
     private OnShowtimeClickListener listener;
     private SparseBooleanArray expandedStates = new SparseBooleanArray();
     private Integer selectedScreenId;
+    private Integer selectedScheduleId;
     private Integer movieId;
+
     public interface OnShowtimeClickListener {
-        void onShowtimeClick(Theater theater,String date, String showtime, Integer screenId, String screenRoom);
+        void onShowtimeClick(Theater theater,String date, String showtime, Integer screenId, String screenRoom, Integer scheduleId);
     }
 
     public TheaterShowtimesAdapter(OnShowtimeClickListener listener,Integer movieId) {
@@ -96,6 +98,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
         private View divider;
         private ConstraintLayout headerLayout;
         private String selectedScreenRoom;
+        private Integer selectedCinemaId;
 
         TheaterViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -124,6 +127,8 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                 boolean newState = !expandedStates.get(position, false);
                 expandedStates.put(position, newState);
 
+                selectedCinemaId = theater.getId();
+
                 // Animate arrow rotation
                 arrowIcon.animate()
                         .rotation(newState ? 180f : 0f)
@@ -133,7 +138,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                 // Show/hide showtimes container
                 if (newState) {
                     screenRoomsContainer.setVisibility(View.VISIBLE);
-                    populateScreenRooms(theater,theater.getId(),movieId);
+                    populateScreenRooms(theater,selectedCinemaId,movieId);
                 } else {
                     screenRoomsContainer.setVisibility(View.GONE);
                     showtimesContainer.setVisibility(View.GONE);
@@ -233,17 +238,31 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                             if (response.isSuccessful() && response.body() != null) {
                                 ScheduleResponse scheduleResponse = response.body();
 
-                                // Group schedules by date
-                                Map<String, List<String>> schedulesByDate = new LinkedHashMap<>();
+//                                // Group schedules by date
+//                                Map<String, List<String>> schedulesByDate = new LinkedHashMap<>();
+//                                List<String> dates = scheduleResponse.getDate();
+//                                List<String> times = scheduleResponse.getTime();
+                                Map<String, Map<String, Integer>> schedulesByDateAndTime = new LinkedHashMap<>();
                                 List<String> dates = scheduleResponse.getDate();
                                 List<String> times = scheduleResponse.getTime();
+                                List<Integer> scheduleIds = scheduleResponse.getScheduleId();
 
-                                // Assuming dates and times are aligned, map them together
+
+//                                // Assuming dates and times are aligned, map them together
+//                                for (int i = 0; i < dates.size(); i++) {
+//                                    String date = dates.get(i);
+//                                    String time = times.get(i);
+//
+//                                    schedulesByDate.computeIfAbsent(date, k -> new ArrayList<>()).add(time);
+//                                }
+
                                 for (int i = 0; i < dates.size(); i++) {
                                     String date = dates.get(i);
                                     String time = times.get(i);
+                                    Integer scheduleId = scheduleIds.get(i);
 
-                                    schedulesByDate.computeIfAbsent(date, k -> new ArrayList<>()).add(time);
+                                    schedulesByDateAndTime.computeIfAbsent(date, k -> new LinkedHashMap<>())
+                                            .put(time, scheduleId);
                                 }
 
                                 // Create layout for date buttons
@@ -263,11 +282,10 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                 timeLayout.setFlexWrap(FlexWrap.WRAP);
 
                                 // Add date and time buttons
-                                for (String date : schedulesByDate.keySet()) {
+//                                for (String date : schedulesByDate.keySet()) {
+                                for (String date : schedulesByDateAndTime.keySet()) {
                                     Button dateButton = new Button(context);
                                     dateButton.setText(date);
-
-                                    // Button appearance
                                     dateButton.setTextColor(textColorStateList);
                                     dateButton.setAllCaps(false);
                                     dateButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
@@ -294,11 +312,15 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                         timeLayout.removeAllViews();
 
                                         // Populate time buttons for the selected date
-                                        for (String time : schedulesByDate.get(date)) {
+//                                        for (String time : schedulesByDate.get(date)) {
+
+                                        Map<String, Integer> timesForDate = schedulesByDateAndTime.get(date);
+                                        for (Map.Entry<String, Integer> entry : timesForDate.entrySet()) {
+                                            String time = entry.getKey();
+                                            Integer scheduleId = entry.getValue();
+
                                             Button timeButton = new Button(context);
                                             timeButton.setText(time);
-
-                                            // Time button appearance
                                             timeButton.setBackground(ContextCompat.getDrawable(context, R.drawable.date_button_selector));
                                             timeButton.setTextColor(textColorStateList);
                                             timeButton.setAllCaps(false);
@@ -322,7 +344,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                                 timeButton.setSelected(true);
 
                                                 // Pass selected scheduleId to the listener
-                                                listener.onShowtimeClick(theater, date, time, selectedScreenId, selectedScreenRoom);
+                                                listener.onShowtimeClick(theater, date, time, selectedScreenId, selectedScreenRoom, scheduleId);
                                             });
 
                                             timeLayout.addView(timeButton);

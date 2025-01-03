@@ -1,12 +1,16 @@
 package vn.edu.usth.mcma.frontend.Showtimes.Models;
 
 public class Coupon {
+    private int id;
     private String name;
     private double discountPercentage;
+    private int type; // 1 là movieCoupon, 0 là userCoupon
     private boolean isSelected;
 
-    public Coupon(String name) {
+    public Coupon(String name, int type, int id) {
         this.name = name;
+        this.type = type;  // 1 = MovieCoupon, 0 = UserCoupon
+        this.id = id;
         this.discountPercentage = extractDiscountPercentage(name);
         this.isSelected = false;
     }
@@ -25,6 +29,22 @@ public class Coupon {
     }
 
     // Existing getters and setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     public String getName() {
         return name;
     }

@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class TicketItem implements Parcelable {
+
     private TicketType type;
     private int quantity;
     private double price;

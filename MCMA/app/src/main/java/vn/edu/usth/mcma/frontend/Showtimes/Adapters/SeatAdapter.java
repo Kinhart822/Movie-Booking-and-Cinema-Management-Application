@@ -13,7 +13,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import vn.edu.usth.mcma.R;
@@ -23,7 +22,7 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.U
 import vn.edu.usth.mcma.frontend.Showtimes.UI.SeatSelectionActivity;
 
 public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder> {
-    private final List<Object> combinedSeatList;
+    private final Object[][] seatMatrix;
     private final Context context;
     private final OnSeatSelectedListener listener;
     private final Set<AvailableSeatResponse> selectedSeats = new HashSet<>();
@@ -34,15 +33,15 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
     }
 
     public SeatAdapter(
-            List<Object> combinedSeatList,
+            Object[][] seatMatrix,
             Context context,
             OnSeatSelectedListener listener,
             int maxSeats
     ) {
+        this.seatMatrix = seatMatrix;
         this.context = context;
         this.listener = listener;
         this.maxSeats = maxSeats;
-        this.combinedSeatList = combinedSeatList;
     }
 
     @NonNull
@@ -53,10 +52,53 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
         return new SeatViewHolder(view);
     }
 
-    @SuppressLint("SetTextI18n")
+//    @SuppressLint("SetTextI18n")
+//    @Override
+//    public void onBindViewHolder(@NonNull SeatViewHolder holder, int position) {
+//
+//        int totalCols = seatMatrix.length;
+//        int  totalRows= seatMatrix[0].length;
+//
+//        int row = position / totalRows;
+//        int col = position % totalCols;
+//
+//        Object seat = seatMatrix[row][col];
+//
+//        if (seat instanceof AvailableSeatResponse) {
+//            AvailableSeatResponse availableSeat = (AvailableSeatResponse) seat;
+//            holder.seatTextView.setText(availableSeat.getAvailableSeat());
+//            updateSeatBackground(holder, availableSeat);
+//
+//            holder.itemView.setOnClickListener(v -> {
+//                if (!"Unavailable".equalsIgnoreCase(availableSeat.getSeatStatus()) && !"Held".equalsIgnoreCase(availableSeat.getSeatStatus())) {
+//                    toggleSeatSelection(availableSeat, holder, row, col);
+//                }
+//            });
+//        } else if (seat instanceof UnavailableSeatResponse) {
+//            UnavailableSeatResponse unavailableSeat = (UnavailableSeatResponse) seat;
+//            holder.seatTextView.setText(unavailableSeat.getUnAvailableSeat());
+//            updateSeatBackground(holder, unavailableSeat);
+//        } else if (seat instanceof HeldSeatResponse) {
+//            HeldSeatResponse heldSeat = (HeldSeatResponse) seat;
+//            holder.seatTextView.setText(heldSeat.getHeldSeat());
+//            updateSeatBackground(holder, heldSeat);
+//        } else {
+//            holder.itemView.setBackground(null);
+//            holder.itemView.setOnClickListener(null);
+//            holder.seatTextView.setText("");
+//            return;
+//        }
+//    }
+
     @Override
     public void onBindViewHolder(@NonNull SeatViewHolder holder, int position) {
-        Object seat = combinedSeatList.get(position);
+        int totalRows = seatMatrix.length; // Rows represent the horizontal layout
+        int totalCols = seatMatrix[0].length; // Columns represent the vertical layout
+
+        int row = position / totalCols; // Correcting the row calculation
+        int col = position % totalCols; // Correcting the column calculation
+
+        Object seat = seatMatrix[row][col];
 
         if (seat instanceof AvailableSeatResponse) {
             AvailableSeatResponse availableSeat = (AvailableSeatResponse) seat;
@@ -65,27 +107,104 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
 
             holder.itemView.setOnClickListener(v -> {
                 if (!"Unavailable".equalsIgnoreCase(availableSeat.getSeatStatus()) && !"Held".equalsIgnoreCase(availableSeat.getSeatStatus())) {
-                    toggleSeatSelection(availableSeat, holder, position);
+                    toggleSeatSelection(availableSeat, holder, row, col);
                 }
             });
         } else if (seat instanceof UnavailableSeatResponse) {
             UnavailableSeatResponse unavailableSeat = (UnavailableSeatResponse) seat;
             holder.seatTextView.setText(unavailableSeat.getUnAvailableSeat());
             updateSeatBackground(holder, unavailableSeat);
-
-            holder.itemView.setOnClickListener(v -> {
-                // Do nothing for unavailable seats
-            });
         } else if (seat instanceof HeldSeatResponse) {
             HeldSeatResponse heldSeat = (HeldSeatResponse) seat;
             holder.seatTextView.setText(heldSeat.getHeldSeat());
             updateSeatBackground(holder, heldSeat);
-
-            holder.itemView.setOnClickListener(v -> {
-                // Do nothing for held seats
-            });
+        } else {
+            holder.itemView.setBackground(null);
+            holder.itemView.setOnClickListener(null);
+            holder.seatTextView.setText("");
         }
     }
+
+    private void toggleSeatSelection(AvailableSeatResponse seat, SeatViewHolder holder, int row, int col) {
+        // Kiểm tra nếu ghế là loại "Couple"
+        if ("couple".equalsIgnoreCase(seat.getAvailableSeatsType())) {
+            // Tìm ghế đôi liền kề
+            int[] adjacentPosition = findAdjacentCoupleSeat(row, col);
+
+            if (adjacentPosition != null) {
+                int adjacentRow = adjacentPosition[0];
+                int adjacentCol = adjacentPosition[1];
+                AvailableSeatResponse adjacentSeat = (AvailableSeatResponse) seatMatrix[adjacentRow][adjacentCol];
+
+                // Chọn hoặc bỏ chọn cả hai ghế
+                if (selectedSeats.contains(seat) || selectedSeats.contains(adjacentSeat)) {
+                    selectedSeats.remove(seat);
+                    selectedSeats.remove(adjacentSeat);
+                } else {
+                    if (selectedSeats.size() + 2 <= maxSeats) {
+                        selectedSeats.add(seat);
+                        selectedSeats.add(adjacentSeat);
+                    } else {
+                        Toast.makeText(context, "Maximum seats selected!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+
+                // Cập nhật giao diện của cả hai ghế
+                notifyItemChanged(row * seatMatrix[0].length + col);
+                notifyItemChanged(adjacentRow * seatMatrix[0].length + adjacentCol);
+            }
+        } else {
+            // Xử lý chọn ghế thường
+            if (selectedSeats.contains(seat)) {
+                selectedSeats.remove(seat);
+            } else {
+                if (selectedSeats.size() < maxSeats) {
+                    selectedSeats.add(seat);
+                } else {
+                    Toast.makeText(context, "Maximum seats selected!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
+            // Cập nhật giao diện ghế
+            notifyItemChanged(row * seatMatrix[0].length + col);
+        }
+
+        // Cập nhật danh sách ghế đã chọn trong Activity
+        if (context instanceof SeatSelectionActivity) {
+            ((SeatSelectionActivity) context).updateSelectedSeatsDisplay();
+        }
+
+        // Gọi listener nếu có
+        if (listener != null) {
+            listener.onSeatSelected(seat);
+        }
+    }
+
+
+    private int[] findAdjacentCoupleSeat(int row, int col) {
+        // Tìm ghế liền kề bên phải
+        if (col + 1 < 10) {
+            Object adjacentSeat = seatMatrix[row][col + 1];
+            if (adjacentSeat instanceof AvailableSeatResponse &&
+                    "Couple".equalsIgnoreCase(((AvailableSeatResponse) adjacentSeat).getAvailableSeatsType())) {
+                return new int[]{row, col + 1};
+            }
+        }
+
+        // Tìm ghế liền kề bên trái
+        if (col - 1 >= 0) {
+            Object adjacentSeat = seatMatrix[row][col - 1];
+            if (adjacentSeat instanceof AvailableSeatResponse &&
+                    "Couple".equalsIgnoreCase(((AvailableSeatResponse) adjacentSeat).getAvailableSeatsType())) {
+                return new int[]{row, col - 1};
+            }
+        }
+
+        return null;
+    }
+
 
     private void updateSeatBackground(SeatViewHolder holder, AvailableSeatResponse seat) {
         int backgroundResId;
@@ -108,7 +227,6 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
         holder.seatTextView.setBackground(ContextCompat.getDrawable(context, backgroundResId));
     }
 
-
     private void updateSeatBackground(SeatViewHolder holder, UnavailableSeatResponse seat) {
         int backgroundResId = R.drawable.ic_seat_unavailable;
 
@@ -120,93 +238,18 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
 
         holder.seatTextView.setBackground(ContextCompat.getDrawable(context, backgroundResId));
     }
-    private void toggleSeatSelection(AvailableSeatResponse seat, SeatViewHolder holder, int position) {
-        // Check if the selected seat is a "Couple" seat
-        if ("couple".equalsIgnoreCase(seat.getAvailableSeatsType())) {
-            // Try to find adjacent couple seat
-            int adjacentPosition = findAdjacentCoupleSeat(position);
-
-            if (adjacentPosition != -1) {
-                // Select both the clicked seat and the adjacent seat
-                AvailableSeatResponse adjacentSeat = (AvailableSeatResponse) combinedSeatList.get(adjacentPosition);
-                if (selectedSeats.contains(seat) || selectedSeats.contains(adjacentSeat)) {
-                    selectedSeats.remove(seat);
-                    selectedSeats.remove(adjacentSeat);
-                } else {
-                    if (selectedSeats.size() + 2 <= maxSeats) {
-                        selectedSeats.add(seat);
-                        selectedSeats.add(adjacentSeat);
-                    } else {
-                        Toast.makeText(context, "Maximum seats selected!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-                // Notify that both seats have been selected or deselected
-                notifyItemChanged(position);
-                notifyItemChanged(adjacentPosition);
-            }
-        } else {
-            // Normal seat selection for non-couple seats
-            if (selectedSeats.contains(seat)) {
-                selectedSeats.remove(seat);
-            } else {
-                if (selectedSeats.size() < maxSeats) {
-                    selectedSeats.add(seat);
-                } else {
-                    Toast.makeText(context, "Maximum seats selected!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-            // Notify the listener and update appearance
-            notifyItemChanged(position);
-            if (listener != null) {
-                listener.onSeatSelected(seat);
-            }
-        }
-
-        // Update selected seats display in the activity
-        if (context instanceof SeatSelectionActivity) {
-            ((SeatSelectionActivity) context).updateSelectedSeatsDisplay();
-        }
-    }
-
-
-    private int findAdjacentCoupleSeat(int position) {
-        // Get current seat and its row/column
-        AvailableSeatResponse currentSeat = (AvailableSeatResponse) combinedSeatList.get(position);
-        int row = currentSeat.getSeatRow();
-        int col = currentSeat.getSeatColumn();
-
-        // Look for adjacent couple seat (either to the right or to the left)
-        if (col + 1 < 10) { // assuming 10 columns per row
-            Object adjacentSeat = combinedSeatList.get(position + 1); // seat to the right
-            if (adjacentSeat instanceof AvailableSeatResponse &&
-                    "Couple".equalsIgnoreCase(((AvailableSeatResponse) adjacentSeat).getAvailableSeatsType()) &&
-                    ((AvailableSeatResponse) adjacentSeat).getSeatRow() == row) {
-                return position + 1;
-            }
-        }
-
-        if (col - 1 >= 0) { // seat to the left
-            Object adjacentSeat = combinedSeatList.get(position - 1);
-            if (adjacentSeat instanceof AvailableSeatResponse &&
-                    "Couple".equalsIgnoreCase(((AvailableSeatResponse) adjacentSeat).getAvailableSeatsType()) &&
-                    ((AvailableSeatResponse) adjacentSeat).getSeatRow() == row) {
-                return position - 1;
-            }
-        }
-
-        // Return -1 if no adjacent couple seat found
-        return -1;
-    }
 
     public Set<AvailableSeatResponse> getSelectedSeats() {
         return selectedSeats;
     }
 
+
     @Override
     public int getItemCount() {
-        return combinedSeatList.size();
+//        return 100;
+//        return seatMatrix[0].length * seatMatrix.length;
+        return seatMatrix.length * seatMatrix[0].length; // Rows * Columns
+
     }
 
     static class SeatViewHolder extends RecyclerView.ViewHolder {

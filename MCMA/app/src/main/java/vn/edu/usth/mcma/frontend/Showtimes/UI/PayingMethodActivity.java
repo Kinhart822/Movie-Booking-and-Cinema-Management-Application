@@ -35,7 +35,6 @@ public class PayingMethodActivity extends AppCompatActivity {
     private CheckBox termsCheckbox;
     private Button completePaymentButton;
     private PaymentMethod selectedPaymentMethod;
-    private ImageView moviePosterIV;
     private TextView movieTitleTV, theaterNameTV, screenNumberTV, movieDateTV, movieShowtimeTV;
 
     @Override
@@ -61,32 +60,31 @@ public class PayingMethodActivity extends AppCompatActivity {
         completePaymentButton = findViewById(R.id.completePaymentButton);
         paymentMethodsRecyclerView = findViewById(R.id.paymentMethodsRecyclerView);
 
-        // Set movie details from intent
-        int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
-        if (movieBannerResId != 0) {
-            moviePosterIV.setImageResource(movieBannerResId);
+
+        String selectedMovie = getIntent().getStringExtra("MOVIE_NAME");
+        if (selectedMovie != null) {
+            movieTitleTV.setText(selectedMovie);
         }
 
-        movieTitleTV.setText(getIntent().getStringExtra("MOVIE_TITLE"));
-        theaterNameTV.setText(getIntent().getStringExtra("THEATER_NAME"));
-        screenNumberTV.setText(getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
+        String selectedTheater = getIntent().getStringExtra("CINEMA_NAME");
+        if (selectedTheater != null) {
+            theaterNameTV.setText(selectedTheater);
+        }
 
-        setDateAndShowtime();
-    }
+        String selectedDate = getIntent().getStringExtra("SELECTED_DATE");
+        if (movieDateTV != null) {
+            movieDateTV.setText(selectedDate);
+        }
 
-    private void setDateAndShowtime() {
-        // Set today's date
-        SimpleDateFormat dateFormat = new SimpleDateFormat("d 'tháng' M, yyyy", Locale.getDefault());
-        String formattedDate = dateFormat.format(new Date());
-        movieDateTV.setText(formattedDate);
+        // Screen number handling
+        String selectedScreenRoom = getIntent().getStringExtra("SELECTED_SCREEN_ROOM");
+        if (screenNumberTV != null) {
+            screenNumberTV.setText(selectedScreenRoom != null ? selectedScreenRoom : "Screen 1");
+        }
 
-        // Set showtime
         String selectedShowtime = getIntent().getStringExtra("SELECTED_SHOWTIME");
-        if (selectedShowtime != null) {
-            String[] showtimeParts = selectedShowtime.split(":");
-            int startHour = Integer.parseInt(showtimeParts[0]);
-            int endHour = startHour + 2;
-            movieShowtimeTV.setText(String.format("%02d:00 - %02d:00", startHour, endHour));
+        if (movieShowtimeTV != null) {
+            movieShowtimeTV.setText(selectedShowtime);
         }
     }
 
@@ -121,15 +119,15 @@ public class PayingMethodActivity extends AppCompatActivity {
     private void handlePaymentCompletion() {
         completePaymentButton.setOnClickListener(v -> {
             if (selectedPaymentMethod == null) {
-                Toast.makeText(this, "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please select payment method\n", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (!termsCheckbox.isChecked()) {
-                Toast.makeText(this, "Vui lòng đồng ý với điều khoản", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please agree to the terms\n", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            Toast.makeText(this, "Thanh toán thành công!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Payment successful!\n", Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(this, vn.edu.usth.mcma.frontend.MainActivity.class);
             intent.putExtra("navigate_to", "HomeFragment");

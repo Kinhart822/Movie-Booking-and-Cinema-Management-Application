@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -20,6 +21,7 @@ import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketItem;
 public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketViewHolder> {
     private List<TicketItem> ticketItems;
     private int guestQuantity;
+    private List<Integer> ticketIds = new ArrayList<>();
     private OnTotalTicketsChangedListener listener;
 
     public interface OnTotalTicketsChangedListener {

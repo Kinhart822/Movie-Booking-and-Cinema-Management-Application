@@ -60,14 +60,6 @@
                     android:textStyle="bold"/>
 
                 <TextView
-                    android:id="@+id/ageRating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Movie is allowed for audience above 16 years old"
-                    android:textColor="#FF0000"/>
-
-                <TextView
                     android:id="@+id/theaterName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -106,6 +98,15 @@
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/light_gray" />
         <!-- Payment Methods Section -->
         <TextView
             android:layout_width="match_parent"
@@ -120,6 +121,14 @@
             android:layout_height="wrap_content"
             android:padding="16dp"/>
         <!-- Terms Checkbox -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/light_gray" />
         <CheckBox
             android:id="@+id/termsCheckbox"
             android:layout_width="match_parent"

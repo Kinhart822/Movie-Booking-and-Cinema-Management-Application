@@ -55,6 +55,10 @@ public class MovieBookingActivity extends AppCompatActivity {
     private View theatersSection;
     private String movieTitle;
     private int movieId;
+    private int selectedCityId;
+    private int selectedCinemaId;
+    private int selectedScreenId;
+    private int selectedScheduleId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +170,7 @@ public class MovieBookingActivity extends AppCompatActivity {
                 cityButton.setSelected(true);
                 selectedCityButton = cityButton;
                 selectedCity = city;
+                selectedCityId = cityId;
             }
 
             cityButton.setOnClickListener(v -> {
@@ -178,6 +183,7 @@ public class MovieBookingActivity extends AppCompatActivity {
 
                 if (cityId != -1) {
                     fetchCinemasByCity(movieId, cityId);
+                    selectedCityId = cityId;
                 }
             });
 
@@ -239,7 +245,10 @@ public class MovieBookingActivity extends AppCompatActivity {
         theatersRecyclerView = findViewById(R.id.theaters_recycler_view);
         theaterAdapter = new TheaterShowtimesAdapter(new TheaterShowtimesAdapter.OnShowtimeClickListener() {
             @Override
-            public void onShowtimeClick(Theater theater,String date, String showtime, Integer screenId, String screenRoom) {
+            public void onShowtimeClick(Theater theater,String date, String showtime, Integer screenId, String screenRoom, Integer scheduleId) {
+                selectedCinemaId = theater.getId(); // Lấy theaterId
+                selectedScreenId = screenId;
+                selectedScheduleId = scheduleId;
                 showQuantityTicketDialog(theater,date, showtime, screenId, screenRoom);
             }
         },movieId);
@@ -272,7 +281,13 @@ public class MovieBookingActivity extends AppCompatActivity {
 //                intent.putExtra("THEATER_NAME", theater.getName());
                 int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
                 intent.putExtra("MOVIE_BANNER", movieBannerResId);
+
+                // Booking
                 intent.putExtra("MOVIE_ID", movieId);
+                intent.putExtra("SELECTED_CITY_ID", selectedCityId);
+                intent.putExtra("SELECTED_CINEMA_ID", selectedCinemaId);
+                intent.putExtra("SELECTED_SCREEN_ID", selectedScreenId);
+                intent.putExtra("SELECTED_SCHEDULE_ID", selectedScheduleId);
 
 //                intent.putExtra("MOVIE_TITLE", movieTitle);
                 startActivity(intent);
