@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Deprecated
 public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,11 +43,11 @@ public class City {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "city")
     private List<Cinema> cinemaList;
-
+    //haven't imported: use movie_schedule instead
     @ManyToOne
     @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
-
+    //haven't imported: unused
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "city")
     private List<Booking> bookings;
 }
