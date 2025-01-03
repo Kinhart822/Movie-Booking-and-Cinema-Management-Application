@@ -18,7 +18,7 @@ public class GlobalExceptionHandler extends RuntimeException {
 
     @ExceptionHandler(BusinessException.class)
     @ResponseBody
-    public ResponseEntity<Object> handleBusinessException(BusinessException be, HttpServletRequest request) {
+    public ResponseEntity<ApiResponse> handleBusinessException(BusinessException be, HttpServletRequest request) {
         log.error("BusinessException occurred: {}", be.toString());
         int status = Integer.parseInt(be.getStatus());
         String stackTrace = ExceptionUtils.getStackTrace(messageSource, request, be.getMessage());
