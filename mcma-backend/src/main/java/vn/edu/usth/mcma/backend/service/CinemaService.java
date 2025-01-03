@@ -27,7 +27,7 @@ public class CinemaService extends AbstractService<Cinema, Long> {
     public ApiResponse createCinema(CinemaRequest request) {
         Long userId = jwtUtil.getUserIdFromToken();
         Cinema cinema = new Cinema();
-        cinema.setCityId(request.getCityId());
+//      debug  cinema.setCityId(request.getCityId());
         cinema.setName(request.getName());
         cinema.setStatus(CommonStatus.ACTIVE.getStatus());
         cinema.setCreatedBy(userId);

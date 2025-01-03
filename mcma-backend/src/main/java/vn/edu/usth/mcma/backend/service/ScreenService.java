@@ -26,9 +26,9 @@ public class ScreenService extends AbstractService<Screen, Long> {
     public ApiResponse createScreen(ScreenRequest request) {
         Long userId = jwtUtil.getUserIdFromToken();
         Screen screen = new Screen();
-        screen.setCinemaId(request.getCinemaId());
+//      debug  screen.setCinemaId(request.getCinemaId());
         screen.setName(request.getName());
-        screen.setTypeId(request.getTypeId());
+//      debug  screen.setTypeId(request.getTypeId());
         screen.setStatus(CommonStatus.ACTIVE.getStatus());
         screen.setCreatedBy(userId);
         screen.setLastModifiedBy(userId);
@@ -43,7 +43,7 @@ public class ScreenService extends AbstractService<Screen, Long> {
         Screen screen = findById(id);
         // changing cinemaId is not allowed think about it :)
         screen.setName(request.getName());
-        screen.setTypeId(request.getTypeId());
+//      debug  screen.setTypeId(request.getTypeId());
         screen.setLastModifiedBy(userId);
         screen.setLastModifiedDate(Instant.now());
         screenRepository.save(screen);

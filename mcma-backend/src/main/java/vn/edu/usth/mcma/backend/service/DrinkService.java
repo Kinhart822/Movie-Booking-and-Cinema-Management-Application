@@ -30,9 +30,9 @@ public class DrinkService extends AbstractService<Drink, Long> {
         drink.setName(request.getName());
         drink.setDescription(request.getDescription());
         drink.setImageUrl(request.getImageUrl());
-        drink.setSize(request.getSize());
+//      debug  drink.setSize(request.getSize());
         drink.setVolume(request.getVolume());
-        drink.setPrice(request.getPrice());
+//      debug  drink.setPrice(request.getPrice());
         drink.setStatus(CommonStatus.ACTIVE.getStatus());
         drink.setCreatedBy(userId);
         drink.setLastModifiedBy(userId);
@@ -48,9 +48,9 @@ public class DrinkService extends AbstractService<Drink, Long> {
         drink.setName(request.getName());
         drink.setDescription(request.getDescription());
         drink.setImageUrl(request.getImageUrl());
-        drink.setSize(request.getSize());
+//      debug  drink.setSize(request.getSize());
         drink.setVolume(request.getVolume());
-        drink.setPrice(request.getPrice());
+//      debug  drink.setPrice(request.getPrice());
         drink.setLastModifiedBy(userId);
         drink.setLastModifiedDate(Instant.now());
         drinkRepository.save(drink);

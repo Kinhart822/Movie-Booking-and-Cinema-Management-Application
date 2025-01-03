@@ -30,8 +30,8 @@ public class FoodService extends AbstractService<Food, Long> {
         food.setName(request.getName());
         food.setDescription(request.getDescription());
         food.setImageUrl(request.getImageUrl());
-        food.setSize(request.getSize());
-        food.setPrice(request.getPrice());
+//      debug  food.setSize(request.getSize());
+//      debug  food.setPrice(request.getPrice());
         food.setStatus(CommonStatus.ACTIVE.getStatus());
         food.setCreatedBy(userId);
         food.setLastModifiedBy(userId);
@@ -47,8 +47,8 @@ public class FoodService extends AbstractService<Food, Long> {
         food.setName(request.getName());
         food.setDescription(request.getDescription());
         food.setImageUrl(request.getImageUrl());
-        food.setSize(request.getSize());
-        food.setPrice(request.getPrice());
+//      debug  food.setSize(request.getSize());
+//      debug  food.setPrice(request.getPrice());
         food.setLastModifiedBy(userId);
         food.setLastModifiedDate(Instant.now());
         foodRepository.save(food);
