@@ -24,7 +24,7 @@ public class Screen extends AbstractAuditing implements Serializable {
     @Column
     private String name;
     @ManyToOne
-    @JoinColumn(name = "type_id", columnDefinition = "TINYINT UNSIGNED")
+    @JoinColumn(name = "type_id")
     private ScreenType screenType;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
