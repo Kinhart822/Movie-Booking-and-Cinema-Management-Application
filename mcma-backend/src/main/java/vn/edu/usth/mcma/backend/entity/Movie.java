@@ -6,7 +6,6 @@ import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.List;
 import java.util.Set;
 
 @Entity
