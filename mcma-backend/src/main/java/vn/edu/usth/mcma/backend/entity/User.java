@@ -83,4 +83,9 @@ public class User implements Serializable, UserDetails {
     public String getUsername() {
         return this.email;
     }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
 }
