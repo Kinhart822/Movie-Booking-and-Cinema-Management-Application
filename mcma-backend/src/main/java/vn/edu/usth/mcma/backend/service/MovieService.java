@@ -58,7 +58,7 @@ public class MovieService extends AbstractService<Movie, Long> {
                 .endTime(endTime)
                 .status(CommonStatus.ACTIVE.getStatus())
                 .build());
-        return this.successResponse();
+        return ApiResponse.success();
     }
 
     // TODO: USER

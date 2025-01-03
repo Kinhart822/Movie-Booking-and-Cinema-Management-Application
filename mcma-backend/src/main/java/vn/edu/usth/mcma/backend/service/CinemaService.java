@@ -1,10 +1,13 @@
 package vn.edu.usth.mcma.backend.service;
 
+import constants.ApiResponseCode;
 import constants.CommonStatus;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.CinemaProjection;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
+import vn.edu.usth.mcma.backend.exception.BusinessException;
+import vn.edu.usth.mcma.backend.repository.CityRepository;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.dto.CinemaRequest;
 import vn.edu.usth.mcma.backend.repository.CinemaRepository;
@@ -33,7 +36,7 @@ public class CinemaService extends AbstractService<Cinema, Long> {
         cinema.setCreatedBy(userId);
         cinema.setLastModifiedBy(userId);
         cinemaRepository.save(cinema);
-        return this.successResponse();
+        return ApiResponse.success();
     }
     public List<CinemaProjection> findAll(String query) {
         return cinemaRepository.findAllProjectionByQuery(query);
@@ -46,7 +49,7 @@ public class CinemaService extends AbstractService<Cinema, Long> {
         cinema.setLastModifiedBy(userId);
         cinema.setLastModifiedDate(Instant.now());
         cinemaRepository.save(cinema);
-        return this.successResponse();
+        return ApiResponse.success();
     }
     public ApiResponse deleteCinema(Long id) {
         Long userId = jwtUtil.getUserIdFromToken();
@@ -55,6 +58,6 @@ public class CinemaService extends AbstractService<Cinema, Long> {
         cinema.setLastModifiedBy(userId);
         cinema.setLastModifiedDate(Instant.now());
         cinemaRepository.save(cinema);
-        return this.successResponse();
+        return ApiResponse.success();
     }
 }

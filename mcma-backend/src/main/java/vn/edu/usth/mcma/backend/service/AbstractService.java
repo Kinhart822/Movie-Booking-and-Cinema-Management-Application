@@ -14,11 +14,4 @@ public abstract class AbstractService<T, ID> {
     public T findById(ID id) {
         return repository.findById(id).orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
     }
-    ApiResponse successResponse() {
-        return ApiResponse
-                .builder()
-                .status(ApiResponseCode.SUCCESS.getStatus())
-                .message(ApiResponseCode.SUCCESS.getDescription())
-                .build();
-    }
 }

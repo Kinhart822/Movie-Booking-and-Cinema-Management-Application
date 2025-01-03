@@ -36,7 +36,7 @@ public class FoodService extends AbstractService<Food, Long> {
         food.setCreatedBy(userId);
         food.setLastModifiedBy(userId);
         foodRepository.save(food);
-        return this.successResponse();
+        return ApiResponse.success();
     }
     public List<Food> findAll(String query, Pageable pageable) {
         return foodRepository.findAllByNameContaining(query, pageable);
@@ -52,7 +52,7 @@ public class FoodService extends AbstractService<Food, Long> {
         food.setLastModifiedBy(userId);
         food.setLastModifiedDate(Instant.now());
         foodRepository.save(food);
-        return this.successResponse();
+        return ApiResponse.success();
     }
     public ApiResponse deleteFood(Long id) {
         Long userId = jwtUtil.getUserIdFromToken();
@@ -61,6 +61,6 @@ public class FoodService extends AbstractService<Food, Long> {
         food.setLastModifiedBy(userId);
         food.setLastModifiedDate(Instant.now());
         foodRepository.save(food);
-        return this.successResponse();
+        return ApiResponse.success();
     }
 }

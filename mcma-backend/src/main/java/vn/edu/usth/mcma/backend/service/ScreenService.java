@@ -33,7 +33,7 @@ public class ScreenService extends AbstractService<Screen, Long> {
         screen.setCreatedBy(userId);
         screen.setLastModifiedBy(userId);
         screenRepository.save(screen);
-        return this.successResponse();
+        return ApiResponse.success();
     }
     public List<Screen> findAll(String query, Pageable pageable) {
         return screenRepository.findAllByNameContaining(query, pageable);
@@ -47,7 +47,7 @@ public class ScreenService extends AbstractService<Screen, Long> {
         screen.setLastModifiedBy(userId);
         screen.setLastModifiedDate(Instant.now());
         screenRepository.save(screen);
-        return this.successResponse();
+        return ApiResponse.success();
     }
     public ApiResponse deleteScreen(Long id) {
         Long userId = jwtUtil.getUserIdFromToken();
@@ -56,6 +56,6 @@ public class ScreenService extends AbstractService<Screen, Long> {
         screen.setLastModifiedBy(userId);
         screen.setLastModifiedDate(Instant.now());
         screenRepository.save(screen);
-        return this.successResponse();
+        return ApiResponse.success();
     }
 }

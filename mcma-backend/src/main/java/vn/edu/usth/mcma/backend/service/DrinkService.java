@@ -37,7 +37,7 @@ public class DrinkService extends AbstractService<Drink, Long> {
         drink.setCreatedBy(userId);
         drink.setLastModifiedBy(userId);
         drinkRepository.save(drink);
-        return this.successResponse();
+        return ApiResponse.success();
     }
     public List<Drink> findAll(String query, Pageable pageable) {
         return drinkRepository.findAllByNameContaining(query, pageable);
@@ -54,7 +54,7 @@ public class DrinkService extends AbstractService<Drink, Long> {
         drink.setLastModifiedBy(userId);
         drink.setLastModifiedDate(Instant.now());
         drinkRepository.save(drink);
-        return this.successResponse();
+        return ApiResponse.success();
     }
     public ApiResponse deleteDrink(Long id) {
         Long userId = jwtUtil.getUserIdFromToken();
@@ -63,6 +63,6 @@ public class DrinkService extends AbstractService<Drink, Long> {
         drink.setLastModifiedBy(userId);
         drink.setLastModifiedDate(Instant.now());
         drinkRepository.save(drink);
-        return this.successResponse();
+        return ApiResponse.success();
     }
 }

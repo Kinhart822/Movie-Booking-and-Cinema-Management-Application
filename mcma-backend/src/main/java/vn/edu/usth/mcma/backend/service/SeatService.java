@@ -1,13 +1,17 @@
 package vn.edu.usth.mcma.backend.service;
 
+import constants.ApiResponseCode;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.SeatMapRequest;
 import vn.edu.usth.mcma.backend.dto.SeatMapResponse;
 import vn.edu.usth.mcma.backend.dto.SeatPosition;
+import vn.edu.usth.mcma.backend.entity.Screen;
 import vn.edu.usth.mcma.backend.entity.Seat;
 import vn.edu.usth.mcma.backend.entity.SeatPK;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
+import vn.edu.usth.mcma.backend.exception.BusinessException;
+import vn.edu.usth.mcma.backend.repository.ScreenRepository;
 import vn.edu.usth.mcma.backend.repository.SeatRepository;
 
 import java.util.List;
@@ -43,7 +47,7 @@ public class SeatService extends AbstractService<Seat, SeatPK> {
                         .build())
                 .toList();
         seatRepository.saveAll(seats);
-        return this.successResponse();
+        return ApiResponse.success();
     }
 
     public SeatMapResponse findSeatMapByScreenId(Long screenId) {
@@ -74,7 +78,7 @@ public class SeatService extends AbstractService<Seat, SeatPK> {
 //        seat.setLastModifiedBy(userId);
 //        seat.setLastModifiedDate(Instant.now());
 //        seatRepository.save(seat);
-//        return this.successResponse();
+//        return ApiResponse.success();
 //    }
 //    public ApiResponse deleteSeat(Long id) {
 //        Long userId = jwtUtil.getUserIdFromToken(hsRequest);
@@ -83,6 +87,6 @@ public class SeatService extends AbstractService<Seat, SeatPK> {
 //        seat.setLastModifiedBy(userId);
 //        seat.setLastModifiedDate(Instant.now());
 //        seatRepository.save(seat);
-//        return this.successResponse();
+//        return ApiResponse.success();
 //    }
 }

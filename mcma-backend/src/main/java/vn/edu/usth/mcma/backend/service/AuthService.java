@@ -80,11 +80,7 @@ public class AuthService {
         email = user.getEmail();//email of the saved entity, not from request
         String token = jwtService.generateToken(email);
         saveUserToken(token, email);
-        return ApiResponse
-                .builder()
-                .status(ApiResponseCode.SUCCESS.getStatus())
-                .message(ApiResponseCode.SUCCESS.getMessage())
-                .build();
+        return ApiResponse.success();
     }
 
     public JwtAuthResponse signIn(SignInRequest signInRequest) {
@@ -148,11 +144,7 @@ public class AuthService {
             throw new BusinessException(ApiResponseCode.EMAIL_NOT_FOUND);
         }
         emailService.sendResetPasswordMail(user.get());
-        return ApiResponse
-                .builder()
-                .status(ApiResponseCode.SUCCESS.getStatus())
-                .message(ApiResponseCode.SUCCESS.getDescription())
-                .build();
+        return ApiResponse.success();
     }
     public Map<String, Boolean> resetPasswordCheck(ResetPasswordCheck check) {
         Integer type = check.getType();
@@ -173,11 +165,7 @@ public class AuthService {
         if (user.isEmpty()) {
             throw new BusinessException(ApiResponseCode.RESET_KEY_NOT_FOUND);
         }
-        return ApiResponse
-                .builder()
-                .status(ApiResponseCode.SUCCESS.getStatus())
-                .message(ApiResponseCode.SUCCESS.getDescription())
-                .build();
+        return ApiResponse.success();
     }
 
     public void updateAccount(Long userId, UpdateAccountRequest updateAccountRequest) {

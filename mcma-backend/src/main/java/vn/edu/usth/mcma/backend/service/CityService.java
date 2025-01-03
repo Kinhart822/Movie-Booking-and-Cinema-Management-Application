@@ -33,7 +33,7 @@ public class CityService extends AbstractService<City, Long> {
         city.setCreatedBy(userId);
         city.setLastModifiedBy(userId);
         cityRepository.save(city);
-        return this.successResponse();
+        return ApiResponse.success();
     }
     public List<City> findAll(String query, Pageable pageable) {
         return cityRepository.findAllByNameContaining(query, pageable);
@@ -45,7 +45,7 @@ public class CityService extends AbstractService<City, Long> {
         city.setLastModifiedBy(userId);
         city.setLastModifiedDate(Instant.now());
         cityRepository.save(city);
-        return this.successResponse();
+        return ApiResponse.success();
     }
     public ApiResponse deleteCity(Long id) {
         Long userId = jwtUtil.getUserIdFromToken();
@@ -54,6 +54,6 @@ public class CityService extends AbstractService<City, Long> {
         city.setLastModifiedBy(userId);
         city.setLastModifiedDate(Instant.now());
         cityRepository.save(city);
-        return this.successResponse();
+        return ApiResponse.success();
     }
 }
