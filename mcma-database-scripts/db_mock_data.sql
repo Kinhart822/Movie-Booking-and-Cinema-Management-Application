@@ -83,5 +83,12 @@ values (1, 'phong 1', 1, 1),
        (1, 'phong 2', 1, 1);
 insert into mcma.user (first_name, last_name, sex, dob, email, phone, password, address, user_type, status, created_by,
                        last_modified_by)
-values ('At', 'Nguyen', 1, '2004-11-04 00:00:00', 'at0@gmail.com', '0976289114',
+values ('At', 'Nguyen', 1, '2004-04-11 00:00:00', 'at0@gmail.com', '0976289114',
         '$2a$10$do2lQSohzuLfiSljWORi0Oc3OVG37mtPWxR/cAmJSsOLebcF4A5Oi', 'Hanoi, Viet Nam', 0, 1, 0, 0);
+insert into mcma.movie (name, length, publish_date, status)
+values ('Inception', 148, '2010-07-16 00:00:00', 1),
+       ('Interstellar', 169, '2014-11-07 00:00:00', 1),
+       ('The Dark Knight', 152, '2008-07-18 00:00:00', 1),
+       ('Tenet', 150, '2020-08-26 00:00:00', 1),
+       ('Dunkirk', 106, '2017-07-21 00:00:00', 1),
+       ('not released', 10, '2025-01-31 00:00:00', 1);
