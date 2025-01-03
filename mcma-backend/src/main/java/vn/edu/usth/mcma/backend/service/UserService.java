@@ -51,12 +51,10 @@ public class UserService extends AbstractService<User, Long> {
     private UserDetailsService userDetailsService() {
         return email -> {
             User user = userRepository.findByEmailIgnoreCase(email).orElseThrow(() -> new BusinessException(ApiResponseCode.EMAIL_NOT_FOUND));
-            List<GrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority(UserType.values()[user.getUserType()].name()));
             return new org.springframework.security.core.userdetails.User(
                     user.getEmail(),
                     user.getPassword(),
-                    authorities);
+                    user.getAuthorities());
         };
     }
 

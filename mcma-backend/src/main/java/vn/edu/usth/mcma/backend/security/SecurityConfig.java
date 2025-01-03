@@ -59,8 +59,8 @@ public class SecurityConfig {
                                 "/api/v1/user/search-movie-by-movie-genre-name",
                                 "/api/v1/user/booking/**",
                                 "/api/v1/user/view/**").permitAll()
-                        .requestMatchers("/api/v1/admin").hasAuthority(UserType.ADMIN.name())
-                        .requestMatchers("/api/v1/user").hasAuthority(UserType.USER.name())
+                        .requestMatchers("/api/v1/admin/**").hasAuthority(UserType.ADMIN.name())
+                        .requestMatchers("/api/v1/user/**").hasAuthority(UserType.USER.name())
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
