@@ -29,6 +29,7 @@ public class Movie extends AbstractAuditing implements Serializable {
     private String imageUrl;
     @Column
     private String backgroundImageUrl;
+    // length in seconds
     @Column
     private Integer length;
     @Column
