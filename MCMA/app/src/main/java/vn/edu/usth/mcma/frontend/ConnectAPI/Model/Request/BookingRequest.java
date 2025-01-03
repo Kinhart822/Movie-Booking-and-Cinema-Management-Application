@@ -44,8 +44,8 @@ public class BookingRequest {
         private List<Integer> seatIds;
         private List<Integer> foodIds = new ArrayList<>();
         private List<Integer> drinkIds = new ArrayList<>();
-        private Integer movieCouponId = 0;  // Default value
-        private Integer userCouponId = 0;   // Default value
+        private Integer movieCouponId;
+        private Integer userCouponId;
 
         public Builder(Integer movieId, Integer cityId, Integer cinemaId, Integer screenId, Integer scheduleId, List<Integer> ticketIds, List<Integer> seatIds) {
             this.movieId = movieId;

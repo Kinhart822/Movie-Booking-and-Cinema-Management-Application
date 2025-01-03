@@ -16,9 +16,28 @@ public class BookingResponse {
     private List<String> seatName;
     private List<String> foodNameList;
     private List<String> drinkNameList;
-
+    private List<String> couponName;
     private Double totalPrice;
     private String status;
+
+    public BookingResponse(String bookingNo, Integer movieId, String movieName, String imageUrlMovie, String cityName, String cinemaName, String startDateTime, String endDateTime, String screenName, List<String> ticketTypeName, List<String> seatName, List<String> foodNameList, List<String> drinkNameList, List<String> couponName, Double totalPrice, String status) {
+        this.bookingNo = bookingNo;
+        this.movieId = movieId;
+        this.movieName = movieName;
+        this.imageUrlMovie = imageUrlMovie;
+        this.cityName = cityName;
+        this.cinemaName = cinemaName;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+        this.screenName = screenName;
+        this.ticketTypeName = ticketTypeName;
+        this.seatName = seatName;
+        this.foodNameList = foodNameList;
+        this.drinkNameList = drinkNameList;
+        this.couponName = couponName;
+        this.totalPrice = totalPrice;
+        this.status = status;
+    }
 
     public String getBookingNo() {
         return bookingNo;
@@ -26,6 +45,14 @@ public class BookingResponse {
 
     public void setBookingNo(String bookingNo) {
         this.bookingNo = bookingNo;
+    }
+
+    public Integer getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(Integer movieId) {
+        this.movieId = movieId;
     }
 
     public String getMovieName() {
@@ -116,6 +143,14 @@ public class BookingResponse {
         this.drinkNameList = drinkNameList;
     }
 
+    public List<String> getCouponName() {
+        return couponName;
+    }
+
+    public void setCouponName(List<String> couponName) {
+        this.couponName = couponName;
+    }
+
     public Double getTotalPrice() {
         return totalPrice;
     }
@@ -130,13 +165,5 @@ public class BookingResponse {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public Integer getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(Integer movieId) {
-        this.movieId = movieId;
     }
 }

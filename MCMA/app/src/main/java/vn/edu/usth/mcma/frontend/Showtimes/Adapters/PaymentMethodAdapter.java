@@ -13,18 +13,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.PaymentMethod;
+import vn.edu.usth.mcma.frontend.Showtimes.Models.Booking.PaymentMethod;
 
 public class PaymentMethodAdapter extends RecyclerView.Adapter<PaymentMethodAdapter.PaymentMethodViewHolder> {
-    private List<PaymentMethod> paymentMethods;
+//    private List<PaymentMethod> paymentMethods;
+
+    private List<vn.edu.usth.mcma.frontend.Showtimes.Models.Booking.PaymentMethod> paymentMethods;
+
     private int selectedPosition = -1;
     private OnPaymentMethodSelectedListener listener;
-    public PaymentMethodAdapter(List<PaymentMethod> paymentMethods) {
+//    public PaymentMethodAdapter(List<PaymentMethod> paymentMethods) {
+//        this.paymentMethods = paymentMethods;
+//    }
+
+    public PaymentMethodAdapter(List<vn.edu.usth.mcma.frontend.Showtimes.Models.Booking.PaymentMethod> paymentMethods) {
         this.paymentMethods = paymentMethods;
     }
+
+//    public interface OnPaymentMethodSelectedListener {
+//        void onPaymentMethodSelected(PaymentMethod paymentMethod);
+//    }
+
     public interface OnPaymentMethodSelectedListener {
         void onPaymentMethodSelected(PaymentMethod paymentMethod);
     }
+
     public void setOnPaymentMethodSelectedListener(OnPaymentMethodSelectedListener listener) {
         this.listener = listener;
     }
@@ -38,20 +51,44 @@ public class PaymentMethodAdapter extends RecyclerView.Adapter<PaymentMethodAdap
 
     @Override
     public void onBindViewHolder(@NonNull PaymentMethodViewHolder holder, int position) {
-        PaymentMethod paymentMethod = paymentMethods.get(position);
+//        PaymentMethod paymentMethod = paymentMethods.get(position);
+//        holder.paymentMethodIcon.setImageResource(paymentMethod.getIconResource());
+//        holder.paymentMethodName.setText(paymentMethod.getName());
+//
+//        // Set text color to black
+//        holder.paymentMethodName.setTextColor(holder.itemView.getContext().getResources().getColor(android.R.color.black));
+//
+//        holder.paymentMethodRadio.setChecked(position == selectedPosition);
+//
+//        // Handle both the entire item click and radio button click
+//        View.OnClickListener clickListener = v -> {
+//            int previousSelected = selectedPosition;
+//            selectedPosition = holder.getAdapterPosition();
+//            // Update previous and new selections
+//            if (previousSelected != -1) {
+//                notifyItemChanged(previousSelected);
+//            }
+//            notifyItemChanged(selectedPosition);
+//            if (listener != null) {
+//                listener.onPaymentMethodSelected(paymentMethod);
+//            }
+//        };
+//        // Set click listener for both the item view and radio button
+//        holder.itemView.setOnClickListener(clickListener);
+//        holder.paymentMethodRadio.setOnClickListener(clickListener);
+//        // Prevent radio button from handling clicks separately
+//        holder.paymentMethodRadio.setClickable(false);
+
+        vn.edu.usth.mcma.frontend.Showtimes.Models.Booking.PaymentMethod paymentMethod = paymentMethods.get(position);
         holder.paymentMethodIcon.setImageResource(paymentMethod.getIconResource());
-        holder.paymentMethodName.setText(paymentMethod.getName());
+        holder.paymentMethodName.setText(paymentMethod.getDisplayName());
 
-        // Set text color to black
         holder.paymentMethodName.setTextColor(holder.itemView.getContext().getResources().getColor(android.R.color.black));
-
         holder.paymentMethodRadio.setChecked(position == selectedPosition);
 
-        // Handle both the entire item click and radio button click
         View.OnClickListener clickListener = v -> {
             int previousSelected = selectedPosition;
             selectedPosition = holder.getAdapterPosition();
-            // Update previous and new selections
             if (previousSelected != -1) {
                 notifyItemChanged(previousSelected);
             }
@@ -60,10 +97,8 @@ public class PaymentMethodAdapter extends RecyclerView.Adapter<PaymentMethodAdap
                 listener.onPaymentMethodSelected(paymentMethod);
             }
         };
-        // Set click listener for both the item view and radio button
         holder.itemView.setOnClickListener(clickListener);
         holder.paymentMethodRadio.setOnClickListener(clickListener);
-        // Prevent radio button from handling clicks separately
         holder.paymentMethodRadio.setClickable(false);
     }
 

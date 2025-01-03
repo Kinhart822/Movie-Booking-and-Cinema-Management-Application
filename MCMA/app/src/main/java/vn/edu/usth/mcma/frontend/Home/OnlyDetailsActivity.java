@@ -39,8 +39,8 @@ public class OnlyDetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Hide the booking button
-        Button bookingButton = findViewById(R.id.bookingButton);
-        bookingButton.setVisibility(View.GONE);
+//        Button bookingButton = findViewById(R.id.bookingButton);
+//        bookingButton.setVisibility(View.GONE);
 
         // Get movie title from intent
         Intent intent = getIntent();

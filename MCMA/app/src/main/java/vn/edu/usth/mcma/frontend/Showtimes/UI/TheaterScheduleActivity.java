@@ -87,7 +87,7 @@ public class TheaterScheduleActivity extends AppCompatActivity
         daysContainer.removeAllViews();
 
         GetScheduleAPI apiService = new Retrofit.Builder()
-                .baseUrl("http://10.10.16.248:8080/")
+                .baseUrl("http://192.168.33.102:8080/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(GetScheduleAPI.class);
@@ -185,7 +185,7 @@ public class TheaterScheduleActivity extends AppCompatActivity
 
     private void loadMovieSchedule(String date) {
         GetAllMovieAPI apiService = new Retrofit.Builder()
-                .baseUrl("http://10.10.16.248:8080/")
+                .baseUrl("http://192.168.33.102:8080/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(GetAllMovieAPI.class);
@@ -253,7 +253,7 @@ public class TheaterScheduleActivity extends AppCompatActivity
 
     private void fetchMovieDetails(int movieId) {
         GetAllInformationOfSelectedMovie apiService = new Retrofit.Builder()
-                .baseUrl("http://10.10.16.248:8080/")
+                .baseUrl("http://192.168.33.102:8080/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(GetAllInformationOfSelectedMovie.class);

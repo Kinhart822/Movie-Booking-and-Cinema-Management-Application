@@ -143,8 +143,10 @@ public class PaymentBookingActivity extends AppCompatActivity {
             dialogAdapter.setCurrentSelection(coupon);
             if (coupon.getType() == 0) {
                 selectedUserCouponId = coupon.getId();  // Lưu ID user coupon
+                selectedMovieCouponId = -1;  // Reset ID movie coupon
             } else {
                 selectedMovieCouponId = coupon.getId();  // Lưu ID movie coupon
+                selectedUserCouponId = -1;  // Reset ID user coupon
             }
         });
 
@@ -165,9 +167,12 @@ public class PaymentBookingActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateCouponButton() {
         if (selectedCoupon != null) {
             buttonCoupon.setText(selectedCoupon.getName());
+        } else {
+            buttonCoupon.setText("Select coupon");
         }
     }
 
@@ -205,7 +210,7 @@ public class PaymentBookingActivity extends AppCompatActivity {
                             String name = names.get(i);
                             String description = descriptions.get(i);
                             double discountRate = discountRates.get(i).doubleValue();
-                            int couponId = couponResponse.getCouponIds().get(i); // Lấy ID từ response
+                            int couponId = couponResponse.getCouponIds().get(i);
 
                             String couponName = String.format("%s - %s - %s%%", name, description, discountRate * 100);
                             coupons.add(new Coupon(couponName, 0, couponId));
@@ -400,78 +405,38 @@ public class PaymentBookingActivity extends AppCompatActivity {
     private void setupCheckoutButton() {
         Button checkoutButton = findViewById(R.id.checkout_button);
         checkoutButton.setOnClickListener(v -> {
-            // Hiển thị AlertDialog để thông báo cho người dùng rằng họ có 5 phút để hoàn tất thanh toán
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("You have 5 minutes to complete the payment.\n")
                     .setCancelable(false)
                     .setPositiveButton("OK", (dialog, id) -> {
-                        // Gửi API yêu cầu cập nhật booking
-                        sendBookingRequest();
-                    });
-            builder.show();
-        });
-    }
-
-    private void sendBookingRequest() {
-        BookingRequest.Builder builder = new BookingRequest.Builder(
-                movieId, selectedCityId, selectedCinemaId, selectedScreenId, selectedScheduleId,
-                selectedTicketIds, selectedSeatIds);
-
-        if (!selectedFoodIds.isEmpty()) {
-            builder.setFoodIds(selectedFoodIds);
-        }
-        if (!selectedDrinkIds.isEmpty()) {
-            builder.setDrinkIds(selectedDrinkIds);
-        }
-        if (selectedMovieCouponId != 0) {
-            builder.setMovieCouponId(selectedMovieCouponId);
-        }
-        if (selectedUserCouponId != 0) {
-            builder.setUserCouponId(selectedUserCouponId);
-        }
-
-        // Tạo đối tượng BookingRequest
-        BookingRequest bookingRequest = builder.build();
-
-        // Tạo đối tượng API
-        RetrofitService retrofitService = new RetrofitService(this);
-        BookingAPI bookingAPI = retrofitService.getRetrofit().create(BookingAPI.class);
-        Call<SendBookingResponse> call = bookingAPI.processBooking(bookingRequest);
-
-        // Gửi yêu cầu API
-        call.enqueue(new Callback<SendBookingResponse>() {
-            @Override
-            public void onResponse(Call<SendBookingResponse> call, Response<SendBookingResponse> response) {
-                if (response.isSuccessful()) {
-                    SendBookingResponse sendBookingResponse = response.body();
-                    if (sendBookingResponse != null) {
-                        // Lưu thông tin booking nếu cần
-                        Toast.makeText(getApplicationContext(), "Process Booking successfully!", Toast.LENGTH_SHORT).show();
-
-                        int bookingId = sendBookingResponse.getBookingId();
-
-                        // Sau khi gửi API thành công, chuyển sang PayingMethodActivity
+                        // Chuyển sang PayingMethodActivity
                         Intent intent = new Intent(getApplicationContext(), PayingMethodActivity.class);
                         intent.putExtra("MOVIE_NAME", getIntent().getStringExtra("MOVIE_NAME"));
                         intent.putExtra("CINEMA_NAME", getIntent().getStringExtra("CINEMA_NAME"));
                         intent.putExtra("SELECTED_DATE", getIntent().getStringExtra("SELECTED_DATE"));
                         intent.putExtra("SELECTED_SHOWTIME", getIntent().getStringExtra("SELECTED_SHOWTIME"));
                         intent.putExtra("SELECTED_SCREEN_ROOM", getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
-                        intent.putExtra("SELECTED_BOOKING_ID", bookingId);
 
+                        // Booking
+                        intent.putExtra("MOVIE_ID", movieId);
+                        intent.putExtra("SELECTED_CITY_ID", selectedCityId);
+                        intent.putExtra("SELECTED_CINEMA_ID", selectedCinemaId);
+                        intent.putExtra("SELECTED_SCREEN_ID", selectedScreenId);
+                        intent.putExtra("SELECTED_SCHEDULE_ID", selectedScheduleId);
+                        intent.putIntegerArrayListExtra("SELECTED_TICKET_IDS", new ArrayList<>(selectedTicketIds));
+                        intent.putIntegerArrayListExtra("SELECTED_SEAT_IDS", new ArrayList<>(selectedSeatIds));
+                        intent.putIntegerArrayListExtra("SELECTED_FOOD_IDS", new ArrayList<>(selectedFoodIds));
+                        intent.putIntegerArrayListExtra("SELECTED_DRINK_IDS", new ArrayList<>(selectedDrinkIds));
+                        if (selectedMovieCouponId != 0 && selectedMovieCouponId > 0) {
+                            intent.putExtra("SELECTED_MOVIE_COUPON_ID", selectedMovieCouponId);
+                        }
+                        if (selectedUserCouponId != 0 && selectedUserCouponId > 0) {
+                            intent.putExtra("SELECTED_USER_COUPON_ID", selectedUserCouponId);
+                        }
 
                         startActivity(intent);
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), "Failed to update booking.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<SendBookingResponse> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
+                    });
+            builder.show();
         });
     }
-
 }
