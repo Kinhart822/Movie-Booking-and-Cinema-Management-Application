@@ -16,6 +16,7 @@ import java.util.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
+@Deprecated
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,16 +66,16 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "coupon_id"))
     private Set<Coupon> userCoupons;
-    
+    //haven't imported: unused
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Token> tokens;
-
+    //haven't imported: unused
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Booking> bookings;
-
+    //haven't imported: unused
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Notification> notifications;
-    
+    //haven't imported: unused
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<MovieRespond> movieResponds;
 
