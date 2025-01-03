@@ -31,7 +31,7 @@ public interface BookingService {
     SendBookingResponse processingBooking(Integer userId, BookingRequest bookingRequest);
     BookingResponse completeBooking(Integer userId, BookingRequest bookingRequest);
 
-    void updateBookingSeat(BookingRequest bookingRequest);
+//    void updateBookingSeat(BookingRequest bookingRequest);
     void cancelBooking(Integer bookingId, Integer userId);
     void revokeCancelBooking(Integer bookingId, Integer userId);
     void deleteBooking(Integer bookingId, Integer userId);

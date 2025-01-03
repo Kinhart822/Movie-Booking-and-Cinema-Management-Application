@@ -1,6 +1,7 @@
 package com.spring.repository;
 
 import com.spring.entities.Booking;
+import com.spring.enums.PaymentMethod;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +15,10 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     @Query("SELECT b FROM Booking b WHERE b.user.id = :userId AND b.movie.id = :movieId")
     List<Booking> findByUserIdAndMovieId(@Param("userId") Integer userId, @Param("movieId") Integer movieId);
 
-    @Query("SELECT b FROM Booking b WHERE b.user.id = :userId")
+    @Query("SELECT b FROM Booking b WHERE b.paymentMethod =:paymentMethod")
+    List<Booking> findByPaymentMethod(@Param("paymentMethod") PaymentMethod paymentMethod);
+
+    @Query("SELECT b FROM Booking b WHERE b.user.id = :userId ORDER BY b.startDateTime DESC")
     List<Booking> findByUserId(@Param("userId") Integer userId);
 
     List<Booking> findByEndDateTimeBefore(LocalDateTime endDateTime);

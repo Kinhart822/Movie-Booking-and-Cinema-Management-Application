@@ -182,11 +182,11 @@ public class UserController {
         return ResponseEntity.ok(bookingResponse);
     }
 
-    @PostMapping("/booking/updateBookingSeat")
-    public ResponseEntity<String> updateBookingSeat(@RequestBody BookingRequest bookingRequest) {
-        bookingService.updateBookingSeat(bookingRequest);
-        return ResponseEntity.ok("Seat(s) updated successfully");
-    }
+//    @PostMapping("/booking/updateBookingSeat")
+//    public ResponseEntity<String> updateBookingSeat(@RequestBody BookingRequest bookingRequest) {
+//        bookingService.updateBookingSeat(bookingRequest);
+//        return ResponseEntity.ok("Seat(s) updated successfully");
+//    }
 
     @PostMapping("/booking/cancel-booking/{bookingId}")
     public ResponseEntity<String> cancelBooking(HttpServletRequest request, @PathVariable Integer bookingId) {

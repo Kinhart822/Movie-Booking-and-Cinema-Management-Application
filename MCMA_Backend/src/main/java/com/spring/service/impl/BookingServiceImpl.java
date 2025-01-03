@@ -490,7 +490,6 @@ public class BookingServiceImpl implements BookingService {
             throw new IllegalArgumentException("No schedules found for given movie, cinema, and screen.");
         }
 
-        List<ScheduleResponse> scheduleResponses = new ArrayList<>();
         List<MovieGenre> movieGenres = movieGenreRepository.findMovieGenresByMovie(movie.getId());
         List<String> movieGenreNameList = movieGenres.stream()
                 .map(movieGenre -> movieGenre.getMovieGenreDetail().getName())
@@ -550,7 +549,7 @@ public class BookingServiceImpl implements BookingService {
         List<String> dayOfWeekList = new ArrayList<>();
         List<String> dayList = new ArrayList<>();
         List<String> timeList = new ArrayList<>();
-        for (MovieSchedule schedule : movie.getMovieScheduleList()) {
+        for (MovieSchedule schedule : movieSchedules) {
             String dayOfWeek = schedule.getStartTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
             String day = schedule.getStartTime().format(formatDate);
             String time = schedule.getStartTime().format(formatTime);
@@ -561,7 +560,7 @@ public class BookingServiceImpl implements BookingService {
 
         List<Integer> scheduleIdList = new ArrayList<>();
         List<String> screenNameList = new ArrayList<>();
-        for (MovieSchedule schedule : movie.getMovieScheduleList()) {
+        for (MovieSchedule schedule : movieSchedules) {
             Integer scheduleId = schedule.getId();
             String screenName = schedule.getScreen().getName();
             scheduleIdList.add(scheduleId);
@@ -604,12 +603,14 @@ public class BookingServiceImpl implements BookingService {
             List<Integer> ticketsIds = new ArrayList<>();
             List<String> ticketTypes = new ArrayList<>();
             List<String> ticketDescriptions = new ArrayList<>();
+            List<Double> ticketPriceList = new ArrayList<>();
 
             ticketsIds.add(ticket.getId());
             ticketTypes.add(ticket.getTicketType().getName());
             ticketDescriptions.add(ticket.getTicketType().getDescription());
+            ticketPriceList.add(ticket.getTicketType().getPrice());
 
-            TicketResponse response = new TicketResponse(ticketsIds, ticketTypes, ticketDescriptions);
+            TicketResponse response = new TicketResponse(ticketsIds, ticketTypes, ticketDescriptions, ticketPriceList);
             ticketResponses.add(response);
         }
 
@@ -629,6 +630,7 @@ public class BookingServiceImpl implements BookingService {
                     screen.getName(),
                     seat.getId(),
                     seat.getName(),
+                    seat.getSeatStatus().toString(),
                     seat.getColumn(),
                     seat.getRow(),
                     seat.getSeatType().getName()
@@ -652,6 +654,7 @@ public class BookingServiceImpl implements BookingService {
                     screen.getName(),
                     seat.getId(),
                     seat.getName(),
+                    seat.getSeatStatus().toString(),
                     seat.getColumn(),
                     seat.getRow(),
                     seat.getSeatType().getName()
@@ -678,6 +681,7 @@ public class BookingServiceImpl implements BookingService {
                     screen.getName(),
                     seat.getId(),
                     seat.getName(),
+                    seat.getSeatStatus().toString(),
                     seat.getColumn(),
                     seat.getRow(),
                     seat.getSeatType().getName(),
@@ -966,33 +970,68 @@ public class BookingServiceImpl implements BookingService {
         double updateTotalPrice = booking.getTotalPrice() + totalPriceSeat;
         booking.setTotalPrice(updateTotalPrice);
 
+//        if (bookingRequest.getFoodIds() != null && !bookingRequest.getFoodIds().isEmpty()) {
+//            Map<String, BookingFood> foodMap = new HashMap<>();
+//            double totalFoodPrice = 0.0;
+//
+//            for (int i = 0; i < bookingRequest.getFoodIds().size(); i++) {
+//                Integer foodId = bookingRequest.getFoodIds().get(i);
+//                SizeFoodOrDrink size = bookingRequest.getSizeFoodList().get(i);
+//
+//                Food food = foodRepository.findById(foodId)
+//                        .orElseThrow(() -> new IllegalArgumentException("Food not found"));
+//                if (food.getCinema().getId() != cinema.getId()) {
+//                    throw new IllegalArgumentException("The selected food does not match the specified cinema!");
+//                }
+//
+//                String key = "%d-%s".formatted(foodId, size.name());
+//
+//                BookingFood bookingFood = foodMap.computeIfAbsent(key, k -> {
+//                    BookingFood newBookingFood = new BookingFood();
+//                    newBookingFood.setBooking(booking);
+//                    newBookingFood.setFood(food);
+//                    newBookingFood.setSizeFood(size);
+//                    newBookingFood.setQuantity(1);
+//                    return newBookingFood;
+//                });
+//
+//                bookingFood.setQuantity(bookingFood.getQuantity() + 1);
+////                double price = food.getPrice() * getFoodOrDrinkSize(size) * bookingFood.getQuantity();
+//                double price = food.getPrice() * bookingFood.getQuantity();
+//                totalFoodPrice += price;
+//            }
+//
+//            updateTotalPrice = booking.getTotalPrice() + totalFoodPrice;
+//            booking.setTotalPrice(updateTotalPrice);
+//
+//            booking.setFoodList(new ArrayList<>(foodMap.values()));
+//        }
+
         if (bookingRequest.getFoodIds() != null && !bookingRequest.getFoodIds().isEmpty()) {
-            Map<String, BookingFood> foodMap = new HashMap<>();
+            Map<Integer, BookingFood> foodMap = new HashMap<>();
             double totalFoodPrice = 0.0;
 
-            for (int i = 0; i < bookingRequest.getFoodIds().size(); i++) {
-                Integer foodId = bookingRequest.getFoodIds().get(i);
-                SizeFoodOrDrink size = bookingRequest.getSizeFoodList().get(i);
-
+            for (Integer foodId : bookingRequest.getFoodIds()) {
                 Food food = foodRepository.findById(foodId)
                         .orElseThrow(() -> new IllegalArgumentException("Food not found"));
                 if (food.getCinema().getId() != cinema.getId()) {
                     throw new IllegalArgumentException("The selected food does not match the specified cinema!");
                 }
 
-                String key = "%d-%s".formatted(foodId, size.name());
-
-                BookingFood bookingFood = foodMap.computeIfAbsent(key, k -> {
+                BookingFood bookingFood = foodMap.computeIfAbsent(foodId, k -> {
                     BookingFood newBookingFood = new BookingFood();
                     newBookingFood.setBooking(booking);
                     newBookingFood.setFood(food);
-                    newBookingFood.setSizeFood(size);
-                    newBookingFood.setQuantity(1);
+                    newBookingFood.setQuantity(0);
                     return newBookingFood;
                 });
 
                 bookingFood.setQuantity(bookingFood.getQuantity() + 1);
-                double price = food.getPrice() * getFoodOrDrinkSize(size) * bookingFood.getQuantity();
+            }
+
+            for (BookingFood bookingFood : foodMap.values()) {
+                Food food = bookingFood.getFood();
+                double price = food.getPrice() * bookingFood.getQuantity();
                 totalFoodPrice += price;
             }
 
@@ -1002,33 +1041,69 @@ public class BookingServiceImpl implements BookingService {
             booking.setFoodList(new ArrayList<>(foodMap.values()));
         }
 
+//        if (bookingRequest.getDrinkIds() != null && !bookingRequest.getDrinkIds().isEmpty()) {
+//            Map<String, BookingDrink> drinkMap = new HashMap<>();
+//            double totalDrinkPrice = 0.0;
+//
+//            for (int i = 0; i < bookingRequest.getDrinkIds().size(); i++) {
+//                Integer drinkId = bookingRequest.getDrinkIds().get(i);
+//                SizeFoodOrDrink size = bookingRequest.getSizeDrinkList().get(i);
+//
+//                Drink drink = drinkRepository.findById(drinkId)
+//                        .orElseThrow(() -> new IllegalArgumentException("Drink not found"));
+//                if (drink.getCinema().getId() != cinema.getId()) {
+//                    throw new IllegalArgumentException("The selected drink does not match the specified cinema!");
+//                }
+//
+//                String key = "%d-%s".formatted(drinkId, size.name());
+//
+//                BookingDrink bookingDrink = drinkMap.computeIfAbsent(key, k -> {
+//                    BookingDrink newBookingDrink = new BookingDrink();
+//                    newBookingDrink.setBooking(booking);
+//                    newBookingDrink.setDrink(drink);
+//                    newBookingDrink.setSizeDrink(size);
+//                    newBookingDrink.setQuantity(1);
+//                    return newBookingDrink;
+//                });
+//
+//                bookingDrink.setQuantity(bookingDrink.getQuantity() + 1);
+////                double price = drink.getPrice() * getFoodOrDrinkSize(size) * bookingDrink.getQuantity();
+//                double price = drink.getPrice() * bookingDrink.getQuantity();
+//                totalDrinkPrice += price;
+//            }
+//
+//            updateTotalPrice = booking.getTotalPrice() + totalDrinkPrice;
+//            booking.setTotalPrice(updateTotalPrice);
+//
+//            booking.setDrinks(new ArrayList<>(drinkMap.values()));
+//        }
+
         if (bookingRequest.getDrinkIds() != null && !bookingRequest.getDrinkIds().isEmpty()) {
-            Map<String, BookingDrink> drinkMap = new HashMap<>();
+            Map<Integer, BookingDrink> drinkMap = new HashMap<>();
             double totalDrinkPrice = 0.0;
 
-            for (int i = 0; i < bookingRequest.getDrinkIds().size(); i++) {
-                Integer drinkId = bookingRequest.getDrinkIds().get(i);
-                SizeFoodOrDrink size = bookingRequest.getSizeDrinkList().get(i);
-
+            for (Integer drinkId : bookingRequest.getDrinkIds()) {
                 Drink drink = drinkRepository.findById(drinkId)
                         .orElseThrow(() -> new IllegalArgumentException("Drink not found"));
+
                 if (drink.getCinema().getId() != cinema.getId()) {
                     throw new IllegalArgumentException("The selected drink does not match the specified cinema!");
                 }
 
-                String key = "%d-%s".formatted(drinkId, size.name());
-
-                BookingDrink bookingDrink = drinkMap.computeIfAbsent(key, k -> {
+                BookingDrink bookingDrink = drinkMap.computeIfAbsent(drinkId, k -> {
                     BookingDrink newBookingDrink = new BookingDrink();
                     newBookingDrink.setBooking(booking);
                     newBookingDrink.setDrink(drink);
-                    newBookingDrink.setSizeDrink(size);
-                    newBookingDrink.setQuantity(1);
+                    newBookingDrink.setQuantity(0);
                     return newBookingDrink;
                 });
 
                 bookingDrink.setQuantity(bookingDrink.getQuantity() + 1);
-                double price = drink.getPrice() * getFoodOrDrinkSize(size) * bookingDrink.getQuantity();
+            }
+
+            for (BookingDrink bookingDrink : drinkMap.values()) {
+                Drink drink = bookingDrink.getDrink();
+                double price = drink.getPrice() * bookingDrink.getQuantity();
                 totalDrinkPrice += price;
             }
 
@@ -1041,12 +1116,9 @@ public class BookingServiceImpl implements BookingService {
         List<BookingCoupon> bookingCoupons = new ArrayList<>();
         double discountAmount;
 
-        // Fetch and validate selected movie coupon
+//         Fetch and validate selected movie coupon
         if (bookingRequest.getMovieCouponId() != null) {
-            Coupon selectedMovieCoupon = couponRepository.findCouponByMovieIdAndCouponId(
-                    bookingRequest.getMovieId(),
-                    bookingRequest.getMovieCouponId()
-            );
+            Coupon selectedMovieCoupon = couponRepository.findCouponByCouponId(bookingRequest.getMovieCouponId());
             if (selectedMovieCoupon == null) {
                 throw new IllegalArgumentException("Coupon not found for movie %d.".formatted(bookingRequest.getMovieId()));
             }
@@ -1054,12 +1126,12 @@ public class BookingServiceImpl implements BookingService {
                 throw new IllegalArgumentException("Coupon %d is not valid.".formatted(selectedMovieCoupon.getId()));
             }
 
-            if (totalPrice < selectedMovieCoupon.getMinSpendReq()) {
-                throw new IllegalArgumentException("Minimum spend requirement not met for coupon %d.".formatted(selectedMovieCoupon.getId()));
-            }
+//            if (updateTotalPrice < selectedMovieCoupon.getMinSpendReq()) {
+//                throw new IllegalArgumentException("Minimum spend requirement not met for coupon %d.".formatted(selectedMovieCoupon.getId()));
+//            }
 
             discountAmount = updateTotalPrice * selectedMovieCoupon.getDiscount().doubleValue();
-            discountAmount = Math.min(discountAmount, selectedMovieCoupon.getDiscountLimit());
+//            discountAmount = Math.min(discountAmount, selectedMovieCoupon.getDiscountLimit());
             updateTotalPrice -= discountAmount;
 
             BookingCoupon bookingCoupon = new BookingCoupon();
@@ -1068,9 +1140,9 @@ public class BookingServiceImpl implements BookingService {
             bookingCoupons.add(bookingCoupon);
         }
 
-        // Fetch and validate selected user coupon
+//         Fetch and validate selected user coupon
         if (bookingRequest.getUserCouponId() != null) {
-            Coupon selectedUserCoupon = couponRepository.findCouponByUserIdAndCouponId(userId, bookingRequest.getUserCouponId());
+            Coupon selectedUserCoupon = couponRepository.findCouponByCouponId(bookingRequest.getUserCouponId());
             if (selectedUserCoupon == null) {
                 throw new IllegalArgumentException("Coupon not found for user %d.".formatted(userId));
             }
@@ -1078,12 +1150,12 @@ public class BookingServiceImpl implements BookingService {
                 throw new IllegalArgumentException("Coupon %d is not valid.".formatted(selectedUserCoupon.getId()));
             }
 
-            if (totalPrice < selectedUserCoupon.getMinSpendReq()) {
-                throw new IllegalArgumentException("Minimum spend requirement not met for coupon %d.".formatted(selectedUserCoupon.getId()));
-            }
+//            if (updateTotalPrice < selectedUserCoupon.getMinSpendReq()) {
+//                throw new IllegalArgumentException("Minimum spend requirement not met for coupon %d.".formatted(selectedUserCoupon.getId()));
+//            }
 
             discountAmount = updateTotalPrice * selectedUserCoupon.getDiscount().doubleValue();
-            discountAmount = Math.min(discountAmount, selectedUserCoupon.getDiscountLimit());
+//            discountAmount = Math.min(discountAmount, selectedUserCoupon.getDiscountLimit());
             updateTotalPrice -= discountAmount;
 
             BookingCoupon bookingCoupon = new BookingCoupon();
@@ -1104,20 +1176,52 @@ public class BookingServiceImpl implements BookingService {
         // Schedule seat release if payment is not completed
         scheduleSeatReleaseTask(booking);
 
-        return new SendBookingResponse(
-                booking.getId(),
-                booking.getMovie().getName(),
-                booking.getCity().getName(),
-                booking.getCinema().getName(),
-                booking.getStartDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm a")),
-                booking.getEndDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm a")),
-                booking.getScreen().getName(),
-                booking.getTickets().stream().map(ticket -> ticket.getTicket().getTicketType().getName()).toList(),
-                booking.getSeatList().stream().map(seat -> "%s (%s)".formatted(seat.getSeat().getName(), seat.getSeatType().getName())).toList(),
-                booking.getFoodList().stream().map(food -> "%s (%s)".formatted(food.getFood().getName(), food.getSizeFood())).toList(),
-                booking.getDrinks().stream().map(drink -> "%s (%s)".formatted(drink.getDrink().getName(), drink.getSizeDrink())).toList(),
-                booking.getStatus().toString()
-        );
+//        return new SendBookingResponse(
+//                booking.getId(),
+//                booking.getMovie().getName(),
+//                booking.getCity().getName(),
+//                booking.getCinema().getName(),
+//                booking.getStartDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm a")),
+//                booking.getEndDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm a")),
+//                booking.getScreen().getName(),
+//                booking.getTickets().stream().map(ticket -> ticket.getTicket().getTicketType().getName()).toList(),
+//                booking.getSeatList().stream().map(seat -> "%s (%s)".formatted(seat.getSeat().getName(), seat.getSeatType().getName())).toList(),
+////                booking.getFoodList().stream().map(food -> "%s (%s)".formatted(food.getFood().getName(), food.getSizeFood())).toList(),
+////                booking.getDrinks().stream().map(drink -> "%s (%s)".formatted(drink.getDrink().getName(), drink.getSizeDrink())).toList(),
+//                booking.getFoodList().stream().map(food -> "%s".formatted(food.getFood().getName())).toList(),
+//                booking.getDrinks().stream().map(drink -> "%s".formatted(drink.getDrink().getName())).toList(),
+//                booking.getStatus().toString()
+//        );
+
+        return SendBookingResponse.builder()
+                .bookingId(booking.getId())
+                .movieName(booking.getMovie().getName())
+                .cityName(booking.getCity().getName())
+                .cinemaName(booking.getCinema().getName())
+                .startDateTime(booking.getStartDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm a")))
+                .endDateTime(booking.getEndDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm a")))
+                .screenName(booking.getScreen().getName())
+                .ticketTypeName(booking.getTickets().stream().map(ticket -> ticket.getTicket().getTicketType().getName()).toList())
+                .seatName(booking.getSeatList().stream().map(seat -> "%s (%s)".formatted(seat.getSeat().getName(), seat.getSeatType().getName())).toList())
+                .foodNameList(Optional.ofNullable(booking.getFoodList())
+                        .orElse(Collections.emptyList())
+                        .stream()
+                        .map(food -> "%s - Quantity: %d".formatted(food.getFood().getName(), food.getQuantity()))
+                        .toList())
+                .drinkNameList(Optional.ofNullable(booking.getDrinks())
+                        .orElse(Collections.emptyList())
+                        .stream()
+                        .map(drink -> "%s - Quantity: %d".formatted(drink.getDrink().getName(), drink.getQuantity()))
+                        .toList())
+                .couponName(Optional.ofNullable(booking.getCoupons())
+                        .orElse(Collections.emptyList())
+                        .stream()
+                        .map(bookingCoupon -> "%s (%s)".formatted(bookingCoupon.getCoupon().getName(), bookingCoupon.getCoupon().getDescription()))
+                        .toList())
+                .totalPrice(updateTotalPrice)
+                .bookingStatus(booking.getStatus().toString())
+                .build();
+
     }
 
     @Override
@@ -1206,8 +1310,9 @@ public class BookingServiceImpl implements BookingService {
                 booking.getScreen().getName(),
                 booking.getTickets().stream().map(ticket -> ticket.getTicket().getTicketType().getName()).toList(),
                 booking.getSeatList().stream().map(seat -> "%s (%s)".formatted(seat.getSeat().getName(), seat.getSeatType().getName())).toList(),
-                booking.getFoodList().stream().map(food -> "%s (%s)".formatted(food.getFood().getName(), food.getSizeFood())).toList(),
-                booking.getDrinks().stream().map(drink -> "%s (%s)".formatted(drink.getDrink().getName(), drink.getSizeDrink())).toList(),
+                booking.getFoodList().stream().map(food -> "%s - Quantity: %d".formatted(food.getFood().getName(), food.getQuantity())).toList(),
+                booking.getDrinks().stream().map(drink -> "%s - Quantity: %d".formatted(drink.getDrink().getName(), drink.getQuantity())).toList(),
+                booking.getCoupons().stream().map(coupon -> "%s (%s)".formatted(coupon.getCoupon().getName(), coupon.getCoupon().getDescription())).toList(),
                 booking.getTotalPrice(),
                 booking.getStatus().toString()
         );
@@ -1331,73 +1436,73 @@ public class BookingServiceImpl implements BookingService {
     }
 
     // TODO: Check Xem có Update đc Seat ko (Ko cần thiết)
-    @Override
-    public void updateBookingSeat(BookingRequest bookingRequest) {
-        Booking booking = bookingRepository.findById(bookingRequest.getBookingId())
-                .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingRequest.getBookingId())));
-        if (bookingRequest.getSeatIds() == null || bookingRequest.getSeatIds().isEmpty()) return;
-
-        int ticketCount = booking.getTickets().stream()
-                .mapToInt(BookingTicket::getQuantity)
-                .sum();
-        int seatCount = bookingRequest.getSeatIds().size();
-        if (seatCount != ticketCount) {
-            throw new IllegalArgumentException("The number of selected seats (%d) does not match the number of tickets (%d).".formatted(seatCount, ticketCount));
-        }
-
-        List<Seat> selectedSeats = seatRepository.findAllById(bookingRequest.getSeatIds())
-                .stream()
-                .toList();
-        if (selectedSeats.size() != seatCount) {
-            throw new IllegalArgumentException("The size of the updated booking list does not match the number of the size of the old booking list");
-        }
-        if (selectedSeats.stream().anyMatch(seat -> seat.getScreen().getId() != booking.getScreen().getId())) {
-            throw new IllegalArgumentException("The selected seats do not match the specified screen!");
-        }
-        if (selectedSeats.stream().anyMatch(seat -> seat.getSeatStatus() == SeatStatus.Unavailable)) {
-            throw new IllegalArgumentException("Selected seats are already unavailable, please select a different seat.");
-        }
-
-        List<Integer> newSeatIds = selectedSeats.stream()
-                .map(Seat::getId)
-                .sorted()
-                .toList();
-        List<Integer> oldSeatIds = booking.getSeatList().stream()
-                .map(bookingSeat -> bookingSeat.getSeat().getId())
-                .toList();
-        if (newSeatIds.equals(oldSeatIds)) {
-            throw new IllegalArgumentException("The updated booking list matches the original booking list. Please make a valid change!");
-        }
-
-        // Chuyển trạng thái ghế cũ thành Available
-        List<Seat> seatListChangeToAvailable = new ArrayList<>();
-        for (BookingSeat seat : booking.getSeatList()) {
-            seat.getSeat().setSeatStatus(SeatStatus.Available);
-            seatListChangeToAvailable.add(seat.getSeat());
-        }
-        seatRepository.saveAll(seatListChangeToAvailable);
-
-        // Cập nhập ghế mới và trạng thái
-        List<BookingSeat> existingBookingSeats = booking.getSeatList();
-        for (int i = 0; i < existingBookingSeats.size(); i++) {
-            BookingSeat existingBookingSeat = existingBookingSeats.get(i);
-            Seat newSeat = selectedSeats.get(i);
-
-            existingBookingSeat.setSeat(newSeat);
-            existingBookingSeat.setSeatType(newSeat.getSeatType());
-            newSeat.setSeatStatus(SeatStatus.Held);
-        }
-
-        seatRepository.saveAll(selectedSeats);
-        booking.setSeatList(existingBookingSeats);
-
-        double newTotalPrice = booking.getSeatList().stream()
-                .mapToDouble(bookingSeat -> bookingSeat.getSeat().getSeatType().getPrice())
-                .sum();
-        booking.setTotalPrice(newTotalPrice);
-
-        bookingRepository.save(booking);
-    }
+//    @Override
+//    public void updateBookingSeat(BookingRequest bookingRequest) {
+//        Booking booking = bookingRepository.findById(bookingRequest.getBookingId())
+//                .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingRequest.getBookingId())));
+//        if (bookingRequest.getSeatIds() == null || bookingRequest.getSeatIds().isEmpty()) return;
+//
+//        int ticketCount = booking.getTickets().stream()
+//                .mapToInt(BookingTicket::getQuantity)
+//                .sum();
+//        int seatCount = bookingRequest.getSeatIds().size();
+//        if (seatCount != ticketCount) {
+//            throw new IllegalArgumentException("The number of selected seats (%d) does not match the number of tickets (%d).".formatted(seatCount, ticketCount));
+//        }
+//
+//        List<Seat> selectedSeats = seatRepository.findAllById(bookingRequest.getSeatIds())
+//                .stream()
+//                .toList();
+//        if (selectedSeats.size() != seatCount) {
+//            throw new IllegalArgumentException("The size of the updated booking list does not match the number of the size of the old booking list");
+//        }
+//        if (selectedSeats.stream().anyMatch(seat -> seat.getScreen().getId() != booking.getScreen().getId())) {
+//            throw new IllegalArgumentException("The selected seats do not match the specified screen!");
+//        }
+//        if (selectedSeats.stream().anyMatch(seat -> seat.getSeatStatus() == SeatStatus.Unavailable)) {
+//            throw new IllegalArgumentException("Selected seats are already unavailable, please select a different seat.");
+//        }
+//
+//        List<Integer> newSeatIds = selectedSeats.stream()
+//                .map(Seat::getId)
+//                .sorted()
+//                .toList();
+//        List<Integer> oldSeatIds = booking.getSeatList().stream()
+//                .map(bookingSeat -> bookingSeat.getSeat().getId())
+//                .toList();
+//        if (newSeatIds.equals(oldSeatIds)) {
+//            throw new IllegalArgumentException("The updated booking list matches the original booking list. Please make a valid change!");
+//        }
+//
+//        // Chuyển trạng thái ghế cũ thành Available
+//        List<Seat> seatListChangeToAvailable = new ArrayList<>();
+//        for (BookingSeat seat : booking.getSeatList()) {
+//            seat.getSeat().setSeatStatus(SeatStatus.Available);
+//            seatListChangeToAvailable.add(seat.getSeat());
+//        }
+//        seatRepository.saveAll(seatListChangeToAvailable);
+//
+//        // Cập nhập ghế mới và trạng thái
+//        List<BookingSeat> existingBookingSeats = booking.getSeatList();
+//        for (int i = 0; i < existingBookingSeats.size(); i++) {
+//            BookingSeat existingBookingSeat = existingBookingSeats.get(i);
+//            Seat newSeat = selectedSeats.get(i);
+//
+//            existingBookingSeat.setSeat(newSeat);
+//            existingBookingSeat.setSeatType(newSeat.getSeatType());
+//            newSeat.setSeatStatus(SeatStatus.Held);
+//        }
+//
+//        seatRepository.saveAll(selectedSeats);
+//        booking.setSeatList(existingBookingSeats);
+//
+//        double newTotalPrice = booking.getSeatList().stream()
+//                .mapToDouble(bookingSeat -> bookingSeat.getSeat().getSeatType().getPrice())
+//                .sum();
+//        booking.setTotalPrice(newTotalPrice);
+//
+//        bookingRepository.save(booking);
+//    }
 
     // TODO: Additional methods
     private boolean isBookingIncomplete(Booking booking) {
@@ -1433,13 +1538,13 @@ public class BookingServiceImpl implements BookingService {
         return camelCaseName.toString();
     }
 
-    private double getFoodOrDrinkSize(SizeFoodOrDrink sizeFoodOrDrink) {
-        return switch (sizeFoodOrDrink) {
-            case Small -> 0.75;
-            case Medium -> 1.00;
-            case Large -> 1.25;
-        };
-    }
+//    private double getFoodOrDrinkSize(SizeFoodOrDrink sizeFoodOrDrink) {
+//        return switch (sizeFoodOrDrink) {
+//            case Small -> 0.75;
+//            case Medium -> 1.00;
+//            case Large -> 1.25;
+//        };
+//    }
 
     private void scheduleSeatReleaseTask(Booking booking) {
         long delay = Duration.ofMinutes(5).toMillis();

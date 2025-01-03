@@ -26,7 +26,7 @@ public class BookingResponse {
     private List<String> seatName;
     private List<String> foodNameList;
     private List<String> drinkNameList;
-
+    private List<String> couponName;
     private Double totalPrice;
     private String status;
 }

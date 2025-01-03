@@ -659,8 +659,9 @@ public class ViewServiceImpl implements ViewService {
             bookResponse.setScreenName(book.getScreen().getName());
             bookResponse.setTicketTypeName(book.getTickets().stream().map(ticket -> ticket.getTicket().getTicketType().getName()).toList());
             bookResponse.setSeatName(book.getSeatList().stream().map(seat -> "%s (%s)".formatted(seat.getSeat().getName(), seat.getSeatType().getName())).toList());
-            bookResponse.setFoodNameList(book.getFoodList().stream().map(food -> food.getFood().getName()).toList());
-            bookResponse.setDrinkNameList(book.getDrinks().stream().map(drink -> drink.getDrink().getName()).toList());
+            bookResponse.setFoodNameList(book.getFoodList().stream().map(food -> "%s - Quantity: %d".formatted(food.getFood().getName(), food.getQuantity())).toList());
+            bookResponse.setDrinkNameList(book.getDrinks().stream().map(drink -> "%s - Quantity: %d".formatted(drink.getDrink().getName(), drink.getQuantity())).toList());
+            bookResponse.setCouponName(book.getCoupons().stream().map(coupon -> "%s (%s)".formatted(coupon.getCoupon().getName(), coupon.getCoupon().getDescription())).toList());
             bookResponse.setStatus(book.getStatus().toString());
             bookResponse.setTotalPrice(book.getTotalPrice());
             bookingResponses.add(bookResponse);
@@ -695,8 +696,9 @@ public class ViewServiceImpl implements ViewService {
             bookResponse.setScreenName(book.getScreen().getName());
             bookResponse.setTicketTypeName(book.getTickets().stream().map(ticket -> ticket.getTicket().getTicketType().getName()).toList());
             bookResponse.setSeatName(book.getSeatList().stream().map(seat -> "%s (%s)".formatted(seat.getSeat().getName(), seat.getSeatType().getName())).toList());
-            bookResponse.setFoodNameList(book.getFoodList().stream().map(food -> food.getFood().getName()).toList());
-            bookResponse.setDrinkNameList(book.getDrinks().stream().map(drink -> drink.getDrink().getName()).toList());
+            bookResponse.setFoodNameList(book.getFoodList().stream().map(food -> "%s - Quantity: %d".formatted(food.getFood().getName(), food.getQuantity())).toList());
+            bookResponse.setDrinkNameList(book.getDrinks().stream().map(drink -> "%s - Quantity: %d".formatted(drink.getDrink().getName(), drink.getQuantity())).toList());
+            bookResponse.setCouponName(book.getCoupons().stream().map(coupon -> "%s (%s)".formatted(coupon.getCoupon().getName(), coupon.getCoupon().getDescription())).toList());
             bookResponse.setStatus(book.getStatus().toString());
             bookResponse.setTotalPrice(book.getTotalPrice());
             bookingResponses.add(bookResponse);

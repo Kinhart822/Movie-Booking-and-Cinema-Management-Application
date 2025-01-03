@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -21,6 +22,12 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public NotificationResponse getNotificationsByUserId(Integer userId) {
         List<Notification> notifications = notificationRepository.findByUserId(userId);
+
+        if (notifications.isEmpty()) {
+            return new NotificationResponse(Collections.emptyList(), Collections.emptyList());
+        }
+        notifications.sort((n1, n2) -> n2.getDateCreated().compareTo(n1.getDateCreated()));
+
         List<String> messages = notifications.stream()
                 .map(Notification::getMessage)
                 .toList();

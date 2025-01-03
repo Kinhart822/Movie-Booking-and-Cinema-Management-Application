@@ -1,16 +1,15 @@
 package com.spring.dto.response.booking;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class SendBookingResponse {
     private Integer bookingId;
     private String movieName;
@@ -21,7 +20,9 @@ public class SendBookingResponse {
     private String screenName;
     private List<String> ticketTypeName;
     private List<String> seatName;
-    private List<String> foodNameList;
-    private List<String> drinkNameList;
+    private List<String> foodNameList = new ArrayList<>();
+    private List<String> drinkNameList = new ArrayList<>();
+    private List<String> couponName = new ArrayList<>();
+    private Double totalPrice;
     private String bookingStatus;
 }
