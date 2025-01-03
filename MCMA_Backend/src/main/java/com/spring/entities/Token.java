@@ -10,6 +10,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Deprecated
 public class Token implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
