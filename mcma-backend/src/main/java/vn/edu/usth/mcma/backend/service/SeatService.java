@@ -47,10 +47,10 @@ public class SeatService extends AbstractService<Seat, SeatPK> {
     }
 
     public SeatMapResponse findSeatMapByScreenId(Long screenId) {
-        List<Seat> seats = seatRepository.findAllByScreenId(screenId);
         return SeatMapResponse
                 .builder()
-                .seatPositions(seats
+                .seatPositions(seatRepository
+                        .findAllByScreenId(screenId)
                         .stream()
                         .map(s -> SeatPosition
                                 .builder()
@@ -59,7 +59,6 @@ public class SeatService extends AbstractService<Seat, SeatPK> {
                                 .typeId(s.getTypeId())
                                 .name(s.getName())
                                 .build())
-                        .sorted()
                         .toList())
                 .build();
     }
