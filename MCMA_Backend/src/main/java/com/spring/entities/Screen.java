@@ -48,13 +48,13 @@ public class Screen {
     @ManyToOne
     @JoinColumn(name = "screen_type_id")
     private ScreenType screenType;
-    //haven't imported: unused
+    //rejected: unused
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "screen")
     private List<Seat> seatList;
-    //haven't imported: unused
+    //rejected: unused
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "screen")
     private List<MovieSchedule> movieScheduleList;
-    //haven't imported: unused
+    //rejected: unused
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "screen")
     private List<Booking> bookings;
 }

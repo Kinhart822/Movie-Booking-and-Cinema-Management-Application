@@ -58,7 +58,7 @@ public class Food {
     @ManyToOne
     @JoinColumn(name = "cinema_id", nullable = false)
     private Cinema cinema;
-    //haven't imported: unused
+    //rejected: unused
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "food")
     private List<BookingFood> foodList;
 }

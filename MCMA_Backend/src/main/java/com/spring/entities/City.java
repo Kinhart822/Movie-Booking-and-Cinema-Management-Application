@@ -40,14 +40,14 @@ public class City {
     @Column(name = "Date_Updated")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateUpdated;
-
+    //rejected: create loop
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "city")
     private List<Cinema> cinemaList;
-    //haven't imported: use movie_schedule instead
+    //rejected: use movie_schedule instead
     @ManyToOne
     @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
-    //haven't imported: unused
+    //rejected: unused
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "city")
     private List<Booking> bookings;
 }

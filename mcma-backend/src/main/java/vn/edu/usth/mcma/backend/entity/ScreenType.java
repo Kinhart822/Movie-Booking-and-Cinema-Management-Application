@@ -27,8 +27,4 @@ public class ScreenType extends AbstractAuditing implements Serializable {
     private Integer status;
     @Column
     private Double price;
-    @OneToMany(
-            fetch = FetchType.LAZY,
-            mappedBy = "screenType")
-    private List<Screen> screenList;
 }

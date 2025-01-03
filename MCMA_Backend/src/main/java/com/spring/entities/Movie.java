@@ -60,7 +60,7 @@ public class Movie {
     @Column(name = "Date_Updated")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateUpdated;
-
+    //rejected: create loop
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie", cascade = CascadeType.ALL)
     private List<MovieSchedule> movieScheduleList;
 
@@ -91,13 +91,13 @@ public class Movie {
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "coupon_id"))
     private Set<Coupon> movieCouponSet;
-
+    //rejected: create loop
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie", cascade = CascadeType.ALL)
     private List<MovieRespond> movieResponds;
-    //haven't imported: unused
+    //rejected: unused
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie", cascade = CascadeType.ALL)
     private List<City> cityList;
-    //haven't imported: unused
+    //rejected: unused
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
     private List<Booking> bookings;
 }

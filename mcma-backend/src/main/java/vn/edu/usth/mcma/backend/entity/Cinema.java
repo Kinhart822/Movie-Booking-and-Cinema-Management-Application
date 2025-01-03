@@ -28,10 +28,4 @@ public class Cinema extends AbstractAuditing implements Serializable {
     private String address;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cinema")
-    private List<Screen> screenList;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cinema")
-    private List<Food> foodList;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cinema")
-    private List<Drink> drinks;
 }

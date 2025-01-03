@@ -23,6 +23,4 @@ public class City extends AbstractAuditing implements Serializable {
     private String name;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "city")
-    private List<Cinema> cinemaList;
 }

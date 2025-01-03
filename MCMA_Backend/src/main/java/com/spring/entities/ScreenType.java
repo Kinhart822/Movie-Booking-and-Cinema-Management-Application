@@ -46,7 +46,7 @@ public class ScreenType {
     @Column(name = "Date_Updated")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateUpdated;
-
+    //rejected: create loop
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "screenType")
     private List<Screen> screenList;
 }
