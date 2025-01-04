@@ -40,14 +40,17 @@ public class RatingMovie_Activity extends AppCompatActivity {
 
         TextView movieName = findViewById(R.id.tvMovieName);
         TextView movieType = findViewById(R.id.tvMovieType);
-        ImageView movieImage = findViewById(R.id.tvMovieImage); // Thêm ImageView
+        ImageView movieImage = findViewById(R.id.tvMovieImage);
         ImageButton mImageView = findViewById(R.id.back_button);
         ratingBar = findViewById(R.id.ratingBar);
         ratingScale = findViewById(R.id.tvRatingScale);
         editFeedback = findViewById(R.id.etComment);
         buttonSubmit = findViewById(R.id.btnSubmit);
 
-//        // Lấy dữ liệu từ intent trong adapter
+        // Lấy dữ liệu từ intent trong adapter
+//        String name = getIntent().getStringExtra("movie_name");
+//        String type = getIntent().getStringExtra("movie_type");
+//        int imageResId = getIntent().getIntExtra("movie_image", R.drawable.movie5);
         Intent intent = getIntent();
         String name = intent.getStringExtra("movie_name");
         String type = intent.getStringExtra("movie_type");
@@ -100,6 +103,11 @@ public class RatingMovie_Activity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Thank you for rating: " + rating + " stars\nFeedback: " + feedback, Toast.LENGTH_SHORT).show();
 
+//                Intent resultIntent = new Intent();
+//                resultIntent.putExtra("rating", rating);
+//                resultIntent.putExtra("feedback", feedback);
+//                setResult(RESULT_OK, resultIntent);
+//                finish();
                 // Reset the feedback and rating sections
                 editFeedback.setText(""); // Clear the feedback text
                 ratingBar.setRating(5);  // Reset the RatingBar to 0

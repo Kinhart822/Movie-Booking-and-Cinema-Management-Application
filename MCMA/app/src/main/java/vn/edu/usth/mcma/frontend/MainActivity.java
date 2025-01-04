@@ -149,12 +149,6 @@ public class MainActivity extends AppCompatActivity {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         });
 
-        LinearLayout toShowtimesFragment = findViewById(R.id.showtimes_side_navigation);
-        toShowtimesFragment.setOnClickListener(view -> {
-            closeToShowtimesPage();
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-        });
-
         LinearLayout toStoreFragment = findViewById(R.id.store_side_navigation);
         toStoreFragment.setOnClickListener(view -> {
             closeToStorePage();

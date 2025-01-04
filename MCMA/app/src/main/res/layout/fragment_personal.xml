@@ -124,6 +124,32 @@
                             app:tint="@color/black" />
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/management_booking_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="12dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/edit_group_box"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Management Booking"
+                            android:textSize="16sp"
+                            android:textColor="@color/black" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="Log Out"
+                            android:src="@drawable/ic_arrow_right"
+                            app:tint="@color/black" />
+                    </LinearLayout>
+
                     <!-- Payment History Row -->
                     <LinearLayout
                         android:id="@+id/account_information_booking_history"

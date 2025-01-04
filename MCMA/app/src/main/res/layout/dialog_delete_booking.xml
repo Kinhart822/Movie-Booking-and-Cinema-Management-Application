@@ -2,16 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/dialog_background"
     android:orientation="vertical"
-    android:padding="24dp"
-    android:background="@drawable/dialog_background">
+    android:padding="24dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:gravity="center"
-        android:text="Are you sure want to delete account?"
+        android:text="Are you sure want to delete booking?"
         android:textColor="@android:color/black"
         android:textSize="16sp" />
 
@@ -26,42 +26,42 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/border_button_management_booking"
-            android:padding="5dp"
             android:layout_marginEnd="10dp"
-            android:gravity="center">
+            android:background="@drawable/border_button_management_booking"
+            android:gravity="center"
+            android:padding="5dp">
 
             <Button
-                android:id="@+id/btn_confirm_delete_account"
+                android:id="@+id/btn_delete_yes"
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
+                android:background="@android:color/transparent"
                 android:padding="10dp"
-                android:text="Confirm"
+                android:text="Yes"
                 android:textAllCaps="false"
                 android:textColor="@color/black"
-                android:textSize="16sp"
-                android:background="@android:color/transparent" />
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/border_button_management_booking"
-            android:padding="5dp"
             android:layout_marginStart="10dp"
-            android:gravity="center">
+            android:background="@drawable/border_button_management_booking"
+            android:gravity="center"
+            android:padding="5dp">
 
             <Button
-                android:id="@+id/btn_cancel_delete_account"
+                android:id="@+id/btn_delete_no"
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
+                android:background="@android:color/transparent"
                 android:padding="10dp"
-                android:text="Cancel"
+                android:text="No"
                 android:textAllCaps="false"
                 android:textColor="@color/red"
-                android:textSize="16sp"
-                android:background="@android:color/transparent" />
+                android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

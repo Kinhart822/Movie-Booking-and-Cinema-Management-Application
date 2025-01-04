@@ -102,7 +102,6 @@ public class PersonalFragment extends Fragment {
 //                        fragmentTransaction.commit();
                         Logout();
 
-                        // Đóng dialog
                         dialog.dismiss();
                     }
                 });
@@ -110,12 +109,11 @@ public class PersonalFragment extends Fragment {
                 cancelButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Đóng dialog
                         dialog.dismiss();
                     }
                 });
 
-                // Hiển thị dialog
+
                 dialog.show();
             }
         });
@@ -136,8 +134,13 @@ public class PersonalFragment extends Fragment {
                 confirmButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+//                        Fragment loginFragment = new vn.edu.usth.mcma.frontend.Login.LoginFragment();
+//                        FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
+//                        fragmentTransaction.replace(android.R.id.content, loginFragment);
+//                        fragmentTransaction.commit();
+
                         deleteAccount();
-                        // Đóng dialog
+
                         dialog.dismiss();
                     }
                 });
@@ -145,12 +148,63 @@ public class PersonalFragment extends Fragment {
                 cancelButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Đóng dialog
                         dialog.dismiss();
                     }
                 });
 
-                // Hiển thị dialog
+                dialog.show();
+            }
+        });
+
+        LinearLayout management_booking_button = v.findViewById(R.id.management_booking_button);
+        management_booking_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_management_booking, null);
+
+                Button cancelBookingButton = dialogView.findViewById(R.id.btn_cancel_booking);
+                Button revokeCancelBookingButton = dialogView.findViewById(R.id.btn_revoke_cancel_booking);
+                Button deleteBookingButton = dialogView.findViewById(R.id.btn_delete_booking);
+                Button exitButton = dialogView.findViewById(R.id.btn_exit);
+
+                builder.setView(dialogView);
+                AlertDialog dialog = builder.create();
+
+                cancelBookingButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Personal.Cancel_Booking_Activity.class);
+                        requireContext().startActivity(intent);
+                        dialog.dismiss();
+                    }
+                });
+
+                revokeCancelBookingButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Personal.Revoke_Cancel_Booking_Activity.class);
+                        requireContext().startActivity(intent);
+                        dialog.dismiss();
+                    }
+                });
+
+                deleteBookingButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Personal.Delete_Booking_Activity.class);
+                        requireContext().startActivity(intent);
+                        dialog.dismiss();
+                    }
+                });
+
+                exitButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
                 dialog.show();
             }
         });

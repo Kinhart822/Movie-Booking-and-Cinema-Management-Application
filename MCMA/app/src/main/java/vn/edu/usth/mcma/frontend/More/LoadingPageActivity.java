@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend;
+package vn.edu.usth.mcma.frontend.More;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.MainActivity;
 
 public class LoadingPageActivity extends AppCompatActivity {
     Handler handler;
