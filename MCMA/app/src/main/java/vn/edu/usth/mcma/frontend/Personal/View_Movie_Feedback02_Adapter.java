@@ -31,16 +31,15 @@ public class View_Movie_Feedback02_Adapter extends RecyclerView.Adapter<View_Mov
     public void onBindViewHolder(@NonNull View_Movie_Feedback02_ViewHolder holder, int position) {
         // Gán dữ liệu cho ViewHolder
         View_Movie_Feedback02_Item item = items.get(position);
-        holder.ratingBarFeedback.setRating(item.getRating());
 
-        // Cập nhật comment theo rating
-        String comment = item.getRatingComment();
-        holder.contentFeedback.setText(comment);  // Hiển thị comment dựa trên rating
+        holder.ratingBarFeedback.setRating(item.getRatingStar().floatValue());
+
+        String comment = item.getContent();
+        holder.contentFeedback.setText(comment);
     }
 
     @Override
     public int getItemCount() {
-        // Trả về số lượng item trong danh sách
         return items.size();
     }
 }

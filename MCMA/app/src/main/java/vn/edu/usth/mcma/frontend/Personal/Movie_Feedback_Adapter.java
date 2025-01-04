@@ -16,6 +16,8 @@ import vn.edu.usth.mcma.R;
 
 import android.app.AlertDialog;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class Movie_Feedback_Adapter extends RecyclerView.Adapter<Movie_Feedback_ViewHolder> {
@@ -40,11 +42,16 @@ public class Movie_Feedback_Adapter extends RecyclerView.Adapter<Movie_Feedback_
 
         holder.nameView.setText(item.getMovie_name());
         holder.typeView.setText(item.getMovie_type());
-        holder.imageView.setImageResource(item.getMovie_image());
+//        holder.imageView.setImageResource(item.getMovie_image());
+        Glide.with(context)
+                .load(item.getImageUrl())
+                .placeholder(R.drawable.usthlogo)
+                .into(holder.imageView);
 
         holder.itemView.setOnClickListener(view -> {
             Intent intent = new Intent(context, View_Movie_Feedback02_Activity.class);
-            intent.putExtra("movie_name", item.getMovie_name());
+            intent.putExtra("movie_feedback_id", item.getMovieId());
+            intent.putExtra("movie_feedback_name", item.getMovie_name());
             context.startActivity(intent);
         });
     }

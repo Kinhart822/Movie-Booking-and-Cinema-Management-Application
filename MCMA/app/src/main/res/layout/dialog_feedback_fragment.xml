@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:padding="10dp"
-            android:text="View Movie Feedback"
+            android:text="View Other Feedback"
             android:textAllCaps="false"
             android:textColor="@color/black"
             android:textSize="16sp"

@@ -34,7 +34,7 @@
                 android:layout_height="35dp"
                 android:layout_marginRight="30dp"
                 android:gravity="center"
-                android:text="View Movie Feedback"
+                android:text="View Other Feedback"
                 android:textColor="@color/black"
                 android:textSize="22sp"
                 android:textStyle="bold" />
