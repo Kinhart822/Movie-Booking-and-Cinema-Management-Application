@@ -3,6 +3,7 @@ package com.spring.service.impl;
 import com.spring.dto.response.booking.*;
 import com.spring.dto.response.view.*;
 import com.spring.entities.*;
+import com.spring.enums.BookingStatus;
 import com.spring.enums.PerformerSex;
 import com.spring.enums.PerformerType;
 import com.spring.enums.SizeFoodOrDrink;
@@ -644,8 +645,9 @@ public class ViewServiceImpl implements ViewService {
 
     @Override
     public List<BookingResponse> getAllBookings() {
-        List<Booking> bookings = bookingRepository.findAll();
+        List<Booking> bookings = bookingRepository.findAllOrderByDateUpdatedDesc();
         List<BookingResponse> bookingResponses = new ArrayList<>();
+
 
         for (Booking book : bookings) {
             BookingResponse bookResponse = new BookingResponse();
@@ -675,6 +677,43 @@ public class ViewServiceImpl implements ViewService {
         List<Booking> bookings = bookingRepository.findByUserId(userId);
         if (bookings.isEmpty()) {
             throw new IllegalArgumentException("No bookings found for given user.");
+        }
+        List<BookingResponse> bookingResponses = new ArrayList<>();
+
+        for (Booking book : bookings) {
+            List<MovieGenre> movieGenres = movieGenreRepository.findMovieGenresByMovie(book.getMovie().getId());
+            if (movieGenres.isEmpty()) {
+                throw new IllegalArgumentException("Movie does not have any genre.");
+            }
+
+            BookingResponse bookResponse = new BookingResponse();
+            bookResponse.setBookingNo(book.getBookingNo());
+            bookResponse.setMovieName(book.getMovie().getName());
+            bookResponse.setMovieId(book.getMovie().getId());
+            bookResponse.setImageUrlMovie(book.getMovie().getImageUrl());
+            bookResponse.setCityName(book.getCity().getName());
+            bookResponse.setCinemaName(book.getCinema().getName());
+            bookResponse.setStartDateTime(book.getStartDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm a")));
+            bookResponse.setEndDateTime(book.getEndDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm a")));
+            bookResponse.setScreenName(book.getScreen().getName());
+            bookResponse.setTicketTypeName(book.getTickets().stream().map(ticket -> ticket.getTicket().getTicketType().getName()).toList());
+            bookResponse.setSeatName(book.getSeatList().stream().map(seat -> "%s (%s)".formatted(seat.getSeat().getName(), seat.getSeatType().getName())).toList());
+            bookResponse.setFoodNameList(book.getFoodList().stream().map(food -> "%s - Quantity: %d".formatted(food.getFood().getName(), food.getQuantity())).toList());
+            bookResponse.setDrinkNameList(book.getDrinks().stream().map(drink -> "%s - Quantity: %d".formatted(drink.getDrink().getName(), drink.getQuantity())).toList());
+            bookResponse.setCouponName(book.getCoupons().stream().map(coupon -> "%s (%s)".formatted(coupon.getCoupon().getName(), coupon.getCoupon().getDescription())).toList());
+            bookResponse.setStatus(book.getStatus().toString());
+            bookResponse.setTotalPrice(book.getTotalPrice());
+            bookingResponses.add(bookResponse);
+        }
+
+        return bookingResponses;
+    }
+
+    @Override
+    public List<BookingResponse> getAllBookingsCanceled(BookingStatus bookingStatus) {
+        List<Booking> bookings = bookingRepository.findByStatus(BookingStatus.CANCELLED);
+        if (bookings.isEmpty()) {
+            throw new IllegalArgumentException("No bookings found for given status.");
         }
         List<BookingResponse> bookingResponses = new ArrayList<>();
 

@@ -33,6 +33,14 @@ public class Booking {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime endDateTime;
 
+    @Column(name = "Date_Created")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime dateCreated;
+
+    @Column(name = "Date_Updated")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime dateUpdated;
+
     @Column(name = "Payment_Method")
     @Enumerated(EnumType.ORDINAL)
     private PaymentMethod paymentMethod;

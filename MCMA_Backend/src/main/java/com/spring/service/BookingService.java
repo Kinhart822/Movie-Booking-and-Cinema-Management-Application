@@ -34,5 +34,6 @@ public interface BookingService {
 //    void updateBookingSeat(BookingRequest bookingRequest);
     void cancelBooking(Integer bookingId, Integer userId);
     void revokeCancelBooking(Integer bookingId, Integer userId);
+    void deleteAfterCancelBooking(Integer bookingId, Integer userId);
     void deleteBooking(Integer bookingId, Integer userId);
 }

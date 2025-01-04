@@ -11,6 +11,7 @@ import com.spring.dto.response.movieRespond.CommentResponse;
 import com.spring.dto.response.movieRespond.MovieRespondResponse;
 import com.spring.dto.response.movieRespond.RatingResponse;
 import com.spring.dto.response.view.*;
+import com.spring.enums.BookingStatus;
 import com.spring.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -198,7 +199,7 @@ public class UserController {
     @PostMapping("/booking/revoke-cancel-booking/{bookingId}")
     public ResponseEntity<String> revokeCancelBooking(HttpServletRequest request, @PathVariable Integer bookingId) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        bookingService.cancelBooking(bookingId, userId);
+        bookingService.revokeCancelBooking(bookingId, userId);
         return ResponseEntity.ok("Booking reinstated successfully");
     }
 
@@ -343,6 +344,12 @@ public class UserController {
     public ResponseEntity<List<BookingResponse>> getAllBookingsByUser(HttpServletRequest request) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
         List<BookingResponse> bookingResponses = viewService.getAllBookingsByUser(userId);
+        return ResponseEntity.ok(bookingResponses);
+    }
+
+    @GetMapping("/view/allBookingsCanceled")
+    public ResponseEntity<List<BookingResponse>> getAllBookingsCanceled(HttpServletRequest request) {
+        List<BookingResponse> bookingResponses = viewService.getAllBookingsCanceled(BookingStatus.CANCELLED);
         return ResponseEntity.ok(bookingResponses);
     }
 

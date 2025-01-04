@@ -2,6 +2,7 @@ package com.spring.service;
 
 import com.spring.dto.response.booking.*;
 import com.spring.dto.response.view.*;
+import com.spring.enums.BookingStatus;
 
 import java.util.List;
 
@@ -39,4 +40,6 @@ public interface ViewService {
     List<BookingResponse> getAllBookings();
 
     List<BookingResponse> getAllBookingsByUser(Integer userId);
+
+    List<BookingResponse> getAllBookingsCanceled(BookingStatus bookingStatus);
 }

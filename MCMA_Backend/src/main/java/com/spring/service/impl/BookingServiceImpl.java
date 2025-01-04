@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -1171,6 +1172,8 @@ public class BookingServiceImpl implements BookingService {
         booking.setCoupons(bookingCoupons);
         booking.setTotalPrice(updateTotalPrice);
         booking.setStatus(BookingStatus.In_Processing);
+        booking.setDateCreated(LocalDateTime.now());
+        booking.setDateUpdated(LocalDateTime.now());
         bookingRepository.save(booking);
 
         // Schedule seat release if payment is not completed
@@ -1263,12 +1266,12 @@ public class BookingServiceImpl implements BookingService {
                 .collect(Collectors.toList());
         seatRepository.saveAll(seatsToUpdate);
 
+        booking.setDateUpdated(LocalDateTime.now());
         bookingRepository.save(booking);
 
         if (booking.getPaymentMethod().equals(PaymentMethod.Bank_Transfer)) {
             booking.setStatus(BookingStatus.Completed);
         }
-
 
         Notification notification = new Notification();
         notification.setUser(user);
@@ -1318,6 +1321,47 @@ public class BookingServiceImpl implements BookingService {
         );
     }
 
+//    @Override
+//    public void cancelBooking(Integer bookingId, Integer userId) {
+//        Booking booking = bookingRepository.findById(bookingId)
+//                .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingId)));
+//
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+//
+//        if (booking.getStatus() == BookingStatus.Pending_Payment) {
+//            if (booking.getPaymentMethod() == PaymentMethod.Cash) {
+//                List<Seat> seatListChangeToAvailable = new ArrayList<>();
+//                for (BookingSeat seat : booking.getSeatList()) {
+//                    seat.getSeat().setSeatStatus(SeatStatus.Available);
+//                    seatListChangeToAvailable.add(seat.getSeat());
+//                }
+//                seatRepository.saveAll(seatListChangeToAvailable);
+//
+//                booking.setStatus(BookingStatus.CANCELLED);
+//                bookingRepository.save(booking);
+//
+//                try {
+//                    Notification notification = new Notification();
+//                    notification.setUser(user);
+//                    notification.setMessage("Booking Number: %s, Your booking for %s is canceled. You will have the money that you pay for the booking return to your wallet".formatted(booking.getBookingNo(), booking.getMovie().getName()));
+//                    notification.setDateCreated(LocalDateTime.now());
+//                    notificationRepository.save(notification);
+//
+//                    emailService.sendCancelMailMessage(user.getEmail());
+//                    System.out.printf("Notification sent to %s%n", user.getEmail());
+//                } catch (Exception e) {
+//                    System.out.println("Failed to send email notification. Please try again later.");
+//                }
+//
+//                // Schedule the booking deletion 10 minutes after cancellation
+//                try (ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor()) {
+//                    scheduler.schedule(() -> deleteBooking(bookingId, userId), 10, TimeUnit.MINUTES);
+//                }
+//            }
+//        }
+//    }
+
     @Override
     public void cancelBooking(Integer bookingId, Integer userId) {
         Booking booking = bookingRepository.findById(bookingId)
@@ -1326,36 +1370,40 @@ public class BookingServiceImpl implements BookingService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
 
-        if (booking.getStatus() == BookingStatus.Pending_Payment) {
-            if (booking.getPaymentMethod() == PaymentMethod.Cash) {
-                List<Seat> seatListChangeToAvailable = new ArrayList<>();
-                for (BookingSeat seat : booking.getSeatList()) {
-                    seat.getSeat().setSeatStatus(SeatStatus.Available);
-                    seatListChangeToAvailable.add(seat.getSeat());
-                }
-                seatRepository.saveAll(seatListChangeToAvailable);
+        if (ChronoUnit.MINUTES.between(LocalDateTime.now(), booking.getStartDateTime()) >= 60) {
+            if (booking.getStatus() == BookingStatus.Completed) {
+                if (booking.getPaymentMethod() == PaymentMethod.Bank_Transfer) {
+                    List<Seat> seatListChangeToAvailable = new ArrayList<>();
+                    for (BookingSeat seat : booking.getSeatList()) {
+                        seat.getSeat().setSeatStatus(SeatStatus.Available);
+                        seatListChangeToAvailable.add(seat.getSeat());
+                    }
+                    seatRepository.saveAll(seatListChangeToAvailable);
 
-                booking.setStatus(BookingStatus.CANCELLED);
-                bookingRepository.save(booking);
+                    booking.setStatus(BookingStatus.CANCELLED);
+                    bookingRepository.save(booking);
 
-                try {
-                    Notification notification = new Notification();
-                    notification.setUser(user);
-                    notification.setMessage("Booking Number: %s, Your booking for %s is canceled. You will have the money that you pay for the booking return to your wallet".formatted(booking.getBookingNo(), booking.getMovie().getName()));
-                    notification.setDateCreated(LocalDateTime.now());
-                    notificationRepository.save(notification);
+                    try {
+                        Notification notification = new Notification();
+                        notification.setUser(user);
+                        notification.setMessage("Booking Number: %s, Your booking for %s is canceled. You will have the money that you pay for the booking return to your wallet".formatted(booking.getBookingNo(), booking.getMovie().getName()));
+                        notification.setDateCreated(LocalDateTime.now());
+                        notificationRepository.save(notification);
 
-                    emailService.sendCancelMailMessage(user.getEmail());
-                    System.out.printf("Notification sent to %s%n", user.getEmail());
-                } catch (Exception e) {
-                    System.out.println("Failed to send email notification. Please try again later.");
-                }
+                        emailService.sendCancelMailMessage(user.getEmail());
+                        System.out.printf("Notification sent to %s%n", user.getEmail());
+                    } catch (Exception e) {
+                        System.out.println("Failed to send email notification. Please try again later.");
+                    }
 
-                // Schedule the booking deletion 10 minutes after cancellation
-                try (ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor()) {
-                    scheduler.schedule(() -> deleteBooking(bookingId, userId), 10, TimeUnit.MINUTES);
+                    // Schedule the booking deletion 10 minutes after cancellation
+                    try (ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor()) {
+                        scheduler.schedule(() -> deleteAfterCancelBooking(bookingId, userId), 10, TimeUnit.MINUTES);
+                    }
                 }
             }
+        } else {
+            System.out.println("Can't cancel this booking! Please try again later.");
         }
     }
 
@@ -1372,32 +1420,34 @@ public class BookingServiceImpl implements BookingService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
 
-        List<Seat> seatListChangeToHeld = new ArrayList<>();
-        for (BookingSeat seat : booking.getSeatList()) {
-            seat.getSeat().setSeatStatus(SeatStatus.Held);
-            seatListChangeToHeld.add(seat.getSeat());
-        }
-        seatRepository.saveAll(seatListChangeToHeld);
+        if (booking.getStatus().equals(BookingStatus.CANCELLED)) {
+            List<Seat> seatListChangeToHeld = new ArrayList<>();
+            for (BookingSeat seat : booking.getSeatList()) {
+                seat.getSeat().setSeatStatus(SeatStatus.Unavailable);
+                seatListChangeToHeld.add(seat.getSeat());
+            }
+            seatRepository.saveAll(seatListChangeToHeld);
 
-        booking.setStatus(BookingStatus.Completed);
-        bookingRepository.save(booking);
+            booking.setStatus(BookingStatus.Completed);
+            bookingRepository.save(booking);
 
-        try {
-            Notification notification = new Notification();
-            notification.setUser(user);
-            notification.setMessage("Your booking for %s has been successfully reinstated. Booking Number: %s".formatted(booking.getMovie().getName(), booking.getBookingNo()));
-            notification.setDateCreated(LocalDateTime.now());
-            notificationRepository.save(notification);
+            try {
+                Notification notification = new Notification();
+                notification.setUser(user);
+                notification.setMessage("Your booking for %s has been successfully reinstated. Booking Number: %s".formatted(booking.getMovie().getName(), booking.getBookingNo()));
+                notification.setDateCreated(LocalDateTime.now());
+                notificationRepository.save(notification);
 
-            emailService.sendReinstateMailMessage(user.getEmail());
-            System.out.printf("Notification sent to %s%n", user.getEmail());
-        } catch (Exception e) {
-            System.out.println("Failed to send email notification. Please try again later.");
+                emailService.sendReinstateMailMessage(user.getEmail());
+                System.out.printf("Notification sent to %s%n", user.getEmail());
+            } catch (Exception e) {
+                System.out.println("Failed to send email notification. Please try again later.");
+            }
         }
     }
 
     @Override
-    public void deleteBooking(Integer bookingId, Integer userId) {
+    public void deleteAfterCancelBooking(Integer bookingId, Integer userId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingId)));
 
@@ -1432,6 +1482,49 @@ public class BookingServiceImpl implements BookingService {
             emailService.sendDeleteMailMessage(user.getEmail());
         } catch (Exception e) {
             System.out.println("Failed to send email notification. Please try again later.");
+        }
+    }
+
+    @Override
+    public void deleteBooking(Integer bookingId, Integer userId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found for ID: %d".formatted(bookingId)));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+
+        if (ChronoUnit.MINUTES.between(LocalDateTime.now(), booking.getStartDateTime()) >= 60) {
+            if (booking.getStatus() == BookingStatus.Completed) {
+                if (booking.getPaymentMethod() == PaymentMethod.Bank_Transfer) {
+                    List<Seat> seatListChangeToAvailable = new ArrayList<>();
+                    for (BookingSeat seat : booking.getSeatList()) {
+                        seat.getSeat().setSeatStatus(SeatStatus.Available);
+                        seatListChangeToAvailable.add(seat.getSeat());
+                    }
+                    seatRepository.saveAll(seatListChangeToAvailable);
+
+                    for (BookingTicket bookingTicket : booking.getTickets()) {
+                        bookingTicket.setTicket(null);
+                        bookingTicketRepository.delete(bookingTicket);
+                    }
+
+                    bookingRepository.delete(booking);
+
+                    try {
+                        Notification notification = new Notification();
+                        notification.setUser(user);
+                        notification.setMessage("Your booking for %s is deleted. Booking Number: %s".formatted(booking.getMovie().getName(), booking.getBookingNo()));
+                        notification.setDateCreated(LocalDateTime.now());
+                        notificationRepository.save(notification);
+
+                        emailService.sendDeleteMailMessage(user.getEmail());
+                    } catch (Exception e) {
+                        System.out.println("Failed to send email notification. Please try again later.");
+                    }
+                }
+            }
+        } else {
+            System.out.println("Can't cancel this booking! Please try again later.");
         }
     }
 
