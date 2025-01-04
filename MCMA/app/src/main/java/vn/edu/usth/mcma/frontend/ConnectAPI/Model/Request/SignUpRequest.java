@@ -8,7 +8,7 @@ public class SignUpRequest {
     private String firstName;
     private String lastName;
     private String phone;
-    private Date dateOfBirth;
+    private String dateOfBirth;
     private Gender gender;
     private String type;
     private String address;
@@ -40,11 +40,11 @@ public class SignUpRequest {
         this.phone = phone;
     }
 
-    public Date getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

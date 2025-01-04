@@ -19,7 +19,7 @@ public interface AuthenticationApi {
     Call<JwtAuthenticationResponse> refresh(@Body RefreshTokenRequest refreshTokenRequest);
 
     @POST("/api/v1/auth/signUp")
-    Call<JwtAuthenticationResponse> signUp(@Body SignUpRequest signUpRequest);
+    Call<Void> signUp(@Body SignUpRequest signUpRequest);
 
     @POST("/api/v1/auth/forgot-password")
     Call<JwtAuthenticationResponse> forgotPassword(@Body ForgotPasswordRequest forgotPasswordRequest);

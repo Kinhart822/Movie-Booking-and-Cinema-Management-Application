@@ -52,9 +52,6 @@ public class LoginFragment extends Fragment {
         RetrofitService retrofitService = new RetrofitService(requireActivity());
         authenticationApi = retrofitService.getRetrofit().create(AuthenticationApi.class);
 
-        // Check token expiration
-        checkAndRefreshToken();
-
         buttonLogin.setOnClickListener(v -> {
             String email = editTextEmail.getText().toString();
             String password = editTextPassword.getText().toString();
@@ -101,6 +98,9 @@ public class LoginFragment extends Fragment {
 
                 }
             });
+
+            // Check token expiration
+            checkAndRefreshToken();
         });
         TextView create_account = view.findViewById(R.id.create_account);
         create_account.setOnClickListener(new View.OnClickListener() {

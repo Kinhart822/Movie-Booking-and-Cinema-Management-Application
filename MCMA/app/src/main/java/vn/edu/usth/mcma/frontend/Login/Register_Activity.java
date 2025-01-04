@@ -39,7 +39,7 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 public class Register_Activity extends AppCompatActivity {
     private Spinner spinnerGender;
     private EditText editFirstName, editLastName, editPhone, editDateOfBirth, editAdress, editTextEmail, editTextPassword, editTextConfirmPassword;
-
+    public static int phoneNumber;
     private Button buttonRegister;
 
     @Override
@@ -68,20 +68,20 @@ public class Register_Activity extends AppCompatActivity {
             String LastName = editLastName.getText().toString();
             String Phone = editPhone.getText().toString();
             String DateOfBirth = editDateOfBirth.getText().toString();
-            String Adress = editAdress.getText().toString();
+            String Address = editAdress.getText().toString();
             String TextEmail = editTextEmail.getText().toString();
             String TextPassword = editTextPassword.getText().toString();
             String TextConfirmPassword = editTextConfirmPassword.getText().toString();
 
             // Validate date of birth format (MM/dd/yyyy)
             @SuppressLint("SimpleDateFormat")
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             dateFormat.setLenient(false);
             Date dateOfBirth = null;
             try {
                 dateOfBirth = dateFormat.parse(DateOfBirth);
             } catch (ParseException e) {
-                Toast.makeText(this, "Date of birth must be in the format MM/dd/yyyy", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Date of birth must be in the format dd/MM/yyyy", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -98,10 +98,11 @@ public class Register_Activity extends AppCompatActivity {
             }
 
             // Validate phone number (Vietnam format)
-//            if (!Phone.matches("^(0|\\+84)[3|5|7|8|9][0-9]{8}$")) {
-//                Toast.makeText(this, "Invalid phone number", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
+            if (!Phone.matches("^(0|\\+84)[3|5|7|8|9][0-9]{8}$")) {
+                Toast.makeText(this, "Invalid phone number", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             // Validate email format
             if (!android.util.Patterns.EMAIL_ADDRESS.matcher(TextEmail).matches()) {
                 Toast.makeText(this, "Invalid email format", Toast.LENGTH_SHORT).show();
@@ -130,14 +131,14 @@ public class Register_Activity extends AppCompatActivity {
                 return;
             }
 
-//            String formattedDate = dateFormat.format(dateOfBirth);
+            String formattedDate = dateFormat.format(dateOfBirth);
 
             SignUpRequest signUpRequest = new SignUpRequest();
             signUpRequest.setFirstName(firstname);
             signUpRequest.setLastName(LastName);
             signUpRequest.setPhone(Phone);
-            signUpRequest.setDateOfBirth(dateOfBirth);
-            signUpRequest.setAddress(Adress);
+            signUpRequest.setDateOfBirth(formattedDate);
+            signUpRequest.setAddress(Address);
             signUpRequest.setEmail(TextEmail);
             signUpRequest.setPassword(TextPassword);
             signUpRequest.setConfirmPassword(TextConfirmPassword);
@@ -146,11 +147,12 @@ public class Register_Activity extends AppCompatActivity {
 
 
 
-            authenticationApi.signUp(signUpRequest).enqueue(new Callback<JwtAuthenticationResponse>() {
+            authenticationApi.signUp(signUpRequest).enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Call<JwtAuthenticationResponse> call, Response<JwtAuthenticationResponse> response) {
+                public void onResponse(Call<Void> call, Response<Void> response) {
                     if(response.isSuccessful()){
                         Toast.makeText(Register_Activity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
+                        phoneNumber = Integer.parseInt(Phone);
                         SharedPreferences sharedPreferences = getSharedPreferences("ProfilePrefs", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("firstName", firstname);
@@ -167,7 +169,7 @@ public class Register_Activity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<JwtAuthenticationResponse> call, Throwable t) {
+                public void onFailure(Call<Void> call, Throwable t) {
                     Toast.makeText(Register_Activity.this, "Registration failed!!!" + t.getMessage(), Toast.LENGTH_SHORT).show();
                     Logger.getLogger(Register_Activity.class.getName()).log(Level.SEVERE, "Error occurred", t);
                 }

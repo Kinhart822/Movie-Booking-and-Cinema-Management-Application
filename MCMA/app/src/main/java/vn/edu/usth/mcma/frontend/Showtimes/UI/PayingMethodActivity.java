@@ -1,32 +1,29 @@
 package vn.edu.usth.mcma.frontend.Showtimes.UI;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
+import android.telephony.SmsManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AlertDialog;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,6 +34,7 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.SendBo
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.BookingProcessAPIs.BookingAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
+import vn.edu.usth.mcma.frontend.Login.Register_Activity;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.PaymentMethodAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Booking.PaymentMethod;
 
@@ -45,7 +43,8 @@ public class PayingMethodActivity extends AppCompatActivity {
     private PaymentMethodAdapter paymentMethodAdapter;
     private CheckBox termsCheckbox;
     private Button completePaymentButton;
-    private PaymentMethod selectedPaymentMethod;
+    private PaymentMethod selectedPaymentMethodEnum;
+    private vn.edu.usth.mcma.frontend.Showtimes.Models.PaymentMethod selectedPaymentMethod;
     private TextView movieTitleTV, theaterNameTV, screenNumberTV, movieDateTV, movieShowtimeTV;
     private String movieName;
     private String cinemaName;
@@ -60,6 +59,7 @@ public class PayingMethodActivity extends AppCompatActivity {
     private List<Integer> selectedDrinkIds = new ArrayList<>();
     private int selectedMovieCouponId;
     private int selectedUserCouponId;
+    private static String bookingMessageSuccessFully;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,13 +123,42 @@ public class PayingMethodActivity extends AppCompatActivity {
         }
     }
 
-    private void setupPaymentMethodsRecyclerView() {
-        List<vn.edu.usth.mcma.frontend.Showtimes.Models.Booking.PaymentMethod> paymentMethods = Arrays.asList(vn.edu.usth.mcma.frontend.Showtimes.Models.Booking.PaymentMethod.Cash, vn.edu.usth.mcma.frontend.Showtimes.Models.Booking.PaymentMethod.Bank_Transfer);
+//    private void setupPaymentMethodsRecyclerView() {
+//        List<vn.edu.usth.mcma.frontend.Showtimes.Models.Booking.PaymentMethod> paymentMethods = Arrays.asList(vn.edu.usth.mcma.frontend.Showtimes.Models.Booking.PaymentMethod.Cash, vn.edu.usth.mcma.frontend.Showtimes.Models.Booking.PaymentMethod.Bank_Transfer);
+//
+//        paymentMethodAdapter = new PaymentMethodAdapter(paymentMethods);
+//        paymentMethodAdapter.setOnPaymentMethodSelectedListener(paymentMethod -> {
+//            selectedPaymentMethod = paymentMethod;
+//            Toast.makeText(this, "Selected: " + paymentMethod.name(), Toast.LENGTH_SHORT).show();
+//        });
+//
+//        paymentMethodsRecyclerView.setHasFixedSize(true);
+//        paymentMethodsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        paymentMethodsRecyclerView.setAdapter(paymentMethodAdapter);
+//    }
 
-        paymentMethodAdapter = new PaymentMethodAdapter(paymentMethods);
+    private void setupPaymentMethodsRecyclerView() {
+        List<vn.edu.usth.mcma.frontend.Showtimes.Models.PaymentMethod> paymentMethods = new ArrayList<>();
+        paymentMethods.add(new vn.edu.usth.mcma.frontend.Showtimes.Models.PaymentMethod("Cổng VNPAY", R.drawable.ic_vnpay));
+        paymentMethods.add(new vn.edu.usth.mcma.frontend.Showtimes.Models.PaymentMethod("Ví Momo", R.drawable.ic_momo));
+        paymentMethods.add(new vn.edu.usth.mcma.frontend.Showtimes.Models.PaymentMethod("Ví Zalopay", R.drawable.ic_zalopay));
+        paymentMethods.add(new vn.edu.usth.mcma.frontend.Showtimes.Models.PaymentMethod("Thẻ ATM nội địa (Internet Banking)", R.drawable.ic_atm));
+        paymentMethods.add(new vn.edu.usth.mcma.frontend.Showtimes.Models.PaymentMethod("Thẻ quốc tế (Visa, Master, Amex, JCB)", R.drawable.ic_credit_card));
+        paymentMethods.add(new vn.edu.usth.mcma.frontend.Showtimes.Models.PaymentMethod("Ví ShopeePay", R.drawable.ic_shopeepay));
+
+        Set<String> uniqueNames = new LinkedHashSet<>();
+        List<vn.edu.usth.mcma.frontend.Showtimes.Models.PaymentMethod> uniquePaymentMethods = new ArrayList<>();
+        for (vn.edu.usth.mcma.frontend.Showtimes.Models.PaymentMethod method : paymentMethods) {
+            if (uniqueNames.add(method.getName())) {
+                uniquePaymentMethods.add(method);
+            }
+        }
+
+        paymentMethodAdapter = new PaymentMethodAdapter(uniquePaymentMethods);
         paymentMethodAdapter.setOnPaymentMethodSelectedListener(paymentMethod -> {
             selectedPaymentMethod = paymentMethod;
-            Toast.makeText(this, "Selected: " + paymentMethod.name(), Toast.LENGTH_SHORT).show();
+            selectedPaymentMethodEnum = PaymentMethod.Bank_Transfer;
+            Toast.makeText(this, "Selected: " + paymentMethod.getName(), Toast.LENGTH_SHORT).show();
         });
 
         paymentMethodsRecyclerView.setHasFixedSize(true);
@@ -150,6 +179,7 @@ public class PayingMethodActivity extends AppCompatActivity {
             }
 
             sendBookingRequest();
+
             Intent intent = new Intent(this, vn.edu.usth.mcma.frontend.MainActivity.class);
             intent.putExtra("navigate_to", "HomeFragment");
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -193,10 +223,10 @@ public class PayingMethodActivity extends AppCompatActivity {
                     if (sendBookingResponse != null) {
                         Toast.makeText(getApplicationContext(), "Process Booking successfully!", Toast.LENGTH_SHORT).show();
                         int bookingId = sendBookingResponse.getBookingId();
-                        completeBooking(bookingId, selectedPaymentMethod);
+                        completeBooking(bookingId, selectedPaymentMethodEnum);
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Failed to update booking.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Failed to Process Booking.", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -223,6 +253,36 @@ public class PayingMethodActivity extends AppCompatActivity {
                     if (bookingResponse != null) {
                         if (paymentMethod.equals(PaymentMethod.Bank_Transfer)) {
                             Toast.makeText(getApplicationContext(), "Complete Booking successfully!", Toast.LENGTH_SHORT).show();
+                            if (ContextCompat.checkSelfPermission(PayingMethodActivity.this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
+                                bookingMessageSuccessFully = String.format(
+                                        "Your booking for the movie \"%s\" is confirmed!\n" +
+                                                "Booking Number: %s\n" +
+                                                "Date & Time: %s - %s\n" +
+                                                "Cinema: %s, %s\n" +
+                                                "Screen: %s\n" +
+                                                "Tickets: %s\n" +
+                                                "Seats: %s\n" +
+                                                "Please confirm your booking by calling our hotline: 1234567890 or visiting our website.\n" +
+                                                "Thank you for booking with us!",
+                                                "Enjoy your movie!\n" +
+                                                "Best Regards,\n" +
+                                                "SpotCinema+",
+                                        bookingResponse.getMovieName(),
+                                        bookingResponse.getBookingNo(),
+                                        bookingResponse.getStartDateTime(),
+                                        bookingResponse.getEndDateTime(),
+                                        bookingResponse.getCinemaName(),
+                                        bookingResponse.getCityName(),
+                                        bookingResponse.getScreenName(),
+                                        String.join(", ", bookingResponse.getTicketTypeName()),
+                                        String.join(", ", bookingResponse.getSeatName())
+                                );
+                                sendSMS(bookingMessageSuccessFully);
+                            } else {
+                                ActivityCompat.requestPermissions(PayingMethodActivity.this,
+                                        new String[]{Manifest.permission.SEND_SMS},
+                                        100);
+                            }
                         } else if (paymentMethod.equals(PaymentMethod.Cash)) {
                             Toast.makeText(getApplicationContext(), "Your Booking Status will be Pending, and your seat(s) will be held.", Toast.LENGTH_LONG).show();
                             Toast.makeText(getApplicationContext(), "Please go to your selected cinema to pay  for your booking before the start date of the movie!", Toast.LENGTH_LONG).show();
@@ -230,7 +290,7 @@ public class PayingMethodActivity extends AppCompatActivity {
                         }
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Failed to complete booking.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Failed to Complete Booking.", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -239,5 +299,27 @@ public class PayingMethodActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 100 && grantResults. length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            sendSMS(bookingMessageSuccessFully);
+        } else {
+            Toast.makeText(this, "Permission Denied !! ", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void sendSMS(String message) {
+        if (Register_Activity.phoneNumber != 0){
+            SmsManager smsManager = SmsManager.getDefault();
+
+            smsManager.sendTextMessage(String.valueOf(Register_Activity.phoneNumber), null, message, null, null);
+            Toast.makeText(this, "SMS Sent Successfully!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this,"Please try again!", Toast.LENGTH_SHORT).show();
+        }
     }
 }
