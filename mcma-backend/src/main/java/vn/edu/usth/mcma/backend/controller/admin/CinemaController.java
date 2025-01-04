@@ -1,12 +1,11 @@
 package vn.edu.usth.mcma.backend.controller.admin;
 
-import constants.ApiResponseCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.dto.CinemaProjection;
 import vn.edu.usth.mcma.backend.dto.CinemaRequest;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
-import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.CinemaRepository;
 import vn.edu.usth.mcma.backend.service.CinemaService;
 import vn.edu.usth.mcma.backend.entity.Cinema;
@@ -21,25 +20,27 @@ public class CinemaController {
     private final CinemaRepository cinemaRepository;
 
     @PostMapping("/cinema")
-    public ApiResponse createCinema(@RequestBody CinemaRequest request) {
-        return cinemaService.createCinema(request);
+    public ResponseEntity<ApiResponse> createCinema(@RequestBody CinemaRequest request) {
+        return ResponseEntity.ok(cinemaService.createCinema(request));
     }
     @GetMapping("/cinema")
-    public List<CinemaProjection> findAll(@RequestParam(required = false, defaultValue = "") String query) {
-        return cinemaService.findAll(query);
+    public ResponseEntity<List<CinemaProjection>> findAll(@RequestParam(required = false, defaultValue = "") String query) {
+        return ResponseEntity.ok(cinemaService.findAll(query));
     }
     @GetMapping("/cinema/{id}")
-    public Cinema findById(@PathVariable Long id) {
-        return cinemaRepository
-                .findById(id)
-                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+    public ResponseEntity<Cinema> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(cinemaService.findById(id));
     }
     @PutMapping("/cinema/{id}")
-    public ApiResponse updateCinema(@PathVariable Long id, @RequestBody CinemaRequest request) {
-        return cinemaService.updateCinema(id, request);
+    public ResponseEntity<ApiResponse> updateCinema(@PathVariable Long id, @RequestBody CinemaRequest request) {
+        return ResponseEntity.ok(cinemaService.updateCinema(id, request));
     }
-    @DeleteMapping("/cinema/{id}")
-    public ApiResponse deleteCinema(@PathVariable Long id) {
-        return cinemaService.deleteCinema(id);
+    @PatchMapping("/cinema/{id}")
+    public ResponseEntity<ApiResponse> toggleStatus(@PathVariable Long id) {
+        return ResponseEntity.ok(cinemaService.toggleStatus(id));
+    }
+    @DeleteMapping("/cinema")
+    public ResponseEntity<ApiResponse> deactivateCinemas(@RequestBody List<Long> ids) {
+        return ResponseEntity.ok(cinemaService.deactivateCinemas(ids));
     }
 }

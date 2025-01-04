@@ -17,48 +17,81 @@ import vn.edu.usth.mcma.backend.entity.Cinema;
 import java.time.Instant;
 import java.util.List;
 
-@Transactional
 @Service
 @AllArgsConstructor
 public class CinemaService {
     private final CinemaRepository cinemaRepository;
-    private final JwtUtil jwtUtil;
     private final CityRepository cityRepository;
+    private final JwtUtil jwtUtil;
+
     public ApiResponse createCinema(CinemaRequest request) {
         Long userId = jwtUtil.getUserIdFromToken();
-        Cinema cinema = new Cinema();
-//      debug  cinema.setCityId(request.getCityId());
-        cinema.setName(request.getName());
-        cinema.setStatus(CommonStatus.ACTIVE.getStatus());
-        cinema.setCreatedBy(userId);
-        cinema.setLastModifiedBy(userId);
-        cinemaRepository.save(cinema);
+        Instant now = Instant.now();
+        cinemaRepository
+                .save(Cinema
+                        .builder()
+                        .city(cityRepository
+                                .findById(request.getCityId())
+                                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND)))
+                        .name(request.getName())
+                        .address(request.getAddress())
+                        .status(CommonStatus.ACTIVE.getStatus())
+                        .createdBy(userId)
+                        .createdDate(now)
+                        .lastModifiedBy(userId)
+                        .lastModifiedDate(now)
+                        .build());
         return ApiResponse.success();
     }
     public List<CinemaProjection> findAll(String query) {
         return cinemaRepository.findAllProjectionByQuery(query);
     }
+    public Cinema findById(Long id) {
+        return cinemaRepository.findById(id).orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+    }
     public ApiResponse updateCinema(Long id, CinemaRequest request) {
-        Long userId = jwtUtil.getUserIdFromToken();
-        Cinema cinema = cinemaRepository
-                .findById(id)
-                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
-        // changing cityId is not allowed think about it :)
-        cinema.setName(request.getName());
-        cinema.setLastModifiedBy(userId);
-        cinema.setLastModifiedDate(Instant.now());
-        cinemaRepository.save(cinema);
+        Cinema cinema = findById(id);
+        cinemaRepository
+                .save(Cinema
+                        .builder()
+                        .id(cinema.getId())
+                        .city(cinema.getCity())
+                        .name(request.getName())
+                        .address(request.getAddress())
+                        .status(request.getStatus())
+                        .lastModifiedBy(jwtUtil.getUserIdFromToken())
+                        .lastModifiedDate(Instant.now())
+                        .build());
         return ApiResponse.success();
     }
-    public ApiResponse deleteCinema(Long id) {
-        Long userId = jwtUtil.getUserIdFromToken();
-        Cinema cinema = cinemaRepository
-                .findById(id)
-                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
-        cinema.setStatus(CommonStatus.DELETED.getStatus());
-        cinema.setLastModifiedBy(userId);
-        cinema.setLastModifiedDate(Instant.now());
-        cinemaRepository.save(cinema);
+    public ApiResponse toggleStatus(Long id) {
+        Cinema cinema = findById(id);
+        cinemaRepository
+                .save(Cinema
+                        .builder()
+                        .id(cinema.getId())
+                        .city(cinema.getCity())
+                        .name(cinema.getName())
+                        .address(cinema.getAddress())
+                        .status(CommonStatus.ACTIVE.getStatus() + CommonStatus.INACTIVE.getStatus() - cinema.getStatus())
+                        .lastModifiedBy(jwtUtil.getUserIdFromToken())
+                        .lastModifiedDate(Instant.now())
+                        .build());
+        return ApiResponse.success();
+    }
+    public ApiResponse deactivateCinemas(List<Long> ids) {
+        cinemaRepository
+                .saveAll(cinemaRepository
+                        .findAllById(ids)
+                        .stream()
+                        .map(c -> Cinema
+                                .builder()
+                                .id(c.getId())
+                                .city(c.getCity())
+                                .name(c.getName())
+                                .address(c.getAddress())
+                                .status(CommonStatus.INACTIVE.getStatus()).build())
+                        .toList());
         return ApiResponse.success();
     }
 }

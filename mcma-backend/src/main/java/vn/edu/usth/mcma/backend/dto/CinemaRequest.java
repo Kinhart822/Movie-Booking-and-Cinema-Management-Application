@@ -7,4 +7,5 @@ public class CinemaRequest {
     private Long cityId;
     private String name;
     private String address;
+    private Integer status;
 }
