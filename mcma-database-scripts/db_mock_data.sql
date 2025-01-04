@@ -22,25 +22,25 @@ truncate table mcma.seat;
 truncate table mcma.token;
 truncate table mcma.user;
 set foreign_key_checks = 1;
-insert into mcma.city (name, status, created_by, last_modified_by)
-values ('Hanoi', 1, 1, 1),
-       ('Ho Chi Minh City', 1, 1, 1),
-       ('Da Nang', 1, 1, 1),
-       ('Hai Phong', 1, 1, 1);
-insert into mcma.cinema (city_id, address, name, status, created_by, last_modified_by)
-values (1, 'Cau Giay', 'Hanoi Cinema 1', 1, 1, 1),
-       (1, 'Cau Giay', 'Hanoi Cinema 2', 1, 1, 1),
-       (1, 'Cau Giay', 'Hanoi Cinema 3', 1, 1, 1),
-       (1, 'Cau Giay', 'Hanoi Cinema 4', 1, 1, 1),
-       (2, 'Cau Giay', 'HCMC Cinema 1', 1, 1, 1),
-       (2, 'Cau Giay', 'HCMC Cinema 2', 1, 1, 1),
-       (2, 'Cau Giay', 'HCMC Cinema 3', 1, 1, 1),
-       (2, 'Cau Giay', 'HCMC Cinema 4', 1, 1, 1),
-       (3, 'Cau Giay', 'Da Nang Cinema 1', 1, 1, 1),
-       (3, 'Cau Giay', 'Da Nang Cinema 2', 1, 1, 1),
-       (4, 'Cau Giay', 'Hai Phong Cinema 1', 1, 1, 1),
-       (4, 'Cau Giay', 'Hai Phong Cinema 2', 1, 1, 1),
-       (4, 'Cau Giay', 'Hai Phong Cinema 3', 1, 1, 1);
+insert into mcma.city (name, status, created_by, created_date, last_modified_by, last_modified_date)
+values ('Hanoi', 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       ('Ho Chi Minh City', 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       ('Da Nang', 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       ('Hai Phong', 1, 1, utc_timestamp(), 1, utc_timestamp());
+insert into mcma.cinema (city_id, address, name, status, created_by, created_date, last_modified_by, last_modified_date)
+values (1, 'Cau Giay', 'Hanoi Cinema 1', 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       (1, 'Cau Giay', 'Hanoi Cinema 2', 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       (1, 'Cau Giay', 'Hanoi Cinema 3', 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       (1, 'Cau Giay', 'Hanoi Cinema 4', 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       (2, 'Cau Giay', 'HCMC Cinema 1', 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       (2, 'Cau Giay', 'HCMC Cinema 2', 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       (2, 'Cau Giay', 'HCMC Cinema 3', 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       (2, 'Cau Giay', 'HCMC Cinema 4', 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       (3, 'Cau Giay', 'Da Nang Cinema 1', 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       (3, 'Cau Giay', 'Da Nang Cinema 2', 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       (4, 'Cau Giay', 'Hai Phong Cinema 1', 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       (4, 'Cau Giay', 'Hai Phong Cinema 2', 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       (4, 'Cau Giay', 'Hai Phong Cinema 3', 1, 1, utc_timestamp(), 1, utc_timestamp());
 -- not updated
 # insert into mcma.coupon (name, description, discount, min_spend_req, discount_limit, available_date, expired_date,
 #                          status, created_by, last_modified_by)
@@ -76,19 +76,23 @@ values (1, 'Cau Giay', 'Hanoi Cinema 1', 1, 1, 1),
 #        ('Nachos', 'Crispy nachos with cheese dip', 'http://example.com/images/nachos.jpg', null, 40000, 1, 1, 1),
 #        ('Hotdog', 'Juicy hotdog in a bun', 'http://example.com/images/hotdog.jpg', null, 35000, 1, 1, 1);
 --
-insert into mcma.screen_type (name, description, price, status)
-values ('imax', 'wow', 10, 1);
-insert into mcma.screen (cinema_id, name, type_id, status)
-values (1, 'phong 1', 1, 1),
-       (1, 'phong 2', 1, 1);
+insert into mcma.screen_type (name, description, price, status, created_by, created_date, last_modified_by,
+                              last_modified_date)
+values ('imax', 'wow', 10, 1, 1, utc_timestamp(), 1, utc_timestamp());
+insert into mcma.screen (cinema_id, name, type_id, status, created_by, created_date, last_modified_by,
+                         last_modified_date)
+values (1, 'phong 1', 1, 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       (1, 'phong 2', 1, 1, 1, utc_timestamp(), 1, utc_timestamp());
 insert into mcma.user (first_name, last_name, sex, dob, email, phone, password, address, user_type, status, created_by,
-                       last_modified_by)
+                       created_date, last_modified_by, last_modified_date)
 values ('At', 'Nguyen', 1, '2004-04-11 00:00:00', 'at0@gmail.com', '0976289114',
-        '$2a$10$do2lQSohzuLfiSljWORi0Oc3OVG37mtPWxR/cAmJSsOLebcF4A5Oi', 'Hanoi, Viet Nam', 0, 1, 0, 0);
-insert into mcma.movie (name, length, publish_date, status)
-values ('Inception', 148, '2010-07-16 00:00:00', 1),
-       ('Interstellar', 169, '2014-11-07 00:00:00', 1),
-       ('The Dark Knight', 152, '2008-07-18 00:00:00', 1),
-       ('Tenet', 150, '2020-08-26 00:00:00', 1),
-       ('Dunkirk', 106, '2017-07-21 00:00:00', 1),
-       ('not released', 10, '2025-01-31 00:00:00', 1);
+        '$2a$10$do2lQSohzuLfiSljWORi0Oc3OVG37mtPWxR/cAmJSsOLebcF4A5Oi', 'Hanoi, Viet Nam', 0, 1, 0, utc_timestamp(), 0,
+        utc_timestamp());
+insert into mcma.movie (name, length, publish_date, status, created_by, created_date, last_modified_by,
+                        last_modified_date)
+values ('Inception', 148, '2010-07-16 00:00:00', 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       ('Interstellar', 169, '2014-11-07 00:00:00', 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       ('The Dark Knight', 152, '2008-07-18 00:00:00', 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       ('Tenet', 150, '2020-08-26 00:00:00', 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       ('Dunkirk', 106, '2017-07-21 00:00:00', 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       ('not released', 10, '2025-01-31 00:00:00', 1, 1, utc_timestamp(), 1, utc_timestamp());
