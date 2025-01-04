@@ -10,11 +10,10 @@ import java.util.List;
 
 public class SeatTest {
     private SeatMapRequest request;
+    private List<SeatPosition> seatPositions;
     @BeforeEach
     void init() {
-        request = new SeatMapRequest();
-        request.setScreenId(1L);
-        List<SeatPosition> seatPositions = new ArrayList<>();
+        seatPositions = new ArrayList<>();
         seatPositions.add(SeatPosition.builder().row(1).col(1).typeId(-1).build());
         seatPositions.add(SeatPosition.builder().row(1).col(2).typeId(0).build());
         seatPositions.add(SeatPosition.builder().row(1).col(3).typeId(-1).build());
@@ -39,13 +38,11 @@ public class SeatTest {
         seatPositions.add(SeatPosition.builder().row(6).col(2).typeId(0).build());
         seatPositions.add(SeatPosition.builder().row(6).col(3).typeId(-1).build());
         seatPositions.add(SeatPosition.builder().row(6).col(4).typeId(-1).build());
-        request.setSeatPositions(seatPositions);
     }
 
     @Test
     void test1() {
-        request.validateSeatMap();
-        request.assignName();
+        request = new SeatMapRequest(1L, seatPositions);
         System.out.println(request.getNamedSeatPositions());
     }
 

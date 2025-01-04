@@ -49,7 +49,7 @@ public class SeatMapRequest {
         }
     }
 
-    public void assignName() {
+    private void assignName() {
         namedSeatPositions = new ArrayList<>();
         char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
         AtomicInteger currentLetter = new AtomicInteger();
@@ -74,7 +74,7 @@ public class SeatMapRequest {
         });
     }
 
-    public void validateSeatMap() {
+    private void validateSeatMap() {
         Set<Integer> seatTypeIds = SeatType.getIdMap().keySet();
         // check typeId existent -> map to seatValidate object -> sort (see overridden sorting method of SeatPositionValue)
         List<SeatPositionValidate> validateList = this
