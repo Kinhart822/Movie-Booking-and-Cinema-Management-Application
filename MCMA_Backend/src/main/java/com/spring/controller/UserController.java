@@ -347,16 +347,24 @@ public class UserController {
         return ResponseEntity.ok(bookingResponses);
     }
 
-    @GetMapping("/view/allCompletedBookingsByUser")
-    public ResponseEntity<List<BookingResponse>> getAllCompletedBookingsByUser(HttpServletRequest request) {
+    @GetMapping("/view/getAllCompletedBookingsThatHaveStartDateTimeHigherThanNowByUser")
+    public ResponseEntity<List<BookingResponse>> getAllCompletedBookingsThatHaveStartDateTimeHigherThanNowByUser(HttpServletRequest request) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        List<BookingResponse> bookingResponses = viewService.getAllCompletedBookingsByUser(userId);
+        List<BookingResponse> bookingResponses = viewService.getAllCompletedBookingsThatHaveStartDateTimeHigherThanNowByUser(userId);
         return ResponseEntity.ok(bookingResponses);
     }
 
-    @GetMapping("/view/allBookingsCanceled")
-    public ResponseEntity<List<BookingResponse>> getAllBookingsCanceled() {
-        List<BookingResponse> bookingResponses = viewService.getAllBookingsCanceled(BookingStatus.CANCELLED);
+    @GetMapping("/view/getAllBookingsThatHaveStartDateTimeHigherThanNowByUser")
+    public ResponseEntity<List<BookingResponse>> getAllBookingsThatHaveStartDateTimeHigherThanNowByUser(HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        List<BookingResponse> bookingResponses = viewService.getAllBookingsThatHaveStartDateTimeHigherThanNowByUser(userId);
+        return ResponseEntity.ok(bookingResponses);
+    }
+
+    @GetMapping("/view/allBookingsCanceledByUser")
+    public ResponseEntity<List<BookingResponse>> getAllBookingsCanceled(HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        List<BookingResponse> bookingResponses = viewService.getAllBookingsCanceledByUser(BookingStatus.CANCELLED, userId);
         return ResponseEntity.ok(bookingResponses);
     }
 
