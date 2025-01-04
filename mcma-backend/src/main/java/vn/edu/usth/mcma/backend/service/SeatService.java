@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.SeatMapRequest;
 import vn.edu.usth.mcma.backend.dto.SeatMapResponse;
 import vn.edu.usth.mcma.backend.dto.SeatPosition;
-import vn.edu.usth.mcma.backend.entity.Screen;
 import vn.edu.usth.mcma.backend.entity.Seat;
 import vn.edu.usth.mcma.backend.entity.SeatPK;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;

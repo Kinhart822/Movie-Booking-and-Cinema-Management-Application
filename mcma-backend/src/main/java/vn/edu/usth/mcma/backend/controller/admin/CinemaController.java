@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.dto.CinemaProjection;
 import vn.edu.usth.mcma.backend.dto.CinemaRequest;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
-import vn.edu.usth.mcma.backend.repository.CinemaRepository;
 import vn.edu.usth.mcma.backend.service.CinemaService;
 import vn.edu.usth.mcma.backend.entity.Cinema;
 
