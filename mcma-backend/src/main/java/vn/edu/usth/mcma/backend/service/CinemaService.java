@@ -49,7 +49,7 @@ public class CinemaService {
         return cinemaRepository.findById(id).orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
     }
     public ApiResponse updateCinema(Long id, CinemaRequest request) {
-        Cinema cinema = findById(id);
+        Cinema cinema = cinemaRepository.findById(id).orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         cinemaRepository
                 .save(Cinema
                         .builder()
@@ -64,7 +64,7 @@ public class CinemaService {
         return ApiResponse.success();
     }
     public ApiResponse toggleStatus(Long id) {
-        Cinema cinema = findById(id);
+        Cinema cinema = cinemaRepository.findById(id).orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         cinemaRepository
                 .save(Cinema
                         .builder()
