@@ -766,6 +766,8 @@ public class BookingServiceImpl implements BookingService {
             throw new IllegalArgumentException("No available coupons found for given user.");
         }
 
+        availableUserCouponIds.removeIf(coupon -> coupon.getDateAvailable().after(new Date()) || coupon.getDateExpired().before(new Date()));
+
         List<Integer> couponIds = new ArrayList<>();
         List<String> couponNameList = new ArrayList<>();
         List<String> couponDescriptionList = new ArrayList<>();
@@ -800,6 +802,8 @@ public class BookingServiceImpl implements BookingService {
         if (availableMovieCouponIds == null || availableMovieCouponIds.isEmpty()) {
             throw new IllegalArgumentException("No available coupons found for given movie.");
         }
+
+        availableMovieCouponIds.removeIf(coupon -> coupon.getDateAvailable().after(new Date()) || coupon.getDateExpired().before(new Date()));
 
         List<Integer> couponIds = new ArrayList<>();
         List<String> couponNameList = new ArrayList<>();
@@ -1123,10 +1127,6 @@ public class BookingServiceImpl implements BookingService {
             if (selectedMovieCoupon == null) {
                 throw new IllegalArgumentException("Coupon not found for movie %d.".formatted(bookingRequest.getMovieId()));
             }
-            if (selectedMovieCoupon.getDateAvailable().after(new Date()) || selectedMovieCoupon.getDateExpired().before(new Date())) {
-                throw new IllegalArgumentException("Coupon %d is not valid.".formatted(selectedMovieCoupon.getId()));
-            }
-
 //            if (updateTotalPrice < selectedMovieCoupon.getMinSpendReq()) {
 //                throw new IllegalArgumentException("Minimum spend requirement not met for coupon %d.".formatted(selectedMovieCoupon.getId()));
 //            }
@@ -1147,10 +1147,6 @@ public class BookingServiceImpl implements BookingService {
             if (selectedUserCoupon == null) {
                 throw new IllegalArgumentException("Coupon not found for user %d.".formatted(userId));
             }
-            if (selectedUserCoupon.getDateAvailable().after(new Date()) || selectedUserCoupon.getDateExpired().before(new Date())) {
-                throw new IllegalArgumentException("Coupon %d is not valid.".formatted(selectedUserCoupon.getId()));
-            }
-
 //            if (updateTotalPrice < selectedUserCoupon.getMinSpendReq()) {
 //                throw new IllegalArgumentException("Minimum spend requirement not met for coupon %d.".formatted(selectedUserCoupon.getId()));
 //            }
