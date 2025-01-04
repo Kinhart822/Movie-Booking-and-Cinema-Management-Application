@@ -2,6 +2,7 @@ package vn.edu.usth.mcma.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -12,7 +13,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class Rating extends AbstractAuditing implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
