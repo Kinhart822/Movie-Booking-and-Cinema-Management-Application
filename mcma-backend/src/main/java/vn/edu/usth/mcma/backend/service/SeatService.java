@@ -22,11 +22,10 @@ import java.util.List;
 @AllArgsConstructor
 public class SeatService {
     private final SeatRepository seatRepository;
-    private final ScreenService screenService;
     private final ScreenRepository screenRepository;
 
     public ApiResponse createSeatMap(SeatMapRequest request) {
-        Screen screen = screenRepository
+        screenRepository
                 .findById(request.getScreenId())
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         List<Seat> seats = request

@@ -13,7 +13,6 @@ import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.UserRepository;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.service.AuthService;
-import vn.edu.usth.mcma.backend.service.UserService;
 
 import java.util.Map;
 

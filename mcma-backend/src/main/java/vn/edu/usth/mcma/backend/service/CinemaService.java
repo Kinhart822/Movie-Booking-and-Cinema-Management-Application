@@ -2,7 +2,6 @@ package vn.edu.usth.mcma.backend.service;
 
 import constants.ApiResponseCode;
 import constants.CommonStatus;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.CinemaProjection;

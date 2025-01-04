@@ -17,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CinemaController {
     private final CinemaService cinemaService;
-    private final CinemaRepository cinemaRepository;
 
     @PostMapping("/cinema")
     public ResponseEntity<ApiResponse> createCinema(@RequestBody CinemaRequest request) {
