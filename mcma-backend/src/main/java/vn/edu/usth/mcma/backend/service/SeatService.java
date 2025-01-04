@@ -109,7 +109,6 @@ public class SeatService {
         // begin update
         List<Seat> updatedSeats = new ArrayList<>();
         for (Seat seat : seats) {
-            Integer typeId = seat.getTypeId();
             Integer row = seat.getPk().getRow();
             Integer col = seat.getPk().getColumn();
             SeatTile tile = seatGrid.get(row).get(col);
