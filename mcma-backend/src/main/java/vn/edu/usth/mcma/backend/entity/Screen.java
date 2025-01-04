@@ -29,4 +29,7 @@ public class Screen extends AbstractAuditing implements Serializable {
     private ScreenType screenType;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
+    // this attribute can only be mutated by schedule
+    @Column
+    private boolean mutable;
 }

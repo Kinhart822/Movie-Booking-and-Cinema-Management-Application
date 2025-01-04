@@ -20,7 +20,9 @@ public enum ApiResponseCode {
     MOVIE_NOT_PUBLISHED("400", "MOVIE_NOT_PUBLISHED"),
     SCREEN_OCCUPIED("400", "SCREEN_OCCUPIED"),
     BAD_REQUEST("400", "BAD_REQUEST"),
-    RESET_KEY_NOT_FOUND("404", "RESET_KEY_NOT_FOUND"),;
+    RESET_KEY_NOT_FOUND("404", "RESET_KEY_NOT_FOUND"),
+    INITIATED_SEAT_MAP("400", "SeatMap of this screen has already been initiated"),
+    BUSY_SCREEN("400", "Cannot update SeatMap: Screen is going to be used"),;
     private final String status;
     private final String description;
 }

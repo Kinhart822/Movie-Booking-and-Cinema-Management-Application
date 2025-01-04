@@ -79,10 +79,10 @@ values (1, 'Cau Giay', 'Hanoi Cinema 1', 1, 1, utc_timestamp(), 1, utc_timestamp
 insert into mcma.screen_type (name, description, price, status, created_by, created_date, last_modified_by,
                               last_modified_date)
 values ('imax', 'wow', 10, 1, 1, utc_timestamp(), 1, utc_timestamp());
-insert into mcma.screen (cinema_id, name, type_id, status, created_by, created_date, last_modified_by,
+insert into mcma.screen (cinema_id, name, type_id, status, mutable, created_by, created_date, last_modified_by,
                          last_modified_date)
-values (1, 'phong 1', 1, 1, 1, utc_timestamp(), 1, utc_timestamp()),
-       (1, 'phong 2', 1, 1, 1, utc_timestamp(), 1, utc_timestamp());
+values (1, 'phong 1', 1, 1, 1,1, utc_timestamp(), 1, utc_timestamp()),
+       (1, 'phong 2', 1, 1, 1,1, utc_timestamp(), 1, utc_timestamp());
 insert into mcma.user (first_name, last_name, sex, dob, email, phone, password, address, user_type, status, created_by,
                        created_date, last_modified_by, last_modified_date)
 values ('At', 'Nguyen', 1, '2004-04-11 00:00:00', 'at0@gmail.com', '0976289114',

@@ -42,7 +42,7 @@ public class SeatTest {
 
     @Test
     void test1() {
-        request = new SeatMapRequest(1L, seatPositions);
+        request = new SeatMapRequest(seatPositions);
         System.out.println(request.getNamedSeatPositions());
     }
 

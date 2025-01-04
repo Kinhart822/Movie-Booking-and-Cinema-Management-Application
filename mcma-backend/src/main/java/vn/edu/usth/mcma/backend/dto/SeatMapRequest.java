@@ -14,12 +14,13 @@ import vn.edu.usth.mcma.backend.exception.BusinessException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * this DTO throw BusinessException which is outside controller level so globalHandler couldn't handle
+ */
 @Data
 @Validated
 @NoArgsConstructor
 public class SeatMapRequest {
-    @NotNull
-    private Long screenId;
     @NotNull
     private List<SeatPosition> seatPositions;
     @JsonIgnore
@@ -29,26 +30,29 @@ public class SeatMapRequest {
      * must be initialized using initSeatGrid()
      */
     @JsonIgnore
-    private Map<Integer, Map<Integer, SeatPositionValidate>> seatGrid;
+    private Map<Integer, Map<Integer, SeatTile>> seatGrid;
 
+    /**
+     * this constructor call validateSeatMap() and then assignName() if constructed using restful api
+     * this will initiate seatGrid
+     */
     @JsonCreator
-    public SeatMapRequest(@JsonProperty("screenId") Long screenId, @JsonProperty("seatPositions") List<SeatPosition> seatPositions) {
-        this.screenId = screenId;
+    public SeatMapRequest(@JsonProperty("seatPositions") List<SeatPosition> seatPositions) {
         this.seatPositions = seatPositions;
         this.validateSeatMap();
         this.assignName();
     }
 
     // treemap is used to preserve sorted order -> able to iterate row-by-row, col-by-col
-    private void initSeatGrid(List<SeatPositionValidate> validateList) {
+    private void initSeatGrid(List<SeatTile> validateList) {
         seatGrid = new TreeMap<>();
-        for (SeatPositionValidate seat : validateList) {
+        for (SeatTile seat : validateList) {
             seatGrid
                     .computeIfAbsent(seat.getRow(), r -> new TreeMap<>())
                     .put(seat.getCol(), seat);
         }
     }
-
+    // this will assignName for seatGrid and namedSeatPositions
     private void assignName() {
         namedSeatPositions = new ArrayList<>();
         char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
@@ -67,7 +71,9 @@ public class SeatMapRequest {
                     namedSeatPositions.add(createSeatPosition(seat));
                     return;
                 }
-                namedSeatPositions.add(createSeatPosition(seat, alphabet[currentLetter.get()] + String.valueOf(currentNumber)));
+                String name = alphabet[currentLetter.get()] + String.valueOf(currentNumber);
+                seat.setName(name);
+                namedSeatPositions.add(createSeatPosition(seat, name));
                 currentNumber.getAndIncrement();
             });
             currentLetter.getAndIncrement();
@@ -77,7 +83,7 @@ public class SeatMapRequest {
     private void validateSeatMap() {
         Set<Integer> seatTypeIds = SeatType.getIdMap().keySet();
         // check typeId existent -> map to seatValidate object -> sort (see overridden sorting method of SeatPositionValue)
-        List<SeatPositionValidate> validateList = this
+        List<SeatTile> validateList = this
                 .seatPositions
                 .stream()
                 .map(seat -> createSeatPositionValidate(seat, seatTypeIds))
@@ -87,7 +93,7 @@ public class SeatMapRequest {
         initSeatGrid(validateList);
 
         // iterate through each seat and validate rectangles
-        for (SeatPositionValidate seat : validateList) {
+        for (SeatTile seat : validateList) {
             if (seat.isChecked()) {
                 continue;
             }
@@ -100,10 +106,10 @@ public class SeatMapRequest {
         }
     }
 
-    private boolean validateRectangle(SeatPositionValidate startSeat, Map<Integer, Map<Integer, SeatPositionValidate>> seatGrid, Integer width, Integer length) {
+    private boolean validateRectangle(SeatTile startSeat, Map<Integer, Map<Integer, SeatTile>> seatGrid, Integer width, Integer length) {
         for (int row = startSeat.getRow(); row < startSeat.getRow() + length; row++) {
             for (int col = startSeat.getCol(); col < startSeat.getCol() + width; col++) {
-                SeatPositionValidate seat = seatGrid.get(row).get(col);
+                SeatTile seat = seatGrid.get(row).get(col);
                 if (seat == null || seat.getTypeId() != startSeat.getTypeId()) {
                     return false;
                 }
@@ -111,7 +117,7 @@ public class SeatMapRequest {
         }
         for (int row = startSeat.getRow(); row < startSeat.getRow() + length; row++) {
             for (int col = startSeat.getCol(); col < startSeat.getCol() + width; col++) {
-                SeatPositionValidate seat = seatGrid.get(row).get(col);
+                SeatTile seat = seatGrid.get(row).get(col);
                 if (seat != null) {
                     seat.setChecked(true);
                 }
@@ -120,11 +126,11 @@ public class SeatMapRequest {
         return true;
     }
 
-    private SeatPosition createSeatPosition(SeatPositionValidate seat) {
+    private SeatPosition createSeatPosition(SeatTile seat) {
         return createSeatPosition(seat, null);
     }
 
-    private SeatPosition createSeatPosition(SeatPositionValidate seat, String name) {
+    private SeatPosition createSeatPosition(SeatTile seat, String name) {
         return SeatPosition
                 .builder()
                 .row(seat.getRow())
@@ -134,11 +140,11 @@ public class SeatMapRequest {
                 .build();
     }
 
-    private SeatPositionValidate createSeatPositionValidate(SeatPosition seat, Set<Integer> seatTypeIds) {
+    private SeatTile createSeatPositionValidate(SeatPosition seat, Set<Integer> seatTypeIds) {
         if (!seatTypeIds.contains(seat.getTypeId())) {
             throw new BusinessException(ApiResponseCode.SEAT_TYPE_NOT_FOUND);
         }
-        return SeatPositionValidate
+        return SeatTile
                 .builder()
                 .row(seat.getRow())
                 .col(seat.getCol())

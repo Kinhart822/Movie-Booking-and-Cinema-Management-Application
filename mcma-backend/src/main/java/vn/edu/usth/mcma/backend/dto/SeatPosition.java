@@ -14,6 +14,5 @@ public class SeatPosition {
     private int row;
     private int col;
     private int typeId;
-    @JsonIgnore
     private String name;
 }

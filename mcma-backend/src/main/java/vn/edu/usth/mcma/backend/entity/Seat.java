@@ -21,7 +21,7 @@ import java.time.Instant;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class Seat implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
