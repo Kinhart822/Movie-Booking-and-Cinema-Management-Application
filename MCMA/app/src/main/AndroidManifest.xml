@@ -71,13 +71,10 @@
             android:name=".frontend.Search.Search_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.AddMovie"
+            android:name=".frontend.More.AddMovie"
             android:exported="false" />
         <activity
-            android:name=".frontend.CinemaActivity"
-            android:exported="false" />
-        <activity
-            android:name=".frontend.LoadingPageActivity"
+            android:name=".frontend.More.LoadingPageActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

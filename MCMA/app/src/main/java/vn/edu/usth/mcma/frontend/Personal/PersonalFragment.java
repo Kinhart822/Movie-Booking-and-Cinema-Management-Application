@@ -147,6 +147,59 @@ public class PersonalFragment extends Fragment {
             }
         });
 
+        LinearLayout management_booking_button = v.findViewById(R.id.management_booking_button);
+        management_booking_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_management_booking, null);
+
+                Button cancelBookingButton = dialogView.findViewById(R.id.btn_cancel_booking);
+                Button revokeCancelBookingButton = dialogView.findViewById(R.id.btn_revoke_cancel_booking);
+                Button deleteBookingButton = dialogView.findViewById(R.id.btn_delete_booking);
+                Button exitButton = dialogView.findViewById(R.id.btn_exit);
+
+                builder.setView(dialogView);
+                AlertDialog dialog = builder.create();
+
+                cancelBookingButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Xử lý logic hủy đặt chỗ
+                        dialog.dismiss();
+                    }
+                });
+
+                revokeCancelBookingButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Xử lý logic khôi phục đặt chỗ
+                        dialog.dismiss();
+                    }
+                });
+
+                deleteBookingButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Xử lý logic xóa đặt chỗ
+                        dialog.dismiss();
+                    }
+                });
+
+                exitButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Đóng dialog
+                        dialog.dismiss();
+                    }
+                });
+
+                // Hiển thị dialog
+                dialog.show();
+            }
+        });
+
+
         return v;
     }
 }
