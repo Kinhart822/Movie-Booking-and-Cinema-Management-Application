@@ -90,7 +90,6 @@ public class PersonalFragment extends Fragment {
                         fragmentTransaction.replace(android.R.id.content, loginFragment);
                         fragmentTransaction.commit();
 
-                        // Đóng dialog
                         dialog.dismiss();
                     }
                 }); 
@@ -98,12 +97,11 @@ public class PersonalFragment extends Fragment {
                 cancelButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Đóng dialog
                         dialog.dismiss();
                     }
                 });
 
-                // Hiển thị dialog
+
                 dialog.show();
             }
         });
@@ -129,7 +127,6 @@ public class PersonalFragment extends Fragment {
                         fragmentTransaction.replace(android.R.id.content, loginFragment);
                         fragmentTransaction.commit();
 
-                        // Đóng dialog
                         dialog.dismiss();
                     }
                 });
@@ -137,12 +134,10 @@ public class PersonalFragment extends Fragment {
                 cancelButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Đóng dialog
                         dialog.dismiss();
                     }
                 });
 
-                // Hiển thị dialog
                 dialog.show();
             }
         });
@@ -165,7 +160,8 @@ public class PersonalFragment extends Fragment {
                 cancelBookingButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Xử lý logic hủy đặt chỗ
+                        Intent intent = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Personal.Cancel_Booking_Activity.class);
+                        requireContext().startActivity(intent);
                         dialog.dismiss();
                     }
                 });
@@ -173,7 +169,8 @@ public class PersonalFragment extends Fragment {
                 revokeCancelBookingButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Xử lý logic khôi phục đặt chỗ
+                        Intent intent = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Personal.Revoke_Cancel_Booking_Activity.class);
+                        requireContext().startActivity(intent);
                         dialog.dismiss();
                     }
                 });
@@ -181,7 +178,8 @@ public class PersonalFragment extends Fragment {
                 deleteBookingButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Xử lý logic xóa đặt chỗ
+                        Intent intent = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Personal.Delete_Booking_Activity.class);
+                        requireContext().startActivity(intent);
                         dialog.dismiss();
                     }
                 });
@@ -189,15 +187,14 @@ public class PersonalFragment extends Fragment {
                 exitButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Đóng dialog
                         dialog.dismiss();
                     }
                 });
 
-                // Hiển thị dialog
                 dialog.show();
             }
         });
+
 
 
         return v;
