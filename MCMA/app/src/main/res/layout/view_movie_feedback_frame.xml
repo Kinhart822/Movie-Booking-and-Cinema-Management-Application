@@ -23,7 +23,7 @@
             android:padding="8dp">
 
             <TextView
-                android:id="@+id/content"
+                android:id="@+id/content_feedback"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:text="Content"
@@ -33,15 +33,18 @@
                 android:textSize="18sp"
                 android:textColor="@color/black" />
 
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                tools:text="Time"
+            <RatingBar
+                android:id="@+id/ratingBar_feedback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:padding="5dp"
-                android:textSize="12sp"
-                android:textColor="@color/black"/>
+                android:numStars="5"
+                android:stepSize="0.5"
+                android:rating="5"
+                android:progressTint="@color/gold"
+                android:backgroundTint="@color/LightBlue"
+                android:layout_marginBottom="5dp" />
 
         </LinearLayout>
     </LinearLayout>

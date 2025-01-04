@@ -27,7 +27,7 @@ public class RatingMovie_Activity extends AppCompatActivity {
 
         TextView movieName = findViewById(R.id.tvMovieName);
         TextView movieType = findViewById(R.id.tvMovieType);
-        ImageView movieImage = findViewById(R.id.tvMovieImage); // Thêm ImageView
+        ImageView movieImage = findViewById(R.id.tvMovieImage);
         ImageButton mImageView = findViewById(R.id.back_button);
         ratingBar = findViewById(R.id.ratingBar);
         ratingScale = findViewById(R.id.tvRatingScale);
@@ -37,14 +37,13 @@ public class RatingMovie_Activity extends AppCompatActivity {
         // Lấy dữ liệu từ intent trong adapter
         String name = getIntent().getStringExtra("movie_name");
         String type = getIntent().getStringExtra("movie_type");
-        int imageResId = getIntent().getIntExtra("movie_image", R.drawable.movie5); // Lấy hình ảnh, với giá trị mặc định nếu không có
+        int imageResId = getIntent().getIntExtra("movie_image", R.drawable.movie5);
 
-        // Gán dữ liệu cho các view
         movieName.setText(name);
         movieType.setText(type);
         movieImage.setImageResource(imageResId); // Hiển thị hình ảnh
 
-        // Xử lý nút quay lại
+
         mImageView.setOnClickListener(v -> finish());
 
         ratingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
