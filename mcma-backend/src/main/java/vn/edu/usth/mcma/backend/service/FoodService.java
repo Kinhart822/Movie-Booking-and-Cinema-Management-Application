@@ -59,7 +59,7 @@ public class FoodService {
         Food food = foodRepository
                 .findById(id)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
-        food.setStatus(CommonStatus.DELETED.getStatus());
+        food.setStatus(CommonStatus.INACTIVE.getStatus());
         food.setLastModifiedBy(userId);
         food.setLastModifiedDate(Instant.now());
         foodRepository.save(food);

@@ -61,7 +61,7 @@ public class DrinkService {
         Drink drink = drinkRepository
                 .findById(id)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
-        drink.setStatus(CommonStatus.DELETED.getStatus());
+        drink.setStatus(CommonStatus.INACTIVE.getStatus());
         drink.setLastModifiedBy(userId);
         drink.setLastModifiedDate(Instant.now());
         drinkRepository.save(drink);

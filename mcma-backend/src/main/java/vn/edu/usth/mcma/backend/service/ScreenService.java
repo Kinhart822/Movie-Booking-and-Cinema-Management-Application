@@ -55,7 +55,7 @@ public class ScreenService {
         Screen screen = screenRepository
                 .findById(id)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
-        screen.setStatus(CommonStatus.DELETED.getStatus());
+        screen.setStatus(CommonStatus.INACTIVE.getStatus());
         screen.setLastModifiedBy(userId);
         screen.setLastModifiedDate(Instant.now());
         screenRepository.save(screen);

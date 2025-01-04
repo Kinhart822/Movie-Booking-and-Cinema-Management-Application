@@ -52,7 +52,7 @@ public class CityService {
         City city = cityRepository
                 .findById(id)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
-        city.setStatus(CommonStatus.DELETED.getStatus());
+        city.setStatus(CommonStatus.INACTIVE.getStatus());
         city.setLastModifiedBy(userId);
         city.setLastModifiedDate(Instant.now());
         cityRepository.save(city);
