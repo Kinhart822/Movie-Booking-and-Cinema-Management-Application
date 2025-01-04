@@ -33,6 +33,9 @@
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
+            android:name=".frontend.Personal.Movie_Feedback_Activity"
+            android:exported="false" />
+        <activity
             android:name=".frontend.Feedback.View_Movie_Feedback_Activity"
             android:exported="false" />
         <activity
@@ -40,6 +43,9 @@
             android:exported="false" />
         <activity
             android:name=".frontend.Personal.Revoke_Cancel_Booking_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Personal.View_Movie_Feedback02_Activity"
             android:exported="false" />
         <activity
             android:name=".frontend.Personal.Cancel_Booking_Activity"
@@ -102,9 +108,7 @@
         <activity
             android:name=".frontend.Search.Search_Activity"
             android:exported="false" />
-        <activity
-            android:name=".frontend.More.AddMovie"
-            android:exported="false" />
+
         <activity
             android:name=".frontend.More.LoadingPageActivity"
             android:exported="true">

@@ -75,10 +75,49 @@ public class PersonalFragment extends Fragment {
         to_feedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Personal.ViewFeedback_Activity.class);
-                startActivity(i);
+                // Inflate the dialog layout
+                LayoutInflater inflater = LayoutInflater.from(requireContext());
+                View dialogView = inflater.inflate(R.layout.dialog_feedback_fragment, null);
+
+                // Create the dialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                builder.setView(dialogView);
+
+                // Initialize the dialog
+                AlertDialog dialog = builder.create();
+
+                // Initialize buttons in the dialog
+                Button btnViewMovieFeedback = dialogView.findViewById(R.id.btn_viewmovie_feedback);
+                Button btnViewYourFeedback = dialogView.findViewById(R.id.btn_viewyour_feedback);
+                Button btnCancelFeedback = dialogView.findViewById(R.id.btn_cancel_feedback);
+
+                // Set click listeners for the buttons
+                btnViewMovieFeedback.setOnClickListener(v -> {
+                    // Navigate to Movie_Feedback_Activity
+                    Intent intent = new Intent(requireContext(), Movie_Feedback_Activity.class);
+                    requireContext().startActivity(intent);
+                    dialog.dismiss(); // Close the dialog
+                });
+
+                btnViewYourFeedback.setOnClickListener(v -> {
+                    // Navigate to ViewFeedback_Activity
+                    Intent intent = new Intent(requireContext(), ViewFeedback_Activity.class);
+                    requireContext().startActivity(intent);
+                    dialog.dismiss(); // Close the dialog
+                });
+
+                btnCancelFeedback.setOnClickListener(v -> {
+                    // Dismiss the dialog
+                    dialog.dismiss();
+                });
+
+                // Show the dialog
+                dialog.show();
             }
         });
+
+
+
 
         LinearLayout logout_button = v.findViewById(R.id.account_information_log_out);
         logout_button.setOnClickListener(new View.OnClickListener() {
