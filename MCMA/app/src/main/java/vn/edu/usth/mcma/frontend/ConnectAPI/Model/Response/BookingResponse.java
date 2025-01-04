@@ -3,6 +3,7 @@ package vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response;
 import java.util.List;
 
 public class BookingResponse {
+    private Integer bookingId;
     private String bookingNo;
     private Integer movieId;
     private String movieName;
@@ -20,7 +21,8 @@ public class BookingResponse {
     private Double totalPrice;
     private String status;
 
-    public BookingResponse(String bookingNo, Integer movieId, String movieName, String imageUrlMovie, String cityName, String cinemaName, String startDateTime, String endDateTime, String screenName, List<String> ticketTypeName, List<String> seatName, List<String> foodNameList, List<String> drinkNameList, List<String> couponName, Double totalPrice, String status) {
+    public BookingResponse(Integer bookingId, String bookingNo, Integer movieId, String movieName, String imageUrlMovie, String cityName, String cinemaName, String startDateTime, String endDateTime, String screenName, List<String> ticketTypeName, List<String> seatName, List<String> foodNameList, List<String> drinkNameList, List<String> couponName, Double totalPrice, String status) {
+        this.bookingId = bookingId;
         this.bookingNo = bookingNo;
         this.movieId = movieId;
         this.movieName = movieName;
@@ -165,5 +167,13 @@ public class BookingResponse {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Integer getBookingId() {
+        return bookingId;
+    }
+
+    public void setBookingId(Integer bookingId) {
+        this.bookingId = bookingId;
     }
 }

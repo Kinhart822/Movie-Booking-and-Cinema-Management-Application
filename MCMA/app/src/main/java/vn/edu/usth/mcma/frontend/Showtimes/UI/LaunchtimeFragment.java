@@ -63,7 +63,7 @@ public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnThe
         TheaterDataProvider.getCities(new Callback<ViewCityResponse>() {
             @Override
             public void onResponse(Call<ViewCityResponse> call, Response<ViewCityResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
+                if (isAdded() && response.isSuccessful() && response.body() != null) {
                     List<Integer> cityIds = response.body().getCityIds();
                     List<String> cityNames = response.body().getCityNameList();
 
@@ -77,8 +77,9 @@ public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnThe
 
             @Override
             public void onFailure(Call<ViewCityResponse> call, Throwable t) {
-                Log.e("LoadCitiesError", "Error fetching city list", t);
-                Toast.makeText(requireContext(), "Failed to load cities. Please try again later.", Toast.LENGTH_SHORT).show();
+                if (isAdded()) {
+                    Toast.makeText(requireContext(), "Failed to load cities. Please try again later.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -131,22 +132,20 @@ public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnThe
         call.enqueue(new Callback<ViewCinemaResponse>() {
             @Override
             public void onResponse(Call<ViewCinemaResponse> call, Response<ViewCinemaResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
+                if (isAdded() && response.isSuccessful() && response.body() != null) {
+                    // Process the response
+                    List<Theater> theaters = new ArrayList<>();
                     List<Integer> cinemaIds = response.body().getCinemaIdList();
                     List<String> cinemaNames = response.body().getCinemaNameList();
                     List<String> cinemaAddressNames = response.body().getCinemaAddressList();
-                    List<Theater> theaters = new ArrayList<>();
 
                     for (int i = 0; i < cinemaNames.size(); i++) {
                         int id = cinemaIds.get(i);
                         String name = cinemaNames.get(i);
                         String address = i < cinemaAddressNames.size() ? cinemaAddressNames.get(i) : "Address not available";
 
-                        if (name == null || name.isEmpty()) {
-                            theaters.add(new Theater(id, "Unnamed Cinema", "Address not available", currentCity, R.drawable.theater_image1));
-                        } else {
-                            theaters.add(new Theater(id, name, address, currentCity, R.drawable.theater_image1));
-                        }
+                        theaters.add(new Theater(id, name != null && !name.isEmpty() ? name : "Unnamed Cinema",
+                                address, currentCity, R.drawable.theater_image1));
                     }
 
                     if (theaterAdapter != null) {
@@ -157,12 +156,12 @@ public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnThe
 
             @Override
             public void onFailure(Call<ViewCinemaResponse> call, Throwable t) {
-                Log.e("TheaterListError", "Error fetching theater list", t);
-                Toast.makeText(requireContext(), "Failed to load theater list. Please try again.", Toast.LENGTH_SHORT).show();
+                if (isAdded()) {
+                    Toast.makeText(requireContext(), "Failed to load theater list. Please try again.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
-
 
     @Override
     public void onTheaterClick(Theater theater) {

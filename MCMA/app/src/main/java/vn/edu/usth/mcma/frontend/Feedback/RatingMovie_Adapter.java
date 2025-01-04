@@ -28,11 +28,20 @@ public class RatingMovie_Adapter extends RecyclerView.Adapter<RatingMovie_ViewHo
 //        void onItemClick(String movieName, String movieType, int movieImage);
 //    }
 
+    public interface OnItemClickListener {
+        void onItemClick(String movieName, String movieType, String movieImage);
+    }
 
     public RatingMovie_Adapter(Context context, List<BookingResponse> items) {
         this.context = context;
         this.items = items;
     }
+
+//    public RatingMovie_Adapter(Context context, List<BookingResponse> items, OnItemClickListener onItemClickListener) {
+//        this.context = context;
+//        this.items = items;
+//        this.onItemClickListener = onItemClickListener;
+//    }
 
 //    public RatingMovie_Adapter(Context context, List<RatingMovie_Item> items, OnItemClickListener onItemClickListener) {
 //        this.context = context;
@@ -77,6 +86,11 @@ public class RatingMovie_Adapter extends RecyclerView.Adapter<RatingMovie_ViewHo
         // Xử lý sự kiện click item
 //        holder.itemView.setOnClickListener(v ->
 //                onItemClickListener.onItemClick(item.getMovie_name(), item.getMovie_type(), item.getMovie_image()));
+
+//        holder.itemView.setOnClickListener(v -> {
+//            // Gọi callback để hiển thị dialog từ Fragment
+//            onItemClickListener.onItemClick(bookingResponse.getMovieName(), bookingResponse.getBookingNo(), bookingResponse.getImageUrlMovie());
+//        });
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, RatingMovie_Activity.class);

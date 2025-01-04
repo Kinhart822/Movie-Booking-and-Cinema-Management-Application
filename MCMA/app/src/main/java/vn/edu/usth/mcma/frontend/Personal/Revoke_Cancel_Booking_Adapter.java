@@ -11,9 +11,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.BookingProcessAPIs.BookingAPI;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 
 import android.app.AlertDialog;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -39,10 +47,14 @@ public class Revoke_Cancel_Booking_Adapter extends RecyclerView.Adapter<Revoke_C
 
         holder.nameView.setText(item.getMovie_name());
         holder.typeView.setText(item.getMovie_type());
-        holder.imageView.setImageResource(item.getMovie_image());
+
+        Glide.with(context)
+                .load(item.getMovieImageUrl())
+                .placeholder(R.drawable.usthlogo)
+                .into(holder.imageView);
 
         holder.itemView.setOnClickListener(v -> {
-            showCancelBookingDialog();
+            showRevokeCancelBookingDialog(item);
         });
     }
 
@@ -52,7 +64,7 @@ public class Revoke_Cancel_Booking_Adapter extends RecyclerView.Adapter<Revoke_C
     }
 
     // Dialog
-    private void showCancelBookingDialog() {
+    private void showRevokeCancelBookingDialog(Revoke_Cancel_Booking_Item item) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -66,6 +78,7 @@ public class Revoke_Cancel_Booking_Adapter extends RecyclerView.Adapter<Revoke_C
         AlertDialog dialog = builder.create();
 
         btn_yes.setOnClickListener(view -> {
+            revokeCanceledBooking(item.getBookingId(), item);
             dialog.dismiss();
         });
 
@@ -76,4 +89,58 @@ public class Revoke_Cancel_Booking_Adapter extends RecyclerView.Adapter<Revoke_C
         // Show the dialog
         dialog.show();
     }
+
+    private void revokeCanceledBooking(int bookingId, Revoke_Cancel_Booking_Item item) {
+        RetrofitService retrofitService = new RetrofitService(context);
+        BookingAPI bookingAPI = retrofitService.getRetrofit().create(BookingAPI.class);
+        bookingAPI.revokeCancelBooking(bookingId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(context, "Booking reinstated successfully!", Toast.LENGTH_SHORT).show();
+                    removeItemFromList(bookingId);
+                    showRevokeCancellationSuccessDialog(item);
+                } else {
+//                    Toast.makeText(context, "Failed to reinstate booking", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void removeItemFromList(int bookingId) {
+        int position = -1;
+
+        // Find the item position by bookingId
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).getBookingId() == bookingId) {
+                position = i;
+                break;
+            }
+        }
+
+        if (position != -1) {
+            // Remove the item and notify adapter
+            items.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+    private void showRevokeCancellationSuccessDialog(Revoke_Cancel_Booking_Item item) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Booking Reinstated");
+        builder.setMessage("Your booking for " + item.getMovie_name() + " has been successfully reinstated. Booking Number: " + item.getBookingId());
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            dialog.dismiss();
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 }
+
