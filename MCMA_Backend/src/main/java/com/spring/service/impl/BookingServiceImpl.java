@@ -1295,6 +1295,7 @@ public class BookingServiceImpl implements BookingService {
         }
 
         return new BookingResponse(
+                booking.getId(),
                 booking.getBookingNo(),
                 booking.getMovie().getId(),
                 booking.getMovie().getName(),

@@ -7,7 +7,7 @@ import com.spring.dto.response.UserResponse;
 import java.util.List;
 
 public interface AuthenticationService {
-    JwtAuthenticationResponse signUp(SignUpRequest signUpRequest);
+    void signUp(SignUpRequest signUpRequest);
 
     JwtAuthenticationResponse signIn(SignInRequest signInRequest);
 

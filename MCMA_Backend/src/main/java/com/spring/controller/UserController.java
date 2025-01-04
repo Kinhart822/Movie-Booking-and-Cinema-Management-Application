@@ -347,8 +347,15 @@ public class UserController {
         return ResponseEntity.ok(bookingResponses);
     }
 
+    @GetMapping("/view/allCompletedBookingsByUser")
+    public ResponseEntity<List<BookingResponse>> getAllCompletedBookingsByUser(HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        List<BookingResponse> bookingResponses = viewService.getAllCompletedBookingsByUser(userId);
+        return ResponseEntity.ok(bookingResponses);
+    }
+
     @GetMapping("/view/allBookingsCanceled")
-    public ResponseEntity<List<BookingResponse>> getAllBookingsCanceled(HttpServletRequest request) {
+    public ResponseEntity<List<BookingResponse>> getAllBookingsCanceled() {
         List<BookingResponse> bookingResponses = viewService.getAllBookingsCanceled(BookingStatus.CANCELLED);
         return ResponseEntity.ok(bookingResponses);
     }

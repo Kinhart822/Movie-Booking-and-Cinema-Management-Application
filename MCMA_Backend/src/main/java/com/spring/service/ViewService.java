@@ -41,5 +41,7 @@ public interface ViewService {
 
     List<BookingResponse> getAllBookingsByUser(Integer userId);
 
+    List<BookingResponse> getAllCompletedBookingsByUser(Integer userId);
+
     List<BookingResponse> getAllBookingsCanceled(BookingStatus bookingStatus);
 }

@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookingResponse {
+    private Integer bookingId;
     private String bookingNo;
     private Integer movieId;
     private String movieName;
