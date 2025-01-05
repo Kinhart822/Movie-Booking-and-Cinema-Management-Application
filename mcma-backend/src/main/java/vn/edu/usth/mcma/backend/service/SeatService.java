@@ -5,15 +5,15 @@ import constants.SeatType;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import vn.edu.usth.mcma.backend.dto.SeatMapRequest;
-import vn.edu.usth.mcma.backend.dto.SeatMapResponse;
-import vn.edu.usth.mcma.backend.dto.SeatPosition;
+import vn.edu.usth.mcma.backend.dto.SeatHelperInput;
+import vn.edu.usth.mcma.backend.dto.SeatResponse;
 import vn.edu.usth.mcma.backend.dto.SeatTile;
 import vn.edu.usth.mcma.backend.entity.Screen;
 import vn.edu.usth.mcma.backend.entity.Seat;
 import vn.edu.usth.mcma.backend.entity.SeatPK;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
+import vn.edu.usth.mcma.backend.helper.SeatHelper;
 import vn.edu.usth.mcma.backend.repository.ScreenRepository;
 import vn.edu.usth.mcma.backend.repository.SeatRepository;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
@@ -32,29 +32,30 @@ public class SeatService {
     private final JwtUtil jwtUtil;
     private final boolean DEFAULT_SEAT_AVAILABILITY = true;
 
-    public ApiResponse initSeatMap(Long screenId, SeatMapRequest request) {
+    public ApiResponse initSeatMap(Long screenId, List<SeatHelperInput> seatHelperInputs) {
         Screen screen = screenRepository
                 .findById(screenId)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         // check initiated
-        if (!findSeatMapByScreenId(screenId).getSeatPositions().isEmpty()) {
+        if (!findSeatMapByScreenId(screenId).isEmpty()) {
             throw new BusinessException(ApiResponseCode.INITIATED_SEAT_MAP);
         }
         Long userId = jwtUtil.getUserIdFromToken();
         Instant now = Instant.now();
-        seatRepository.saveAll(request
-                .getNamedSeatPositions() // sorted btw
+        SeatHelper seatHelper = new SeatHelper(seatHelperInputs);
+        seatRepository.saveAll(seatHelper
+                .getSeatHelperOutputs() // sorted btw
                 .stream()
-                .map(pos -> Seat
+                .map(seatResponse -> Seat
                         .builder()
                         .pk(SeatPK
                                 .builder()
                                 .screenId(screen.getId())
-                                .row(pos.getRow())
-                                .column(pos.getCol())
+                                .row(seatResponse.getRow())
+                                .column(seatResponse.getCol())
                                 .build())
-                        .typeId(pos.getTypeId())
-                        .name(pos.getName())
+                        .typeId(seatResponse.getTypeId())
+                        .name(seatResponse.getName())
                         .isAvailable(DEFAULT_SEAT_AVAILABILITY)
                         .createdBy(userId)
                         .createdDate(now)
@@ -65,23 +66,20 @@ public class SeatService {
         return ApiResponse.success();
     }
 
-    public SeatMapResponse findSeatMapByScreenId(Long screenId) {
-        return SeatMapResponse
-                .builder()
-                .seatPositions(seatRepository
-                        .findAllByScreenId(screenId)
-                        .stream()
-                        .map(s -> SeatPosition
-                                .builder()
-                                .row(s.getPk().getRow())
-                                .col(s.getPk().getColumn())
-                                .typeId(s.getTypeId())
-                                .name(s.getName())
-                                .build())
-                        .toList())
-                .build();
+    public List<SeatResponse> findSeatMapByScreenId(Long screenId) {
+        return seatRepository
+                .findAllByScreenId(screenId)
+                .stream()
+                .map(s -> SeatResponse
+                        .builder()
+                        .row(s.getPk().getRow())
+                        .col(s.getPk().getColumn())
+                        .typeId(s.getTypeId())
+                        .name(s.getName())
+                        .build())
+                .toList();
     }
-    public ApiResponse updateSeatMap(Long screenId, SeatMapRequest request) {
+    public ApiResponse updateSeatMap(Long screenId, List<SeatHelperInput> seatHelperInputs) {
         Screen screen = screenRepository
                 .findById(screenId)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
@@ -90,7 +88,8 @@ public class SeatService {
         }
         Long userId = jwtUtil.getUserIdFromToken();
         Instant now = Instant.now();
-        Map<Integer, Map<Integer, SeatTile>> seatGrid = request.getSeatGrid();
+        SeatHelper seatHelper = new SeatHelper(seatHelperInputs);
+        Map<Integer, Map<Integer, SeatTile>> seatGrid = seatHelper.getSeatGrid();
         List<Seat> seats = seatRepository.findAllByScreenId(screenId);
         // a for loop to detect mutation of type = -1
         for (Seat seat : seats) {

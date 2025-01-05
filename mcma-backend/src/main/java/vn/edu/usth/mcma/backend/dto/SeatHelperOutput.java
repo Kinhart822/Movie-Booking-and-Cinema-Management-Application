@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SeatPosition {
+public class SeatHelperOutput {
     private int row;
     private int col;
     private int typeId;

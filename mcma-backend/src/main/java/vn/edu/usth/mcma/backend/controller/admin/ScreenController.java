@@ -7,9 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.usth.mcma.backend.dto.ScreenRequest;
-import vn.edu.usth.mcma.backend.dto.SeatMapRequest;
-import vn.edu.usth.mcma.backend.dto.SeatMapResponse;
+import vn.edu.usth.mcma.backend.dto.*;
 import vn.edu.usth.mcma.backend.entity.Screen;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
@@ -56,16 +54,16 @@ public class ScreenController {
       ==========
      */
     @GetMapping("/screen/{screenId}/seat")
-    public ResponseEntity<SeatMapResponse> findSeatMapByScreenId(@PathVariable Long screenId) {
+    public ResponseEntity<List<SeatResponse>> findSeatMapByScreenId(@PathVariable Long screenId) {
         return ResponseEntity.ok(seatService.findSeatMapByScreenId(screenId));
     }
     @PostMapping("/screen/{screenId}/seat")
-    public ResponseEntity<ApiResponse> initSeatMap(@PathVariable Long screenId, @Valid @RequestBody SeatMapRequest request) {
-        return ResponseEntity.ok(seatService.initSeatMap(screenId, request));
+    public ResponseEntity<ApiResponse> initSeatMap(@PathVariable Long screenId, @Valid @RequestBody List<SeatHelperInput> seatHelperInputs) {
+        return ResponseEntity.ok(seatService.initSeatMap(screenId, seatHelperInputs));
     }
     @PutMapping("/screen/{screenId}/seat")
-    public ResponseEntity<ApiResponse> updateSeatMap(@PathVariable Long screenId, @Valid @RequestBody SeatMapRequest request) {
-        return ResponseEntity.ok(seatService.updateSeatMap(screenId, request));
+    public ResponseEntity<ApiResponse> updateSeatMap(@PathVariable Long screenId, @Valid @RequestBody List<SeatHelperInput> seatHelperInputs) {
+        return ResponseEntity.ok(seatService.updateSeatMap(screenId, seatHelperInputs));
     }
 
 //    @DeleteMapping("/seat/{id}")
