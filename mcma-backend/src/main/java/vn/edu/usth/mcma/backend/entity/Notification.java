@@ -3,17 +3,19 @@ package vn.edu.usth.mcma.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-public class Notification extends AbstractAuditing implements Serializable {
+@Builder
+public class Notification implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @Id
@@ -21,6 +23,10 @@ public class Notification extends AbstractAuditing implements Serializable {
     private Long id;
     @Column
     private String content;
-    @Column(columnDefinition = "TINYINT")
-    private Integer status;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    @CreatedDate
+    @Column(updatable = false)
+    private Instant createdDate;
 }

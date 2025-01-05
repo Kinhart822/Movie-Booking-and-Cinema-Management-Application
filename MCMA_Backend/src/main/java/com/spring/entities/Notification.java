@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Deprecated
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
