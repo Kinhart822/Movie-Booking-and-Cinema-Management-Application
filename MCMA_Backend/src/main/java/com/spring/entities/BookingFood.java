@@ -12,6 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Deprecated
 public class BookingFood {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

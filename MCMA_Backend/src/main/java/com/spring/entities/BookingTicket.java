@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Deprecated
 public class BookingTicket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

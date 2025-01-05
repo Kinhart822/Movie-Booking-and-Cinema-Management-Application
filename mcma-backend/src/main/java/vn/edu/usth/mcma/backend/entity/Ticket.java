@@ -21,4 +21,11 @@ public class Ticket extends AbstractAuditing implements Serializable {
     private Long id;
     @Column(columnDefinition = "TINYINT")
     private Integer typeId;
+    @OneToOne
+    @JoinColumns({
+            @JoinColumn(name = "seat_screenId", referencedColumnName = "screenId"),
+            @JoinColumn(name = "seat_row", referencedColumnName = "row"),
+            @JoinColumn(name = "seat_col", referencedColumnName = "col")
+    })
+    private Seat seat;
 }

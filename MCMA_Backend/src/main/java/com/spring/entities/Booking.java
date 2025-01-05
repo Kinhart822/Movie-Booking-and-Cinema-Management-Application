@@ -17,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Deprecated
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,11 +25,11 @@ public class Booking {
 
     @Column(name = "Booking_No")
     private String bookingNo;
-
+    //rejected: movie start time -> get from schedule
     @Column(name = "Start_Date_Time")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime startDateTime;
-
+    //rejected: movie end time -> get from schedule
     @Column(name = "End_Date_Time")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime endDateTime;
@@ -55,15 +56,15 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
+    //rejected: get from schedule
     @ManyToOne
     @JoinColumn(name = "movie_id")
     private Movie movie;
-
+    //rejected: get from schedule
     @ManyToOne
     @JoinColumn(name = "city_id")
     private City city;
-
+    //rejected: get from schedule
     @ManyToOne
     @JoinColumn(name = "cinema_id")
     private Cinema cinema;
@@ -71,23 +72,23 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "movie_schedule_id")
     private MovieSchedule movieSchedule;
-
+    //rejected: get from schedule
     @ManyToOne
     @JoinColumn(name = "screen_id")
     private Screen screen;
-
+    // rejected
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
     private List<BookingTicket> tickets;
-
+    // rejected
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
     private List<BookingSeat> seatList;
-
+    // rejected
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
     private List<BookingFood> foodList;
-
+    // rejected
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
     private List<BookingDrink> drinks;
-
+    // rejected
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
     private List<BookingCoupon> coupons;
 }
