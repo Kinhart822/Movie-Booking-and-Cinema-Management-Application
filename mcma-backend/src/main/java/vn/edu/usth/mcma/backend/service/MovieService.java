@@ -7,11 +7,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.MovieScheduleRequest;
 import vn.edu.usth.mcma.backend.entity.Movie;
-import vn.edu.usth.mcma.backend.entity.MovieSchedule;
+import vn.edu.usth.mcma.backend.entity.Schedule;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.MovieRepository;
-import vn.edu.usth.mcma.backend.repository.MovieScheduleRepository;
+import vn.edu.usth.mcma.backend.repository.ScheduleRepository;
 import vn.edu.usth.mcma.backend.repository.ScreenRepository;
 
 import java.time.Instant;
@@ -22,7 +22,7 @@ import java.time.Instant;
 public class MovieService {
     private final MovieRepository movieRepository;
     private final ScreenRepository screenRepository;
-    private final MovieScheduleRepository movieScheduleRepository;
+    private final ScheduleRepository movieScheduleRepository;
     /*
      * ========
      * schedule
@@ -43,7 +43,7 @@ public class MovieService {
         if (!movieScheduleRepository.eventsInRange(startTime, endTime).isEmpty()) {
             throw new BusinessException(ApiResponseCode.SCREEN_OCCUPIED);
         }
-        movieScheduleRepository.save(MovieSchedule
+        movieScheduleRepository.save(Schedule
                 .builder()
                 .screen(screenRepository
                         .findById(request.getScreenId())

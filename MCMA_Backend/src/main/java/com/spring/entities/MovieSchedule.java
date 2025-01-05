@@ -17,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Deprecated
 public class MovieSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,7 +54,7 @@ public class MovieSchedule {
     @ManyToOne
     @JoinColumn(name = "screen_id", nullable = false)
     private Screen screen;
-    //TODO import
+    // rejected
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "movieSchedule")
     private List<Booking> bookings;
 }
