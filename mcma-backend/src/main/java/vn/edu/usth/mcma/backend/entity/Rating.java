@@ -26,7 +26,4 @@ public class Rating extends AbstractAuditing implements Serializable {
     private String description;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
-
-    @ManyToMany(mappedBy = "ratingSet")
-    private Set<Movie> movieSet;
 }

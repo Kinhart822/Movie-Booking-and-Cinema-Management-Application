@@ -35,12 +35,12 @@ public class Movie extends AbstractAuditing implements Serializable {
     @Column
     private Instant publishDate;
     @Column
-    private Long ratingId;
-    @Column
     private String trailerUrl;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
-
+    @ManyToOne
+    @JoinColumn(name = "rating_id")
+    private Rating rating;
     @ManyToMany
     @JoinTable(
             name = "map_movie_genre",
@@ -53,12 +53,6 @@ public class Movie extends AbstractAuditing implements Serializable {
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "performer_id"))
     private Set<Performer> performerSet;
-    @ManyToMany
-    @JoinTable(
-            name = "map_movie_rating",
-            joinColumns = @JoinColumn(name = "movie_id"),
-            inverseJoinColumns = @JoinColumn(name = "rating_id"))
-    private Set<Rating> ratingSet;
     @ManyToMany
     @JoinTable(
             name = "map_movie_coupon",
