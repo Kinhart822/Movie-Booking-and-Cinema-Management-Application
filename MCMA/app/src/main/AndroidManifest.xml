@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/cinema_icon3"
+        android:label="MCMA"
+        android:roundIcon="@mipmap/cinema_icon3_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MCMA"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="tiramisu">
+        <activity
+            android:name=".frontend.Showtimes.UI.PayingMethodActivity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Home.OnlyDetailsActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".frontend.Personal.Movie_Feedback_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Feedback.View_Movie_Feedback_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Personal.Delete_Booking_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Personal.Revoke_Cancel_Booking_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Personal.View_Movie_Feedback02_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Personal.Cancel_Booking_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Feedback.RatingMovie_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Showtimes.UI.TicketSelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Showtimes.UI.PaymentBookingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Showtimes.UI.ComboSelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Showtimes.UI.SeatSelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Showtimes.UI.MovieBookingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Showtimes.UI.MovieDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Personal.ViewFeedback_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Personal.Booking_History_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Personal.Change_Password_Account_Info_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Personal.Account_Information_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Personal.Edit_Update_Account_Info_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Notification.Notification_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Login.ResetPassword_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Login.ForgotPassword_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Login.Register_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Showtimes.UI.TheaterScheduleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.MainActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity
+            android:name=".frontend.Search.Search_Activity"
+            android:exported="false" />
+
+        <activity
+            android:name=".frontend.More.LoadingPageActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

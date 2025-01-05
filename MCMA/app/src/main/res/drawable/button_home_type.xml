@@ -1,0 +1,5 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/gold" /> <!-- Màu nền là màu gold -->
+    <corners android:radius="0dp" /> <!-- Không bo tròn -->
+    <stroke android:width="1dp" android:color="@color/white" /> <!-- Viền trắng -->
+</shape>

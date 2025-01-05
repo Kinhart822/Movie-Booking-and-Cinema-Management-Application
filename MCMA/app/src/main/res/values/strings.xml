@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">MCMA</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="register_for_account">Register for account</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="todo">TODO</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="phone">Phone</string>
+    <string name="date_of_birth">Date of Birth</string>
+    <string name="address">Address</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="user">User</string>
+    <string name="admin">Admin</string>
+
+    <string name="login_underlined"><u>Login</u></string>
+    <string name="forgotpassword_underlined"><u>Forgot password ?</u></string>
+    <string name="name_underlined"><u>Name</u></string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="terrible">Terrible</string>
+    <string name="rating_excellent">Excellent!</string>
+    <string name="unknown_genre">Unknown Genre</string>
+    <string name="can_t_book">Can\'t Book</string>
+    <string name="are_you_sure_want_to_delete_account">Are you sure want to delete account?</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="are_you_sure_want_to_log_out">Are you sure want to log out?</string>
+    <string name="unknown_rating">Unknown Rating\n</string>
+
+    <string-array name="gender_array">
+        <item>Choose gender</item>
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </string-array>
+
+
+    <string name="store_title">Cửa hàng</string>
+    <string name="select_theater">Chọn rạp để nhận hàng</string>
+    <string name="all_theaters">Tất cả các rạp</string>
+    <string name="no_data">Chưa có dữ liệu</string>
+    <string name="total_price">Tổng tiền (đã bao gồm phụ thu)</string>
+    <string name="complete_payment">Hoàn tất thanh toán</string>
+    <string name="concession">Concession</string>
+    <string name="book_ticket">Booking</string>
+    <string name="_0">0$</string>
+    <string name="_0_00">$0.00</string>
+</resources>
+

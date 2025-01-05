@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="*"
+                android:background="@drawable/tab_background"
+                android:padding="16dp">
+
+
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="Movie Name"
+                        android:textStyle="bold"
+                        android:padding="8dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/tab_background" />
+
+                    <TextView
+                        android:id="@+id/movie_name_feedback"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:padding="8dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/tab_background"
+                        android:maxWidth="200dp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        tools:text="Movie name" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="Rating"
+                        android:textStyle="bold"
+                        android:padding="8dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/tab_background" />
+
+                    <TextView
+                        android:id="@+id/rating_feedback"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:padding="8dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/tab_background"
+                        tools:text="Rating Stars" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="Comment"
+                        android:textStyle="bold"
+                        android:padding="8dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/tab_background" />
+
+                    <TextView
+                        android:id="@+id/comment_feedback"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:padding="8dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/tab_background"
+                        android:maxWidth="200dp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        tools:text="Comment" />
+                </TableRow>
+            </TableLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
