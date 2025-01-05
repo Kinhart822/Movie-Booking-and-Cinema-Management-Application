@@ -6,7 +6,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vn.edu.usth.mcma.backend.entity.Movie;
 
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -16,41 +15,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
      * User
      * ====
      */
-//    @Query(nativeQuery = true, value = """
-//                 SELECT
-//                        m.id,
-//                        m.name,
-//                        m.length,
-//                        m.description,
-//                        m.image_url,
-//                        m.background_image_url,
-//                        m.trailer_link,
-//                        m.date_publish,
-//                        GROUP_CONCAT(DISTINCT mrd.name SEPARATOR ',') AS rating_name,
-//                        GROUP_CONCAT(DISTINCT mrd.description SEPARATOR ',') AS rating_description,
-//                        GROUP_CONCAT(DISTINCT mgd.name SEPARATOR ',') AS genre_name,
-//                        GROUP_CONCAT(DISTINCT mpd.name SEPARATOR ',') AS performer_name,
-//                        GROUP_CONCAT(DISTINCT mpd.performer_type SEPARATOR ',') AS performer_type,
-//                        GROUP_CONCAT(DISTINCT mpd.performer_sex SEPARATOR ',') AS performer_sex
-//                 FROM movie m
-//                 LEFT JOIN set_movie_rating_detail srd ON m.id = srd.movie_id
-//                 LEFT JOIN movie_rating_detail mrd ON srd.movie_rating_detail_id = mrd.id
-//                 LEFT JOIN set_movie_genre g ON m.id = g.movie_id
-//                 LEFT JOIN movie_genre mg ON g.movie_genre_id = mg.id
-//                 LEFT JOIN movie_genre_detail mgd ON mg.movie_genre_detail_id = mgd.id
-//                 LEFT JOIN set_movie_performer p ON m.id = p.movie_id
-//                 LEFT JOIN movie_performer mp ON p.movie_performer_id = mp.id
-//                 LEFT JOIN movie_performer_detail mpd ON mp.movie_performer_detail_id = mpd.id
-//                 WHERE (:title IS NULL OR :title = '' OR m.name LIKE CONCAT('%', :title, '%'))
-//                 GROUP BY m.id, m.name, m.length, m.image_url, m.trailer_link, m.date_publish
-//                 ORDER BY m.date_publish DESC
-//                 LIMIT :limit OFFSET :offset
-//            """)
-//    List<Object[]> getAllMovies(
-//            @Param("title") String title,
-//            @Param("limit") Integer limit,
-//            @Param("offset") Integer offset);
-//
+    List<Movie> findAllByNameContainingAndStatusIs(String title, Integer status);
+
 //    @Query(nativeQuery = true, value = """
 //                 SELECT
 //                     m.id,

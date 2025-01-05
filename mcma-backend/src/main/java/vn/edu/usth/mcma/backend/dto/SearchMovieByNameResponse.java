@@ -1,9 +1,6 @@
 package vn.edu.usth.mcma.backend.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,20 +8,18 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class SearchMovieByNameResponse {
-    private Integer id;
+    private Long id;
     private String name;
-    private Integer length;
     private String description;
     private String imageUrl;
     private String backgroundImageUrl;
-    private String trailerLink;
-    private String datePublish;
-    private List<String> ratingNameList;
-    private List<String> ratingDescriptionList;
-    private List<String> genreNameList;
-    private List<String> performerNameList;
-    private List<String> performerType;
-    private List<String> performerSex;
+    private Integer length;//in seconds
+    private String publishDate;
+    private String trailerUrl;
+    private RatingResponse rating;
+    private List<GenreResponse> genres;
+    private List<PerformerResponse> performers;
 }
 

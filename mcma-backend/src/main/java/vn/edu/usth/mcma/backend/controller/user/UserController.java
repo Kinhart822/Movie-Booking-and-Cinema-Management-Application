@@ -15,27 +15,24 @@ import java.util.List;
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 public class UserController {
-//    private final MovieService movieService;
+    private final MovieService movieService;
 //    private final BookingService bookingService;
 //    private final NotificationService notificationService;
 //    private final ViewService viewService;
 //    private final MovieRespondService movieRespondService;
-//    private final JwtUtil jwtUtil;
-//
-//    @GetMapping
-//    public ResponseEntity<String> sayHello(HttpServletRequest request) {
-//        Integer userId = jwtUtil.getUserIdFromToken(request);
-//        return ResponseEntity.ok("Hello, User! Your ID is: %d".formatted(userId));
-//    }
-//
-//    // TODO: Search Movies
-//    @GetMapping("/search-movie-by-name")
-//    public ResponseEntity<List<SearchMovieByNameResponse>> getAllMovies(
-//            @RequestParam(required = false, name = "title") String title,
-//            @RequestParam(required = false, name = "limit", defaultValue = "100") Integer limit,
-//            @RequestParam(required = false, name = "offset", defaultValue = "0") Integer offset) {
-//        return ResponseEntity.ok(movieService.getAllMovies(title, limit, offset));
-//    }
+    private final JwtUtil jwtUtil;
+
+    @GetMapping
+    public ResponseEntity<String> sayHello() {
+        Long userId = jwtUtil.getUserIdFromToken();
+        return ResponseEntity.ok("Hello, User! Your ID is: %d".formatted(userId));
+    }
+    // TODO: Search Movies
+    @GetMapping("/search-movie-by-name")
+    public ResponseEntity<List<SearchMovieByNameResponse>> getAllMovies(
+            @RequestParam(required = false, name = "title") String title) {
+        return ResponseEntity.ok(movieService.getAllMovies(title));
+    }
 //
 //    @GetMapping("/search-movie-by-genre")
 //    public ResponseEntity<List<SearchMovieByGenreResponse>> getAllMoviesByMovieGenreSet(

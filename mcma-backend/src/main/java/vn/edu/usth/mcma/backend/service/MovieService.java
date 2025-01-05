@@ -5,8 +5,7 @@ import constants.CommonStatus;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import vn.edu.usth.mcma.backend.dto.MovieScheduleRequest;
-import vn.edu.usth.mcma.backend.dto.SearchMovieByNameResponse;
+import vn.edu.usth.mcma.backend.dto.*;
 import vn.edu.usth.mcma.backend.entity.Movie;
 import vn.edu.usth.mcma.backend.entity.Schedule;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
@@ -16,6 +15,7 @@ import vn.edu.usth.mcma.backend.repository.ScheduleRepository;
 import vn.edu.usth.mcma.backend.repository.ScreenRepository;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -57,35 +57,51 @@ public class MovieService {
                 .build());
         return ApiResponse.success();
     }
-
-    public List<SearchMovieByNameResponse> getAllMovies(String title, Integer limit, Integer offset) {
-        return null;
+    /*
+     * TODO:USER
+     */
+    public List<SearchMovieByNameResponse> getAllMovies(String title) {
+        return movieRepository
+                .findAllByNameContainingAndStatusIs(title, CommonStatus.ACTIVE.getStatus())
+                .stream()
+                .map(m -> SearchMovieByNameResponse
+                        .builder()
+                        .id(m.getId())
+                        .name(m.getName())
+                        .description(m.getDescription())
+                        .imageUrl(m.getImageUrl())
+                        .backgroundImageUrl(m.getBackgroundImageUrl())
+                        .length(m.getLength())
+                        .publishDate(m.getPublishDate().toString().substring(0,10))
+                        .trailerUrl(m.getTrailerUrl())
+                        .rating(RatingResponse
+                                .builder()
+                                .id(m.getRating().getId())
+                                .name(m.getRating().getName())
+                                .description(m.getRating().getDescription())
+                                .build())
+                        .genres(m
+                                .getGenreSet()
+                                .stream()
+                                .map(g -> GenreResponse
+                                        .builder()
+                                        .id(g.getId())
+                                        .name(g.getName())
+                                        .build())
+                                .toList())
+                        .performers(m
+                                .getPerformerSet()
+                                .stream()
+                                .map(p -> PerformerResponse
+                                        .builder()
+                                        .id(p.getId())
+                                        .name(p.getName())
+                                        .type(p.getTypeId().toString())
+                                        .build())
+                                .toList()).build())
+                .toList();
     }
 
-    // TODO: USER
-//    public List<SearchMovieByNameResponse> getAllMovies(String title, Integer limit, Integer offset) {
-//        List<Object[]> results = movieRepository.getAllMovies(title, limit, offset);
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-//        return results.stream()
-//                .map(result -> new SearchMovieByNameResponse(
-//                        (Integer) result[0],        // id
-//                        (String) result[1],         // name
-//                        (Integer) result[2],        // length
-//                        (String) result[3],         // description
-//                        (String) result[4],         // image Url
-//                        (String) result[5],         // backgroundImageUrl
-//                        (String) result[6],         // trailerLink
-//                        result[7] != null ? dateFormat.format((Date) result[7]) : null, //  datePublish
-//                        result[8] != null ? Arrays.asList(result[8].toString().split(",")) : new ArrayList<>(), // ratingNameList
-//                        result[9] != null ? Arrays.asList(result[9].toString().split(",")) : new ArrayList<>(), // ratingDescriptionList
-//                        result[10] != null ? Arrays.asList(result[10].toString().split(",")) : new ArrayList<>(), // genreNameList
-//                        result[11] != null ? Arrays.asList(result[11].toString().split(",")) : new ArrayList<>(), // performerNameList
-//                        result[12] != null ? Arrays.asList(result[12].toString().split(",")) : new ArrayList<>(), // performerType
-//                        result[13] != null ? Arrays.asList(result[13].toString().split(",")) : new ArrayList<>() // performerSex
-//                ))
-//                .collect(Collectors.toList());
-//    }
-//
 //    public List<SearchMovieByGenreResponse> getAllMoviesByMovieGenreSet(Integer movieGenreId) {
 //        List<Object[]> results = movieRepository.getAllMoviesByMovieGenreSet(movieGenreId);
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
