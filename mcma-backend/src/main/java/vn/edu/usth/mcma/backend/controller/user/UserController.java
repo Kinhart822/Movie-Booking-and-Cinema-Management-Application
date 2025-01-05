@@ -1,8 +1,9 @@
-package com.spring.controller;
+package vn.edu.usth.mcma.backend.controller.user;
 
 import com.spring.config.JwtUtil;
 import com.spring.dto.request.booking.BookingRequest;
 import com.spring.dto.request.respond.MovieRespondRequest;
+import com.spring.dto.response.booking.BookingResponse;
 import com.spring.dto.response.SearchMovieByGenreResponse;
 import com.spring.dto.response.SearchMovieByNameResponse;
 import com.spring.dto.response.booking.*;
@@ -23,7 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
-public class UserControllerv {
+public class UserController {
 
     @Autowired
     private MovieService movieService;
