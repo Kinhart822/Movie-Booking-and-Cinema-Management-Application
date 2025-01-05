@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ScreenRequest {
-    private Long cinemaId;
     private String name;
-    private Integer typeId;
+    private Long typeId;
+    private Integer status;
 }

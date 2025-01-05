@@ -51,10 +51,8 @@ public class CinemaService {
     public ApiResponse updateCinema(Long id, CinemaRequest request) {
         Cinema cinema = cinemaRepository.findById(id).orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         cinemaRepository
-                .save(Cinema
-                        .builder()
-                        .id(cinema.getId())
-                        .city(cinema.getCity())
+                .save(cinema
+                        .toBuilder()
                         .name(request.getName())
                         .address(request.getAddress())
                         .status(request.getStatus())
@@ -66,12 +64,8 @@ public class CinemaService {
     public ApiResponse toggleStatus(Long id) {
         Cinema cinema = cinemaRepository.findById(id).orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         cinemaRepository
-                .save(Cinema
-                        .builder()
-                        .id(cinema.getId())
-                        .city(cinema.getCity())
-                        .name(cinema.getName())
-                        .address(cinema.getAddress())
+                .save(cinema
+                        .toBuilder()
                         .status(CommonStatus.ACTIVE.getStatus() + CommonStatus.INACTIVE.getStatus() - cinema.getStatus())
                         .lastModifiedBy(jwtUtil.getUserIdFromToken())
                         .lastModifiedDate(Instant.now())
@@ -79,17 +73,18 @@ public class CinemaService {
         return ApiResponse.success();
     }
     public ApiResponse deactivateCinemas(List<Long> ids) {
+        Long userId = jwtUtil.getUserIdFromToken();
+        Instant now = Instant.now();
         cinemaRepository
                 .saveAll(cinemaRepository
                         .findAllById(ids)
                         .stream()
-                        .map(c -> Cinema
-                                .builder()
-                                .id(c.getId())
-                                .city(c.getCity())
-                                .name(c.getName())
-                                .address(c.getAddress())
-                                .status(CommonStatus.INACTIVE.getStatus()).build())
+                        .map(c -> c
+                                .toBuilder()
+                                .status(CommonStatus.INACTIVE.getStatus())
+                                .lastModifiedBy(userId)
+                                .lastModifiedDate(now)
+                                .build())
                         .toList());
         return ApiResponse.success();
     }

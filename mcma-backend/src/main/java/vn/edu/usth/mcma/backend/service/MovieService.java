@@ -6,6 +6,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.MovieScheduleRequest;
+import vn.edu.usth.mcma.backend.dto.SearchMovieByNameResponse;
 import vn.edu.usth.mcma.backend.entity.Movie;
 import vn.edu.usth.mcma.backend.entity.Schedule;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
@@ -15,6 +16,7 @@ import vn.edu.usth.mcma.backend.repository.ScheduleRepository;
 import vn.edu.usth.mcma.backend.repository.ScreenRepository;
 
 import java.time.Instant;
+import java.util.List;
 
 @Transactional
 @Service
@@ -54,6 +56,10 @@ public class MovieService {
                 .status(CommonStatus.ACTIVE.getStatus())
                 .build());
         return ApiResponse.success();
+    }
+
+    public List<SearchMovieByNameResponse> getAllMovies(String title, Integer limit, Integer offset) {
+        return null;
     }
 
     // TODO: USER

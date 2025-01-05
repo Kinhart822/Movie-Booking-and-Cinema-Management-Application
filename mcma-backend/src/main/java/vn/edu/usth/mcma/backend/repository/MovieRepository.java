@@ -1,12 +1,21 @@
 package vn.edu.usth.mcma.backend.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vn.edu.usth.mcma.backend.entity.Movie;
 
+import java.util.Date;
+import java.util.List;
+
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> {
-    // TODO: USER
+    /*
+     * ====
+     * User
+     * ====
+     */
 //    @Query(nativeQuery = true, value = """
 //                 SELECT
 //                        m.id,
@@ -15,8 +24,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 //                        m.description,
 //                        m.image_url,
 //                        m.background_image_url,
-//                        m.trailer_url,
-//                        m.publish_date,
+//                        m.trailer_link,
+//                        m.date_publish,
 //                        GROUP_CONCAT(DISTINCT mrd.name SEPARATOR ',') AS rating_name,
 //                        GROUP_CONCAT(DISTINCT mrd.description SEPARATOR ',') AS rating_description,
 //                        GROUP_CONCAT(DISTINCT mgd.name SEPARATOR ',') AS genre_name,
@@ -33,8 +42,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 //                 LEFT JOIN movie_performer mp ON p.movie_performer_id = mp.id
 //                 LEFT JOIN movie_performer_detail mpd ON mp.movie_performer_detail_id = mpd.id
 //                 WHERE (:title IS NULL OR :title = '' OR m.name LIKE CONCAT('%', :title, '%'))
-//                 GROUP BY m.id, m.name, m.length, m.image_url, m.trailer_url, m.publish_date
-//                 ORDER BY m.publish_date DESC
+//                 GROUP BY m.id, m.name, m.length, m.image_url, m.trailer_link, m.date_publish
+//                 ORDER BY m.date_publish DESC
 //                 LIMIT :limit OFFSET :offset
 //            """)
 //    List<Object[]> getAllMovies(
@@ -50,8 +59,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 //                     m.description,
 //                     m.image_url,
 //                     m.background_image_url,
-//                     m.trailer_url,
-//                     m.publish_date,
+//                     m.trailer_link,
+//                     m.date_publish,
 //                     GROUP_CONCAT(DISTINCT mrd.name SEPARATOR ',') AS rating_name,
 //                     GROUP_CONCAT(DISTINCT mrd.description SEPARATOR ',') AS rating_description,
 //                     GROUP_CONCAT(DISTINCT mgd.name SEPARATOR ',') AS genre_name,
@@ -68,8 +77,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 //                 LEFT JOIN movie_performer mp ON p.movie_performer_id = mp.id
 //                 LEFT JOIN movie_performer_detail mpd ON mp.movie_performer_detail_id = mpd.id
 //                 WHERE mg.id = :movieGenreId
-//                 GROUP BY m.id, m.name, m.length, m.image_url, m.trailer_url, m.publish_date
-//                 ORDER BY m.publish_date DESC
+//                 GROUP BY m.id, m.name, m.length, m.image_url, m.trailer_link, m.date_publish
+//                 ORDER BY m.date_publish DESC
 //            """)
 //    List<Object[]> getAllMoviesByMovieGenreSet(@Param("movieGenreId") Integer movieGenreId);
 //
@@ -81,8 +90,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 //                    m.description,
 //                    m.image_url,
 //                    m.background_image_url,
-//                    m.trailer_url,
-//                    m.publish_date,
+//                    m.trailer_link,
+//                    m.date_publish,
 //                    GROUP_CONCAT(DISTINCT mrd.name SEPARATOR ',') AS rating_name,
 //                    GROUP_CONCAT(DISTINCT mrd.description SEPARATOR ',') AS rating_description,
 //                    GROUP_CONCAT(DISTINCT mgd.name SEPARATOR ',') AS genre_name,
@@ -99,8 +108,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 //                LEFT JOIN movie_performer mp ON p.movie_performer_id = mp.id
 //                LEFT JOIN movie_performer_detail mpd ON mp.movie_performer_detail_id = mpd.id
 //                WHERE (:name IS NULL OR :name = '' OR mgd.name LIKE CONCAT('%', :name, '%'))
-//                GROUP BY m.id, m.name, m.length, m.image_url, m.trailer_url, m.publish_date
-//                ORDER BY m.publish_date DESC
+//                GROUP BY m.id, m.name, m.length, m.image_url, m.trailer_link, m.date_publish
+//                ORDER BY m.date_publish DESC
 //                LIMIT :limit OFFSET :offset
 //            """)
 //    List<Object[]> getAllMoviesByMovieGenreName(
@@ -129,4 +138,3 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 //            """)
 //    List<Movie> findMoviesBySelectedDateSchedule(@Param("date") String date);
 }
-

@@ -1,24 +1,29 @@
 set foreign_key_checks = 0;
+truncate table mcma.booking;
 truncate table mcma.cinema;
 truncate table mcma.city;
 truncate table mcma.coupon;
 truncate table mcma.drink;
 truncate table mcma.food;
 truncate table mcma.genre;
+truncate table mcma.map_booking_coupon;
+truncate table mcma.map_booking_drink;
+truncate table mcma.map_booking_food;
+truncate table mcma.map_booking_ticket;
 truncate table mcma.map_movie_coupon;
 truncate table mcma.map_movie_genre;
 truncate table mcma.map_movie_performer;
-truncate table mcma.map_movie_rating;
 truncate table mcma.map_user_coupon;
 truncate table mcma.movie;
 truncate table mcma.movie_response;
-truncate table mcma.movie_schedule;
 truncate table mcma.notification;
 truncate table mcma.performer;
 truncate table mcma.rating;
+truncate table mcma.schedule;
 truncate table mcma.screen;
 truncate table mcma.screen_type;
 truncate table mcma.seat;
+truncate table mcma.ticket;
 truncate table mcma.token;
 truncate table mcma.user;
 set foreign_key_checks = 1;
@@ -81,18 +86,74 @@ insert into mcma.screen_type (name, description, price, status, created_by, crea
 values ('imax', 'wow', 10, 1, 1, utc_timestamp(), 1, utc_timestamp());
 insert into mcma.screen (cinema_id, name, type_id, status, mutable, created_by, created_date, last_modified_by,
                          last_modified_date)
-values (1, 'phong 1', 1, 1, 1,1, utc_timestamp(), 1, utc_timestamp()),
-       (1, 'phong 2', 1, 1, 1,1, utc_timestamp(), 1, utc_timestamp());
+values (1, 'phong 1', 1, 1, 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       (1, 'phong 2', 1, 1, 1, 1, utc_timestamp(), 1, utc_timestamp());
 insert into mcma.user (first_name, last_name, sex, dob, email, phone, password, address, user_type, status, created_by,
                        created_date, last_modified_by, last_modified_date)
 values ('At', 'Nguyen', 1, '2004-04-11 00:00:00', 'at0@gmail.com', '0976289114',
         '$2a$10$do2lQSohzuLfiSljWORi0Oc3OVG37mtPWxR/cAmJSsOLebcF4A5Oi', 'Hanoi, Viet Nam', 0, 1, 0, utc_timestamp(), 0,
         utc_timestamp());
-insert into mcma.movie (name, length, publish_date, status, created_by, created_date, last_modified_by,
+insert into mcma.rating (name, description, status, created_by, last_modified_by, created_date, last_modified_date)
+values ('PG-13', 'Parental Guidance-13', 1, 1, 1, utc_timestamp(), utc_timestamp()),
+       ('R', 'Restricted', 1, 1, 1, utc_timestamp(), utc_timestamp()),
+       ('G', 'General Audience', 1, 1, 1, utc_timestamp(), utc_timestamp());
+
+insert into mcma.movie (name, length, publish_date, rating_id, status, created_by, created_date, last_modified_by,
                         last_modified_date)
-values ('Inception', 148, '2010-07-16 00:00:00', 1, 1, utc_timestamp(), 1, utc_timestamp()),
-       ('Interstellar', 169, '2014-11-07 00:00:00', 1, 1, utc_timestamp(), 1, utc_timestamp()),
-       ('The Dark Knight', 152, '2008-07-18 00:00:00', 1, 1, utc_timestamp(), 1, utc_timestamp()),
-       ('Tenet', 150, '2020-08-26 00:00:00', 1, 1, utc_timestamp(), 1, utc_timestamp()),
-       ('Dunkirk', 106, '2017-07-21 00:00:00', 1, 1, utc_timestamp(), 1, utc_timestamp()),
-       ('not released', 10, '2025-01-31 00:00:00', 1, 1, utc_timestamp(), 1, utc_timestamp());
+values ('Inception', 148, '2010-07-16 00:00:00', 1, 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       ('Interstellar', 169, '2014-11-07 00:00:00', 2, 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       ('The Dark Knight', 152, '2008-07-18 00:00:00', 3, 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       ('Tenet', 150, '2020-08-26 00:00:00', 1, 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       ('Dunkirk', 106, '2017-07-21 00:00:00', 2, 1, 1, utc_timestamp(), 1, utc_timestamp()),
+       ('not released', 10, '2025-01-31 00:00:00', 3, 1, 1, utc_timestamp(), 1, utc_timestamp());
+insert into mcma.genre (name, description, status, created_by, last_modified_by, created_date, last_modified_date)
+values ('Action', 'Action-packed movie', 1, 1, 1, utc_timestamp(), utc_timestamp()),
+       ('Comedy', 'Humorous movie', 1, 1, 1, utc_timestamp(), utc_timestamp()),
+       ('Drama', 'Emotional storytelling', 1, 1, 1, utc_timestamp(), utc_timestamp()),
+       ('Sci-fi', 'Science Fiction', 1, 1, 1, utc_timestamp(), utc_timestamp());
+insert into mcma.map_movie_genre (movie_id, genre_id)
+values (1,1),
+       (1,2),
+       (1,3),
+       (2,2),
+       (2,3),
+       (2,4),
+       (3,3),
+       (3,4),
+       (3,1),
+       (4,4),
+       (4,1),
+       (4,2),
+       (5,1),
+       (5,2),
+       (5,3),
+       (6,2),
+       (6,3),
+       (6,4);
+
+insert into mcma.performer (name, type_id, sex, dob, status, created_by, last_modified_by, created_date,
+                            last_modified_date)
+values ('John Doe', 1, 0, '1980-05-15 00:00:00', 1, 1, 1, utc_timestamp(), utc_timestamp()),
+       ('Jane Smith', 0, 1, '1990-10-20 00:00:00', 1, 1, 1, utc_timestamp(), utc_timestamp()),
+       ('Alice Johnson', 0, 1, '1985-03-25 00:00:00', 1, 1, 1, utc_timestamp(), utc_timestamp()),
+       ('Bob Brown', 1, 0, '1975-12-05 00:00:00', 1, 1, 1, utc_timestamp(), utc_timestamp()),
+       ('Charlie Davis', 1, 1, '1982-07-30 00:00:00', 1, 1, 1, utc_timestamp(), utc_timestamp());
+insert into mcma.map_movie_performer (movie_id, performer_id)
+values (1,1),
+       (1,2),
+       (1,3),
+       (2,4),
+       (2,5),
+       (2,1),
+       (3,2),
+       (3,3),
+       (3,4),
+       (4,5),
+       (4,1),
+       (4,2),
+       (5,3),
+       (5,4),
+       (5,5),
+       (6,1),
+       (6,2),
+       (6,3);

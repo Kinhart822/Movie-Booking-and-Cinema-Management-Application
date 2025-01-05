@@ -25,7 +25,7 @@ public interface CinemaRepository extends JpaRepository<Cinema, Long> {
                      left join city c on cine.city_id = c.id
                      left join screen s on cine.id = s.cinema_id
                      left join user u on cine.last_modified_by = u.id
-            where cine.name like concat('%', :query, '%')
+            where :query is null or cine.name like concat('%', :query, '%')
             group by cine.id""")
     List<CinemaProjection> findAllProjectionByQuery(@Param(value = "query") String query);
 }

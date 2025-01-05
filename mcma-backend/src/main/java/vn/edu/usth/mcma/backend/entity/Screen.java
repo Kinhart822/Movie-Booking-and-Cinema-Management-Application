@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 public class Screen extends AbstractAuditing implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
