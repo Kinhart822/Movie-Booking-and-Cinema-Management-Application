@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SeatTest {
-    private SeatHelper seatHelper;
     private List<SeatHelperInput> seatHelperInputs;
     @BeforeEach
     void init() {
@@ -42,7 +41,7 @@ public class SeatTest {
 
     @Test
     void test1() {
-        seatHelper = new SeatHelper(seatHelperInputs);
+        SeatHelper seatHelper = new SeatHelper(seatHelperInputs);
         System.out.println(seatHelper.getSeatHelperOutputs());
     }
 

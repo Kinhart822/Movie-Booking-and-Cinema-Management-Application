@@ -5,12 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SeatMapResponse {
-    private List<SeatPosition> seatPositions;
+public class SeatHelperInput {
+    private int row;
+    private int col;
+    private int typeId;
 }
