@@ -1,6 +1,7 @@
 package vn.edu.usth.mcma.backend.service;
 
 import constants.ApiResponseCode;
+import constants.SeatAvailability;
 import constants.SeatType;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -30,7 +31,7 @@ public class SeatService {
     private final SeatRepository seatRepository;
     private final ScreenRepository screenRepository;
     private final JwtUtil jwtUtil;
-    private final boolean DEFAULT_SEAT_AVAILABILITY = true;
+    private final SeatAvailability DEFAULT_SEAT_AVAILABILITY = SeatAvailability.AVAILABLE;
 
     public ApiResponse initSeatMap(Long screenId, List<SeatHelperInput> seatHelperInputs) {
         Screen screen = screenRepository
@@ -56,7 +57,7 @@ public class SeatService {
                                 .build())
                         .typeId(seatResponse.getTypeId())
                         .name(seatResponse.getName())
-                        .isAvailable(DEFAULT_SEAT_AVAILABILITY)
+                        .availability(DEFAULT_SEAT_AVAILABILITY)
                         .createdBy(userId)
                         .createdDate(now)
                         .lastModifiedBy(userId)

@@ -21,7 +21,7 @@ import java.time.Instant;
 //@EntityListeners(AuditingEntityListener.class) error: loop
 @Getter
 @Setter
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class AbstractAuditing implements Serializable {
