@@ -17,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Deprecated
 public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,7 +59,7 @@ public class Seat {
     @ManyToOne
     @JoinColumn(name = "screen_id", nullable = false)
     private Screen screen;
-
+    //rejected: unused
     @OneToMany(mappedBy = "seat", cascade = CascadeType.ALL)
     private List<BookingSeat> seatList;
 }

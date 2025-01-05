@@ -7,21 +7,23 @@ import java.util.Map;
 
 @Getter
 public enum SeatType {
-    UNAVAILABLE(-1, "Unavailable space",1,1),
-    AVAILABLE(0, "Available space",1,1),
-    NORMAL(1, "For normies",1,1),
-    VIP(2, "For VIP",1,1),
-    LOVERS(3, "For lovers",2,1),
-    BED(4, "For lovers with back pain",2,3),;
+    UNAVAILABLE(-1, "Unavailable space",1,1,null),
+    AVAILABLE(0, "Available space",1,1,null),
+    NORMAL(1, "For normies",1,1,30.0),
+    VIP(2, "For VIP",1,1, 40.0),
+    LOVERS(3, "For lovers",2,1,50.0),
+    BED(4, "For lovers with back pain",2,3,120.0),;
     private final int id;
     private final String description;
     private final int width;
     private final int length;
-    SeatType(int id, String description, int width, int length) {
+    private final Double price;
+    SeatType(int id, String description, int width, int length, Double price) {
         this.id = id;
         this.description = description;
         this.width = width;
         this.length = length;
+        this.price = price;
     }
     private static final Map<Integer, SeatType> ID_MAP = new HashMap<>();
     static {

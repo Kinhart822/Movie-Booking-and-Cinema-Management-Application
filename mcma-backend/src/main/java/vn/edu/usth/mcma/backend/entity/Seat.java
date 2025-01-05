@@ -1,8 +1,7 @@
 package vn.edu.usth.mcma.backend.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
+import constants.SeatAvailability;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -32,7 +31,8 @@ public class Seat implements Serializable {
     @Column
     private String name;
     @Column
-    private Boolean isAvailable;
+    @Enumerated(EnumType.ORDINAL)
+    private SeatAvailability availability;
     @CreatedBy
     @Column(updatable = false)
     private Long createdBy;
