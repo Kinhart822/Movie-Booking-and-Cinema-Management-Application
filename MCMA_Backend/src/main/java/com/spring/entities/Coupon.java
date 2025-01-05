@@ -18,6 +18,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Deprecated
 public class Coupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,7 +68,7 @@ public class Coupon {
 
     @ManyToMany(mappedBy = "movieCouponSet")
     private Set<Movie> movieSet;
-    //TODO import
+    //rejected
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "coupon")
     private List<BookingCoupon> coupons;
 }
