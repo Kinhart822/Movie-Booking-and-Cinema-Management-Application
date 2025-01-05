@@ -19,9 +19,9 @@ public class BookingRequest {
     private List<Integer> ticketIds;
     private List<Integer> seatIds;
     private List<Integer> foodIds;
-    private List<SizeFoodOrDrink> sizeFoodList;
+//    private List<SizeFoodOrDrink> sizeFoodList;
     private List<Integer> drinkIds;
-    private List<SizeFoodOrDrink> sizeDrinkList;
+//    private List<SizeFoodOrDrink> sizeDrinkList;
     private Integer movieCouponId;
     private Integer userCouponId;
     private PaymentMethod paymentMethod;

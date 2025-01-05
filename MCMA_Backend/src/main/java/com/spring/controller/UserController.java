@@ -11,6 +11,7 @@ import com.spring.dto.response.movieRespond.CommentResponse;
 import com.spring.dto.response.movieRespond.MovieRespondResponse;
 import com.spring.dto.response.movieRespond.RatingResponse;
 import com.spring.dto.response.view.*;
+import com.spring.enums.BookingStatus;
 import com.spring.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -182,11 +183,11 @@ public class UserController {
         return ResponseEntity.ok(bookingResponse);
     }
 
-    @PostMapping("/booking/updateBookingSeat")
-    public ResponseEntity<String> updateBookingSeat(@RequestBody BookingRequest bookingRequest) {
-        bookingService.updateBookingSeat(bookingRequest);
-        return ResponseEntity.ok("Seat(s) updated successfully");
-    }
+//    @PostMapping("/booking/updateBookingSeat")
+//    public ResponseEntity<String> updateBookingSeat(@RequestBody BookingRequest bookingRequest) {
+//        bookingService.updateBookingSeat(bookingRequest);
+//        return ResponseEntity.ok("Seat(s) updated successfully");
+//    }
 
     @PostMapping("/booking/cancel-booking/{bookingId}")
     public ResponseEntity<String> cancelBooking(HttpServletRequest request, @PathVariable Integer bookingId) {
@@ -198,7 +199,7 @@ public class UserController {
     @PostMapping("/booking/revoke-cancel-booking/{bookingId}")
     public ResponseEntity<String> revokeCancelBooking(HttpServletRequest request, @PathVariable Integer bookingId) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        bookingService.cancelBooking(bookingId, userId);
+        bookingService.revokeCancelBooking(bookingId, userId);
         return ResponseEntity.ok("Booking reinstated successfully");
     }
 
@@ -343,6 +344,27 @@ public class UserController {
     public ResponseEntity<List<BookingResponse>> getAllBookingsByUser(HttpServletRequest request) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
         List<BookingResponse> bookingResponses = viewService.getAllBookingsByUser(userId);
+        return ResponseEntity.ok(bookingResponses);
+    }
+
+    @GetMapping("/view/getAllCompletedBookingsThatHaveStartDateTimeHigherThanNowByUser")
+    public ResponseEntity<List<BookingResponse>> getAllCompletedBookingsThatHaveStartDateTimeHigherThanNowByUser(HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        List<BookingResponse> bookingResponses = viewService.getAllCompletedBookingsThatHaveStartDateTimeHigherThanNowByUser(userId);
+        return ResponseEntity.ok(bookingResponses);
+    }
+
+    @GetMapping("/view/getAllBookingsThatHaveStartDateTimeHigherThanNowByUser")
+    public ResponseEntity<List<BookingResponse>> getAllBookingsThatHaveStartDateTimeHigherThanNowByUser(HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        List<BookingResponse> bookingResponses = viewService.getAllBookingsThatHaveStartDateTimeHigherThanNowByUser(userId);
+        return ResponseEntity.ok(bookingResponses);
+    }
+
+    @GetMapping("/view/allBookingsCanceledByUser")
+    public ResponseEntity<List<BookingResponse>> getAllBookingsCanceled(HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        List<BookingResponse> bookingResponses = viewService.getAllBookingsCanceledByUser(BookingStatus.CANCELLED, userId);
         return ResponseEntity.ok(bookingResponses);
     }
 

@@ -16,6 +16,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -71,7 +73,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public JwtAuthenticationResponse signUp(SignUpRequest signUpRequest) {
+    public void signUp(SignUpRequest signUpRequest) {
         if (!signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())) {
             throw new IllegalArgumentException("Password and confirm password do not match");
         }
@@ -81,12 +83,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new IllegalArgumentException("Email already exists");
         }
 
+        Date dateOfBirth;
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            formatter.setLenient(false);
+            dateOfBirth = formatter.parse(signUpRequest.getDateOfBirth());
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("Invalid dateOfBirth format. Expected format: dd/MM/yyyy");
+        }
+
         User user = new User();
         user.setFirstName(signUpRequest.getFirstName());
         user.setLastName(signUpRequest.getLastName());
         user.setGender(signUpRequest.getGender());
         user.setPhoneNumber(signUpRequest.getPhone());
-        user.setDateOfBirth(signUpRequest.getDateOfBirth());
+        user.setDateOfBirth(dateOfBirth);
         user.setDateCreated(new Date());
         user.setDateUpdated(new Date());
         user.setAddress(signUpRequest.getAddress());
@@ -98,15 +109,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Incorrect Role: %s".formatted(signUpRequest.getType()));
         }
-        var saveUser = userRepository.save(user);
+        userRepository.save(user);
 
-        var jwt = jwtService.generateToken(user);
-        saveUserToken(jwt, saveUser);
-
-        JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
-        jwtAuthenticationResponse.setToken(jwt);
-
-        return jwtAuthenticationResponse;
+//        var jwt = jwtService.generateToken(user);
+//        saveUserToken(jwt, saveUser);
+//
+//        JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
+//        jwtAuthenticationResponse.setToken(jwt);
+//
+//        return jwtAuthenticationResponse;
     }
 
     @Override

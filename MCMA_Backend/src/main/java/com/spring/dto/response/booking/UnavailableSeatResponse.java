@@ -13,6 +13,7 @@ public class UnavailableSeatResponse {
     private  String screenName;
     private Integer seatId;
     private String unAvailableSeat;
+    private String seatStatus;
     private Integer seatColumn;
     private Integer seatRow;
     private String unAvailableSeatsType;

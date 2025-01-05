@@ -15,4 +15,5 @@ public class TicketResponse {
     private List<Integer> ticketIds;
     private List<String> ticketTypes;
     private List<String> ticketDescriptions;
+    private List<Double> ticketPriceList;
 }

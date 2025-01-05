@@ -12,8 +12,9 @@ import lombok.Setter;
 public class HeldSeatResponse {
     private  String screenName;
     private Integer seatId;
-    private String heldSeats;
+    private String heldSeat;
+    private String seatStatus;
     private Integer seatColumn;
     private Integer seatRow;
-    private String heldSeatsTypeList;
+    private String heldSeatsType;
 }

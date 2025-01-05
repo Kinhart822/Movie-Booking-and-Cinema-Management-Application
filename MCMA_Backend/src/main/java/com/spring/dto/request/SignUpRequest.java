@@ -30,9 +30,7 @@ public class SignUpRequest {
     private String phone;
 
     @NotNull(message = "dateOfBirth must be not null")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @JsonFormat(pattern = "MM/dd/yyyy")
-    private Date dateOfBirth;
+    private String dateOfBirth;
 
     @GenderSubset(anyOf = {Gender.Male, Gender.Female, Gender.Other})
     private Gender gender;
@@ -54,9 +52,4 @@ public class SignUpRequest {
 
     @NotBlank
     private String confirmPassword;
-
-    @NotNull(message = "dateCreated must be not null")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @JsonFormat(pattern = "MM/dd/yyyy")
-    private Date dateCreated;
 }
