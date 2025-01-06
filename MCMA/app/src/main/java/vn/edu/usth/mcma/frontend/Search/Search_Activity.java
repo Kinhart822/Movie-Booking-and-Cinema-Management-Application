@@ -223,7 +223,7 @@ public class Search_Activity extends AppCompatActivity {
         } else {
             for (SearchMovieByNameResponse item : items) {
                 List<String> genres = item.getGenres().stream().map(Genre::getName).collect(Collectors.toList());
-                if (genres != null && genres.contains(category)) {
+                if (genres.contains(category)) {
                     filteredItems.add(item);
                 }
 //                if (item.getGenreName().equalsIgnoreCase(category)) {

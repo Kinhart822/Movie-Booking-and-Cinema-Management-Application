@@ -1,7 +1,5 @@
 package vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response;
 
-import java.util.List;
-
 import lombok.Data;
 
 @Data

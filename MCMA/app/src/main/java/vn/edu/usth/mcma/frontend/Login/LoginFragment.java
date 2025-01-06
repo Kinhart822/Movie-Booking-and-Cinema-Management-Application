@@ -149,8 +149,9 @@ public class LoginFragment extends Fragment {
                 RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest(refreshToken);
                 authenticationApi.refresh(refreshTokenRequest).enqueue(new Callback<JwtAuthenticationResponse>() {
                     @Override
-                    public void onResponse(Call<JwtAuthenticationResponse> call, Response<JwtAuthenticationResponse> response) {
+                    public void onResponse(@NonNull Call<JwtAuthenticationResponse> call, @NonNull Response<JwtAuthenticationResponse> response) {
                         if (response.isSuccessful()) {
+                            assert response.body() != null;
                             String newToken = response.body().getToken();
                             saveAuthToken(newToken);
                             // Update expiration time
@@ -165,7 +166,7 @@ public class LoginFragment extends Fragment {
                     }
 
                     @Override
-                    public void onFailure(Call<JwtAuthenticationResponse> call, Throwable t) {
+                    public void onFailure(@NonNull Call<JwtAuthenticationResponse> call, @NonNull Throwable t) {
                         Toast.makeText(getActivity(), "Failed to refresh token: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
