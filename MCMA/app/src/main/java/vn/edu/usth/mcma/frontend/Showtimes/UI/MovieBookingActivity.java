@@ -54,8 +54,8 @@ public class MovieBookingActivity extends AppCompatActivity {
     private View citiesSection;
     private View theatersSection;
     private String movieTitle;
-    private int movieId;
-    private int selectedCityId;
+    private Long movieId;
+    private long selectedCityId;
     private int selectedCinemaId;
     private int selectedScreenId;
     private int selectedScheduleId;
@@ -66,7 +66,7 @@ public class MovieBookingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_booking);
 
         movieTitle = getIntent().getStringExtra("MOVIE_TITLE");
-        movieId = getIntent().getIntExtra("MOVIE_ID", -1);
+        movieId = getIntent().getLongExtra("MOVIE_ID", -1L);
         citiesSection = findViewById(R.id.cities_section);
         theatersSection = findViewById(R.id.theaters_section);
         citiesContainer = findViewById(R.id.cities_container);
@@ -84,7 +84,7 @@ public class MovieBookingActivity extends AppCompatActivity {
         theatersSection.setVisibility(View.VISIBLE);
     }
 
-    private void fetchCitiesByMovie(int movieId) {
+    private void fetchCitiesByMovie(Long movieId) {
         RetrofitService retrofitService = new RetrofitService(this);
         GetAllCitiesAPI getAllCitiesAPI = retrofitService.getRetrofit().create(GetAllCitiesAPI.class);
 
@@ -98,7 +98,7 @@ public class MovieBookingActivity extends AppCompatActivity {
                         // Chọn thành phố đầu tiên làm mặc định
                         CityResponse defaultCity = cities.get(0);
                         selectedCity = defaultCity.getCityName();
-                        int defaultCityId = defaultCity.getCityId();
+                        long defaultCityId = defaultCity.getCityId();
 
                         fetchCinemasByCity(movieId, defaultCityId);
                     }
@@ -117,7 +117,7 @@ public class MovieBookingActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchCinemasByCity(int movieId, int cityId) {
+    private void fetchCinemasByCity(Long movieId, Long cityId) {
         RetrofitService retrofitService = new RetrofitService(this);
         GetCinemaByCityIdAPI apiService = retrofitService.getRetrofit().create(GetCinemaByCityIdAPI.class);
 
@@ -142,13 +142,13 @@ public class MovieBookingActivity extends AppCompatActivity {
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    private void setupCityButtons(int movieId, List<CityResponse> cityResponses) {
+    private void setupCityButtons(Long movieId, List<CityResponse> cityResponses) {
         citiesContainer.removeAllViews();
 
         ColorStateList textColorStateList = ContextCompat.getColorStateList(this, R.color.button_text_selector);
 
         for (CityResponse cityResponse : cityResponses) {
-            Integer cityId = cityResponse.getCityId();
+            Long cityId = cityResponse.getCityId();
             String city = cityResponse.getCityName();
 
             Button cityButton = new Button(this);

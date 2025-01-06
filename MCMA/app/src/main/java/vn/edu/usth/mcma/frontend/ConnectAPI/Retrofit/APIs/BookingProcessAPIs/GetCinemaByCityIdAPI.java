@@ -16,7 +16,7 @@ public interface GetCinemaByCityIdAPI {
 
     @GET("/api/v1/user/booking/allCinemasByMovieAndCity")
     Call<List<CinemaResponse>> getCinemasByMovieIdAndCityId(
-            @Query("movieId") int movieId,
-            @Query("cityId") int cityId
+            @Query("movieId") Long movieId,
+            @Query("cityId") Long cityId
     );
 }

@@ -13,5 +13,5 @@ public interface GetAllCitiesAPI {
     Call<ViewCityResponse> getAllCities();
 
     @GET("/api/v1/user/booking/allCitiesByMovie/{movieId}")
-    Call<List<CityResponse>> getCitiesByMovieId(@Path("movieId") int movieId);
+    Call<List<CityResponse>> getCitiesByMovieId(@Path("movieId") Long movieId);
 }

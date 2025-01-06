@@ -49,13 +49,13 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
     private SparseBooleanArray expandedStates = new SparseBooleanArray();
     private Integer selectedScreenId;
     private Integer selectedScheduleId;
-    private Integer movieId;
+    private final Long movieId;
 
     public interface OnShowtimeClickListener {
         void onShowtimeClick(Theater theater,String date, String showtime, Integer screenId, String screenRoom, Integer scheduleId);
     }
 
-    public TheaterShowtimesAdapter(OnShowtimeClickListener listener,Integer movieId) {
+    public TheaterShowtimesAdapter(OnShowtimeClickListener listener, Long movieId) {
         this.listener = listener;
         this.movieId = movieId; // Initialize movieId
     }
@@ -111,7 +111,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
             headerLayout = itemView.findViewById(R.id.header_layout);
         }
 
-        void bind(Theater theater, int position,Integer movieId) {
+        void bind(Theater theater, int position, Long movieId) {
             theaterName.setText(theater.getName());
             theaterAddress.setText(theater.getAddress());
 
@@ -150,7 +150,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                 populateScreenRooms(theater,theater.getId(),movieId);
             }
         }
-        private void populateScreenRooms(Theater theater, int cinemaId, Integer movieId) {
+        private void populateScreenRooms(Theater theater, int cinemaId, Long movieId) {
             screenRoomsContainer.removeAllViews();
 
             Context context = itemView.getContext();
@@ -219,7 +219,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
         }
 
 
-        private void populateShowtimes(Theater theater, Integer movieId) {
+        private void populateShowtimes(Theater theater, Long movieId) {
             showtimesContainer.removeAllViews();
             Context context = itemView.getContext();
             if (movieId == null || selectedScreenId == null) {
