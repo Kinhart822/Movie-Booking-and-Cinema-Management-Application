@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +35,7 @@ import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.ScheduleResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.ScreenResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.Schedule;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.BookingProcessAPIs.GetDateScheduleByScreenIdAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.BookingProcessAPIs.GetScreenByCinemaIdAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
@@ -51,7 +53,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
     private final Long movieId;
 
     public interface OnShowtimeClickListener {
-        void onShowtimeClick(Theater theater,String date, String showtime, Long screenId, String screenRoom, Integer scheduleId);
+        void onShowtimeClick(Theater theater,String date, String showtime, Long screenId, String screenRoom, Long scheduleId);
     }
 
     public TheaterShowtimesAdapter(OnShowtimeClickListener listener, Long movieId) {
@@ -230,21 +232,30 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
             RetrofitService retrofitService = new RetrofitService(context);
             GetDateScheduleByScreenIdAPI dateScheduleByScreenIdAPI = retrofitService.getRetrofit().create(GetDateScheduleByScreenIdAPI.class);
 
-            dateScheduleByScreenIdAPI.getAllSchedulesByMovieAndCinemaAndScreen(movieId, theater.getId(), selectedScreenId)
-                    .enqueue(new Callback<ScheduleResponse>() {
+            dateScheduleByScreenIdAPI.getAllSchedulesByMovieAndScreen(movieId, selectedScreenId)
+                    .enqueue(new Callback<List<Schedule>>() {
                         @Override
-                        public void onResponse(Call<ScheduleResponse> call, Response<ScheduleResponse> response) {
+                        public void onResponse(@NonNull Call<List<Schedule>> call, @NonNull Response<List<Schedule>> response) {
                             if (response.isSuccessful() && response.body() != null) {
-                                ScheduleResponse scheduleResponse = response.body();
+                                List<Schedule> schedules = response.body();
 
 //                                // Group schedules by date
 //                                Map<String, List<String>> schedulesByDate = new LinkedHashMap<>();
 //                                List<String> dates = scheduleResponse.getDate();
 //                                List<String> times = scheduleResponse.getTime();
-                                Map<String, Map<String, Integer>> schedulesByDateAndTime = new LinkedHashMap<>();
-                                List<String> dates = scheduleResponse.getDate();
-                                List<String> times = scheduleResponse.getTime();
-                                List<Integer> scheduleIds = scheduleResponse.getScheduleId();
+                                Map<String, Map<String, Long>> schedulesByDateAndTime = new LinkedHashMap<>();
+                                List<String> dates = schedules
+                                        .stream()
+                                        .map(s -> s.getStartTime().substring(0,10))
+                                        .collect(Collectors.toList());
+                                List<String> times = schedules
+                                        .stream()
+                                        .map(s -> s.getStartTime().substring(11,16))
+                                        .collect(Collectors.toList());
+                                List<Long> scheduleIds = schedules
+                                        .stream()
+                                        .map(Schedule::getId)
+                                        .collect(Collectors.toList());
 
 
 //                                // Assuming dates and times are aligned, map them together
@@ -258,7 +269,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                 for (int i = 0; i < dates.size(); i++) {
                                     String date = dates.get(i);
                                     String time = times.get(i);
-                                    Integer scheduleId = scheduleIds.get(i);
+                                    Long scheduleId = scheduleIds.get(i);
 
                                     schedulesByDateAndTime.computeIfAbsent(date, k -> new LinkedHashMap<>())
                                             .put(time, scheduleId);
@@ -313,10 +324,10 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                         // Populate time buttons for the selected date
 //                                        for (String time : schedulesByDate.get(date)) {
 
-                                        Map<String, Integer> timesForDate = schedulesByDateAndTime.get(date);
-                                        for (Map.Entry<String, Integer> entry : timesForDate.entrySet()) {
+                                        Map<String, Long> timesForDate = schedulesByDateAndTime.get(date);
+                                        for (Map.Entry<String, Long> entry : timesForDate.entrySet()) {
                                             String time = entry.getKey();
-                                            Integer scheduleId = entry.getValue();
+                                            Long scheduleId = entry.getValue();
 
                                             Button timeButton = new Button(context);
                                             timeButton.setText(time);
@@ -364,7 +375,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                         }
 
                         @Override
-                        public void onFailure(Call<ScheduleResponse> call, Throwable t) {
+                        public void onFailure(@NonNull Call<List<Schedule>> call, @NonNull Throwable t) {
                             // Show error message if the API call fails
                             Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                         }
