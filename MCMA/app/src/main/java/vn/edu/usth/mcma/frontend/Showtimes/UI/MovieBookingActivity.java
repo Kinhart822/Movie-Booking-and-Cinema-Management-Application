@@ -8,11 +8,11 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -56,7 +56,7 @@ public class MovieBookingActivity extends AppCompatActivity {
     private String movieTitle;
     private Long movieId;
     private long selectedCityId;
-    private int selectedCinemaId;
+    private Long selectedCinemaId;
     private int selectedScreenId;
     private int selectedScheduleId;
 
@@ -90,7 +90,7 @@ public class MovieBookingActivity extends AppCompatActivity {
 
         getAllCitiesAPI.getCitiesByMovieId(movieId).enqueue(new Callback<List<CityResponse>>() {
             @Override
-            public void onResponse(Call<List<CityResponse>> call, Response<List<CityResponse>> response) {
+            public void onResponse(@NonNull Call<List<CityResponse>> call, @NonNull Response<List<CityResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<CityResponse> cities = response.body();
 
@@ -111,7 +111,7 @@ public class MovieBookingActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<CityResponse>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<CityResponse>> call, @NonNull Throwable t) {
                 Toast.makeText(MovieBookingActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -124,7 +124,7 @@ public class MovieBookingActivity extends AppCompatActivity {
         Call<List<CinemaResponse>> call = apiService.getCinemasByMovieIdAndCityId(movieId, cityId);
         call.enqueue(new Callback<List<CinemaResponse>>() {
             @Override
-            public void onResponse(Call<List<CinemaResponse>> call, Response<List<CinemaResponse>> response) {
+            public void onResponse(@NonNull Call<List<CinemaResponse>> call, @NonNull Response<List<CinemaResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<CinemaResponse> cinemas = response.body();
                     updateTheatersList(cinemas); // Populate theaters dynamically
@@ -230,12 +230,11 @@ public class MovieBookingActivity extends AppCompatActivity {
         List<Theater> cityTheaters = new ArrayList<>();
 
         for (CinemaResponse cinema : cinemas) {
-            Theater theater = new Theater(
-                    cinema.getCinemaId(),
-                    cinema.getCinemaName(),
-                    cinema.getCinemaAddress()
-            );
-            cityTheaters.add(theater);
+            cityTheaters.add(Theater
+                    .builder()
+                    .id(cinema.getId())
+                    .name(cinema.getName())
+                    .address(cinema.getAddress()).build());
         }
 
         theaterAdapter.setTheaters(cityTheaters, selectedDate, movieTitle);
