@@ -164,7 +164,7 @@ public class TheaterDataProvider {
     }
 
     private static class TheaterInfo {
-        int id;
+        Long id;
         String idCity;
         String name;
         String address;

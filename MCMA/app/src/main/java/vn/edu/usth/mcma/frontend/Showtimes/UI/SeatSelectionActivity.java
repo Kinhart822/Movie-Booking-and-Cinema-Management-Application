@@ -14,21 +14,15 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.SeatStatus;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.AvailableSeatResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.HeldSeatResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.UnavailableSeatResponse;
@@ -38,8 +32,6 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.BookingProcessAPIs.Get
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.SeatAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.Seat;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketItem;
 

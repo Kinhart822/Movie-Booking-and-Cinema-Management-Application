@@ -40,7 +40,7 @@ public class Search_Adapter extends RecyclerView.Adapter<Search_ViewHolder> {
         holder.nameView.setText(item.getName() != null ? item.getName() : "Unknown");
 
         List<String> genres = item.getGenres().stream().map(Genre::getName).collect(Collectors.toList());
-        if (genres != null && !genres.isEmpty() ) {
+        if (!genres.isEmpty()) {
             holder.typeView.setText(genres.get(0)); // Use a valid index, e.g., 0 or a relevant value
         } else {
             holder.typeView.setText(R.string.unknown_genre); // Fallback text
@@ -48,7 +48,7 @@ public class Search_Adapter extends RecyclerView.Adapter<Search_ViewHolder> {
         holder.timeView.setText(item.getLength() != null ? item.getLength() + " min" : "Unknown");
 
         String rating = item.getRating().getName();
-        if (genres != null && !genres.isEmpty() ) {
+        if (!genres.isEmpty()) {
             holder.age_limitView.setText(genres.get(0)); // Use a valid index, e.g., 0 or a relevant value
         } else {
             holder.age_limitView.setText(R.string.unknown_rating); // Fallback text

@@ -202,7 +202,7 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
             public void onResponse(Call<ViewCinemaResponse> call, Response<ViewCinemaResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     ViewCinemaResponse cinemaResponse = response.body();
-                    List<Integer> cinemaIdList = cinemaResponse.getCinemaIdList();
+                    List<Long> cinemaIdList = cinemaResponse.getCinemaIdList();
                     List<String> cinemaNameList = cinemaResponse.getCinemaNameList();
 
                     if (cinemaIdList == null || cinemaNameList == null) {

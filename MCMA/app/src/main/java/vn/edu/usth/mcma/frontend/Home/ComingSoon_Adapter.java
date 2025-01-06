@@ -11,10 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Genre;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ComingSoonResponse;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.NowShowingResponse;
 
 public class ComingSoon_Adapter extends RecyclerView.Adapter<ComingSoon_ViewHolder> {
     private final FilmViewInterface filmViewInterface;
@@ -40,22 +41,17 @@ public class ComingSoon_Adapter extends RecyclerView.Adapter<ComingSoon_ViewHold
     public void onBindViewHolder(@NonNull ComingSoon_ViewHolder holder, int position) {
         ComingSoonResponse comingSoonResponse = items.get(position);
 
-        holder.nameView.setText(comingSoonResponse.getMovieName());
-        holder.timeView.setText(String.format("%d min", comingSoonResponse.getMovieLength()));
+        holder.nameView.setText(comingSoonResponse.getName());
+        holder.timeView.setText(String.format("%d min", comingSoonResponse.getLength()));
 
-        List<String> genres = comingSoonResponse.getMovieGenreNameList();
+        List<String> genres = comingSoonResponse.getGenres().stream().map(Genre::getName).collect(Collectors.toList());
         if (genres != null && !genres.isEmpty()) {
             holder.typeView.setText(genres.get(0)); // Use a valid index, e.g., 0 or a relevant value
         } else {
             holder.typeView.setText(R.string.unknown_genre); // Fallback text
         }
 
-        List<String> rating = comingSoonResponse.getMovieRatingDetailNameList();
-        if (rating != null && !rating.isEmpty()) {
-            holder.age_limitView.setText(rating.get(0)); // Use a valid index, e.g., 0 or a relevant value
-        } else {
-            holder.age_limitView.setText(R.string.unknown_rating); // Fallback text
-        }
+        holder.age_limitView.setText(comingSoonResponse.getRating().getName());
 
         Glide.with(context)
                 .load(comingSoonResponse.getImageUrl())

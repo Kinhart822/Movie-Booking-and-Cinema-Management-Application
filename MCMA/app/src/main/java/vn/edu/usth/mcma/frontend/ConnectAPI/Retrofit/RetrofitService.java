@@ -36,8 +36,8 @@ public class RetrofitService {
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(okHttpClient.build())
-                .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(new Gson()))
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .build();
     }
 }

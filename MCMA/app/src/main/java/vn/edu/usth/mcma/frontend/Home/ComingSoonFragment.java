@@ -14,15 +14,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.PerformerType;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.MovieDetails;
-import vn.edu.usth.mcma.frontend.Showtimes.Utils.MovieDataProvider;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Genre;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ComingSoonResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.Performer;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.ComingSoonMovieAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 
@@ -85,25 +86,20 @@ public class ComingSoonFragment extends Fragment {
 
     private void openMovieDetailsActivity(int position) {
         ComingSoonResponse selectedFilm = comingSoonResponseList.get(position);
-        Log.d("ComingSoonFragment", "Launching OnlyDetailsActivity with film: " + selectedFilm.getMovieName());
+        Log.d("ComingSoonFragment", "Launching OnlyDetailsActivity with film: " + selectedFilm.getName());
 
         Intent intent = new Intent(requireContext(), OnlyDetailsActivity.class);
-        intent.putExtra("MOVIE_NAME", selectedFilm.getMovieName());
-        intent.putExtra("MOVIE_GENRES", new ArrayList<>(selectedFilm.getMovieGenreNameList()));
-        intent.putExtra("MOVIE_LENGTH", selectedFilm.getMovieLength());
+        intent.putExtra("MOVIE_NAME", selectedFilm.getName());
+        intent.putExtra("MOVIE_GENRES", new ArrayList<>(selectedFilm.getGenres().stream().map(Genre::getName).collect(Collectors.toList())));
+        intent.putExtra("MOVIE_LENGTH", selectedFilm.getLength());
         intent.putExtra("MOVIE_DESCRIPTION", selectedFilm.getDescription());
-        intent.putExtra("PUBLISHED_DATE", selectedFilm.getPublishedDate());
+        intent.putExtra("PUBLISHED_DATE", selectedFilm.getPublishDate());
         intent.putExtra("IMAGE_URL", selectedFilm.getImageUrl());
         intent.putExtra("BACKGROUND_IMAGE_URL", selectedFilm.getBackgroundImageUrl());
-        intent.putExtra("TRAILER", selectedFilm.getTrailer());
-        intent.putExtra("MOVIE_RATING", new ArrayList<>(selectedFilm.getMovieRatingDetailNameList()));
-        intent.putExtra("MOVIE_PERFORMER_NAME", new ArrayList<>(selectedFilm.getMoviePerformerNameList()));
-
-        List<String> performerTypeStrings = new ArrayList<>();
-        for (PerformerType performerType : selectedFilm.getMoviePerformerType()) {
-            performerTypeStrings.add(performerType.toString());
-        }
-        intent.putStringArrayListExtra("MOVIE_PERFORMER_TYPE", new ArrayList<>(performerTypeStrings));
+        intent.putExtra("TRAILER", selectedFilm.getTrailerUrl());
+        intent.putExtra("MOVIE_RATING", selectedFilm.getRating().getName());
+        intent.putExtra("MOVIE_PERFORMER_NAME", new ArrayList<>(selectedFilm.getPerformers().stream().map(Performer::getName).collect(Collectors.toList())));
+        intent.putStringArrayListExtra("MOVIE_PERFORMER_TYPE", new ArrayList<>(selectedFilm.getPerformers().stream().map(Performer::getType).collect(Collectors.toList())));
 
         startActivity(intent);
     }

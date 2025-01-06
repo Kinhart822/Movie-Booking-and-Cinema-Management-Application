@@ -57,8 +57,8 @@ public class MovieBookingActivity extends AppCompatActivity {
     private Long movieId;
     private long selectedCityId;
     private Long selectedCinemaId;
-    private int selectedScreenId;
-    private int selectedScheduleId;
+    private Long selectedScreenId;
+    private Long selectedScheduleId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -244,7 +244,7 @@ public class MovieBookingActivity extends AppCompatActivity {
         theatersRecyclerView = findViewById(R.id.theaters_recycler_view);
         theaterAdapter = new TheaterShowtimesAdapter(new TheaterShowtimesAdapter.OnShowtimeClickListener() {
             @Override
-            public void onShowtimeClick(Theater theater,String date, String showtime, Integer screenId, String screenRoom, Integer scheduleId) {
+            public void onShowtimeClick(Theater theater, String date, String showtime, Long screenId, String screenRoom, Long scheduleId) {
                 selectedCinemaId = theater.getId(); // Lấy theaterId
                 selectedScreenId = screenId;
                 selectedScheduleId = scheduleId;
@@ -257,7 +257,7 @@ public class MovieBookingActivity extends AppCompatActivity {
 
 
     // Add new method to MovieBookingActivity.java
-    private void showQuantityTicketDialog(Theater theater,String date, String showtime, Integer screenId, String screenRoom) {
+    private void showQuantityTicketDialog(Theater theater,String date, String showtime, Long screenId, String screenRoom) {
         QuantityTicketDialog dialog = new QuantityTicketDialog(this, new QuantityTicketDialog.OnDialogActionListener() {
             @Override
             public void onContinueClicked(int guestQuantity) {

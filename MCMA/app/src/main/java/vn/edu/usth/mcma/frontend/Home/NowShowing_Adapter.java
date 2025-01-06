@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Genre;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.NowShowingResponse;
 
 public class NowShowing_Adapter extends RecyclerView.Adapter<NowShowing_ViewHolder> {
@@ -39,22 +41,17 @@ public class NowShowing_Adapter extends RecyclerView.Adapter<NowShowing_ViewHold
     public void onBindViewHolder(@NonNull NowShowing_ViewHolder holder, int position) {
         NowShowingResponse nowShowingItem = items.get(position);
 
-        holder.nameView.setText(nowShowingItem.getMovieName());
-        holder.timeView.setText(String.format("%d min", nowShowingItem.getMovieLength()));
+        holder.nameView.setText(nowShowingItem.getName());
+        holder.timeView.setText(String.format("%d min", nowShowingItem.getLength()));
 
-        List<String> genres = nowShowingItem.getMovieGenreNameList();
-        if (genres != null && !genres.isEmpty()) {
+        List<String> genres = nowShowingItem.getGenres().stream().map(Genre::getName).collect(Collectors.toList());
+        if (!genres.isEmpty()) {
             holder.typeView.setText(genres.get(0)); // Use first genre as default
         } else {
             holder.typeView.setText(R.string.unknown_genre);
         }
 
-        List<String> ratings = nowShowingItem.getMovieRatingDetailNameList();
-        if (ratings != null && !ratings.isEmpty()) {
-            holder.age_limitView.setText(ratings.get(0)); // Use first rating as default
-        } else {
-            holder.age_limitView.setText(R.string.unknown_rating);
-        }
+        holder.age_limitView.setText(nowShowingItem.getRating().getName());
 
         Glide.with(context).load(nowShowingItem.getImageUrl()).into(holder.filmView);
 

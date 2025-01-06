@@ -135,12 +135,12 @@ public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnThe
                 if (isAdded() && response.isSuccessful() && response.body() != null) {
                     // Process the response
                     List<Theater> theaters = new ArrayList<>();
-                    List<Integer> cinemaIds = response.body().getCinemaIdList();
+                    List<Long> cinemaIds = response.body().getCinemaIdList();
                     List<String> cinemaNames = response.body().getCinemaNameList();
                     List<String> cinemaAddressNames = response.body().getCinemaAddressList();
 
                     for (int i = 0; i < cinemaNames.size(); i++) {
-                        int id = cinemaIds.get(i);
+                        Long id = cinemaIds.get(i);
                         String name = cinemaNames.get(i);
                         String address = i < cinemaAddressNames.size() ? cinemaAddressNames.get(i) : "Address not available";
 

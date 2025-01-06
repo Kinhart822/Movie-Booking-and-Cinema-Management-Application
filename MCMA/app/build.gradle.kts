@@ -78,3 +78,8 @@ dependencies {
     annotationProcessor(libs.projectlombok.lombok)
 
 }
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }

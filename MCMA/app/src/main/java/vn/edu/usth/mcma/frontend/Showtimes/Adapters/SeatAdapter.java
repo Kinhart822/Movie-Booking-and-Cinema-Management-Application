@@ -1,6 +1,5 @@
 package vn.edu.usth.mcma.frontend.Showtimes.Adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
