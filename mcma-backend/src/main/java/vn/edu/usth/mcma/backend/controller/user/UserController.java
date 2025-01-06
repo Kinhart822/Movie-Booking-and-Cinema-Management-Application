@@ -55,13 +55,11 @@ public class UserController {
     public ResponseEntity<MovieResponse> getAllInformationOfSelectedMovie(@PathVariable Long movieId) {
         return ResponseEntity.ok(bookingService.getAllInformationOfSelectedMovie(movieId));
     }
-
     @GetMapping("/booking/allCitiesByMovie/{movieId}")
     public ResponseEntity<List<CityPresentation>> getAllCitiesByMovie(@PathVariable Long movieId) {
         List<CityPresentation> cityResponses = bookingService.getAllCitiesBySelectedMovie(movieId);
         return ResponseEntity.ok(cityResponses);
     }
-
 //    @GetMapping("/booking/allCinemasByCity/{cityId}")
 //    public ResponseEntity<List<CinemaResponse>> getAllCinemasByCity(@PathVariable Integer cityId) {
 //        List<CinemaResponse> movies = bookingService.getAllCinemasBySelectedCity(cityId);

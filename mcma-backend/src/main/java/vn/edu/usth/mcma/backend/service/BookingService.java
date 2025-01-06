@@ -8,14 +8,9 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.*;
-import vn.edu.usth.mcma.backend.entity.Movie;
-import vn.edu.usth.mcma.backend.entity.Rating;
-import vn.edu.usth.mcma.backend.entity.Review;
+import vn.edu.usth.mcma.backend.entity.*;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
-import vn.edu.usth.mcma.backend.repository.GenreRepository;
-import vn.edu.usth.mcma.backend.repository.MovieRepository;
-import vn.edu.usth.mcma.backend.repository.ReviewRepository;
-import vn.edu.usth.mcma.backend.repository.ScheduleRepository;
+import vn.edu.usth.mcma.backend.repository.*;
 
 import java.time.Instant;
 import java.util.*;
@@ -34,7 +29,7 @@ public class BookingService {
 //    private MoviePerformerRepository moviePerformerRepository;
 //    private MovieRatingDetailRepository movieRatingDetailRepository;
 //    private CinemaRepository cinemaRepository;
-//    private CityRepository cityRepository;
+    private CityRepository cityRepository;
 //    private ScreenRepository screenRepository;
 //    private TicketRepository ticketRepository;
 //    private MovieScheduleRepository movieScheduleRepository;
@@ -126,35 +121,22 @@ public class BookingService {
                 .build();
     }
     public List<CityPresentation> getAllCitiesBySelectedMovie(Long movieId) {
-//        Movie movie = movieRepository
-//                .findById(movieId)
-//                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND);
-//        List<City> cities = cityRepository.findByMovieId(movie.getId());
-//        if (cities == null || cities.isEmpty()) {
-//            throw new IllegalArgumentException("No cities found for given movie.");
-//        }
-//
-//        List<CityResponse> cityResponses = new ArrayList<>();
-//        for (City city : cities) {
-//            List<Cinema> cinemaList = city.getCinemaList();
-//            List<String> cinemaNameList = cinemaList.stream()
-//                    .map(Cinema::getName)
-//                    .toList();
-//
-//            CityResponse cityResponse = new CityResponse(
-//                    movie.getName(),
-//                    city.getId(),
-//                    city.getName(),
-//                    cinemaNameList
-//            );
-//            cityResponses.add(cityResponse);
-//        }
-//
-//        return cityResponses;
-        return null;
+        Movie movie = movieRepository
+                .findById(movieId)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+        return scheduleRepository
+                .findAllByMovieAndStartTimeIsAfterAndStatusIs(movie, Instant.now(), CommonStatus.ACTIVE.getStatus())
+                .stream()
+                .map(Schedule::getScreen)
+                .map(Screen::getCinema)
+                .map(Cinema::getCity)
+                .map(c -> CityPresentation
+                        .builder()
+                        .cityId(c.getId())
+                        .cityName(c.getName())
+                        .build())
+                .toList();
     }
-//
-//
 //    public List<CinemaResponse> getAllCinemasBySelectedCity(Integer cityId) {
 //        City city = cityRepository.findById(cityId)
 //                .orElseThrow(() -> new IllegalArgumentException("Invalid city"));
