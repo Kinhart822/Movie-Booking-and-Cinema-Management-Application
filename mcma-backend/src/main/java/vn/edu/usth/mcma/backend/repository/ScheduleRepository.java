@@ -21,7 +21,8 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
                or :end between s.start_time and s.end_time
                or :start < s.start_time and :end > s.end_time
             """)
-    List<Schedule> eventsInRange(@Param(value = "start") Instant startTime, @Param(value = "end") Instant endTime);
-    List<Schedule> findAllByMovieAndStartTimeIsAfterAndStatusIs(Movie movie, Instant startTime, Integer status);
-    List<Schedule> findAllByMovieAndScreenAndStartTimeIsAfterAndStatusIs(Movie movie, Screen screen, Instant startTime, Integer status);
+    List<Schedule> eventsInRange(@Param(value = "start") Instant time, @Param(value = "end") Instant endTime);
+    List<Schedule> findAllByMovieAndStartTimeIsAfterAndStatusIs(Movie movie, Instant time, Integer status);
+    List<Schedule> findAllByMovieAndScreenAndStartTimeIsAfterAndStatusIs(Movie movie, Screen screen, Instant time, Integer status);
+    List<Schedule> findAllByStartTimeIsAfterAndStatusIs(Instant time, Integer status);
 }

@@ -6,6 +6,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vn.edu.usth.mcma.backend.entity.Movie;
 
+import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -18,6 +20,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<Movie> findAllByNameContainingAndStatusIs(String title, Integer status);
 
     List<Movie> findAllByStatusIs(Integer status);
+
+    List<Movie> findAllByPublishDateAfterAndStatusIs(Instant time, Integer status);
 
 //    @Query(nativeQuery = true, value = """
 //                 SELECT

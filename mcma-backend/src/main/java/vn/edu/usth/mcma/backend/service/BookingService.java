@@ -173,8 +173,6 @@ public class BookingService {
                         .build())
                 .toList();
     }
-//
-//
 //    public List<TicketResponse> getAllTickets() {
 //        List<Ticket> tickets = ticketRepository.findAll();
 //        List<TicketResponse> ticketResponses = new ArrayList<>();
@@ -193,11 +191,8 @@ public class BookingService {
 //            TicketResponse response = new TicketResponse(ticketsIds, ticketTypes, ticketDescriptions, ticketPriceList);
 //            ticketResponses.add(response);
 //        }
-//
 //        return ticketResponses;
 //    }
-//
-//
 //    public List<UnavailableSeatResponse> getAllUnavailableSeatsBySelectedScreen(Integer screenId) {
 //        Screen screen = screenRepository.findById(screenId)
 //                .orElseThrow(() -> new IllegalArgumentException("Invalid screen"));

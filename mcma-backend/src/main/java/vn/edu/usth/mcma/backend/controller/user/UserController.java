@@ -7,6 +7,7 @@ import vn.edu.usth.mcma.backend.dto.*;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.service.BookingService;
 import vn.edu.usth.mcma.backend.service.MovieService;
+import vn.edu.usth.mcma.backend.service.ViewService;
 
 import java.util.List;
 
@@ -16,10 +17,8 @@ import java.util.List;
 public class UserController {
     private final MovieService movieService;
     private final BookingService bookingService;
-//    private final NotificationService notificationService;
-//    private final ViewService viewService;
-//    private final MovieRespondService movieRespondService;
     private final JwtUtil jwtUtil;
+    private final ViewService viewService;
 
     @GetMapping
     public ResponseEntity<String> sayHello() {
@@ -220,16 +219,14 @@ public class UserController {
 //        ViewCouponsResponse viewCouponsResponse = viewService.getAvailableCouponsByMovieId(movieId);
 //        return ResponseEntity.ok(viewCouponsResponse);
 //    }
-//    @GetMapping("/view/nowShowingMovies")
-//    public ResponseEntity<List<NowShowingResponse>> getAvailableNowShowingMovies() {
-//        List<NowShowingResponse> nowShowingMovies = viewService.getAvailableNowShowingMovies();
-//        return ResponseEntity.ok(nowShowingMovies);
-//    }
-//    @GetMapping("/view/comingSoonMovies")
-//    public ResponseEntity<List<ComingSoonResponse>> getAvailableComingSoonMovies() {
-//        List<ComingSoonResponse> comingSoonMovies = viewService.getAvailableComingSoonMovies();
-//        return ResponseEntity.ok(comingSoonMovies);
-//    }
+    @GetMapping("/view/nowShowingMovies")
+    public ResponseEntity<List<HomePageMovie>> getAvailableNowShowingMovies() {
+        return ResponseEntity.ok(viewService.getAvailableNowShowingMovies());
+    }
+    @GetMapping("/view/comingSoonMovies")
+    public ResponseEntity<List<HomePageMovie>> getAvailableComingSoonMovies() {
+        return ResponseEntity.ok(viewService.getAvailableComingSoonMovies());
+    }
 //    @GetMapping("/view/highRatingMovies")
 //    public ResponseEntity<List<HighRatingMovieResponse>> getHighRatingMovies() {
 //        List<HighRatingMovieResponse> highRatingMovieResponses = viewService.getHighRatingMovies();
