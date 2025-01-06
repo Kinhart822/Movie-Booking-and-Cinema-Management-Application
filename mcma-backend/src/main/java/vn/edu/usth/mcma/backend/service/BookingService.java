@@ -137,104 +137,28 @@ public class BookingService {
                         .build())
                 .toList();
     }
-//    public List<CinemaResponse> getAllCinemasBySelectedCity(Integer cityId) {
-//        City city = cityRepository.findById(cityId)
-//                .orElseThrow(() -> new IllegalArgumentException("Invalid city"));
-//
-//        List<Cinema> cinemaList = cinemaRepository.findByCityId(city.getId());
-//        if (cinemaList == null || cinemaList.isEmpty()) {
-//            throw new IllegalArgumentException("No cinemas found for given city.");
-//        }
-//
-//        List<CinemaResponse> cinemaResponses = new ArrayList<>();
-//        for (Cinema cinema : cinemaList) {
-//            List<Screen> screenList = cinema.getScreenList();
-//            List<String> screenType = screenList.stream()
-//                    .map(screen -> screen.getScreenType().getName())
-//                    .toList();
-//            List<String> screenDescription = screenList.stream()
-//                    .map(screen -> screen.getScreenType().getDescription())
-//                    .toList();
-//
-//            List<Food> foodList = cinema.getFoodList();
-//            List<String> foodName = foodList.stream().map(Food::getName).toList();
-//
-//            List<Drink> drinks = cinema.getDrinks();
-//            List<String> drinkName = drinks.stream().map(Drink::getName).toList();
-//
-//            List<MovieSchedule> movieSchedules = movieScheduleRepository.findMovieSchedulesByCinemaId(cinema.getId());
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm a");
-//            List<String> formattedSchedules = movieSchedules.stream()
-//                    .map(schedule -> schedule.getStartTime().format(formatter))
-//                    .toList();
-//
-//            CinemaResponse cinemaResponse = new CinemaResponse(
-//                    city.getName(),
-//                    cinema.getId(),
-//                    cinema.getName(),
-//                    cinema.getAddress(),
-//                    screenType,
-//                    screenDescription,
-//                    foodName,
-//                    drinkName,
-//                    formattedSchedules
-//            );
-//            cinemaResponses.add(cinemaResponse);
-//        }
-//
-//        return cinemaResponses;
-//    }
-//
-//
-//    public List<CinemaResponse> getAllCinemasBySelectedMovieAndSelectedCity(Integer movieId, Integer cityId) {
-//        City city = cityRepository.findById(cityId)
-//                .orElseThrow(() -> new IllegalArgumentException("Invalid city"));
-//        Movie movie = movieRepository.findById(movieId)
-//                .orElseThrow(() -> new IllegalArgumentException("Invalid movie"));
-//
-//        List<Cinema> cinemaList = cinemaRepository.findByMovieIdAndCityId(movie.getId(), city.getId());
-//        if (cinemaList == null || cinemaList.isEmpty()) {
-//            throw new IllegalArgumentException("No cinemas found for given city and movie.");
-//        }
-//
-//        List<CinemaResponse> cinemaResponses = new ArrayList<>();
-//        for (Cinema cinema : cinemaList) {
-//            List<Screen> screenList = cinema.getScreenList();
-//            List<String> screenType = screenList.stream()
-//                    .map(screen -> screen.getScreenType().getName())
-//                    .toList();
-//            List<String> screenDescription = screenList.stream()
-//                    .map(screen -> screen.getScreenType().getDescription())
-//                    .toList();
-//
-//            List<Food> foodList = cinema.getFoodList();
-//            List<String> foodName = foodList.stream().map(Food::getName).toList();
-//
-//            List<Drink> drinks = cinema.getDrinks();
-//            List<String> drinkName = drinks.stream().map(Drink::getName).toList();
-//
-//            List<MovieSchedule> movieSchedules = movieScheduleRepository.findMovieSchedulesByCinemaId(cinema.getId());
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm a");
-//            List<String> formattedSchedules = movieSchedules.stream()
-//                    .map(schedule -> schedule.getStartTime().format(formatter))
-//                    .toList();
-//
-//            CinemaResponse cinemaResponse = new CinemaResponse(
-//                    city.getName(),
-//                    cinema.getId(),
-//                    cinema.getName(),
-//                    cinema.getAddress(),
-//                    screenType,
-//                    screenDescription,
-//                    foodName,
-//                    drinkName,
-//                    formattedSchedules
-//            );
-//            cinemaResponses.add(cinemaResponse);
-//        }
-//
-//        return cinemaResponses;
-//    }
+    public List<CinemaPresentation> getAllCinemasBySelectedMovieAndSelectedCity(Long movieId, Long cityId) {
+        City city = cityRepository
+                .findById(cityId)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+        Movie movie = movieRepository
+                .findById(movieId)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+
+        return scheduleRepository
+                .findAllByMovieAndStartTimeIsAfterAndStatusIs(movie, Instant.now(), CommonStatus.ACTIVE.getStatus())
+                .stream()
+                .map(Schedule::getScreen)
+                .map(Screen::getCinema)
+                .filter(c -> Objects.equals(c.getCity().getId(), city.getId()))
+                .map(c -> CinemaPresentation
+                        .builder()
+                        .id(c.getId())
+                        .name(c.getName())
+                        .address(c.getAddress())
+                        .build())
+                .toList();
+    }
 //
 //
 //    public List<ScreenResponse> getAllScreensBySelectedCinema(Integer cinemaId) {
