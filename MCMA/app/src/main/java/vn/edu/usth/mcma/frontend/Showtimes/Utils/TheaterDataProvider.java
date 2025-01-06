@@ -157,11 +157,9 @@ public class TheaterDataProvider {
         List<String> showtimes = new ArrayList<>();
         int startHour = 10; // 10 AM
         int endHour = 22;   // 10 PM
-
         for (int hour = startHour; hour <= endHour; hour += 2) {
             showtimes.add(String.format("%02d:00", hour));
         }
-
         return showtimes;
     }
 
@@ -171,13 +169,6 @@ public class TheaterDataProvider {
         String name;
         String address;
         int imageResId;
-
-        public TheaterInfo(String address, int id, int imageResId, String name) {
-            this.address = address;
-            this.id = id;
-            this.imageResId = imageResId;
-            this.name = name;
-        }
 
         public TheaterInfo(String address, String idCity, int imageResId) {
             this.address = address;
