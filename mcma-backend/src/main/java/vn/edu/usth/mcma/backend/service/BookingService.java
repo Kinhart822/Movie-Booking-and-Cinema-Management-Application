@@ -25,7 +25,7 @@ public class BookingService {
     private final CinemaRepository cinemaRepository;
     private final ScreenRepository screenRepository;
     private MovieRepository movieRepository;
-    public MovieResponse getAllInformationOfSelectedMovie(Long movieId) {
+    public MoviePresentation getAllInformationOfSelectedMovie(Long movieId) {
         Movie movie = movieRepository
                 .findById(movieId)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
@@ -86,7 +86,7 @@ public class BookingService {
                         .endTime(s.getEndTime().toString())
                         .build())
                 .toList();
-        return MovieResponse
+        return MoviePresentation
                 .builder()
                 .id(movie.getId())
                 .name(movie.getName())
@@ -155,128 +155,26 @@ public class BookingService {
                         .build())
                 .toList();
     }
-//    public ScheduleResponse getAllSchedulesBySelectedMovieAndSelectedCinemaAndSelectedScreen(
-//            Integer movieId, Integer cinemaId, Integer screenId
-//    ) {
-//        Movie movie = movieRepository.findById(movieId)
-//                .orElseThrow(() -> new IllegalArgumentException("Invalid movie"));
-//
-//        Cinema cinema = cinemaRepository.findById(cinemaId)
-//                .orElseThrow(() -> new IllegalArgumentException("Invalid cinema"));
-//
-//        Screen screen = screenRepository.findById(screenId)
-//                .orElseThrow(() -> new IllegalArgumentException("Invalid screen"));
-//
-//        List<MovieSchedule> movieSchedules = movieScheduleRepository.findMovieSchedulesByMovieAndCinemaAndScreen(
-//                movie.getId(), cinema.getId(), screen.getId()
-//        );
-//        if (movieSchedules == null || movieSchedules.isEmpty()) {
-//            throw new IllegalArgumentException("No schedules found for given movie, cinema, and screen.");
-//        }
-//
-//        List<MovieGenre> movieGenres = movieGenreRepository.findMovieGenresByMovie(movie.getId());
-//        List<String> movieGenreNameList = movieGenres.stream()
-//                .map(movieGenre -> movieGenre.getMovieGenreDetail().getName())
-//                .toList();
-//        List<String> movieGenreImageUrls = movieGenres.stream()
-//                .map(movieGenre -> movieGenre.getMovieGenreDetail().getImageUrl())
-//                .toList();
-//        List<String> movieGenreDescriptions = movieGenres.stream()
-//                .map(movieGenre -> movieGenre.getMovieGenreDetail().getDescription())
-//                .toList();
-//
-//        // Fetch Movie Performers
-//        List<MoviePerformer> moviePerformers = moviePerformerRepository.findMoviePerformersByMovieId(movie.getId());
-//        List<String> moviePerformerNameList = moviePerformers.stream()
-//                .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getName())
-//                .toList();
-//
-//        List<PerformerType> moviePerformerType = moviePerformers.stream()
-//                .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getPerformerType())
-//                .toList();
-//
-//        // Fetch Movie Rating Details
-//        List<MovieRatingDetail> movieRatingDetails = movieRatingDetailRepository.findMovieRatingDetailsByMovieId(movie.getId());
-//        List<String> movieRatingDetailNameList = movieRatingDetails.stream()
-//                .map(MovieRatingDetail::getName)
-//                .toList();
-//        List<String> movieRatingDetailDescriptions = movieRatingDetails.stream()
-//                .map(MovieRatingDetail::getDescription)
-//                .toList();
-//
-//        // Format date
-//        SimpleDateFormat publishDateFormatter = new SimpleDateFormat("dd/MM/yyyy");
-//        String formattedDatePublish = publishDateFormatter.format(movie.getDatePublish());
-//
-//        // Movie Respond
-//        List<Comment> comments = commentRepository.findByMovieId(movie.getId());
-//        List<String> contents = comments.stream()
-//                .map(Comment::getContent)
-//                .toList();
-//
-//        List<Rating> ratings = ratingRepository.findByMovieId(movie.getId());
-//        OptionalDouble averageRating = ratings.stream()
-//                .mapToDouble(Rating::getRatingStar)
-//                .average();
-//
-//        double avg = 0;
-//        if (averageRating.isPresent()) {
-//            avg = averageRating.getAsDouble();
-//            System.out.printf("Average rating: %s%n", avg);
-//        } else {
-//            System.out.println("No ratings available.");
-//        }
-//
-//        DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//        DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("HH:mm");
-//
-//        List<String> dayOfWeekList = new ArrayList<>();
-//        List<String> dayList = new ArrayList<>();
-//        List<String> timeList = new ArrayList<>();
-//        for (MovieSchedule schedule : movieSchedules) {
-//            String dayOfWeek = schedule.getStartTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
-//            String day = schedule.getStartTime().format(formatDate);
-//            String time = schedule.getStartTime().format(formatTime);
-//            dayOfWeekList.add(dayOfWeek);
-//            dayList.add(day);
-//            timeList.add(time);
-//        }
-//
-//        List<Integer> scheduleIdList = new ArrayList<>();
-//        List<String> screenNameList = new ArrayList<>();
-//        for (MovieSchedule schedule : movieSchedules) {
-//            Integer scheduleId = schedule.getId();
-//            String screenName = schedule.getScreen().getName();
-//            scheduleIdList.add(scheduleId);
-//            screenNameList.add(screenName);
-//        }
-//
-//        return new ScheduleResponse(
-//                movie.getId(),
-//                movie.getName(),
-//                movie.getLength(),
-//                movie.getDescription(),
-//                formattedDatePublish,
-//                movie.getTrailerLink(),
-//                movie.getImageUrl(),
-//                movie.getBackgroundImageUrl(),
-//                movieGenreNameList,
-//                movieGenreImageUrls,
-//                movieGenreDescriptions,
-//                moviePerformerNameList,
-//                moviePerformerType,
-//                movieRatingDetailNameList,
-//                movieRatingDetailDescriptions,
-//                contents,
-//                avg,
-//                cinema.getName(),
-//                screenNameList,
-//                scheduleIdList,
-//                dayOfWeekList,
-//                dayList,
-//                timeList
-//        );
-//    }
+    public List<SchedulePresentation> getAllSchedulesByMovieAndScreen(Long movieId, Long screenId) {
+        Movie movie = movieRepository
+                .findById(movieId)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+        Screen screen = screenRepository
+                .findById(screenId)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+        return scheduleRepository
+                .findAllByMovieAndScreenAndStartTimeIsAfterAndStatusIs(movie, screen, Instant.now(), CommonStatus.ACTIVE.getStatus())
+                .stream()
+                .map(s -> SchedulePresentation
+                        .builder()
+                        .id(s.getId())
+                        .screenId(s.getScreen().getId())
+                        .movieId(s.getMovie().getId())
+                        .startTime(s.getStartTime().toString())
+                        .endTime(s.getEndTime().toString())
+                        .build())
+                .toList();
+    }
 //
 //
 //    public List<TicketResponse> getAllTickets() {

@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MovieResponse {
+public class MoviePresentation {
     private Long id;
     private String name;
     private Integer length;
