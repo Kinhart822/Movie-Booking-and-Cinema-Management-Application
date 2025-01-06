@@ -15,7 +15,6 @@ import vn.edu.usth.mcma.backend.repository.ScheduleRepository;
 import vn.edu.usth.mcma.backend.repository.ScreenRepository;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -71,10 +70,10 @@ public class MovieService {
                         .description(m.getDescription())
                         .imageUrl(m.getImageUrl())
                         .backgroundImageUrl(m.getBackgroundImageUrl())
-                        .length(m.getLength())
+                        .length(m.getLength()/60)
                         .publishDate(m.getPublishDate().toString().substring(0,10))
                         .trailerUrl(m.getTrailerUrl())
-                        .rating(RatingResponse
+                        .rating(RatingPresentation
                                 .builder()
                                 .id(m.getRating().getId())
                                 .name(m.getRating().getName())
@@ -83,7 +82,7 @@ public class MovieService {
                         .genres(m
                                 .getGenreSet()
                                 .stream()
-                                .map(g -> GenreResponse
+                                .map(g -> GenrePresentation
                                         .builder()
                                         .id(g.getId())
                                         .name(g.getName())
@@ -92,7 +91,7 @@ public class MovieService {
                         .performers(m
                                 .getPerformerSet()
                                 .stream()
-                                .map(p -> PerformerResponse
+                                .map(p -> PerformerPresentation
                                         .builder()
                                         .id(p.getId())
                                         .name(p.getName())

@@ -14,7 +14,7 @@ public class SearchMovieByNameResponse {
     private String description;
     private String imageUrl;
     private String backgroundImageUrl;
-    private Integer length;//in seconds
+    private Integer length;
     private String publishDate;
     private String trailerUrl;
     private Rating rating;

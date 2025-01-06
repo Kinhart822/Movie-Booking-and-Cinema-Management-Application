@@ -8,6 +8,5 @@ import lombok.Setter;
 public class JwtAuthResponse {
     private String accessToken;
     private String message;
-//    private String error; u used it once
     private Long userId;
 }

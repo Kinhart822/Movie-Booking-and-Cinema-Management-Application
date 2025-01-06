@@ -1,12 +1,12 @@
 package vn.edu.usth.mcma.backend.controller.user;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.usth.mcma.backend.dto.MovieResponse;
 import vn.edu.usth.mcma.backend.dto.SearchMovieByNameResponse;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
+import vn.edu.usth.mcma.backend.service.BookingService;
 import vn.edu.usth.mcma.backend.service.MovieService;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final MovieService movieService;
-//    private final BookingService bookingService;
+    private final BookingService bookingService;
 //    private final NotificationService notificationService;
 //    private final ViewService viewService;
 //    private final MovieRespondService movieRespondService;
@@ -49,18 +49,17 @@ public class UserController {
 //        return ResponseEntity.ok(movieService.getAllMoviesByMovieGenreName(name, limit, offset));
 //    }
 //
-//    // TODO: Booking ticket(s)
+    // TODO: Booking ticket(s)
 //    @GetMapping("/information/allMovies")
 //    public ResponseEntity<List<MovieResponse>> getAllMovies() {
 //        List<MovieResponse> movieResponds = bookingService.getAllMovies();
 //        return ResponseEntity.ok(movieResponds);
 //    }
 //
-//    @GetMapping("/information/movieInformation/{movieId}")
-//    public ResponseEntity<MovieResponse> getAllInformationOfSelectedMovie(@PathVariable Integer movieId) {
-//        MovieResponse movieRespond = bookingService.getAllInformationOfSelectedMovie(movieId);
-//        return ResponseEntity.ok(movieRespond);
-//    }
+    @GetMapping("/information/movie-information/{movieId}")
+    public ResponseEntity<MovieResponse> getAllInformationOfSelectedMovie(@PathVariable Long movieId) {
+        return ResponseEntity.ok(bookingService.getAllInformationOfSelectedMovie(movieId));
+    }
 //
 //    @GetMapping("/booking/allCitiesByMovie/{movieId}")
 //    public ResponseEntity<List<CityResponse>> getAllCitiesByMovie(@PathVariable Integer movieId) {

@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -23,9 +22,9 @@ import java.util.stream.Collectors;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.PerformerType;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Genre;
 import vn.edu.usth.mcma.frontend.Home.OnlyDetailsActivity;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
-import vn.edu.usth.mcma.frontend.Showtimes.UI.MovieDetailsActivity;
 
 public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdapter.MovieViewHolder> {
     private List<Movie> movies;
@@ -126,13 +125,13 @@ public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdap
             viewDetails.setOnClickListener(v -> {
                 Intent intent = new Intent(itemView.getContext(), OnlyDetailsActivity.class);
                 intent.putExtra("MOVIE_NAME", movie.getTitle());
-                intent.putExtra("MOVIE_GENRES", new ArrayList<>(movie.getMovieGenreNameList()));
+                intent.putExtra("MOVIE_GENRES", new ArrayList<>(movie.getGenres().stream().map(Genre::getName).collect(Collectors.toList())));
                 intent.putExtra("MOVIE_LENGTH", movie.getMovieLength());
                 intent.putExtra("MOVIE_DESCRIPTION", movie.getDescription());
-                intent.putExtra("PUBLISHED_DATE", movie.getPublishedDate());
+                intent.putExtra("PUBLISHED_DATE", movie.getPublishDate());
                 intent.putExtra("IMAGE_URL", movie.getImageUrl());
-                intent.putExtra("BACKGROUND_IMAGE_URL", movie.getBackgroundImAageUrl());
-                intent.putExtra("TRAILER", movie.getTrailerLink());
+                intent.putExtra("BACKGROUND_IMAGE_URL", movie.getBackgroundImageUrl());
+                intent.putExtra("TRAILER", movie.getTrailerUrl());
                 intent.putExtra("MOVIE_RATING", new ArrayList<>(movie.getMovieRatingDetailNameList()));
                 intent.putExtra("MOVIE_PERFORMER_NAME", new ArrayList<>(movie.getMoviePerformerNameList()));
 

@@ -17,6 +17,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
      */
     List<Movie> findAllByNameContainingAndStatusIs(String title, Integer status);
 
+    List<Movie> findAllByStatusIs(Integer status);
+
 //    @Query(nativeQuery = true, value = """
 //                 SELECT
 //                     m.id,

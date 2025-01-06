@@ -12,13 +12,13 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Request.SignUpRequest;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.JwtAuthenticationResponse;
 
 public interface AuthenticationApi {
-    @POST("/api/v1/auth/signIn")
+    @POST("/api/v1/auth/sign-in")
     Call<JwtAuthenticationResponse> signIn(@Body SignInRequest signInRequest);
 
     @POST("/api/v1/auth/refresh")
     Call<JwtAuthenticationResponse> refresh(@Body RefreshTokenRequest refreshTokenRequest);
 
-    @POST("/api/v1/auth/signUp")
+    @POST("/api/v1/auth/sign-up")
     Call<Void> signUp(@Body SignUpRequest signUpRequest);
 
     @POST("/api/v1/auth/forgot-password")

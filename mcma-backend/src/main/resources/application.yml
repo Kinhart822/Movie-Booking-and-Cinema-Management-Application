@@ -13,6 +13,10 @@ spring:
   web:
     resources:
       add-mappings: true
+  devtools:
+    add-properties: false
+    restart:
+      enabled: false
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
@@ -21,3 +25,4 @@ logging:
     org:
       springframework:
         web: DEBUG
+    web: debug

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -99,16 +100,16 @@ public class Search_Activity extends AppCompatActivity {
         Intent intent = new Intent(Search_Activity.this, OnlyDetailsActivity.class);
 
         intent.putExtra("MOVIE_NAME", clickedItem.getName());
-        intent.putExtra("MOVIE_GENRES", new ArrayList<>(clickedItem.getGenres().stream().map(Genre::getName).toList()));
-        intent.putExtra("MOVIE_LENGTH", clickedItem.getLength()/60);
+        intent.putExtra("MOVIE_GENRES", new ArrayList<>(clickedItem.getGenres().stream().map(Genre::getName).collect(Collectors.toList())));
+        intent.putExtra("MOVIE_LENGTH", clickedItem.getLength());
         intent.putExtra("MOVIE_DESCRIPTION", clickedItem.getDescription());
         intent.putExtra("PUBLISHED_DATE", clickedItem.getPublishDate());
         intent.putExtra("IMAGE_URL", clickedItem.getImageUrl());
         intent.putExtra("BACKGROUND_IMAGE_URL", clickedItem.getBackgroundImageUrl());
         intent.putExtra("TRAILER", clickedItem.getTrailerUrl());
         intent.putExtra("MOVIE_RATING", clickedItem.getRating().getName());
-        intent.putExtra("MOVIE_PERFORMER_NAME", new ArrayList<>(clickedItem.getPerformers().stream().map(Performer::getName).toList()));
-        intent.putStringArrayListExtra("MOVIE_PERFORMER_TYPE", new ArrayList<>(clickedItem.getPerformers().stream().map(Performer::getType).toList()));
+        intent.putExtra("MOVIE_PERFORMER_NAME", new ArrayList<>(clickedItem.getPerformers().stream().map(Performer::getName).collect(Collectors.toList())));
+        intent.putStringArrayListExtra("MOVIE_PERFORMER_TYPE", new ArrayList<>(clickedItem.getPerformers().stream().map(Performer::getType).collect(Collectors.toList())));
 
         startActivity(intent);
     }
@@ -221,7 +222,7 @@ public class Search_Activity extends AppCompatActivity {
             filteredItems.addAll(items);
         } else {
             for (SearchMovieByNameResponse item : items) {
-                List<String> genres = item.getGenres().stream().map(Genre::getName).toList();
+                List<String> genres = item.getGenres().stream().map(Genre::getName).collect(Collectors.toList());
                 if (genres != null && genres.contains(category)) {
                     filteredItems.add(item);
                 }
@@ -247,7 +248,7 @@ public class Search_Activity extends AppCompatActivity {
             // Check if any genre in the genreNameList matches
             boolean matchesGenre = false;
             if (item.getGenres() != null) {
-                for (String genre : item.getGenres().stream().map(Genre::getName).toList()) {
+                for (String genre : item.getGenres().stream().map(Genre::getName).collect(Collectors.toList())) {
                     if (genre.toLowerCase().contains(text.toLowerCase())) {
                         matchesGenre = true;
                         break;

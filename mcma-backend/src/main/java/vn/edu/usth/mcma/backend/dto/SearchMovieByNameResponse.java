@@ -18,8 +18,8 @@ public class SearchMovieByNameResponse {
     private Integer length;//in seconds
     private String publishDate;
     private String trailerUrl;
-    private RatingResponse rating;
-    private List<GenreResponse> genres;
-    private List<PerformerResponse> performers;
+    private RatingPresentation rating;
+    private List<GenrePresentation> genres;
+    private List<PerformerPresentation> performers;
 }
 
