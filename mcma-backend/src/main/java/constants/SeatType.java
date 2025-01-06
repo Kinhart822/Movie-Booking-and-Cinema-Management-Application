@@ -7,8 +7,8 @@ import java.util.Map;
 
 @Getter
 public enum SeatType {
-    UNAVAILABLE(-1, "Unavailable space",1,1,null),
-    AVAILABLE(0, "Available space",1,1,null),
+    NOT_PLACEABLE(-1, "Unavailable space",1,1,null),
+    PLACEABLE(0, "Available space",1,1,null),
     NORMAL(1, "For normies",1,1,30.0),
     VIP(2, "For VIP",1,1, 40.0),
     LOVERS(3, "For lovers",2,1,50.0),

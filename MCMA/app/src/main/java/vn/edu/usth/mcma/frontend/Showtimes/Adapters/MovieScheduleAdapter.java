@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.Instant;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.PerformerType;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Genre;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.Performer;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.Review;
 import vn.edu.usth.mcma.frontend.Home.OnlyDetailsActivity;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 
@@ -78,37 +81,24 @@ public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdap
         void bind(Movie movie) {
             movieTitle.setText(movie.getTitle());
             timeContainer.removeAllViews();
-
-            // 1. Lấy danh sách thời gian
-            List<String> showtimes = movie.getTime();
-
-            // 2. Sắp xếp thời gian theo định dạng HH:mm (hoặc HH)
-            @SuppressLint({"NewApi", "LocalSuppress"}) List<LocalTime> sortedTimes = showtimes.stream()
-                    .map(time -> {
-                        try {
-                            // Giả sử định dạng là HH:mm, nếu chỉ có HH thì đổi thành time + ":00"
-                            return LocalTime.parse(time.length() == 2 ? time + ":00" : time);
-                        } catch (Exception  e) {
-                            Log.e("TimeParseError", "Lỗi khi phân tích thời gian: " + time);
-                            return null;
-                        }
-                    })
-                    .filter(Objects::nonNull)
+            List<String> sortedSchedules = movie
+                    .getSchedules()
+                    .stream()
+                    .map(s -> Instant
+                            .parse(s.getStartTime()))
                     .sorted()
-                    .collect(Collectors.toList());
-
-            // 3. Chuyển đổi LocalTime về định dạng chuỗi HH:mm để hiển thị
-            @SuppressLint({"NewApi", "LocalSuppress"}) List<String> formattedTimes = sortedTimes.stream()
-                    .map(time -> time.format(DateTimeFormatter.ofPattern("HH:mm")))
+                    .map(s -> s
+                            .toString()
+                            .substring(11,16))
                     .collect(Collectors.toList());
 
             // 4. Tạo nút (Button) cho mỗi thời gian đã sắp xếp
-            for (String time : formattedTimes) {
+            for (String schedule : sortedSchedules) {
                 Button timeButton = new Button(itemView.getContext());
-                timeButton.setText(time);
+                timeButton.setText(schedule);
                 timeButton.setOnClickListener(v -> {
                     if (listener != null) {
-                        listener.onShowtimeClick(movie, time);
+                        listener.onShowtimeClick(movie, schedule);
                     }
                 });
 
@@ -132,17 +122,11 @@ public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdap
                 intent.putExtra("IMAGE_URL", movie.getImageUrl());
                 intent.putExtra("BACKGROUND_IMAGE_URL", movie.getBackgroundImageUrl());
                 intent.putExtra("TRAILER", movie.getTrailerUrl());
-                intent.putExtra("MOVIE_RATING", new ArrayList<>(movie.getMovieRatingDetailNameList()));
-                intent.putExtra("MOVIE_PERFORMER_NAME", new ArrayList<>(movie.getMoviePerformerNameList()));
-
-                List<String> performerTypeStrings = new ArrayList<>();
-                for (PerformerType performerType : movie.getMoviePerformerType()) {
-                    performerTypeStrings.add(performerType.toString());
-                }
-                intent.putStringArrayListExtra("MOVIE_PERFORMER_TYPE", new ArrayList<>(performerTypeStrings));
-
-                intent.putExtra("MOVIE_COMMENT", new ArrayList<>(movie.getComments()));
-                intent.putExtra("AVERAGE_STAR", movie.getAverageRating());
+                intent.putExtra("MOVIE_RATING", movie.getRating().getName());
+                intent.putExtra("MOVIE_PERFORMER_NAME", new ArrayList<>(movie.getPerformers().stream().map(Performer::getName).collect(Collectors.toList())));
+                intent.putStringArrayListExtra("MOVIE_PERFORMER_TYPE", new ArrayList<>(movie.getPerformers().stream().map(Performer::getType).collect(Collectors.toList())));
+                intent.putExtra("MOVIE_COMMENT", new ArrayList<>(movie.getReviews().stream().map(Review::getUserComment).collect(Collectors.toList())));
+                intent.putExtra("AVERAGE_STAR", movie.getReviews().stream().mapToInt(Review::getUserVote).average().orElse(0.0));
 
                 itemView.getContext().startActivity(intent);
             });

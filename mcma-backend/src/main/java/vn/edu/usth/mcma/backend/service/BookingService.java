@@ -1,18 +1,23 @@
 package vn.edu.usth.mcma.backend.service;
 
 import constants.ApiResponseCode;
+import constants.CommonStatus;
+import constants.PerformerType;
+import constants.Sex;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import vn.edu.usth.mcma.backend.dto.MovieResponse;
-import vn.edu.usth.mcma.backend.dto.SchedulePresentation;
+import vn.edu.usth.mcma.backend.dto.*;
 import vn.edu.usth.mcma.backend.entity.Movie;
+import vn.edu.usth.mcma.backend.entity.Rating;
+import vn.edu.usth.mcma.backend.entity.Review;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
+import vn.edu.usth.mcma.backend.repository.GenreRepository;
 import vn.edu.usth.mcma.backend.repository.MovieRepository;
+import vn.edu.usth.mcma.backend.repository.ReviewRepository;
 import vn.edu.usth.mcma.backend.repository.ScheduleRepository;
 
-import java.text.SimpleDateFormat;
-import java.time.format.TextStyle;
+import java.time.Instant;
 import java.util.*;
 
 @Transactional
@@ -20,6 +25,8 @@ import java.util.*;
 @AllArgsConstructor
 public class BookingService {
     private final ScheduleRepository scheduleRepository;
+    private final GenreRepository genreRepository;
+    private final ReviewRepository reviewRepository;
     //    private UserRepository userRepository;
 //    private BookingRepository bookingRepository;
     private MovieRepository movieRepository;
@@ -163,86 +170,53 @@ public class BookingService {
         Movie movie = movieRepository
                 .findById(movieId)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
-
-//        DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//        DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("HH:mm");
-
-        // Fetch Movie Genres
-        List<MovieGenre> movieGenres = movieGenreRepository.findMovieGenresByMovie(movie.getId());
-        List<String> movieGenreNameList = movieGenres.stream()
-                .map(movieGenre -> movieGenre.getMovieGenreDetail().getName())
+        // genres
+        List<GenrePresentation> genres = movie
+                .getGenreSet()
+                .stream()
+                .map(g -> GenrePresentation
+                        .builder()
+                        .id(g.getId())
+                        .name(g.getName())
+                        .description(g.getDescription())
+                        .imageUrl(g.getImageUrl())
+                        .build())
                 .toList();
-        List<String> movieGenreImageUrls = movieGenres.stream()
-                .map(movieGenre -> movieGenre.getMovieGenreDetail().getImageUrl())
+        // performers
+        List<PerformerPresentation> performers = movie
+                .getPerformerSet()
+                .stream()
+                .map(p -> PerformerPresentation
+                        .builder()
+                        .id(p.getId())
+                        .name(p.getName())
+                        .type(PerformerType.getById(p.getTypeId()).name())
+                        .dob(p.getDateOfBirth().toString())
+                        .sex(Sex.getById(p.getSex()).name())
+                        .build())
                 .toList();
-        List<String> movieGenreDescriptions = movieGenres.stream()
-                .map(movieGenre -> movieGenre.getMovieGenreDetail().getDescription())
+        // rating
+        Rating r = movie.getRating();
+        RatingPresentation rating = RatingPresentation
+                .builder()
+                .id(r.getId())
+                .name(r.getName())
+                .description(r.getDescription())
+                .build();
+        // reviews
+        List<ReviewPresentation> reviews = reviewRepository
+                .findAllByMovieAndStatusIs(movie, CommonStatus.ACTIVE.getStatus())
+                .stream()
+                .map(review -> ReviewPresentation
+                        .builder()
+                        .id(review.getId())
+                        .userComment(review.getUserComment())
+                        .userVote(review.getUserVote())
+                        .build())
                 .toList();
-
-        // Fetch Movie Performers
-        List<MoviePerformer> moviePerformers = moviePerformerRepository.findMoviePerformersByMovieId(movie.getId());
-        List<String> moviePerformerNameList = moviePerformers.stream()
-                .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getName())
-                .toList();
-
-        SimpleDateFormat formatterDate = new SimpleDateFormat("dd/MM/yyyy");
-        List<Date> moviePerformerDobList = moviePerformers.stream()
-                .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getDob())
-                .toList();
-        List<String> formatMoviePerformerDobList = new ArrayList<>();
-        for (Date dob : moviePerformerDobList) {
-            formatMoviePerformerDobList.add(formatterDate.format(dob));
-        }
-
-        List<PerformerSex> moviePerformerSex = moviePerformers.stream()
-                .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getPerformerSex())
-                .toList();
-        List<PerformerType> moviePerformerType = moviePerformers.stream()
-                .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getPerformerType())
-                .toList();
-
-        // Fetch Movie Rating Details
-        List<MovieRatingDetail> movieRatingDetails = movieRatingDetailRepository.findMovieRatingDetailsByMovieId(movie.getId());
-        List<String> movieRatingDetailNameList = movieRatingDetails.stream()
-                .map(MovieRatingDetail::getName)
-                .toList();
-        List<String> movieRatingDetailDescriptions = movieRatingDetails.stream()
-                .map(MovieRatingDetail::getDescription)
-                .toList();
-
-
-        // Movie Respond
-        List<Comment> comments = commentRepository.findByMovieId(movie.getId());
-        List<String> contents = comments.stream()
-                .map(Comment::getContent)
-                .toList();
-
-        List<Rating> ratings = ratingRepository.findByMovieId(movie.getId());
-        OptionalDouble averageRating = ratings.stream()
-                .mapToDouble(Rating::getRatingStar)
-                .average();
-
-        double avg = 0;
-        if (averageRating.isPresent()) {
-            avg = averageRating.getAsDouble();
-            System.out.printf("Average rating: %s%n", avg);
-        } else {
-            System.out.println("No ratings available.");
-        }
-
-        List<String> dayOfWeekList = new ArrayList<>();
-        List<String> dayList = new ArrayList<>();
-        List<String> timeList = new ArrayList<>();
-        for (MovieSchedule schedule : movie.getMovieScheduleList()) {
-            String dayOfWeek = schedule.getStartTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
-            String day = schedule.getStartTime().format(formatDate);
-            String time = schedule.getStartTime().format(formatTime);
-            dayOfWeekList.add(dayOfWeek);
-            dayList.add(day);
-            timeList.add(time);
-        }
+        // schedules
         List<SchedulePresentation> schedules = scheduleRepository
-                .findAllByMovieAndStartTimeIsAfter()
+                .findAllByMovieAndStartTimeIsAfterAndStatusIs(movie, Instant.now(), CommonStatus.ACTIVE.getStatus())
                 .stream()
                 .map(s -> SchedulePresentation
                         .builder()
@@ -253,7 +227,7 @@ public class BookingService {
                         .endTime(s.getEndTime().toString())
                         .build())
                 .toList();
-        MovieResponse response = MovieResponse
+        return MovieResponse
                 .builder()
                 .id(movie.getId())
                 .name(movie.getName())
@@ -264,22 +238,11 @@ public class BookingService {
                 .imageUrl(movie.getImageUrl())
                 .backgroundImageUrl(movie.getBackgroundImageUrl())
                 .schedules(schedules)
+                .genres(genres)
+                .performers(performers)
+                .rating(rating)
+                .reviews(reviews)
                 .build();
-        return new MovieResponse(
-                dayOfWeekList,
-                dayList,
-                timeList,
-                movieGenreNameList,
-                movieGenreImageUrls,
-                movieGenreDescriptions,
-                moviePerformerNameList,
-                formatMoviePerformerDobList,
-                moviePerformerSex,
-                moviePerformerType,
-                movieRatingDetailNameList,
-                movieRatingDetailDescriptions,
-                contents,
-                avg);
     }
 //
 //

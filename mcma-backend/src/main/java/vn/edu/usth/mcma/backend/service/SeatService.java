@@ -99,10 +99,10 @@ public class SeatService {
             Integer typeId = seat.getTypeId();
             Integer newTypeId = seatGrid.get(row).get(col).getTypeId();
             // TODO: low priority: better response for error: seat with type -1 at cannot be mutated
-            if (typeId == SeatType.UNAVAILABLE.getId() && !typeId.equals(newTypeId)) {
+            if (typeId == SeatType.NOT_PLACEABLE.getId() && !typeId.equals(newTypeId)) {
                 throw new BusinessException(ApiResponseCode.INVALID_SEAT_MAP);
             }
-            if (newTypeId == SeatType.UNAVAILABLE.getId() && !typeId.equals(newTypeId)) {
+            if (newTypeId == SeatType.NOT_PLACEABLE.getId() && !typeId.equals(newTypeId)) {
                 throw new BusinessException(ApiResponseCode.INVALID_SEAT_MAP);
             }
         }

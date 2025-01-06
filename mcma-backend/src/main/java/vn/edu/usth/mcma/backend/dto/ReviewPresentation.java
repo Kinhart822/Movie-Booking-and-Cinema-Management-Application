@@ -5,14 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PerformerPresentation {
+public class ReviewPresentation {
     private Long id;
-    private String name;
-    private String type;
-    private String dob;
-    private String sex;
+    private String userComment;
+    private Integer userVote;
 }

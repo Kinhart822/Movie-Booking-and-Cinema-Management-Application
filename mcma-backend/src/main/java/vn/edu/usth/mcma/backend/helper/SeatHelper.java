@@ -101,13 +101,13 @@ public class SeatHelper {
             if (columnMap
                     .values()
                     .stream()
-                    .allMatch(seat -> seat.getTypeId() == SeatType.UNAVAILABLE.getId() || seat.getTypeId() == SeatType.AVAILABLE.getId())) {
+                    .allMatch(seat -> seat.getTypeId() == SeatType.NOT_PLACEABLE.getId() || seat.getTypeId() == SeatType.PLACEABLE.getId())) {
                 columnMap.forEach((col, seat) -> seatHelperOutputs.add(createSeatResponse(seat)));
                 return;
             }
             AtomicInteger currentNumber = new AtomicInteger(1);
             columnMap.forEach((col, seat) -> {
-                if (seat.getTypeId() == SeatType.UNAVAILABLE.getId() || seat.getTypeId() == SeatType.AVAILABLE.getId()) {
+                if (seat.getTypeId() == SeatType.NOT_PLACEABLE.getId() || seat.getTypeId() == SeatType.PLACEABLE.getId()) {
                     seatHelperOutputs.add(createSeatResponse(seat));
                     return;
                 }

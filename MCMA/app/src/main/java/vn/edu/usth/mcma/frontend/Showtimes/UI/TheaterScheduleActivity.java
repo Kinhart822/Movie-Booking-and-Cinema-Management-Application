@@ -25,15 +25,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.PerformerType;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Genre;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.MovieResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.Performer;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.Review;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ScheduleSelectedByCinemaResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetAllInformationOfSelectedMovie;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetAllMovieAPI;
@@ -190,43 +192,39 @@ public class TheaterScheduleActivity extends AppCompatActivity
             @Override
             public void onResponse(@NonNull Call<List<MovieResponse>> call, @NonNull Response<List<MovieResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<MovieResponse> movieResponses = response.body();
-
-                    // Lọc lịch chiếu theo ngày đã chọn
-                    List<Movie> movies = new ArrayList<>();
                     Map<Integer, Long> movieIdMap = new HashMap<>();
 
-                    for (MovieResponse movieResponse : movieResponses) {
-                        Movie movie = Movie
-                                .builder()
-                                .movieId(movieResponse.getId())
-                                .movieName(movieResponse.getName())
-                                .title(movieResponse.getName())
-                                .movieLength(movieResponse.getLength())
-                                .description(movieResponse.getDescription())
-                                .publishDate(movieResponse.getPublishDate())
-                                .trailerUrl(movieResponse.getTrailerUrl())
-                                .imageUrl(movieResponse.getImageUrl())
-                                .backgroundImageUrl(movieResponse.getBackgroundImageUrl())
-                                .time(movieResponse.getTime())
-                                .genres(movieResponse.getGenres())
-                                .moviePerformerNameList(movieResponse.getMoviePerformerNameList())
-                                .moviePerformerType(movieResponse.getMoviePerformerType())
-                                .movieRatingDetailNameList(movieResponse.getMovieRatingDetailNameList())
-                                .movieRatingDetailDescriptions(movieResponse.getMovieRatingDetailDescriptions())
-                                .comments(movieResponse.getComments())
-                                .averageRating(movieResponse.getAverageRating())
-                                .build();
-                        movies.add(movie);
+                    // Lọc lịch chiếu theo ngày đã chọn
+                    List<Movie> movies = response
+                            .body()
+                            .stream()
+                            .map(m -> Movie
+                                    .builder()
+                                    .movieId(m.getId())
+                                    .movieName(m.getName())
+                                    .title(m.getName())
+                                    .movieLength(m.getLength())
+                                    .description(m.getDescription())
+                                    .publishDate(m.getPublishDate())
+                                    .trailerUrl(m.getTrailerUrl())
+                                    .imageUrl(m.getImageUrl())
+                                    .backgroundImageUrl(m.getBackgroundImageUrl())
+                                    .schedules(m.getSchedules())
+                                    .genres(m.getGenres())
+                                    .performers(m.getPerformers())
+                                    .rating(m.getRating())
+                                    .reviews(m.getReviews())
+                                    .build())
+                            .collect(Collectors.toList());
+                    AtomicInteger i = new AtomicInteger(0);
+                    movies.forEach(m -> movieIdMap.put(i.getAndIncrement(), m.getMovieId()));
 
-                        movieIdMap.put(movies.size() - 1, movieResponse.getId());
-                    }
                     movieAdapter.setMovies(movies); // Cập nhật adapter với danh sách phim
-
                     movieAdapter.setOnShowtimeClickListener((movie, showtime) -> {
                         int position = movies.indexOf(movie);
                         if (position != -1 && movieIdMap.containsKey(position)) {
-                            long movieId = movieIdMap.get(position);
+                            Long movieId = movieIdMap.get(position);
+                            assert movieId != null;
                             fetchMovieDetails(movieId); // Fetch additional details
                         }
                     });
@@ -245,7 +243,7 @@ public class TheaterScheduleActivity extends AppCompatActivity
         });
     }
 
-    private void fetchMovieDetails(long movieId) {
+    private void fetchMovieDetails(Long movieId) {
         RetrofitService retrofitService = new RetrofitService(this);
         GetAllInformationOfSelectedMovie apiService = retrofitService
                 .getRetrofit()
@@ -268,17 +266,11 @@ public class TheaterScheduleActivity extends AppCompatActivity
                     intent.putExtra("IMAGE_URL", movieResponse.getImageUrl());
                     intent.putExtra("BACKGROUND_IMAGE_URL", movieResponse.getBackgroundImageUrl());
                     intent.putExtra("TRAILER", movieResponse.getTrailerUrl());
-                    intent.putExtra("MOVIE_RATING", new ArrayList<>(movieResponse.getMovieRatingDetailNameList()));
-                    intent.putExtra("MOVIE_PERFORMER_NAME", new ArrayList<>(movieResponse.getMoviePerformerNameList()));
-
-                    List<String> performerTypeStrings = new ArrayList<>();
-                    for (PerformerType performerType : movieResponse.getMoviePerformerType()) {
-                        performerTypeStrings.add(performerType.toString());
-                    }
-                    intent.putStringArrayListExtra("MOVIE_PERFORMER_TYPE", new ArrayList<>(performerTypeStrings));
-
-                    intent.putExtra("MOVIE_COMMENT", new ArrayList<>(movieResponse.getComments()));
-                    intent.putExtra("AVERAGE_STAR", movieResponse.getAverageRating());
+                    intent.putExtra("MOVIE_RATING", movieResponse.getRating().getName());
+                    intent.putExtra("MOVIE_PERFORMER_NAME", new ArrayList<>(movieResponse.getPerformers().stream().map(Performer::getName).collect(Collectors.toList())));
+                    intent.putStringArrayListExtra("MOVIE_PERFORMER_TYPE", new ArrayList<>(movieResponse.getPerformers().stream().map(Performer::getType).collect(Collectors.toList())));
+                    intent.putExtra("MOVIE_COMMENT", new ArrayList<>(movieResponse.getReviews().stream().map(Review::getUserComment).collect(Collectors.toList())));
+                    intent.putExtra("AVERAGE_STAR", movieResponse.getReviews().stream().mapToInt(Review::getUserVote).average().orElse(0.0));
                 }
             }
 
@@ -303,6 +295,7 @@ public class TheaterScheduleActivity extends AppCompatActivity
         SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         try {
             Date date = inputFormat.parse(originalDate);
+            assert date != null;
             return outputFormat.format(date);
         } catch (ParseException e) {
             e.printStackTrace();

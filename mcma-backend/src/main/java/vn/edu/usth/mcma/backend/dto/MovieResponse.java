@@ -22,20 +22,8 @@ public class MovieResponse {
     private String backgroundImageUrl;
 
     private List<SchedulePresentation> schedules;
-    private List<String> dayOfWeek;
-    private List<String> date;
-    private List<String> time;
-
     private List<GenrePresentation> genres;
-
-    private List<String> moviePerformerNameList;
-    private List<String> moviePerformerDobList;
-    private List<PerformerSex> moviePerformerSex;
-    private List<PerformerType> moviePerformerType;
-
-    private List<String> movieRatingDetailNameList;
-    private List<String> movieRatingDetailDescriptions;
-
-    private  List<String> comments;
-    private  Double averageRating;
+    private List<PerformerPresentation> performers;
+    private RatingPresentation rating;
+    private List<ReviewPresentation> reviews;
 }
