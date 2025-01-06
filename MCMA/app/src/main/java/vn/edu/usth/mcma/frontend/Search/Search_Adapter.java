@@ -11,11 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.SearchMovieByGenreResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Genre;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.SearchMovieByNameResponse;
-import vn.edu.usth.mcma.frontend.Home.FilmViewInterface;
 
 public class Search_Adapter extends RecyclerView.Adapter<Search_ViewHolder> {
     private SearchViewInterface searchViewInterface;
@@ -39,7 +39,7 @@ public class Search_Adapter extends RecyclerView.Adapter<Search_ViewHolder> {
         SearchMovieByNameResponse item = items.get(position);
         holder.nameView.setText(item.getName() != null ? item.getName() : "Unknown");
 
-        List<String> genres = item.getGenreNameList();
+        List<String> genres = item.getGenres().stream().map(Genre::getName).collect(Collectors.toList());
         if (genres != null && !genres.isEmpty() ) {
             holder.typeView.setText(genres.get(0)); // Use a valid index, e.g., 0 or a relevant value
         } else {
@@ -47,7 +47,7 @@ public class Search_Adapter extends RecyclerView.Adapter<Search_ViewHolder> {
         }
         holder.timeView.setText(item.getLength() != null ? item.getLength() + " min" : "Unknown");
 
-        List<String> rating = item.getRatingNameList();
+        String rating = item.getRating().getName();
         if (genres != null && !genres.isEmpty() ) {
             holder.age_limitView.setText(genres.get(0)); // Use a valid index, e.g., 0 or a relevant value
         } else {

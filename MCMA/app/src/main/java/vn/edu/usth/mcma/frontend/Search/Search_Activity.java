@@ -3,7 +3,6 @@ package vn.edu.usth.mcma.frontend.Search;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
@@ -19,14 +18,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.PerformerType;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Genre;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.MovieGenreResponse;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.NowShowingResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.Performer;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.SearchMovieByNameResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetAllMovieGenres;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.SearchMovieByName;
@@ -100,16 +100,16 @@ public class Search_Activity extends AppCompatActivity {
         Intent intent = new Intent(Search_Activity.this, OnlyDetailsActivity.class);
 
         intent.putExtra("MOVIE_NAME", clickedItem.getName());
-        intent.putExtra("MOVIE_GENRES", new ArrayList<>(clickedItem.getGenreNameList()));
+        intent.putExtra("MOVIE_GENRES", new ArrayList<>(clickedItem.getGenres().stream().map(Genre::getName).collect(Collectors.toList())));
         intent.putExtra("MOVIE_LENGTH", clickedItem.getLength());
         intent.putExtra("MOVIE_DESCRIPTION", clickedItem.getDescription());
-        intent.putExtra("PUBLISHED_DATE", clickedItem.getDatePublish());
+        intent.putExtra("PUBLISHED_DATE", clickedItem.getPublishDate());
         intent.putExtra("IMAGE_URL", clickedItem.getImageUrl());
         intent.putExtra("BACKGROUND_IMAGE_URL", clickedItem.getBackgroundImageUrl());
-        intent.putExtra("TRAILER", clickedItem.getTrailerLink());
-        intent.putExtra("MOVIE_RATING", new ArrayList<>(clickedItem.getRatingNameList()));
-        intent.putExtra("MOVIE_PERFORMER_NAME", new ArrayList<>(clickedItem.getPerformerNameList()));
-        intent.putStringArrayListExtra("MOVIE_PERFORMER_TYPE", new ArrayList<>(clickedItem.getPerformerType()));
+        intent.putExtra("TRAILER", clickedItem.getTrailerUrl());
+        intent.putExtra("MOVIE_RATING", clickedItem.getRating().getName());
+        intent.putExtra("MOVIE_PERFORMER_NAME", new ArrayList<>(clickedItem.getPerformers().stream().map(Performer::getName).collect(Collectors.toList())));
+        intent.putStringArrayListExtra("MOVIE_PERFORMER_TYPE", new ArrayList<>(clickedItem.getPerformers().stream().map(Performer::getType).collect(Collectors.toList())));
 
         startActivity(intent);
     }
@@ -175,12 +175,10 @@ public class Search_Activity extends AppCompatActivity {
 
     private void fetchMoviesFromApi() {
         String title = searchView.getQuery().toString().trim();
-        int limit = 100;
-        int offset = 0;
 
         RetrofitService retrofitService = new RetrofitService(this);
         SearchMovieByName searchMovieByName = retrofitService.getRetrofit().create(SearchMovieByName.class);
-        searchMovieByName.searchMovies(title, limit, offset).enqueue(new Callback<List<SearchMovieByNameResponse>>() {
+        searchMovieByName.searchMovies(title).enqueue(new Callback<List<SearchMovieByNameResponse>>() {
             @Override
             public void onResponse(Call<List<SearchMovieByNameResponse>> call, Response<List<SearchMovieByNameResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -224,7 +222,7 @@ public class Search_Activity extends AppCompatActivity {
             filteredItems.addAll(items);
         } else {
             for (SearchMovieByNameResponse item : items) {
-                List<String> genres = item.getGenreNameList();
+                List<String> genres = item.getGenres().stream().map(Genre::getName).collect(Collectors.toList());
                 if (genres != null && genres.contains(category)) {
                     filteredItems.add(item);
                 }
@@ -249,8 +247,8 @@ public class Search_Activity extends AppCompatActivity {
 
             // Check if any genre in the genreNameList matches
             boolean matchesGenre = false;
-            if (item.getGenreNameList() != null) {
-                for (String genre : item.getGenreNameList()) {
+            if (item.getGenres() != null) {
+                for (String genre : item.getGenres().stream().map(Genre::getName).collect(Collectors.toList())) {
                     if (genre.toLowerCase().contains(text.toLowerCase())) {
                         matchesGenre = true;
                         break;

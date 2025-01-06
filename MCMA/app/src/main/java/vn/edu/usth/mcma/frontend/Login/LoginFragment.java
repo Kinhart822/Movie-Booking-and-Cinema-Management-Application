@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -63,9 +64,10 @@ public class LoginFragment extends Fragment {
 
             authenticationApi.signIn(signInRequest).enqueue(new Callback<JwtAuthenticationResponse>() {
                 @Override
-                public void onResponse(Call<JwtAuthenticationResponse> call, Response<JwtAuthenticationResponse> response) {
+                public void onResponse(@NonNull Call<JwtAuthenticationResponse> call, @NonNull Response<JwtAuthenticationResponse> response) {
                     if (response.isSuccessful()){
                         Toast.makeText(getActivity(), "Login successful!", Toast.LENGTH_SHORT).show();
+                        assert response.body() != null;
                         String token = response.body().getToken();
                         int userId = response.body().getUserId();
                         saveUserIdToPreferences(userId);

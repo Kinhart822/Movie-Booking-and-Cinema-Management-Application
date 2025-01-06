@@ -1,6 +1,5 @@
 package vn.edu.usth.mcma.frontend.Showtimes.UI;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,29 +20,29 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.PerformerType;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Genre;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.MovieResponse;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ScheduleResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.Performer;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.Review;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ScheduleSelectedByCinemaResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetAllInformationOfSelectedMovie;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetAllMovieAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetScheduleAPI;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.MovieScheduleAdapter;
-import vn.edu.usth.mcma.frontend.Showtimes.Utils.TheaterDataProvider;
 
 public class TheaterScheduleActivity extends AppCompatActivity
         implements MovieScheduleAdapter.OnShowtimeClickListener {
@@ -85,17 +85,15 @@ public class TheaterScheduleActivity extends AppCompatActivity
     private void setupDateButtons(int theaterId) {
         LinearLayout daysContainer = findViewById(R.id.days_container);
         daysContainer.removeAllViews();
-
-        GetScheduleAPI apiService = new Retrofit.Builder()
-                .baseUrl("http://192.168.33.102:8080/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
+        RetrofitService retrofitService = new RetrofitService(this);
+        GetScheduleAPI apiService = retrofitService
+                .getRetrofit()
                 .create(GetScheduleAPI.class);
 
         Call<ScheduleSelectedByCinemaResponse> call = apiService.getScheduleByCinema(theaterId);
         call.enqueue(new Callback<ScheduleSelectedByCinemaResponse>() {
             @Override
-            public void onResponse(Call<ScheduleSelectedByCinemaResponse> call, Response<ScheduleSelectedByCinemaResponse> response) {
+            public void onResponse(@NonNull Call<ScheduleSelectedByCinemaResponse> call, @NonNull Response<ScheduleSelectedByCinemaResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     ScheduleSelectedByCinemaResponse scheduleResponse = response.body();
 
@@ -176,7 +174,7 @@ public class TheaterScheduleActivity extends AppCompatActivity
             }
 
             @Override
-            public void onFailure(Call<ScheduleSelectedByCinemaResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<ScheduleSelectedByCinemaResponse> call, @NonNull Throwable t) {
                 Log.e("TheaterScheduleError", "Error fetching schedule", t);
                 Toast.makeText(TheaterScheduleActivity.this, "Failed to load schedule. Please try again.", Toast.LENGTH_SHORT).show();
             }
@@ -184,55 +182,49 @@ public class TheaterScheduleActivity extends AppCompatActivity
     }
 
     private void loadMovieSchedule(String date) {
-        GetAllMovieAPI apiService = new Retrofit.Builder()
-                .baseUrl("http://192.168.33.102:8080/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
+        RetrofitService retrofitService = new RetrofitService(this);
+        GetAllMovieAPI apiService = retrofitService
+                .getRetrofit()
                 .create(GetAllMovieAPI.class);
 
         Call<List<MovieResponse>> call = apiService.getAllMovieBySelectedDate(date);
         call.enqueue(new Callback<List<MovieResponse>>() {
             @Override
-            public void onResponse(Call<List<MovieResponse>> call, Response<List<MovieResponse>> response) {
+            public void onResponse(@NonNull Call<List<MovieResponse>> call, @NonNull Response<List<MovieResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<MovieResponse> movieSchedules = response.body();
+                    Map<Integer, Long> movieIdMap = new HashMap<>();
 
                     // Lọc lịch chiếu theo ngày đã chọn
-                    List<Movie> movies = new ArrayList<>();
-                    Map<Integer, Integer> movieIdMap = new HashMap<>();
+                    List<Movie> movies = response
+                            .body()
+                            .stream()
+                            .map(m -> Movie
+                                    .builder()
+                                    .movieId(m.getId())
+                                    .movieName(m.getName())
+                                    .title(m.getName())
+                                    .movieLength(m.getLength())
+                                    .description(m.getDescription())
+                                    .publishDate(m.getPublishDate())
+                                    .trailerUrl(m.getTrailerUrl())
+                                    .imageUrl(m.getImageUrl())
+                                    .backgroundImageUrl(m.getBackgroundImageUrl())
+                                    .schedules(m.getSchedules())
+                                    .genres(m.getGenres())
+                                    .performers(m.getPerformers())
+                                    .rating(m.getRating())
+                                    .reviews(m.getReviews())
+                                    .build())
+                            .collect(Collectors.toList());
+                    AtomicInteger i = new AtomicInteger(0);
+                    movies.forEach(m -> movieIdMap.put(i.getAndIncrement(), m.getMovieId()));
 
-                    for (MovieResponse movieSchedule : movieSchedules) {
-                        Movie movie = new Movie(
-                                movieSchedule.getMovieId(),
-                                movieSchedule.getMovieName(),
-                                movieSchedule.getMovieName(),
-                                movieSchedule.getMovieLength(),
-                                movieSchedule.getDescription(),
-                                movieSchedule.getPublishedDate(),
-                                movieSchedule.getTrailerLink(),
-                                movieSchedule.getImageUrl(),
-                                movieSchedule.getBackgroundImageUrl(),
-                                movieSchedule.getTime(),
-                                movieSchedule.getMovieGenreNameList(),
-                                movieSchedule.getImageUrlList(),
-                                movieSchedule.getMovieGenreDescriptions(),
-                                movieSchedule.getMoviePerformerNameList(),
-                                movieSchedule.getMoviePerformerType(),
-                                movieSchedule.getMovieRatingDetailNameList(),
-                                movieSchedule.getMovieRatingDetailDescriptions(),
-                                movieSchedule.getComments(),
-                                movieSchedule.getAverageRating()
-                        );
-                        movies.add(movie);
-
-                        movieIdMap.put(movies.size() - 1, movieSchedule.getMovieId());
-                    }
                     movieAdapter.setMovies(movies); // Cập nhật adapter với danh sách phim
-
                     movieAdapter.setOnShowtimeClickListener((movie, showtime) -> {
                         int position = movies.indexOf(movie);
                         if (position != -1 && movieIdMap.containsKey(position)) {
-                            int movieId = movieIdMap.get(position);
+                            Long movieId = movieIdMap.get(position);
+                            assert movieId != null;
                             fetchMovieDetails(movieId); // Fetch additional details
                         }
                     });
@@ -244,53 +236,46 @@ public class TheaterScheduleActivity extends AppCompatActivity
             }
 
             @Override
-            public void onFailure(Call<List<MovieResponse>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<MovieResponse>> call, @NonNull Throwable t) {
                 Log.e("TheaterScheduleError", "Error fetching schedule", t);
                 Toast.makeText(TheaterScheduleActivity.this, "Failed to load schedule. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void fetchMovieDetails(int movieId) {
-        GetAllInformationOfSelectedMovie apiService = new Retrofit.Builder()
-                .baseUrl("http://192.168.33.102:8080/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
+    private void fetchMovieDetails(Long movieId) {
+        RetrofitService retrofitService = new RetrofitService(this);
+        GetAllInformationOfSelectedMovie apiService = retrofitService
+                .getRetrofit()
                 .create(GetAllInformationOfSelectedMovie.class);
 
         Call<MovieResponse> call = apiService.getAllInformationOfSelectedMovie(movieId);
         call.enqueue(new Callback<MovieResponse>() {
             @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+            public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     MovieResponse movieResponse = response.body();
                     // Handle movie details (e.g., display in a new activity)
                     Intent intent = new Intent(TheaterScheduleActivity.this, MovieDetailsActivity.class);
-                    intent.putExtra("MOVIE_TITLE", movieResponse.getMovieName());
-                    intent.putExtra("MOVIE_NAME", movieResponse.getMovieName());
-                    intent.putExtra("MOVIE_GENRES", new ArrayList<>(movieResponse.getMovieGenreNameList()));
-                    intent.putExtra("MOVIE_LENGTH", movieResponse.getMovieLength());
+                    intent.putExtra("MOVIE_TITLE", movieResponse.getName());
+                    intent.putExtra("MOVIE_NAME", movieResponse.getName());
+                    intent.putExtra("MOVIE_GENRES", new ArrayList<>(movieResponse.getGenres().stream().map(Genre::getName).collect(Collectors.toList())));
+                    intent.putExtra("MOVIE_LENGTH", movieResponse.getLength());
                     intent.putExtra("MOVIE_DESCRIPTION", movieResponse.getDescription());
-                    intent.putExtra("PUBLISHED_DATE", movieResponse.getPublishedDate());
+                    intent.putExtra("PUBLISHED_DATE", movieResponse.getPublishDate());
                     intent.putExtra("IMAGE_URL", movieResponse.getImageUrl());
                     intent.putExtra("BACKGROUND_IMAGE_URL", movieResponse.getBackgroundImageUrl());
-                    intent.putExtra("TRAILER", movieResponse.getTrailerLink());
-                    intent.putExtra("MOVIE_RATING", new ArrayList<>(movieResponse.getMovieRatingDetailNameList()));
-                    intent.putExtra("MOVIE_PERFORMER_NAME", new ArrayList<>(movieResponse.getMoviePerformerNameList()));
-
-                    List<String> performerTypeStrings = new ArrayList<>();
-                    for (PerformerType performerType : movieResponse.getMoviePerformerType()) {
-                        performerTypeStrings.add(performerType.toString());
-                    }
-                    intent.putStringArrayListExtra("MOVIE_PERFORMER_TYPE", new ArrayList<>(performerTypeStrings));
-
-                    intent.putExtra("MOVIE_COMMENT", new ArrayList<>(movieResponse.getComments()));
-                    intent.putExtra("AVERAGE_STAR", movieResponse.getAverageRating());
+                    intent.putExtra("TRAILER", movieResponse.getTrailerUrl());
+                    intent.putExtra("MOVIE_RATING", movieResponse.getRating().getName());
+                    intent.putExtra("MOVIE_PERFORMER_NAME", new ArrayList<>(movieResponse.getPerformers().stream().map(Performer::getName).collect(Collectors.toList())));
+                    intent.putStringArrayListExtra("MOVIE_PERFORMER_TYPE", new ArrayList<>(movieResponse.getPerformers().stream().map(Performer::getType).collect(Collectors.toList())));
+                    intent.putExtra("MOVIE_COMMENT", new ArrayList<>(movieResponse.getReviews().stream().map(Review::getUserComment).collect(Collectors.toList())));
+                    intent.putExtra("AVERAGE_STAR", movieResponse.getReviews().stream().mapToInt(Review::getUserVote).average().orElse(0.0));
                 }
             }
 
             @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<MovieResponse> call, @NonNull Throwable t) {
                 Log.e("TheaterScheduleError", "Error fetching movie details", t);
                 Toast.makeText(TheaterScheduleActivity.this, "Failed to load movie details. Please try again.", Toast.LENGTH_SHORT).show();
             }
@@ -310,6 +295,7 @@ public class TheaterScheduleActivity extends AppCompatActivity
         SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         try {
             Date date = inputFormat.parse(originalDate);
+            assert date != null;
             return outputFormat.format(date);
         } catch (ParseException e) {
             e.printStackTrace();

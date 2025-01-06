@@ -8,14 +8,16 @@ import com.google.gson.Gson;
 
 import java.util.concurrent.TimeUnit;
 
+import lombok.Getter;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
+import vn.edu.usth.mcma.frontend.constants.IP;
 
+@Getter
 public class RetrofitService {
-    private static final String BASE_URL = "http://192.168.33.102:8080/";
-
+    private static final String BASE_URL = IP.MINOXD_LAPTOP.getIp();
     private final Retrofit retrofit;
     public RetrofitService(Context context) {
         OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder()
@@ -37,8 +39,5 @@ public class RetrofitService {
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(new Gson()))
                 .build();
-    }
-    public Retrofit getRetrofit() {
-        return retrofit;
     }
 }

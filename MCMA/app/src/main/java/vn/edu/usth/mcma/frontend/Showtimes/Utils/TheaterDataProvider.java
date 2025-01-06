@@ -15,16 +15,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ViewCityResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.BookingProcessAPIs.GetAllCitiesAPI;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
+import vn.edu.usth.mcma.frontend.constants.IP;
 
 public class TheaterDataProvider {
     public static List<String> getCities() {
         return Arrays.asList("TPHCM", "Hà Nội", "Huế", "Đà Nẵng", "Cần Thơ", "Nha Trang", "Đà Lạt", "Vũng Tàu");
     }
 
-    private static final String BASE_URL = "http://192.168.33.102:8080/";
-    private static GetAllCitiesAPI apiService;
+    private static final String BASE_URL = IP.MINOXD_LAPTOP.getIp();
+    private static final GetAllCitiesAPI apiService;
 
     static {
         Retrofit retrofit = new Retrofit.Builder()
@@ -155,11 +157,9 @@ public class TheaterDataProvider {
         List<String> showtimes = new ArrayList<>();
         int startHour = 10; // 10 AM
         int endHour = 22;   // 10 PM
-
         for (int hour = startHour; hour <= endHour; hour += 2) {
             showtimes.add(String.format("%02d:00", hour));
         }
-
         return showtimes;
     }
 
@@ -169,13 +169,6 @@ public class TheaterDataProvider {
         String name;
         String address;
         int imageResId;
-
-        public TheaterInfo(String address, int id, int imageResId, String name) {
-            this.address = address;
-            this.id = id;
-            this.imageResId = imageResId;
-            this.name = name;
-        }
 
         public TheaterInfo(String address, String idCity, int imageResId) {
             this.address = address;

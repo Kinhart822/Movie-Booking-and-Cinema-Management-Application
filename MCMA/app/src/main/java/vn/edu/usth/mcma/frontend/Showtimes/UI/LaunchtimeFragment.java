@@ -28,6 +28,7 @@ import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ViewCinemaResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ViewCityResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetCinemaListAPI;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.TheaterDataProvider;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.TheaterAdapter;
@@ -122,10 +123,9 @@ public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnThe
     }
 
     private void updateTheaterList() {
-        GetCinemaListAPI apiService = new Retrofit.Builder()
-                .baseUrl("http://192.168.33.102:8080/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
+        RetrofitService retrofitService = new RetrofitService(requireContext());
+        GetCinemaListAPI apiService = retrofitService
+                .getRetrofit()
                 .create(GetCinemaListAPI.class);
 
         Call<ViewCinemaResponse> call = apiService.getCinemaListByCity(currentCityId);

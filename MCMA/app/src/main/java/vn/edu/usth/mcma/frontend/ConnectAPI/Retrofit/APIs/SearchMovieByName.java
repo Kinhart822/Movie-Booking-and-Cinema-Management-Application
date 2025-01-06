@@ -10,8 +10,6 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.SearchMovieByNameResp
 public interface SearchMovieByName {
     @GET("/api/v1/user/search-movie-by-name")
     Call<List<SearchMovieByNameResponse>> searchMovies(
-            @Query("title") String title,
-            @Query("limit") int limit,
-            @Query("offset") int offset
+            @Query("title") String title
     );
 }
