@@ -1,9 +1,6 @@
 package vn.edu.usth.mcma.backend.service;
 
-import constants.ApiResponseCode;
-import constants.CommonStatus;
-import constants.PerformerType;
-import constants.Sex;
+import constants.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +21,7 @@ public class BookingService {
     private final CityRepository cityRepository;
     private final CinemaRepository cinemaRepository;
     private final ScreenRepository screenRepository;
+    private final TicketRepository ticketRepository;
     private MovieRepository movieRepository;
     public MoviePresentation getAllInformationOfSelectedMovie(Long movieId) {
         Movie movie = movieRepository

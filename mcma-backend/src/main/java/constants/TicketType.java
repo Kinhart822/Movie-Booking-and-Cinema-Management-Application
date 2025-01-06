@@ -1,5 +1,11 @@
 package constants;
 
+import lombok.Getter;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Getter
 public enum TicketType {
     ADULT(1, "Ticket for adults", 15),
     CHILD(1, "Ticket for children", 8),
@@ -15,5 +21,14 @@ public enum TicketType {
         this.id = id;
         this.description = description;
         this.price = price;
+    }
+    private static final Map<Integer, TicketType> ID_MAP = new HashMap<>();
+    static {
+        for (TicketType ticketType : TicketType.values()) {
+            ID_MAP.put(ticketType.getId(), ticketType);
+        }
+    }
+    public static TicketType getById(int id) {
+        return ID_MAP.get(id);
     }
 }

@@ -72,9 +72,8 @@ public class UserController {
         return ResponseEntity.ok(bookingService.getAllSchedulesByMovieAndScreen(movieId, screenId));
     }
 //    @GetMapping("/booking/allTickets")
-//    public ResponseEntity<List<TicketResponse>> getAllTickets() {
-//        List<TicketResponse> ticketResponses = bookingService.getAllTickets();
-//        return ResponseEntity.ok(ticketResponses);
+//    public ResponseEntity<List<TicketPresentation>> getAllTickets() {
+//        return ResponseEntity.ok(bookingService.getAllTickets());
 //    }
 //    @GetMapping("/booking/allUnavailableSeatsByScreen/{screenId}")
 //    public ResponseEntity<List<UnavailableSeatResponse>> getAllUnavailableSeatsByScreen(@PathVariable Integer screenId) {
