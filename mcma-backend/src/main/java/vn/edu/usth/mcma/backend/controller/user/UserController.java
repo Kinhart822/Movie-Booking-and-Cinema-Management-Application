@@ -3,6 +3,7 @@ package vn.edu.usth.mcma.backend.controller.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.usth.mcma.backend.dto.CityPresentation;
 import vn.edu.usth.mcma.backend.dto.MovieResponse;
 import vn.edu.usth.mcma.backend.dto.SearchMovieByNameResponse;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
@@ -49,24 +50,18 @@ public class UserController {
 //        return ResponseEntity.ok(movieService.getAllMoviesByMovieGenreName(name, limit, offset));
 //    }
 //
-    // TODO: Booking ticket(s)
-//    @GetMapping("/information/allMovies")
-//    public ResponseEntity<List<MovieResponse>> getAllMovies() {
-//        List<MovieResponse> movieResponds = bookingService.getAllMovies();
-//        return ResponseEntity.ok(movieResponds);
-//    }
-//
+    // TODO: Booking
     @GetMapping("/information/movie-information/{movieId}")
     public ResponseEntity<MovieResponse> getAllInformationOfSelectedMovie(@PathVariable Long movieId) {
         return ResponseEntity.ok(bookingService.getAllInformationOfSelectedMovie(movieId));
     }
-//
-//    @GetMapping("/booking/allCitiesByMovie/{movieId}")
-//    public ResponseEntity<List<CityResponse>> getAllCitiesByMovie(@PathVariable Integer movieId) {
-//        List<CityResponse> cityResponses = bookingService.getAllCitiesBySelectedMovie(movieId);
-//        return ResponseEntity.ok(cityResponses);
-//    }
-//
+
+    @GetMapping("/booking/allCitiesByMovie/{movieId}")
+    public ResponseEntity<List<CityPresentation>> getAllCitiesByMovie(@PathVariable Long movieId) {
+        List<CityPresentation> cityResponses = bookingService.getAllCitiesBySelectedMovie(movieId);
+        return ResponseEntity.ok(cityResponses);
+    }
+
 //    @GetMapping("/booking/allCinemasByCity/{cityId}")
 //    public ResponseEntity<List<CinemaResponse>> getAllCinemasByCity(@PathVariable Integer cityId) {
 //        List<CinemaResponse> movies = bookingService.getAllCinemasBySelectedCity(cityId);

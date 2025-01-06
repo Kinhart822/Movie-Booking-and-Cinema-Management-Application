@@ -7,8 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.PerformerSex;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.PerformerType;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Genre;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.Performer;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.Rating;

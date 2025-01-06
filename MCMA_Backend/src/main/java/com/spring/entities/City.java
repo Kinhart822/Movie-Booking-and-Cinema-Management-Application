@@ -43,7 +43,7 @@ public class City {
     //rejected: create loop
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "city")
     private List<Cinema> cinemaList;
-    //rejected: use movie_schedule instead
+    //rejected: use schedule instead
     @ManyToOne
     @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;

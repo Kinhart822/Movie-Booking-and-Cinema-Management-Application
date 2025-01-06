@@ -41,7 +41,7 @@ public class AuthService {
         Token token = new Token();
         token.setValue(value);
         token.setLoggedOut(false);
-        token.setUserId(userService.findUserByEmail(email).getId());
+        token.setUser(userService.findUserByEmail(email));
         tokenRepository.save(token);
     }
 

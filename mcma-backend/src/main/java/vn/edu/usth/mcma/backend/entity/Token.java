@@ -20,9 +20,10 @@ public class Token implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private Long userId;
-    @Column
     private boolean isLoggedOut;
     @Column
     private String value;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

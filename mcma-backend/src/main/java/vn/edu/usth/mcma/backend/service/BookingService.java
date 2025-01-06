@@ -47,125 +47,6 @@ public class BookingService {
 //    private RatingRepository ratingRepository;
 //    private BookingTicketRepository bookingTicketRepository;
     private EmailService emailService;
-
-
-//    public List<MovieResponse> getAllMovies() {
-//        List<Movie> movies = movieRepository.findAllByStatusIs(CommonStatus.ACTIVE.getStatus());
-//        List<MovieResponse> response = new ArrayList<>();
-//
-//        DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//        DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("HH:mm");
-//
-//        for (Movie movie : movies) {
-//            // Fetch Movie Genres
-//            List<MovieGenre> movieGenres = movieGenreRepository.findMovieGenresByMovie(movie.getId());
-//            List<String> movieGenreNameList = movieGenres.stream()
-//                    .map(movieGenre -> movieGenre.getMovieGenreDetail().getName())
-//                    .toList();
-//            List<String> movieGenreImageUrls = movieGenres.stream()
-//                    .map(movieGenre -> movieGenre.getMovieGenreDetail().getImageUrl())
-//                    .toList();
-//            List<String> movieGenreDescriptions = movieGenres.stream()
-//                    .map(movieGenre -> movieGenre.getMovieGenreDetail().getDescription())
-//                    .toList();
-//
-//            // Fetch Movie Performers
-//            List<MoviePerformer> moviePerformers = moviePerformerRepository.findMoviePerformersByMovieId(movie.getId());
-//            List<String> moviePerformerNameList = moviePerformers.stream()
-//                    .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getName())
-//                    .toList();
-//
-//            SimpleDateFormat formatterDate = new SimpleDateFormat("dd/MM/yyyy");
-//            List<Date> moviePerformerDobList = moviePerformers.stream()
-//                    .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getDob())
-//                    .toList();
-//            List<String> formatMoviePerformerDobList = new ArrayList<>();
-//            for (Date dob : moviePerformerDobList) {
-//                formatMoviePerformerDobList.add(formatterDate.format(dob));
-//            }
-//
-//            List<PerformerSex> moviePerformerSex = moviePerformers.stream()
-//                    .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getPerformerSex())
-//                    .toList();
-//            List<PerformerType> moviePerformerType = moviePerformers.stream()
-//                    .map(moviePerformer -> moviePerformer.getMoviePerformerDetail().getPerformerType())
-//                    .toList();
-//
-//            // Fetch Movie Rating Details
-//            List<MovieRatingDetail> movieRatingDetails = movieRatingDetailRepository.findMovieRatingDetailsByMovieId(movie.getId());
-//            List<String> movieRatingDetailNameList = movieRatingDetails.stream()
-//                    .map(MovieRatingDetail::getName)
-//                    .toList();
-//            List<String> movieRatingDetailDescriptions = movieRatingDetails.stream()
-//                    .map(MovieRatingDetail::getDescription)
-//                    .toList();
-//
-//            // Format date
-//            SimpleDateFormat publishDateFormatter = new SimpleDateFormat("dd/MM/yyyy");
-//            String formattedDatePublish = publishDateFormatter.format(movie.getDatePublish());
-//
-//            // Movie Respond
-//            List<Comment> comments = commentRepository.findByMovieId(movie.getId());
-//            List<String> contents = comments.stream()
-//                    .map(Comment::getContent)
-//                    .toList();
-//
-//            List<Rating> ratings = ratingRepository.findByMovieId(movie.getId());
-//            OptionalDouble averageRating = ratings.stream()
-//                    .mapToDouble(Rating::getRatingStar)
-//                    .average();
-//
-//            double avg = 0;
-//            if (averageRating.isPresent()) {
-//                avg = averageRating.getAsDouble();
-//                System.out.printf("Average rating: %s%n", avg);
-//            } else {
-//                System.out.println("No ratings available.");
-//            }
-//
-//            List<String> dayOfWeekList = new ArrayList<>();
-//            List<String> dayList = new ArrayList<>();
-//            List<String> timeList = new ArrayList<>();
-//            for (MovieSchedule schedule : movie.getMovieScheduleList()) {
-//                String dayOfWeek = schedule.getStartTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
-//                String day = schedule.getStartTime().format(formatDate);
-//                String time = schedule.getStartTime().format(formatTime);
-//                dayOfWeekList.add(dayOfWeek);
-//                dayList.add(day);
-//                timeList.add(time);
-//            }
-//            // Create and add MovieResponse object
-//            MovieResponse movieResponse = new MovieResponse(
-//                    movie.getId(),
-//                    movie.getName(),
-//                    movie.getLength(),
-//                    movie.getDescription(),
-//                    formattedDatePublish,
-//                    movie.getTrailerLink(),
-//                    movie.getImageUrl(),
-//                    movie.getBackgroundImageUrl(),
-//                    dayOfWeekList,
-//                    dayList,
-//                    timeList,
-//                    movieGenreNameList,
-//                    movieGenreImageUrls,
-//                    movieGenreDescriptions,
-//                    moviePerformerNameList,
-//                    formatMoviePerformerDobList,
-//                    moviePerformerSex,
-//                    moviePerformerType,
-//                    movieRatingDetailNameList,
-//                    movieRatingDetailDescriptions,
-//                    contents,
-//                    avg
-//            );
-//            response.add(movieResponse);
-//        }
-//
-//        return response;
-//    }
-
-//
     public MovieResponse getAllInformationOfSelectedMovie(Long movieId) {
         Movie movie = movieRepository
                 .findById(movieId)
@@ -244,12 +125,10 @@ public class BookingService {
                 .reviews(reviews)
                 .build();
     }
-//
-//
-//    public List<CityResponse> getAllCitiesBySelectedMovie(Integer movieId) {
-//        Movie movie = movieRepository.findById(movieId)
-//                .orElseThrow(() -> new IllegalArgumentException("Invalid movie"));
-//
+    public List<CityPresentation> getAllCitiesBySelectedMovie(Long movieId) {
+//        Movie movie = movieRepository
+//                .findById(movieId)
+//                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND);
 //        List<City> cities = cityRepository.findByMovieId(movie.getId());
 //        if (cities == null || cities.isEmpty()) {
 //            throw new IllegalArgumentException("No cities found for given movie.");
@@ -272,7 +151,8 @@ public class BookingService {
 //        }
 //
 //        return cityResponses;
-//    }
+        return null;
+    }
 //
 //
 //    public List<CinemaResponse> getAllCinemasBySelectedCity(Integer cityId) {

@@ -30,7 +30,7 @@ public class JwtUtil {
         if (storedToken == null) {
             throw new BusinessException(ApiResponseCode.INVALID_TOKEN);
         }
-        return storedToken.getUserId();
+        return storedToken.getUser().getId();
     }
 
     /**
