@@ -9,8 +9,8 @@ public interface GetDateScheduleByScreenIdAPI {
     @GET("/api/v1/user/booking/allSchedulesByMovieAndCinemaAndScreen")
     Call<ScheduleResponse> getAllSchedulesByMovieAndCinemaAndScreen(
             @Query("movieId") Long movieId,
-            @Query("cinemaId") Integer cinemaId,
-            @Query("screenId") Integer screenId
+            @Query("cinemaId") Long cinemaId,
+            @Query("screenId") Long screenId
     );
 
 }

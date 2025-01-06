@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,12 +46,12 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
     private String movieTitle;
     private OnShowtimeClickListener listener;
     private SparseBooleanArray expandedStates = new SparseBooleanArray();
-    private Integer selectedScreenId;
+    private Long selectedScreenId;
     private Integer selectedScheduleId;
     private final Long movieId;
 
     public interface OnShowtimeClickListener {
-        void onShowtimeClick(Theater theater,String date, String showtime, Integer screenId, String screenRoom, Integer scheduleId);
+        void onShowtimeClick(Theater theater,String date, String showtime, Long screenId, String screenRoom, Integer scheduleId);
     }
 
     public TheaterShowtimesAdapter(OnShowtimeClickListener listener, Long movieId) {
@@ -98,7 +97,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
         private View divider;
         private ConstraintLayout headerLayout;
         private String selectedScreenRoom;
-        private Integer selectedCinemaId;
+        private Long selectedCinemaId;
 
         TheaterViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -150,7 +149,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                 populateScreenRooms(theater,theater.getId(),movieId);
             }
         }
-        private void populateScreenRooms(Theater theater, int cinemaId, Long movieId) {
+        private void populateScreenRooms(Theater theater, Long cinemaId, Long movieId) {
             screenRoomsContainer.removeAllViews();
 
             Context context = itemView.getContext();
@@ -170,7 +169,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
 
                         for (ScreenResponse screen : screens) {
                             Button screenRoomButton = new Button(context);
-                            screenRoomButton.setText(screen.getScreenName());
+                            screenRoomButton.setText(screen.getName());
 
                             FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
                                     FlexboxLayout.LayoutParams.WRAP_CONTENT,
@@ -186,7 +185,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                             screenRoomButton.setOnClickListener(v -> {
 
                                 // Log the screen ID
-                                Log.d("ScreenRoomClick", "Clicked Screen: " + screen.getScreenId());
+                                Log.d("ScreenRoomClick", "Clicked Screen: " + screen.getId());
 
                                 // Reset previous button state if any
                                 for (int j = 0; j < screenRoomsContainer.getChildCount(); j++) {
@@ -198,7 +197,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
 
                                 // Store selected screen room
                                 selectedScreenRoom = screenRoomButton.getText().toString();
-                                selectedScreenId = screen.getScreenId();
+                                selectedScreenId = screen.getId();
                                 // Populate showtimes
                                 showtimesContainer.setVisibility(View.VISIBLE);
                                 populateShowtimes(theater,movieId);

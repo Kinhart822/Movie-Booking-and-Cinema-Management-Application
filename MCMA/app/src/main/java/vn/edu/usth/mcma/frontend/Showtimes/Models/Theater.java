@@ -1,7 +1,6 @@
 package vn.edu.usth.mcma.frontend.Showtimes.Models;
 
 import java.io.Serializable;
-import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

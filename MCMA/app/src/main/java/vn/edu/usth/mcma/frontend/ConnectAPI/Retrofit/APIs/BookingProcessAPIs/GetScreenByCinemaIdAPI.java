@@ -9,5 +9,5 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Screen
 
 public interface GetScreenByCinemaIdAPI {
     @GET("/api/v1/user/booking/allScreenByCinema/{cinemaId}")
-    Call<List<ScreenResponse>> getScreenByCinemaId(@Path("cinemaId") int cinemaId);
+    Call<List<ScreenResponse>> getScreenByCinemaId(@Path("cinemaId") Long cinemaId);
 }
