@@ -20,28 +20,11 @@ import java.util.*;
 @AllArgsConstructor
 public class BookingService {
     private final ScheduleRepository scheduleRepository;
-    private final GenreRepository genreRepository;
     private final ReviewRepository reviewRepository;
-    //    private UserRepository userRepository;
-//    private BookingRepository bookingRepository;
+    private final CityRepository cityRepository;
+    private final CinemaRepository cinemaRepository;
+    private final ScreenRepository screenRepository;
     private MovieRepository movieRepository;
-//    private MovieGenreRepository movieGenreRepository;
-//    private MoviePerformerRepository moviePerformerRepository;
-//    private MovieRatingDetailRepository movieRatingDetailRepository;
-//    private CinemaRepository cinemaRepository;
-    private CityRepository cityRepository;
-//    private ScreenRepository screenRepository;
-//    private TicketRepository ticketRepository;
-//    private MovieScheduleRepository movieScheduleRepository;
-//    private SeatRepository seatRepository;
-//    private FoodRepository foodRepository;
-//    private DrinkRepository drinkRepository;
-//    private CouponRepository couponRepository;
-//    private NotificationRepository notificationRepository;
-//    private CommentRepository commentRepository;
-//    private RatingRepository ratingRepository;
-//    private BookingTicketRepository bookingTicketRepository;
-    private EmailService emailService;
     public MovieResponse getAllInformationOfSelectedMovie(Long movieId) {
         Movie movie = movieRepository
                 .findById(movieId)
@@ -144,7 +127,6 @@ public class BookingService {
         Movie movie = movieRepository
                 .findById(movieId)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
-
         return scheduleRepository
                 .findAllByMovieAndStartTimeIsAfterAndStatusIs(movie, Instant.now(), CommonStatus.ACTIVE.getStatus())
                 .stream()
@@ -159,33 +141,20 @@ public class BookingService {
                         .build())
                 .toList();
     }
-//
-//
-//    public List<ScreenResponse> getAllScreensBySelectedCinema(Integer cinemaId) {
-//        Cinema cinema = cinemaRepository.findById(cinemaId)
-//                .orElseThrow(() -> new IllegalArgumentException("Invalid cinema"));
-//
-//        List<Screen> screenList = screenRepository.findByCinemaId(cinema.getId());
-//        if (screenList == null || screenList.isEmpty()) {
-//            throw new IllegalArgumentException("No screens found for given cinema.");
-//        }
-//        List<ScreenResponse> screenResponses = new ArrayList<>();
-//
-//        for (Screen screen : screenList) {
-//            ScreenResponse screenResponse = new ScreenResponse(
-//                    cinema.getName(),
-//                    screen.getId(),
-//                    screen.getName(),
-//                    screen.getScreenType().getName(),
-//                    screen.getScreenType().getDescription()
-//            );
-//            screenResponses.add(screenResponse);
-//        }
-//
-//        return screenResponses;
-//    }
-//
-//
+    public List<ScreenPresentation> getAllScreensBySelectedCinema(Long cinemaId) {
+        Cinema cinema = cinemaRepository
+                .findById(cinemaId)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+        return screenRepository
+                .findAllByCinema(cinema)
+                .stream()
+                .map(s -> ScreenPresentation
+                        .builder()
+                        .id(s.getId())
+                        .name(s.getName())
+                        .build())
+                .toList();
+    }
 //    public ScheduleResponse getAllSchedulesBySelectedMovieAndSelectedCinemaAndSelectedScreen(
 //            Integer movieId, Integer cinemaId, Integer screenId
 //    ) {

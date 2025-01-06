@@ -4,15 +4,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import vn.edu.usth.mcma.backend.dto.ScreenPresentation;
 import vn.edu.usth.mcma.backend.dto.ScreenProjection;
+import vn.edu.usth.mcma.backend.entity.Cinema;
 import vn.edu.usth.mcma.backend.entity.Screen;
 
 import java.util.List;
 
 @Repository
 public interface ScreenRepository extends JpaRepository<Screen, Long> {
-    List<Screen> findAllByNameContaining(String name);
-
     @Query(nativeQuery = true, value = """
             select s.id                                         as id,
                    s.name                                       as name,
@@ -29,4 +29,5 @@ public interface ScreenRepository extends JpaRepository<Screen, Long> {
               and s.cinema_id = :cinemaId
             group by s.id""")
     List<ScreenProjection> findAllProjectionByQuery(@Param(value = "cinemaId") Long cinemaId, @Param(value = "query") String query);
+    List<Screen> findAllByCinema(Cinema cinema);
 }

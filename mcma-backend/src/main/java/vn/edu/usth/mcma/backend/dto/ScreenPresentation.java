@@ -11,6 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ScreenPresentation {
     private Long id;
-    private String type;
-    private String typeDescription;
+    private String name;
 }

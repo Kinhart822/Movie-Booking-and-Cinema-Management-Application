@@ -3,10 +3,7 @@ package vn.edu.usth.mcma.backend.controller.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.usth.mcma.backend.dto.CinemaPresentation;
-import vn.edu.usth.mcma.backend.dto.CityPresentation;
-import vn.edu.usth.mcma.backend.dto.MovieResponse;
-import vn.edu.usth.mcma.backend.dto.SearchMovieByNameResponse;
+import vn.edu.usth.mcma.backend.dto.*;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.service.BookingService;
 import vn.edu.usth.mcma.backend.service.MovieService;
@@ -67,13 +64,10 @@ public class UserController {
             @RequestParam(required = false, name = "cityId") Long cityId) {
         return ResponseEntity.ok(bookingService.getAllCinemasBySelectedMovieAndSelectedCity(movieId, cityId));
     }
-//
-//    @GetMapping("/booking/allScreenByCinema/{cinemaId}")
-//    public ResponseEntity<List<ScreenResponse>> getAllScreenByCinema(@PathVariable Integer cinemaId) {
-//        List<ScreenResponse> screenResponses = bookingService.getAllScreensBySelectedCinema(cinemaId);
-//        return ResponseEntity.ok(screenResponses);
-//    }
-//
+    @GetMapping("/booking/allScreenByCinema/{cinemaId}")
+    public ResponseEntity<List<ScreenPresentation>> getAllScreenByCinema(@PathVariable Long cinemaId) {
+        return ResponseEntity.ok(bookingService.getAllScreensBySelectedCinema(cinemaId));
+    }
 //    @GetMapping("/booking/allSchedulesByMovieAndCinemaAndScreen")
 //    public ResponseEntity<ScheduleResponse> getAllScheduleByScreen(
 //            @RequestParam(required = false, name = "movieId") Integer movieId,
