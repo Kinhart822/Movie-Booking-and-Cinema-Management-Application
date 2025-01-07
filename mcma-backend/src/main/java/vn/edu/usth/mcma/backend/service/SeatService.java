@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.SeatHelperInput;
 import vn.edu.usth.mcma.backend.dto.SeatResponse;
 import vn.edu.usth.mcma.backend.dto.SeatTile;
+import vn.edu.usth.mcma.backend.dto.SeatTypePresentation;
 import vn.edu.usth.mcma.backend.entity.Screen;
 import vn.edu.usth.mcma.backend.entity.Seat;
 import vn.edu.usth.mcma.backend.entity.SeatPK;
@@ -129,6 +130,20 @@ public class SeatService {
         }
         seatRepository.saveAll(updatedSeats);
         return ApiResponse.success();
+    }
+
+    public List<SeatTypePresentation> getAllSeatTypes() {
+        List<SeatTypePresentation> seatTypes = new ArrayList<>();
+        SeatType.getIdMap().forEach((id, seatType) ->  seatTypes.add(SeatTypePresentation
+                .builder()
+                .id(seatType.getId())
+                .name(seatType.name())
+                .description(seatType.getDescription())
+                .width(seatType.getWidth())
+                .length(seatType.getLength())
+                .price(seatType.getPrice())
+                .build()));
+        return seatTypes;
     }
 //    public ApiResponse deleteSeat(Long id) {
 //        Long userId = jwtUtil.getUserIdFromToken(hsRequest);

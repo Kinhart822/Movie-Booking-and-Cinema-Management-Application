@@ -7,6 +7,7 @@ import vn.edu.usth.mcma.backend.dto.*;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 import vn.edu.usth.mcma.backend.service.BookingService;
 import vn.edu.usth.mcma.backend.service.MovieService;
+import vn.edu.usth.mcma.backend.service.SeatService;
 import vn.edu.usth.mcma.backend.service.ViewService;
 
 import java.util.List;
@@ -19,11 +20,16 @@ public class UserController {
     private final BookingService bookingService;
     private final JwtUtil jwtUtil;
     private final ViewService viewService;
+    private final SeatService seatService;
 
     @GetMapping
     public ResponseEntity<String> sayHello() {
         Long userId = jwtUtil.getUserIdFromToken();
         return ResponseEntity.ok("Hello, User! Your ID is: %d".formatted(userId));
+    }
+    @GetMapping("/seat-types")
+    public ResponseEntity<List<SeatTypePresentation>> getAllSeatTypes() {
+        return ResponseEntity.ok(seatService.getAllSeatTypes());
     }
     // TODO: Search Movies
     @GetMapping("/search-movie-by-name")
