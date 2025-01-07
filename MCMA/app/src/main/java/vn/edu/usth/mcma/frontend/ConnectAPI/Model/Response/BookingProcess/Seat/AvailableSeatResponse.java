@@ -4,9 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import lombok.Data;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketItem;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketType;
 
 @Data
 public class AvailableSeatResponse implements Parcelable{
