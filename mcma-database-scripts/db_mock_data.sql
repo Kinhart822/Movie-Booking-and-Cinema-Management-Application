@@ -258,5 +258,14 @@ values (1, 1),
        (16, 1),
        (16, 2),
        (16, 3);
+insert into mcma.ticket_type (name, description, price, created_by, last_modified_by, created_date, last_modified_date)
+values ('Adult', 'Ticket for adults', 15, 1, 1, utc_timestamp(), utc_timestamp()),
+       ('Child', 'Ticket for children', 8, 1, 1, utc_timestamp(), utc_timestamp()),
+       ('Teen', 'Ticket for teenagers', 10, 1, 1, utc_timestamp(), utc_timestamp()),
+       ('Senior', 'Ticket for seniors', 12, 1, 1, utc_timestamp(), utc_timestamp()),
+       ('Student', 'Ticket for students', 9, 1, 1, utc_timestamp(), utc_timestamp()),
+       ('Couple', 'Discounted ticket for couples', 25, 1, 1, utc_timestamp(), utc_timestamp()),
+       ('Family', 'Discounted ticket for families', 40, 1, 1, utc_timestamp(), utc_timestamp());
+
 # insert into schedule (screen_id, movie_id, start_time, end_time, status, created_by,last_modified_by,created_date,last_modified_date)
 # values (1,3,'2025-06-01 00:00:00'),
