@@ -15,10 +15,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ViewCityResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.BookingProcessAPIs.GetAllCitiesAPI;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
-import vn.edu.usth.mcma.frontend.constants.IP;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.IP;
 
 public class TheaterDataProvider {
     public static List<String> getCities() {

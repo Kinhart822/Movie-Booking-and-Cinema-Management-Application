@@ -51,22 +51,22 @@ public class TicketSelectionActivity extends AppCompatActivity {
     private TextView showtime;
     private double totalTicketPrice;
     private int totalCount;
-    private int movieId;
-    private int selectedCityId;
-    private int selectedCinemaId;
-    private int selectedScreenId;
-    private int selectedScheduleId;
+    private Long movieId;
+    private Long selectedCityId;
+    private Long selectedCinemaId;
+    private Long selectedScreenId;
+    private Long selectedScheduleId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ticket_selection);
 
-        movieId = getIntent().getIntExtra("MOVIE_ID", -1);
-        selectedCityId = getIntent().getIntExtra("SELECTED_CITY_ID", -1);
-        selectedCinemaId = getIntent().getIntExtra("SELECTED_CINEMA_ID", -1);
-        selectedScreenId = getIntent().getIntExtra("SELECTED_SCREEN_ID", -1);
-        selectedScheduleId = getIntent().getIntExtra("SELECTED_SCHEDULE_ID", -1);
+        movieId = getIntent().getLongExtra("MOVIE_ID", -1L);
+        selectedCityId = getIntent().getLongExtra("SELECTED_CITY_ID", -1L);
+        selectedCinemaId = getIntent().getLongExtra("SELECTED_CINEMA_ID", -1L);
+        selectedScreenId = getIntent().getLongExtra("SELECTED_SCREEN_ID", -1L);
+        selectedScheduleId = getIntent().getLongExtra("SELECTED_SCHEDULE_ID", -1L);
 
         initializeViews();
         handleIntentExtras();

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.HashSet;
 import java.util.Set;
 
+import lombok.Getter;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.AvailableSeatResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.HeldSeatResponse;
@@ -24,6 +25,7 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
     private final Object[][] seatMatrix;
     private final Context context;
     private final OnSeatSelectedListener listener;
+    @Getter
     private final Set<AvailableSeatResponse> selectedSeats = new HashSet<>();
     private final int maxSeats;
 
@@ -236,10 +238,6 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
         int backgroundResId = R.drawable.ic_seat_stand;
 
         holder.seatTextView.setBackground(ContextCompat.getDrawable(context, backgroundResId));
-    }
-
-    public Set<AvailableSeatResponse> getSelectedSeats() {
-        return selectedSeats;
     }
 
 

@@ -13,7 +13,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
-import vn.edu.usth.mcma.frontend.constants.IP;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.IP;
 
 @Getter
 public class RetrofitService {

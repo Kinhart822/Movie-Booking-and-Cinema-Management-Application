@@ -10,6 +10,6 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.A
 
 public interface GetAllAvailableSeatsByScreenAPI {
     @GET("/api/v1/user/booking/allAvailableSeatsByScreen/{screenId}")
-    Call<List<AvailableSeatResponse>> getAvailableSeatsByScreen(@Path("screenId") int screenId);
+    Call<List<AvailableSeatResponse>> getAvailableSeatsByScreen(@Path("screenId") Long screenId);
 }
 
