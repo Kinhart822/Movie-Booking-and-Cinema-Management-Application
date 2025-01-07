@@ -32,7 +32,7 @@ public class SeatService {
     private final SeatRepository seatRepository;
     private final ScreenRepository screenRepository;
     private final JwtUtil jwtUtil;
-    private final SeatAvailability DEFAULT_SEAT_AVAILABILITY = SeatAvailability.AVAILABLE;
+    private final SeatAvailability DEFAULT_SEAT_AVAILABILITY = SeatAvailability.Available;
 
     public ApiResponse initSeatMap(Long screenId, List<SeatHelperInput> seatHelperInputs) {
         Screen screen = screenRepository
