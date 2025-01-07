@@ -3,6 +3,7 @@ package vn.edu.usth.mcma.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import vn.edu.usth.mcma.backend.domain.Booking;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -19,13 +20,17 @@ public class Ticket extends AbstractAuditing implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(columnDefinition = "TINYINT")
-    private Integer typeId;
+    @ManyToOne
+    @JoinColumn(name = "booking_id")
+    private Booking booking;
     @OneToOne
     @JoinColumns({
-            @JoinColumn(name = "seat_screenId", referencedColumnName = "screenId"),
+            @JoinColumn(name = "seat_screen_id", referencedColumnName = "screen_id"),
             @JoinColumn(name = "seat_row", referencedColumnName = "row"),
             @JoinColumn(name = "seat_col", referencedColumnName = "col")
     })
     private Seat seat;
+    @ManyToOne
+    @JoinColumn(name = "type_id")
+    private TicketType ticketType;
 }

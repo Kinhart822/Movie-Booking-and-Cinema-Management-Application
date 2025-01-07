@@ -1,6 +1,5 @@
 package vn.edu.usth.mcma.backend.domain;
 
-import constants.BookingPaymentMethod;
 import constants.BookingStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,7 +13,6 @@ import vn.edu.usth.mcma.backend.entity.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -40,11 +38,7 @@ public class Booking implements Serializable {
     @Column
     private Instant lastModifiedDate;
     @Column
-    @Enumerated(EnumType.ORDINAL)
-    private BookingPaymentMethod paymentMethod;
-    //todo: rename final price
-    @Column
-    private Double totalPrice;
+    private Double finalPrice;
     @Column
     @Enumerated(EnumType.ORDINAL)
     private BookingStatus bookingStatus;
@@ -69,12 +63,6 @@ public class Booking implements Serializable {
             joinColumns = @JoinColumn(name = "booking_id"),
             inverseJoinColumns = @JoinColumn(name = "drink_id"))
     private Set<Drink> drinks;
-    @ManyToMany
-    @JoinTable(
-            name = "map_booking_ticket",
-            joinColumns = @JoinColumn(name = "booking_id"),
-            inverseJoinColumns = @JoinColumn(name = "ticket_id"))
-    private Set<Ticket> tickets;
 }
 
 

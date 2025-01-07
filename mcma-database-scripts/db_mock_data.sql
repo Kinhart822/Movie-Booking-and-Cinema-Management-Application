@@ -9,7 +9,6 @@ truncate table mcma.genre;
 truncate table mcma.map_booking_coupon;
 truncate table mcma.map_booking_drink;
 truncate table mcma.map_booking_food;
-truncate table mcma.map_booking_ticket;
 truncate table mcma.map_movie_coupon;
 truncate table mcma.map_movie_genre;
 truncate table mcma.map_movie_performer;
@@ -24,6 +23,7 @@ truncate table mcma.screen;
 truncate table mcma.screen_type;
 truncate table mcma.seat;
 truncate table mcma.ticket;
+truncate table mcma.ticket_type;
 truncate table mcma.token;
 truncate table mcma.user;
 set foreign_key_checks = 1;
@@ -120,6 +120,9 @@ insert into mcma.user (first_name, last_name, sex, dob, email, phone, password, 
                        created_date, last_modified_by, last_modified_date)
 values ('At', 'Nguyen', 1, '2004-04-11 00:00:00', 'at0@gmail.com', '0976289114',
         '$2a$10$do2lQSohzuLfiSljWORi0Oc3OVG37mtPWxR/cAmJSsOLebcF4A5Oi', 'Hanoi, Viet Nam', 0, 1, 0, utc_timestamp(), 0,
+        utc_timestamp()),
+       ('Duc', 'Nguyen', 1, '2004-04-11 00:00:00', 'at0@gmail.com', '0969123456',
+        '$2a$10$IPQMZ8Vc59ChIs1nIst7ZOB2jv1uT5S.m0mmSHkRSc.PYBwVsbn1G', 'Hawktuah', 0, 1, 0, utc_timestamp(), 0,
         utc_timestamp());
 insert into mcma.rating (name, description, status, created_by, last_modified_by, created_date, last_modified_date)
 values ('PG-13', 'Parental Guidance-13', 1, 1, 1, utc_timestamp(), utc_timestamp()),

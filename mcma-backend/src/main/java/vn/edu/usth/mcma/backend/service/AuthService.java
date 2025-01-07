@@ -120,6 +120,7 @@ public class AuthService {
 
         JwtAuthResponse response = new JwtAuthResponse();
         response.setAccessToken(token);
+        response.setUserId(userService.findUserByEmail(email).getId());
         return response;
     }
 
