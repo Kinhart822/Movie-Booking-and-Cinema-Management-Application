@@ -1,16 +1,22 @@
 package vn.edu.usth.mcma.backend.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class SeatTile implements Comparable<SeatTile> {
     private int row;
     private int col;
     private int typeId;
     private String name;
+    private int rootRow;
+    private int rootCol;
     @Builder.Default
     private boolean isChecked = false;
 

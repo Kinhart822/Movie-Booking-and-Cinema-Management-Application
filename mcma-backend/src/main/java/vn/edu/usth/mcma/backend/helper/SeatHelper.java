@@ -40,7 +40,8 @@ public class SeatHelper {
 
         // iterate through each seat and validate rectangles
         for (SeatTile seat : tiles) {
-            if (seat.isChecked()) {
+            //use equivalent seat in seatGrid to see if seat is checked
+            if (seatGrid.get(seat.getRow()).get(seat.getCol()).isChecked()) {
                 continue;
             }
             // already checked above if seat type exists
@@ -72,9 +73,11 @@ public class SeatHelper {
         }
     }
     private boolean validateRectangle(SeatTile startSeat, Map<Integer, Map<Integer, SeatTile>> seatGrid, Integer width, Integer length) {
+        int rootRow = startSeat.getRow();
+        int rootCol = startSeat.getCol();
         // check if all seat in rectangle have the same type
-        for (int row = startSeat.getRow(); row < startSeat.getRow() + length; row++) {
-            for (int col = startSeat.getCol(); col < startSeat.getCol() + width; col++) {
+        for (int row = rootRow; row < rootRow + length; row++) {
+            for (int col = rootCol; col < rootCol + width; col++) {
                 SeatTile seat = seatGrid.get(row).get(col);
                 if (seat == null || seat.getTypeId() != startSeat.getTypeId()) {
                     return false;
@@ -82,11 +85,18 @@ public class SeatHelper {
             }
         }
         // if pass the check then set all seat in rectangle checked
-        for (int row = startSeat.getRow(); row < startSeat.getRow() + length; row++) {
-            for (int col = startSeat.getCol(); col < startSeat.getCol() + width; col++) {
+        for (int row = rootRow; row < rootRow + length; row++) {
+            for (int col = rootCol; col < rootCol + width; col++) {
                 SeatTile seat = seatGrid.get(row).get(col);
                 if (seat != null) {
-                    seat.setChecked(true);
+                    seatGrid
+                            .get(row)
+                            .put(col, seat
+                                    .toBuilder()
+                                    .isChecked(true)
+                                    .rootRow(rootRow)
+                                    .rootCol(rootCol)
+                                    .build());
                 }
             }
         }
@@ -127,6 +137,8 @@ public class SeatHelper {
                 .builder()
                 .row(seat.getRow())
                 .col(seat.getCol())
+                .rootRow(seat.getRootRow())
+                .rootCol(seat.getRootCol())
                 .typeId(seat.getTypeId())
                 .name(name)
                 .build();

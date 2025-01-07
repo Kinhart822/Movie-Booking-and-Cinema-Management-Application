@@ -47,16 +47,18 @@ public class SeatService {
         seatRepository.saveAll(seatHelper
                 .getSeatHelperOutputs() // sorted btw
                 .stream()
-                .map(seatResponse -> Seat
+                .map(output -> Seat
                         .builder()
                         .pk(SeatPK
                                 .builder()
                                 .screenId(screen.getId())
-                                .row(seatResponse.getRow())
-                                .column(seatResponse.getCol())
+                                .row(output.getRow())
+                                .column(output.getCol())
                                 .build())
-                        .typeId(seatResponse.getTypeId())
-                        .name(seatResponse.getName())
+                        .rootRow(output.getRootRow())
+                        .rootCol(output.getRootCol())
+                        .typeId(output.getTypeId())
+                        .name(output.getName())
                         .availability(DEFAULT_SEAT_AVAILABILITY)
                         .createdBy(userId)
                         .createdDate(now)
@@ -77,6 +79,8 @@ public class SeatService {
                         .col(s.getPk().getColumn())
                         .typeId(s.getTypeId())
                         .name(s.getName())
+                        .rootRow(s.getRootRow())
+                        .rootCol(s.getRootCol())
                         .build())
                 .toList();
     }
@@ -115,6 +119,8 @@ public class SeatService {
             Seat updatedSeat = seat
                     .toBuilder()
                     .typeId(tile.getTypeId())
+                    .rootRow(tile.getRootRow())
+                    .rootCol(tile.getRootCol())
                     .name(tile.getName())
                     .lastModifiedBy(userId)
                     .lastModifiedDate(now)

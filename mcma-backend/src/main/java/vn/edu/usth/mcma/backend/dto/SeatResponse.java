@@ -14,4 +14,6 @@ public class SeatResponse {
     private int col;
     private int typeId;
     private String name;
+    private int rootRow;
+    private int rootCol;
 }

@@ -33,6 +33,10 @@ public class Seat implements Serializable {
     @Column
     @Enumerated(EnumType.ORDINAL)
     private SeatAvailability availability;
+    @Column
+    private Integer rootRow;
+    @Column
+    private Integer rootCol;
     @CreatedBy
     @Column(updatable = false)
     private Long createdBy;
