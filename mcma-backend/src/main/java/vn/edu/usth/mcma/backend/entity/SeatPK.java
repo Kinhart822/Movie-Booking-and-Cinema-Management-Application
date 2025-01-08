@@ -3,7 +3,6 @@ package vn.edu.usth.mcma.backend.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -20,6 +19,6 @@ public class SeatPK implements Serializable {
     private Long screenId;
     @Column(columnDefinition = "TINYINT UNSIGNED")
     private Integer row;
-    @Column(name = "col", columnDefinition = "TINYINT UNSIGNED")
-    private Integer column;
+    @Column(columnDefinition = "TINYINT UNSIGNED")
+    private Integer col;
 }

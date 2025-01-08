@@ -23,6 +23,8 @@ public class Ticket extends AbstractAuditing implements Serializable {
     @ManyToOne
     @JoinColumn(name = "booking_id")
     private Booking booking;
+    //todo: remove
+    
     @OneToOne
     @JoinColumns({
             @JoinColumn(name = "seat_screen_id", referencedColumnName = "screenId"),

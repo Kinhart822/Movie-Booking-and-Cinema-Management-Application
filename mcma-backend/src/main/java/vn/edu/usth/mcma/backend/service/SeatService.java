@@ -54,7 +54,7 @@ public class SeatService {
                                 .builder()
                                 .screenId(screen.getId())
                                 .row(output.getRow())
-                                .column(output.getCol())
+                                .col(output.getCol())
                                 .build())
                         .rootRow(output.getRootRow())
                         .rootCol(output.getRootCol())
@@ -77,7 +77,7 @@ public class SeatService {
                 .map(s -> SeatResponse
                         .builder()
                         .row(s.getPk().getRow())
-                        .col(s.getPk().getColumn())
+                        .col(s.getPk().getCol())
                         .typeId(s.getTypeId())
                         .name(s.getName())
                         .rootRow(s.getRootRow())
@@ -100,7 +100,7 @@ public class SeatService {
         // a for loop to detect mutation of type = -1
         for (Seat seat : seats) {
             Integer row = seat.getPk().getRow();
-            Integer col = seat.getPk().getColumn();
+            Integer col = seat.getPk().getCol();
             Integer typeId = seat.getTypeId();
             Integer newTypeId = seatGrid.get(row).get(col).getTypeId();
             // TODO: low priority: better response for error: seat with type -1 at cannot be mutated
@@ -115,7 +115,7 @@ public class SeatService {
         List<Seat> updatedSeats = new ArrayList<>();
         for (Seat seat : seats) {
             Integer row = seat.getPk().getRow();
-            Integer col = seat.getPk().getColumn();
+            Integer col = seat.getPk().getCol();
             SeatTile tile = seatGrid.get(row).get(col);
             Seat updatedSeat = seat
                     .toBuilder()
