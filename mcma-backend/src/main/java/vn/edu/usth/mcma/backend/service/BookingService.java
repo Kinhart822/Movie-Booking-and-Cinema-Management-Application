@@ -22,6 +22,7 @@ public class BookingService {
     private final CinemaRepository cinemaRepository;
     private final ScreenRepository screenRepository;
     private final TicketRepository ticketRepository;
+    private final SeatRepository seatRepository;
     private MovieRepository movieRepository;
     public MoviePresentation getAllInformationOfSelectedMovie(Long movieId) {
         Movie movie = movieRepository
@@ -170,6 +171,22 @@ public class BookingService {
                         .movieId(s.getMovie().getId())
                         .startTime(s.getStartTime().toString())
                         .endTime(s.getEndTime().toString())
+                        .build())
+                .toList();
+    }
+    public List<SeatPresentation> getAllSeatsByScreenId(Long screenId) {
+        return seatRepository
+                .findAllByScreenId(screenId)
+                .stream()
+                .map(s -> SeatPresentation
+                        .builder()
+                        .row(s.getPk().getRow())
+                        .col(s.getPk().getCol())
+                        .typeId(s.getTypeId())
+                        .name(s.getName())
+                        .rootRow(s.getRootRow())
+                        .rootCol(s.getRootCol())
+                        .availability(s.getAvailability().ordinal())
                         .build())
                 .toList();
     }

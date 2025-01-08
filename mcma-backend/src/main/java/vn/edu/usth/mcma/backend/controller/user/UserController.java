@@ -27,10 +27,6 @@ public class UserController {
         Long userId = jwtUtil.getUserIdFromToken();
         return ResponseEntity.ok("Hello, User! Your ID is: %d".formatted(userId));
     }
-    @GetMapping("/seat-types")
-    public ResponseEntity<List<SeatTypePresentation>> getAllSeatTypes() {
-        return ResponseEntity.ok(seatService.getAllSeatTypes());
-    }
     // TODO: Search Movies
     @GetMapping("/search-movie-by-name")
     public ResponseEntity<List<SearchMovieByNameResponse>> getAllMovies(
@@ -75,6 +71,14 @@ public class UserController {
             @RequestParam(required = false, name = "movieId") Long movieId,
             @RequestParam(required = false, name = "screenId") Long screenId) {
         return ResponseEntity.ok(bookingService.getAllSchedulesByMovieAndScreen(movieId, screenId));
+    }
+    @GetMapping("/booking/seat-types")
+    public ResponseEntity<List<SeatTypePresentation>> getAllSeatTypes() {
+        return ResponseEntity.ok(seatService.getAllSeatTypes());
+    }
+    @GetMapping("/booking/seat/{screenId}")
+    public ResponseEntity<List<SeatPresentation>> getAllSeatsByScreenId(@PathVariable Long screenId) {
+        return ResponseEntity.ok(bookingService.getAllSeatsByScreenId(screenId));
     }
 //    @GetMapping("/booking/allTickets")
 //    public ResponseEntity<List<TicketPresentation>> getAllTickets() {
