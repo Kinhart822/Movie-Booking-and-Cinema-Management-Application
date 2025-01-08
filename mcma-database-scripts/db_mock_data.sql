@@ -121,7 +121,7 @@ insert into mcma.user (first_name, last_name, sex, dob, email, phone, password, 
 values ('At', 'Nguyen', 1, '2004-04-11 00:00:00', 'at0@gmail.com', '0976289114',
         '$2a$10$do2lQSohzuLfiSljWORi0Oc3OVG37mtPWxR/cAmJSsOLebcF4A5Oi', 'Hanoi, Viet Nam', 0, 1, 0, utc_timestamp(), 0,
         utc_timestamp()),
-       ('Duc', 'Nguyen', 1, '2004-04-11 00:00:00', 'at0@gmail.com', '0969123456',
+       ('Duc', 'Nguyen', 1, '2004-04-11 00:00:00', 'minhduc@gmail.com', '0969123456',
         '$2a$10$IPQMZ8Vc59ChIs1nIst7ZOB2jv1uT5S.m0mmSHkRSc.PYBwVsbn1G', 'Hawktuah', 0, 1, 0, utc_timestamp(), 0,
         utc_timestamp());
 insert into mcma.rating (name, description, status, created_by, last_modified_by, created_date, last_modified_date)
