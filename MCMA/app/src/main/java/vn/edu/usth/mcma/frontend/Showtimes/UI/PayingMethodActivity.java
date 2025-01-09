@@ -37,6 +37,7 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 import vn.edu.usth.mcma.frontend.Login.Register_Activity;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.PaymentMethodAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Booking.PaymentMethod;
+import vn.edu.usth.mcma.frontend.constants.IntentKey;
 
 public class PayingMethodActivity extends AppCompatActivity {
     private RecyclerView paymentMethodsRecyclerView;
@@ -66,17 +67,13 @@ public class PayingMethodActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_paying_method);
 
-        movieId = getIntent().getIntExtra("MOVIE_ID", -1);
-        selectedCityId = getIntent().getIntExtra("SELECTED_CITY_ID", -1);
-        selectedCinemaId = getIntent().getIntExtra("SELECTED_CINEMA_ID", -1);
-        selectedScreenId = getIntent().getIntExtra("SELECTED_SCREEN_ID", -1);
-        selectedScheduleId = getIntent().getIntExtra("SELECTED_SCHEDULE_ID", -1);
-        selectedTicketIds = getIntent().getIntegerArrayListExtra("SELECTED_TICKET_IDS");
-        selectedSeatIds = getIntent().getIntegerArrayListExtra("SELECTED_SEAT_IDS");
-        selectedFoodIds = getIntent().getIntegerArrayListExtra("SELECTED_FOOD_IDS");
-        selectedDrinkIds = getIntent().getIntegerArrayListExtra("SELECTED_DRINK_IDS");
-        selectedMovieCouponId = getIntent().getIntExtra("SELECTED_MOVIE_COUPON_ID", -1);
-        selectedUserCouponId = getIntent().getIntExtra("SELECTED_USER_COUPON_ID", -1);
+        selectedScheduleId = getIntent().getIntExtra(IntentKey.SELECTED_SCHEDULE_ID.name(), -1);
+        selectedTicketIds = getIntent().getIntegerArrayListExtra(IntentKey.SELECTED_TICKET_IDS.name());
+        selectedRootSeats = getIntent().getParcelableArrayListExtra(IntentKey.SELECTED_ROOT_SEATS.name());
+        selectedFoodIds = getIntent().getIntegerArrayListExtra(IntentKey.SELECTED_FOOD_IDS.name());
+        selectedDrinkIds = getIntent().getIntegerArrayListExtra(IntentKey.SELECTED_DRINK_IDS.name());
+        selectedMovieCouponId = getIntent().getIntExtra(IntentKey.SELECTED_MOVIE_COUPON_ID.name(), -1);
+        selectedUserCouponId = getIntent().getIntExtra(IntentKey.SELECTED_USER_COUPON_ID.name(), -1);
 
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(view -> onBackPressed());
@@ -96,28 +93,28 @@ public class PayingMethodActivity extends AppCompatActivity {
         completePaymentButton = findViewById(R.id.completePaymentButton);
         paymentMethodsRecyclerView = findViewById(R.id.paymentMethodsRecyclerView);
 
-        String selectedMovie = getIntent().getStringExtra("MOVIE_NAME");
+        String selectedMovie = getIntent().getStringExtra(IntentKey.MOVIE_NAME.name());
         if (selectedMovie != null) {
             movieTitleTV.setText(selectedMovie);
         }
 
-        String selectedTheater = getIntent().getStringExtra("CINEMA_NAME");
+        String selectedTheater = getIntent().getStringExtra(IntentKey.CINEMA_NAME.name());
         if (selectedTheater != null) {
             theaterNameTV.setText(selectedTheater);
         }
 
-        String selectedDate = getIntent().getStringExtra("SELECTED_DATE");
+        String selectedDate = getIntent().getStringExtra(IntentKey.SELECTED_DATE.name());
         if (movieDateTV != null) {
             movieDateTV.setText(selectedDate);
         }
 
         // Screen number handling
-        String selectedScreenRoom = getIntent().getStringExtra("SELECTED_SCREEN_ROOM");
+        String selectedScreenRoom = getIntent().getStringExtra(IntentKey.SELECTED_SCREEN_ROOM.name());
         if (screenNumberTV != null) {
             screenNumberTV.setText(selectedScreenRoom != null ? selectedScreenRoom : "Screen 1");
         }
 
-        String selectedShowtime = getIntent().getStringExtra("SELECTED_SHOWTIME");
+        String selectedShowtime = getIntent().getStringExtra(IntentKey.SELECTED_SHOWTIME.name());
         if (movieShowtimeTV != null) {
             movieShowtimeTV.setText(selectedShowtime);
         }
@@ -181,7 +178,7 @@ public class PayingMethodActivity extends AppCompatActivity {
             sendBookingRequest();
 
             Intent intent = new Intent(this, vn.edu.usth.mcma.frontend.MainActivity.class);
-            intent.putExtra("navigate_to", "HomeFragment");
+            intent.putExtra(IntentKey.navigate_to.name(), "HomeFragment");
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();

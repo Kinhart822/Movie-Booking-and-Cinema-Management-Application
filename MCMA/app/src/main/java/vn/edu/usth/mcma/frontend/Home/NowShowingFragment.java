@@ -28,6 +28,7 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.Review;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.NowShowingMovieAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 import vn.edu.usth.mcma.frontend.Showtimes.UI.MovieBookingActivity;
+import vn.edu.usth.mcma.frontend.constants.IntentKey;
 
 public class NowShowingFragment extends Fragment {
     private final List<NowShowingResponse> nowShowingResponseList = new ArrayList<>();
@@ -67,7 +68,7 @@ public class NowShowingFragment extends Fragment {
 
         nowShowingMovieAPI.getAvailableNowShowingMovies().enqueue(new Callback<List<NowShowingResponse>>() {
             @Override
-            public void onResponse(Call<List<NowShowingResponse>> call, Response<List<NowShowingResponse>> response) {
+            public void onResponse(@NonNull Call<List<NowShowingResponse>> call, @NonNull Response<List<NowShowingResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
 
                     Log.d("NowShowingFragment", "Movies received: " + response.body().size());
@@ -79,7 +80,7 @@ public class NowShowingFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<NowShowingResponse>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<NowShowingResponse>> call, @NonNull Throwable t) {
                 Log.e("NowShowingFragment", "API Call Failed: " + t.getMessage(), t);
                 Toast.makeText(requireActivity(), "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
@@ -97,20 +98,20 @@ public class NowShowingFragment extends Fragment {
         Log.d("NowShowingFragment", "Launching OnlyDetailsActivity with film: " + selectedFilm.getName());
         Intent intent = new Intent(requireContext(), OnlyDetailsActivity.class);
 
-        intent.putExtra("MOVIE_NAME", selectedFilm.getName());
-        intent.putExtra("MOVIE_GENRES", new ArrayList<>(selectedFilm.getGenres().stream().map(Genre::getName).collect(Collectors.toList())));
-        intent.putExtra("MOVIE_LENGTH", selectedFilm.getLength());
-        intent.putExtra("MOVIE_DESCRIPTION", selectedFilm.getDescription());
-        intent.putExtra("PUBLISHED_DATE", selectedFilm.getPublishDate());
-        intent.putExtra("IMAGE_URL", selectedFilm.getImageUrl());
-        intent.putExtra("BACKGROUND_IMAGE_URL", selectedFilm.getBackgroundImageUrl());
-        intent.putExtra("TRAILER", selectedFilm.getTrailerUrl());
-        intent.putExtra("MOVIE_RATING", selectedFilm.getRating().getName());
-        intent.putExtra("MOVIE_PERFORMER_NAME", new ArrayList<>(selectedFilm.getPerformers().stream().map(Performer::getName).collect(Collectors.toList())));
-        intent.putStringArrayListExtra("MOVIE_PERFORMER_TYPE", new ArrayList<>(selectedFilm.getPerformers().stream().map(Performer::getType).collect(Collectors.toList())));
+        intent.putExtra(IntentKey.MOVIE_NAME.name(), selectedFilm.getName());
+        intent.putExtra(IntentKey.MOVIE_GENRES.name(), new ArrayList<>(selectedFilm.getGenres().stream().map(Genre::getName).collect(Collectors.toList())));
+        intent.putExtra(IntentKey.MOVIE_LENGTH.name(), selectedFilm.getLength());
+        intent.putExtra(IntentKey.MOVIE_DESCRIPTION.name(), selectedFilm.getDescription());
+        intent.putExtra(IntentKey.PUBLISHED_DATE.name(), selectedFilm.getPublishDate());
+        intent.putExtra(IntentKey.IMAGE_URL.name(), selectedFilm.getImageUrl());
+        intent.putExtra(IntentKey.BACKGROUND_IMAGE_URL.name(), selectedFilm.getBackgroundImageUrl());
+        intent.putExtra(IntentKey.TRAILER.name(), selectedFilm.getTrailerUrl());
+        intent.putExtra(IntentKey.MOVIE_RATING.name(), selectedFilm.getRating().getName());
+        intent.putExtra(IntentKey.MOVIE_PERFORMER_NAME.name(), new ArrayList<>(selectedFilm.getPerformers().stream().map(Performer::getName).collect(Collectors.toList())));
+        intent.putStringArrayListExtra(IntentKey.MOVIE_PERFORMER_TYPE.name(), new ArrayList<>(selectedFilm.getPerformers().stream().map(Performer::getType).collect(Collectors.toList())));
 
-        intent.putExtra("MOVIE_COMMENT", new ArrayList<>(selectedFilm.getReviews().stream().map(Review::getUserComment).collect(Collectors.toList())));
-        intent.putExtra("AVERAGE_STAR", selectedFilm.getReviews().stream().mapToInt(Review::getUserVote).average().orElse(0.0));
+        intent.putExtra(IntentKey.MOVIE_COMMENT.name(), new ArrayList<>(selectedFilm.getReviews().stream().map(Review::getUserComment).collect(Collectors.toList())));
+        intent.putExtra(IntentKey.AVERAGE_STAR.name(), selectedFilm.getReviews().stream().mapToInt(Review::getUserVote).average().orElse(0.0));
 
         startActivity(intent);
     }
@@ -119,8 +120,8 @@ public class NowShowingFragment extends Fragment {
 
         NowShowingResponse selectedFilm = nowShowingResponseList.get(position);
         Intent intent = new Intent(requireContext(), MovieBookingActivity.class);
-        intent.putExtra("MOVIE_TITLE", selectedFilm.getName());
-        intent.putExtra("MOVIE_ID", selectedFilm.getId());
+        intent.putExtra(IntentKey.MOVIE_TITLE.name(), selectedFilm.getName());
+        intent.putExtra(IntentKey.MOVIE_ID.name(), selectedFilm.getId());
         startActivity(intent);
     }
 }

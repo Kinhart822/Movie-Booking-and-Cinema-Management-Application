@@ -30,6 +30,7 @@ import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketItem;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketType;
+import vn.edu.usth.mcma.frontend.constants.IntentKey;
 
 public class TicketSelectionActivity extends AppCompatActivity {
     public static final String EXTRA_GUEST_QUANTITY = "extra_guest_quantity";
@@ -61,11 +62,11 @@ public class TicketSelectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ticket_selection);
 
-        movieId = getIntent().getLongExtra("MOVIE_ID", -1L);
-        selectedCityId = getIntent().getLongExtra("SELECTED_CITY_ID", -1L);
-        selectedCinemaId = getIntent().getLongExtra("SELECTED_CINEMA_ID", -1L);
-        selectedScreenId = getIntent().getLongExtra("SELECTED_SCREEN_ID", -1L);
-        selectedScheduleId = getIntent().getLongExtra("SELECTED_SCHEDULE_ID", -1L);
+        movieId = getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L);
+        selectedCityId = getIntent().getLongExtra(IntentKey.SELECTED_CITY_ID.name(), -1L);
+        selectedCinemaId = getIntent().getLongExtra(IntentKey.SELECTED_CINEMA_ID.name(), -1L);
+        selectedScreenId = getIntent().getLongExtra(IntentKey.SELECTED_SCREEN_ID.name(), -1L);
+        selectedScheduleId = getIntent().getLongExtra(IntentKey.SELECTED_SCHEDULE_ID.name(), -1L);
 
         initializeViews();
         handleIntentExtras();
@@ -177,28 +178,28 @@ public class TicketSelectionActivity extends AppCompatActivity {
                 ticketItemList.addAll(ticketAdapter.getSelectedTicketItems());
                 Intent intent = new Intent(this, SeatSelectionActivity.class);
                 // Crucially, pass the ticket items
-                intent.putParcelableArrayListExtra("TICKET_ITEMS", new ArrayList<>(ticketAdapter.getSelectedTicketItems()));
-                intent.putParcelableArrayListExtra("SELECTED_TICKET_ITEMS", new ArrayList<>(ticketItemList));
+                intent.putParcelableArrayListExtra(IntentKey.TICKET_ITEMS.name(), new ArrayList<>(ticketAdapter.getSelectedTicketItems()));
+                intent.putParcelableArrayListExtra(IntentKey.SELECTED_TICKET_ITEMS.name(), new ArrayList<>(ticketItemList));
 
                 // Pass other extras as you were doing before
-                intent.putExtra("SELECTED_THEATER", getIntent().getSerializableExtra(EXTRA_THEATER));
-                intent.putExtra("THEATER_NAME", getIntent().getStringExtra("THEATER_NAME"));
-                intent.putExtra("SELECTED_MOVIE", getIntent().getSerializableExtra(EXTRA_MOVIE));
-                intent.putExtra("SELECTED_SHOWTIME", getIntent().getStringExtra("SELECTED_SHOWTIME"));
-                intent.putExtra("SELECTED_SCREEN_ROOM", getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
-                int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
-                intent.putExtra("MOVIE_BANNER", movieBannerResId);
-                intent.putExtra("TOTAL_TICKET_PRICE", totalTicketPrice);
-                intent.putExtra("TOTAL_TICKET_COUNT", totalCount);
-                intent.putExtra("SELECTED_DATE", getIntent().getStringExtra("SELECTED_DATE"));
-                intent.putExtra("MOVIE_TITLE", getIntent().getStringExtra("MOVIE_TITLE"));
+                intent.putExtra(IntentKey.SELECTED_THEATER.name(), getIntent().getSerializableExtra(EXTRA_THEATER));
+                intent.putExtra(IntentKey.THEATER_NAME.name(), getIntent().getStringExtra(IntentKey.THEATER_NAME.name()));
+                intent.putExtra(IntentKey.SELECTED_MOVIE.name(), getIntent().getSerializableExtra(EXTRA_MOVIE));
+                intent.putExtra(IntentKey.SELECTED_SHOWTIME.name(), getIntent().getStringExtra(IntentKey.SELECTED_SHOWTIME.name()));
+                intent.putExtra(IntentKey.SELECTED_SCREEN_ROOM.name(), getIntent().getStringExtra(IntentKey.SELECTED_SCREEN_ROOM.name()));
+                int movieBannerResId = getIntent().getIntExtra(IntentKey.MOVIE_BANNER.name(), 0);
+                intent.putExtra(IntentKey.MOVIE_BANNER.name(), movieBannerResId);
+                intent.putExtra(IntentKey.TOTAL_TICKET_PRICE.name(), totalTicketPrice);
+                intent.putExtra(IntentKey.TOTAL_TICKET_COUNT.name(), totalCount);
+                intent.putExtra(IntentKey.SELECTED_DATE.name(), getIntent().getStringExtra(IntentKey.SELECTED_DATE.name()));
+                intent.putExtra(IntentKey.MOVIE_TITLE.name(), getIntent().getStringExtra(IntentKey.MOVIE_TITLE.name()));
 
                 // Booking
-                intent.putExtra("MOVIE_ID", movieId);
-                intent.putExtra("SELECTED_CITY_ID", selectedCityId);
-                intent.putExtra("SELECTED_CINEMA_ID", selectedCinemaId);
-                intent.putExtra("SELECTED_SCREEN_ID", selectedScreenId);
-                intent.putExtra("SELECTED_SCHEDULE_ID", selectedScheduleId);
+                intent.putExtra(IntentKey.MOVIE_ID.name(), movieId);
+                intent.putExtra(IntentKey.SELECTED_CITY_ID.name(), selectedCityId);
+                intent.putExtra(IntentKey.SELECTED_CINEMA_ID.name(), selectedCinemaId);
+                intent.putExtra(IntentKey.SELECTED_SCREEN_ID.name(), selectedScreenId);
+                intent.putExtra(IntentKey.SELECTED_SCHEDULE_ID.name(), selectedScheduleId);
                 intent.putIntegerArrayListExtra("SELECTED_TICKET_IDS", new ArrayList<>(selectedTicketIds));
 
                 startActivity(intent);
@@ -240,7 +241,7 @@ public class TicketSelectionActivity extends AppCompatActivity {
 
         // Theater name handling
         Theater selectedTheater = (Theater) getIntent().getSerializableExtra(EXTRA_THEATER);
-        String theaterName = getIntent().getStringExtra("THEATER_NAME");
+        String theaterName = getIntent().getStringExtra(IntentKey.THEATER_NAME.name());
         if (selectedTheater != null && theaterNameTV != null) {
             theaterNameTV.setText(theaterName != null ? theaterName : selectedTheater.getName());
         }
@@ -252,18 +253,18 @@ public class TicketSelectionActivity extends AppCompatActivity {
         }
 
         // Release date handling (always today's date)
-        String selectedDate = getIntent().getStringExtra("SELECTED_DATE");
+        String selectedDate = getIntent().getStringExtra(IntentKey.SELECTED_DATE.name());
         if (releaseDateTV != null) {
             releaseDateTV.setText(selectedDate);
         }
 
         // Screen number handling
-        String selectedScreenRoom = getIntent().getStringExtra("SELECTED_SCREEN_ROOM");
+        String selectedScreenRoom = getIntent().getStringExtra(IntentKey.SELECTED_SCREEN_ROOM.name());
         if (screenRoomTV != null) {
             screenRoomTV.setText(selectedScreenRoom != null ? selectedScreenRoom : "Screen 1");
         }
 
-        String selectedShowtime = getIntent().getStringExtra("SELECTED_SHOWTIME");
+        String selectedShowtime = getIntent().getStringExtra(IntentKey.SELECTED_SHOWTIME.name());
         if (showtime != null) {
             showtime.setText(selectedShowtime);
         }

@@ -32,6 +32,7 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetAllMovieGenres;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.SearchMovieByName;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 import vn.edu.usth.mcma.frontend.Home.OnlyDetailsActivity;
+import vn.edu.usth.mcma.frontend.constants.IntentKey;
 
 public class Search_Activity extends AppCompatActivity {
     private SearchView searchView;
@@ -99,17 +100,17 @@ public class Search_Activity extends AppCompatActivity {
         SearchMovieByNameResponse clickedItem = filteredItems.get(position);
         Intent intent = new Intent(Search_Activity.this, OnlyDetailsActivity.class);
 
-        intent.putExtra("MOVIE_NAME", clickedItem.getName());
-        intent.putExtra("MOVIE_GENRES", new ArrayList<>(clickedItem.getGenres().stream().map(Genre::getName).collect(Collectors.toList())));
-        intent.putExtra("MOVIE_LENGTH", clickedItem.getLength());
-        intent.putExtra("MOVIE_DESCRIPTION", clickedItem.getDescription());
-        intent.putExtra("PUBLISHED_DATE", clickedItem.getPublishDate());
-        intent.putExtra("IMAGE_URL", clickedItem.getImageUrl());
-        intent.putExtra("BACKGROUND_IMAGE_URL", clickedItem.getBackgroundImageUrl());
-        intent.putExtra("TRAILER", clickedItem.getTrailerUrl());
-        intent.putExtra("MOVIE_RATING", clickedItem.getRating().getName());
-        intent.putExtra("MOVIE_PERFORMER_NAME", new ArrayList<>(clickedItem.getPerformers().stream().map(Performer::getName).collect(Collectors.toList())));
-        intent.putStringArrayListExtra("MOVIE_PERFORMER_TYPE", new ArrayList<>(clickedItem.getPerformers().stream().map(Performer::getType).collect(Collectors.toList())));
+        intent.putExtra(IntentKey.MOVIE_NAME.name(), clickedItem.getName());
+        intent.putExtra(IntentKey.MOVIE_GENRES.name(), new ArrayList<>(clickedItem.getGenres().stream().map(Genre::getName).collect(Collectors.toList())));
+        intent.putExtra(IntentKey.MOVIE_LENGTH.name(), clickedItem.getLength());
+        intent.putExtra(IntentKey.MOVIE_DESCRIPTION.name(), clickedItem.getDescription());
+        intent.putExtra(IntentKey.PUBLISHED_DATE.name(), clickedItem.getPublishDate());
+        intent.putExtra(IntentKey.IMAGE_URL.name(), clickedItem.getImageUrl());
+        intent.putExtra(IntentKey.BACKGROUND_IMAGE_URL.name(), clickedItem.getBackgroundImageUrl());
+        intent.putExtra(IntentKey.TRAILER.name(), clickedItem.getTrailerUrl());
+        intent.putExtra(IntentKey.MOVIE_RATING.name(), clickedItem.getRating().getName());
+        intent.putExtra(IntentKey.MOVIE_PERFORMER_NAME.name(), new ArrayList<>(clickedItem.getPerformers().stream().map(Performer::getName).collect(Collectors.toList())));
+        intent.putStringArrayListExtra(IntentKey.MOVIE_PERFORMER_TYPE.name(), new ArrayList<>(clickedItem.getPerformers().stream().map(Performer::getType).collect(Collectors.toList())));
 
         startActivity(intent);
     }

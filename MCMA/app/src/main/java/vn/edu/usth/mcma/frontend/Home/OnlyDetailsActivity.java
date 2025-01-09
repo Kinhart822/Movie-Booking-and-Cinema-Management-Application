@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.constants.IntentKey;
 
 public class OnlyDetailsActivity extends AppCompatActivity {
     private TextView synopsisTextView;
@@ -44,17 +45,17 @@ public class OnlyDetailsActivity extends AppCompatActivity {
 
         // Get movie title from intent
         Intent intent = getIntent();
-        String movieName = intent.getStringExtra("MOVIE_NAME");
-        List<String> movieGenres = intent.getStringArrayListExtra("MOVIE_GENRES");
-        int movieLength = intent.getIntExtra("MOVIE_LENGTH", 0);
-        String movieDescription = intent.getStringExtra("MOVIE_DESCRIPTION");
-        String publishedDate = intent.getStringExtra("PUBLISHED_DATE");
-        String backgroundImageUrL = intent.getStringExtra("BACKGROUND_IMAGE_URL");
-        List<String> movieRatings = intent.getStringArrayListExtra("MOVIE_RATING");
-        List<String> moviePerformerNameList = intent.getStringArrayListExtra("MOVIE_PERFORMER_NAME");
-        List<String> moviePerformerTypeList = intent.getStringArrayListExtra("MOVIE_PERFORMER_TYPE");
-        List<String> movieCommentList = intent.getStringArrayListExtra("MOVIE_COMMENT");
-        double averageStar = intent.getDoubleExtra("AVERAGE_STAR", 0.0);
+        String movieName = intent.getStringExtra(IntentKey.MOVIE_NAME.name());
+        List<String> movieGenres = intent.getStringArrayListExtra(IntentKey.MOVIE_GENRES.name());
+        int movieLength = intent.getIntExtra(IntentKey.MOVIE_LENGTH.name(), 0);
+        String movieDescription = intent.getStringExtra(IntentKey.MOVIE_DESCRIPTION.name());
+        String publishedDate = intent.getStringExtra(IntentKey.PUBLISHED_DATE.name());
+        String backgroundImageUrL = intent.getStringExtra(IntentKey.BACKGROUND_IMAGE_URL.name());
+        List<String> movieRatings = intent.getStringArrayListExtra(IntentKey.MOVIE_RATING.name());
+        List<String> moviePerformerNameList = intent.getStringArrayListExtra(IntentKey.MOVIE_PERFORMER_NAME.name());
+        List<String> moviePerformerTypeList = intent.getStringArrayListExtra(IntentKey.MOVIE_PERFORMER_TYPE.name());
+        List<String> movieCommentList = intent.getStringArrayListExtra(IntentKey.MOVIE_COMMENT.name());
+        double averageStar = intent.getDoubleExtra(IntentKey.AVERAGE_STAR.name(), 0.0);
 
         // Set toolbar and collapsing toolbar title
         toolbarTitle.setText(movieName);

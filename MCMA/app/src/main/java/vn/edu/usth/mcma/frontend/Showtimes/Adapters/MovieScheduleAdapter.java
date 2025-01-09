@@ -22,6 +22,7 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.Performer;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.Review;
 import vn.edu.usth.mcma.frontend.Home.OnlyDetailsActivity;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
+import vn.edu.usth.mcma.frontend.constants.IntentKey;
 
 public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdapter.MovieViewHolder> {
     private List<Movie> movies;
@@ -108,19 +109,19 @@ public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdap
 
             viewDetails.setOnClickListener(v -> {
                 Intent intent = new Intent(itemView.getContext(), OnlyDetailsActivity.class);
-                intent.putExtra("MOVIE_NAME", movie.getTitle());
-                intent.putExtra("MOVIE_GENRES", new ArrayList<>(movie.getGenres().stream().map(Genre::getName).collect(Collectors.toList())));
-                intent.putExtra("MOVIE_LENGTH", movie.getMovieLength());
-                intent.putExtra("MOVIE_DESCRIPTION", movie.getDescription());
-                intent.putExtra("PUBLISHED_DATE", movie.getPublishDate());
-                intent.putExtra("IMAGE_URL", movie.getImageUrl());
-                intent.putExtra("BACKGROUND_IMAGE_URL", movie.getBackgroundImageUrl());
-                intent.putExtra("TRAILER", movie.getTrailerUrl());
-                intent.putExtra("MOVIE_RATING", movie.getRating().getName());
-                intent.putExtra("MOVIE_PERFORMER_NAME", new ArrayList<>(movie.getPerformers().stream().map(Performer::getName).collect(Collectors.toList())));
-                intent.putStringArrayListExtra("MOVIE_PERFORMER_TYPE", new ArrayList<>(movie.getPerformers().stream().map(Performer::getType).collect(Collectors.toList())));
-                intent.putExtra("MOVIE_COMMENT", new ArrayList<>(movie.getReviews().stream().map(Review::getUserComment).collect(Collectors.toList())));
-                intent.putExtra("AVERAGE_STAR", movie.getReviews().stream().mapToInt(Review::getUserVote).average().orElse(0.0));
+                intent.putExtra(IntentKey.MOVIE_NAME.name(), movie.getTitle());
+                intent.putExtra(IntentKey.MOVIE_GENRES.name(), new ArrayList<>(movie.getGenres().stream().map(Genre::getName).collect(Collectors.toList())));
+                intent.putExtra(IntentKey.MOVIE_LENGTH.name(), movie.getMovieLength());
+                intent.putExtra(IntentKey.MOVIE_DESCRIPTION.name(), movie.getDescription());
+                intent.putExtra(IntentKey.PUBLISHED_DATE.name(), movie.getPublishDate());
+                intent.putExtra(IntentKey.IMAGE_URL.name(), movie.getImageUrl());
+                intent.putExtra(IntentKey.BACKGROUND_IMAGE_URL.name(), movie.getBackgroundImageUrl());
+                intent.putExtra(IntentKey.TRAILER.name(), movie.getTrailerUrl());
+                intent.putExtra(IntentKey.MOVIE_RATING.name(), movie.getRating().getName());
+                intent.putExtra(IntentKey.MOVIE_PERFORMER_NAME.name(), new ArrayList<>(movie.getPerformers().stream().map(Performer::getName).collect(Collectors.toList())));
+                intent.putStringArrayListExtra(IntentKey.MOVIE_PERFORMER_TYPE.name(), new ArrayList<>(movie.getPerformers().stream().map(Performer::getType).collect(Collectors.toList())));
+                intent.putExtra(IntentKey.MOVIE_COMMENT.name(), new ArrayList<>(movie.getReviews().stream().map(Review::getUserComment).collect(Collectors.toList())));
+                intent.putExtra(IntentKey.AVERAGE_STAR.name(), movie.getReviews().stream().mapToInt(Review::getUserVote).average().orElse(0.0));
 
                 itemView.getContext().startActivity(intent);
             });

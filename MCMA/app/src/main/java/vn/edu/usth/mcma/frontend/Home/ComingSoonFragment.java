@@ -20,12 +20,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.PerformerType;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Genre;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ComingSoonResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.Performer;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.ComingSoonMovieAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
+import vn.edu.usth.mcma.frontend.constants.IntentKey;
 
 public class ComingSoonFragment extends Fragment {
     private List<ComingSoonResponse> comingSoonResponseList = new ArrayList<>();
@@ -89,17 +89,17 @@ public class ComingSoonFragment extends Fragment {
         Log.d("ComingSoonFragment", "Launching OnlyDetailsActivity with film: " + selectedFilm.getName());
 
         Intent intent = new Intent(requireContext(), OnlyDetailsActivity.class);
-        intent.putExtra("MOVIE_NAME", selectedFilm.getName());
-        intent.putExtra("MOVIE_GENRES", new ArrayList<>(selectedFilm.getGenres().stream().map(Genre::getName).collect(Collectors.toList())));
-        intent.putExtra("MOVIE_LENGTH", selectedFilm.getLength());
-        intent.putExtra("MOVIE_DESCRIPTION", selectedFilm.getDescription());
-        intent.putExtra("PUBLISHED_DATE", selectedFilm.getPublishDate());
-        intent.putExtra("IMAGE_URL", selectedFilm.getImageUrl());
-        intent.putExtra("BACKGROUND_IMAGE_URL", selectedFilm.getBackgroundImageUrl());
-        intent.putExtra("TRAILER", selectedFilm.getTrailerUrl());
-        intent.putExtra("MOVIE_RATING", selectedFilm.getRating().getName());
-        intent.putExtra("MOVIE_PERFORMER_NAME", new ArrayList<>(selectedFilm.getPerformers().stream().map(Performer::getName).collect(Collectors.toList())));
-        intent.putStringArrayListExtra("MOVIE_PERFORMER_TYPE", new ArrayList<>(selectedFilm.getPerformers().stream().map(Performer::getType).collect(Collectors.toList())));
+        intent.putExtra(IntentKey.MOVIE_NAME.name(), selectedFilm.getName());
+        intent.putExtra(IntentKey.MOVIE_GENRES.name(), new ArrayList<>(selectedFilm.getGenres().stream().map(Genre::getName).collect(Collectors.toList())));
+        intent.putExtra(IntentKey.MOVIE_LENGTH.name(), selectedFilm.getLength());
+        intent.putExtra(IntentKey.MOVIE_DESCRIPTION.name(), selectedFilm.getDescription());
+        intent.putExtra(IntentKey.PUBLISHED_DATE.name(), selectedFilm.getPublishDate());
+        intent.putExtra(IntentKey.IMAGE_URL.name(), selectedFilm.getImageUrl());
+        intent.putExtra(IntentKey.BACKGROUND_IMAGE_URL.name(), selectedFilm.getBackgroundImageUrl());
+        intent.putExtra(IntentKey.TRAILER.name(), selectedFilm.getTrailerUrl());
+        intent.putExtra(IntentKey.MOVIE_RATING.name(), selectedFilm.getRating().getName());
+        intent.putExtra(IntentKey.MOVIE_PERFORMER_NAME.name(), new ArrayList<>(selectedFilm.getPerformers().stream().map(Performer::getName).collect(Collectors.toList())));
+        intent.putStringArrayListExtra(IntentKey.MOVIE_PERFORMER_TYPE.name(), new ArrayList<>(selectedFilm.getPerformers().stream().map(Performer::getType).collect(Collectors.toList())));
 
         startActivity(intent);
     }

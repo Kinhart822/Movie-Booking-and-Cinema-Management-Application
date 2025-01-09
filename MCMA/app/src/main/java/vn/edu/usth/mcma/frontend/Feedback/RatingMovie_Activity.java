@@ -23,6 +23,7 @@ import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Request.MovieRespondRequest;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.AddMovieRespondAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
+import vn.edu.usth.mcma.frontend.constants.IntentKey;
 
 public class RatingMovie_Activity extends AppCompatActivity {
     private EditText editFeedback;
@@ -46,15 +47,10 @@ public class RatingMovie_Activity extends AppCompatActivity {
         ratingScale = findViewById(R.id.tvRatingScale);
         editFeedback = findViewById(R.id.etComment);
         buttonSubmit = findViewById(R.id.btnSubmit);
-
-        // Lấy dữ liệu từ intent trong adapter
-//        String name = getIntent().getStringExtra("movie_name");
-//        String type = getIntent().getStringExtra("movie_type");
-//        int imageResId = getIntent().getIntExtra("movie_image", R.drawable.movie5);
         Intent intent = getIntent();
-        String name = intent.getStringExtra("movie_name");
-        String type = intent.getStringExtra("movie_type");
-        String imageUrl = intent.getStringExtra("movie_image");
+        String name = intent.getStringExtra(IntentKey.movie_name.name());
+        String type = intent.getStringExtra(IntentKey.movie_type.name());
+        String imageUrl = intent.getStringExtra(IntentKey.movie_image.name());
 
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         movieId = intent.getIntExtra(KEY_MOVIE_ID, -1);
@@ -102,12 +98,6 @@ public class RatingMovie_Activity extends AppCompatActivity {
                 Toast.makeText(this, "Please leave a comment", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Thank you for rating: " + rating + " stars\nFeedback: " + feedback, Toast.LENGTH_SHORT).show();
-
-//                Intent resultIntent = new Intent();
-//                resultIntent.putExtra("rating", rating);
-//                resultIntent.putExtra("feedback", feedback);
-//                setResult(RESULT_OK, resultIntent);
-//                finish();
                 // Reset the feedback and rating sections
                 editFeedback.setText(""); // Clear the feedback text
                 ratingBar.setRating(5);  // Reset the RatingBar to 0

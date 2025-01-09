@@ -18,6 +18,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.MovieDetails;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.MovieDataProvider;
+import vn.edu.usth.mcma.frontend.constants.IntentKey;
 
 public class MovieDetailsActivity extends AppCompatActivity {
     private CollapsingToolbarLayout collapsingToolbarLayout;
@@ -42,7 +43,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Get movie title from intent
-        String movieTitle = getIntent().getStringExtra("MOVIE_TITLE");
+        String movieTitle = getIntent().getStringExtra(IntentKey.MOVIE_TITLE.name());
         MovieDetails movieDetails = MovieDataProvider.getMovieDetails(movieTitle);
 
         // Set toolbar and collapsing toolbar title
@@ -114,17 +115,4 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         });
     }
-
-//    private void setupBookingButtons(String movieTitle) {
-//        Button bookingButton = findViewById(R.id.bookingButton);
-//        MovieDetails movieDetails = MovieDataProvider.getMovieDetails(movieTitle);
-//        bookingButton.setOnClickListener(v -> {
-//            Intent intent = new Intent(this, MovieBookingActivity.class);
-//            intent.putExtra("MOVIE_TITLE", movieTitle);
-//            if (movieDetails != null) {
-//                intent.putExtra("MOVIE_BANNER", movieDetails.getBannerImageResId());
-//            }
-//            startActivity(intent);
-//        });
-//    }
 }

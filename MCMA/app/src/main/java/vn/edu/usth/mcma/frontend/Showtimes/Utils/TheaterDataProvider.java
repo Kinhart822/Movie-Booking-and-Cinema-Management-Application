@@ -18,13 +18,14 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.BookingProcessAPIs.Get
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.IP;
+import vn.edu.usth.mcma.frontend.constants.IntentKey;
 
 public class TheaterDataProvider {
     public static List<String> getCities() {
         return Arrays.asList("TPHCM", "Hà Nội", "Huế", "Đà Nẵng", "Cần Thơ", "Nha Trang", "Đà Lạt", "Vũng Tàu");
     }
 
-    private static final String BASE_URL = IP.MINOXD_LAPTOP.getIp();
+    private static final String BASE_URL = IP.MINOXD_PX6A.getIp();
     private static final GetAllCitiesAPI apiService;
 
     static {
@@ -125,7 +126,7 @@ public class TheaterDataProvider {
     public static List<Movie> getMoviesForTheater(String date, Activity activity) {
         List<Movie> movies = new ArrayList<>();
 
-        String movieTitle = activity.getIntent().getStringExtra("MOVIE_TITLE");
+        String movieTitle = activity.getIntent().getStringExtra(IntentKey.MOVIE_TITLE.name());
 
         if (movieTitle != null && !movieTitle.isEmpty()) {
             boolean movieExists = false;

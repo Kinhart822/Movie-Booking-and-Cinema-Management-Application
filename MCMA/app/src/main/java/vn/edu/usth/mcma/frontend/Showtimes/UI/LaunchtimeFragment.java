@@ -2,7 +2,6 @@ package vn.edu.usth.mcma.frontend.Showtimes.UI;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ViewCinemaResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ViewCityResponse;
@@ -32,6 +27,7 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.TheaterDataProvider;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.TheaterAdapter;
+import vn.edu.usth.mcma.frontend.constants.IntentKey;
 
 public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnTheaterClickListener {
     private TheaterAdapter theaterAdapter;
@@ -166,9 +162,9 @@ public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnThe
     @Override
     public void onTheaterClick(Theater theater) {
         Intent intent = new Intent(requireContext(), TheaterScheduleActivity.class);
-        intent.putExtra("CINEMA_ID", theater.getId());
-        intent.putExtra("THEATER_NAME", theater.getName());
-        intent.putExtra("THEATER_ADDRESS", theater.getAddress());
+        intent.putExtra(IntentKey.CINEMA_ID.name(), theater.getId());
+        intent.putExtra(IntentKey.THEATER_NAME.name(), theater.getName());
+        intent.putExtra(IntentKey.THEATER_ADDRESS.name(), theater.getAddress());
         startActivity(intent);
     }
 }

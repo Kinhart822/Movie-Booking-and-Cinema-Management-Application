@@ -4,13 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,11 +24,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Request.BookingRequest;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.CouponResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.AvailableSeatResponse;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.SendBookingResponse;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.BookingProcessAPIs.BookingAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.BookingProcessAPIs.GetAllCouponAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.ComboDetailsAdapter;
@@ -39,10 +34,9 @@ import vn.edu.usth.mcma.frontend.Showtimes.Adapters.SeatDetailsAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.TicketDetailsAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.ComboItem;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Coupon;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.Seat;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketItem;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.PriceCalculator;
+import vn.edu.usth.mcma.frontend.constants.IntentKey;
 
 public class PaymentBookingActivity extends AppCompatActivity {
     private RecyclerView ticketDetailsRecyclerView;
@@ -86,33 +80,33 @@ public class PaymentBookingActivity extends AppCompatActivity {
             onBackPressed();
         });
 
-        movieId = getIntent().getIntExtra("MOVIE_ID", -1);
-        selectedCityId = getIntent().getIntExtra("SELECTED_CITY_ID", -1);
-        selectedCinemaId = getIntent().getIntExtra("SELECTED_CINEMA_ID", -1);
-        selectedScreenId = getIntent().getIntExtra("SELECTED_SCREEN_ID", -1);
-        selectedScheduleId = getIntent().getIntExtra("SELECTED_SCHEDULE_ID", -1);
-        selectedTicketIds =  getIntent().getIntegerArrayListExtra("SELECTED_TICKET_IDS");
-        selectedSeatIds = getIntent().getIntegerArrayListExtra("SELECTED_SEAT_IDS");
-        selectedFoodIds = getIntent().getIntegerArrayListExtra("SELECTED_FOOD_IDS");
-        selectedDrinkIds = getIntent().getIntegerArrayListExtra("SELECTED_DRINK_IDS");
+        movieId = getIntent().getIntExtra(IntentKey.MOVIE_ID.name(), -1);
+        selectedCityId = getIntent().getIntExtra(IntentKey.SELECTED_CITY_ID.name(), -1);
+        selectedCinemaId = getIntent().getIntExtra(IntentKey.SELECTED_CINEMA_ID.name(), -1);
+        selectedScreenId = getIntent().getIntExtra(IntentKey.SELECTED_SCREEN_ID.name(), -1);
+        selectedScheduleId = getIntent().getIntExtra(IntentKey.SELECTED_SCHEDULE_ID.name(), -1);
+        selectedTicketIds =  getIntent().getIntegerArrayListExtra(IntentKey.SELECTED_TICKET_IDS.name());
+        selectedSeatIds = getIntent().getIntegerArrayListExtra(IntentKey.SELECTED_SEAT_IDS.name());
+        selectedFoodIds = getIntent().getIntegerArrayListExtra(IntentKey.SELECTED_FOOD_IDS.name());
+        selectedDrinkIds = getIntent().getIntegerArrayListExtra(IntentKey.SELECTED_DRINK_IDS.name());
 
-        totalTicketCount = getIntent().getIntExtra("TOTAL_TICKET_COUNT", 0);
+        totalTicketCount = getIntent().getIntExtra(IntentKey.TOTAL_TICKET_COUNT.name(), 0);
         Log.d("PaymentBookingActivity", "Total Ticket Count: " + totalTicketCount);
 
-        ticketItems = getIntent().getParcelableArrayListExtra("SELECTED_TICKET_ITEMS");
-        Log.d("PaymentBookingActivity", "SELECTED_TICKET_ITEMS received: " + ticketItems);
+        ticketItems = getIntent().getParcelableArrayListExtra(IntentKey.SELECTED_TICKET_ITEMS.name());
+        Log.d("PaymentBookingActivity", IntentKey.SELECTED_TICKET_ITEMS.name()+" received: " + ticketItems);
 
-        totalTicketPrice = getIntent().getDoubleExtra("TOTAL_TICKET_PRICE", 0.0);
-        Log.d("PaymentBookingActivity", "TOTAL_TICKET_PRICE received: " + totalTicketPrice);
+        totalTicketPrice = getIntent().getDoubleExtra(IntentKey.TOTAL_TICKET_PRICE.name(), 0.0);
+        Log.d("PaymentBookingActivity", IntentKey.TOTAL_TICKET_PRICE.name()+" received: " + totalTicketPrice);
 
-        totalComboCount = getIntent().getIntExtra("TOTAL_COMBO_COUNT", 0);
+        totalComboCount = getIntent().getIntExtra(IntentKey.TOTAL_COMBO_COUNT.name(), 0);
         Log.d("PaymentBookingActivity", "Total Combo Count: " + totalComboCount);
 
-        comboItems = getIntent().getParcelableArrayListExtra("SELECTED_COMBO_ITEMS");
-        Log.d("PaymentBookingActivity", "SELECTED_COMBO_ITEMS received: " + comboItems);
+        comboItems = getIntent().getParcelableArrayListExtra(IntentKey.SELECTED_COMBO_ITEMS.name());
+        Log.d("PaymentBookingActivity", IntentKey.SELECTED_COMBO_ITEMS+" received: " + comboItems);
 
-        selectedSeats = getIntent().getParcelableArrayListExtra("SELECTED_SEAT_ITEMS");
-        Log.d("PaymentBookingActivity", "SELECTED_SEAT_ITEMS received: " + selectedSeats);
+        selectedSeats = getIntent().getParcelableArrayListExtra(IntentKey.SELECTED_SEAT_ITEMS.name());
+        Log.d("PaymentBookingActivity", IntentKey.SELECTED_SEAT_ITEMS.name()+" received: " + selectedSeats);
 
         initializeViews();
         retrieveIntentExtras();
@@ -261,7 +255,7 @@ public class PaymentBookingActivity extends AppCompatActivity {
 
     @SuppressLint("DefaultLocale")
     private void retrieveIntentExtras() {
-        totalPrice = getIntent().getDoubleExtra("TOTAL_PRICE_OF_SELECTED_CHOICE", 0.0);
+        totalPrice = getIntent().getDoubleExtra(IntentKey.TOTAL_PRICE_OF_SELECTED_CHOICE.name(), 0.0);
         totalPriceTV.setText(String.format("$%.2f", totalPrice));
         totalPriceCouponTV.setText(String.format("$%.2f", totalPrice));
     }
@@ -277,30 +271,30 @@ public class PaymentBookingActivity extends AppCompatActivity {
         totalPriceTV = findViewById(R.id.total_price);
         totalPriceCouponTV = findViewById(R.id.total_price_coupon);
 
-        String selectedMovie = getIntent().getStringExtra("MOVIE_NAME");
+        String selectedMovie = getIntent().getStringExtra(IntentKey.MOVIE_NAME.name());
         if (selectedMovie != null) {
             movieTitleTV.setText(selectedMovie);
             movieName = selectedMovie;
         }
 
-        String selectedTheater = getIntent().getStringExtra("CINEMA_NAME");
+        String selectedTheater = getIntent().getStringExtra(IntentKey.CINEMA_NAME.name());
         if (selectedTheater != null) {
             theaterNameTV.setText(selectedTheater);
             cinemaName = selectedTheater;
         }
 
-        String selectedDate = getIntent().getStringExtra("SELECTED_DATE");
+        String selectedDate = getIntent().getStringExtra(IntentKey.SELECTED_DATE.name());
         if (movieDateTV != null) {
             movieDateTV.setText(selectedDate);
         }
 
         // Screen number handling
-        String selectedScreenRoom = getIntent().getStringExtra("SELECTED_SCREEN_ROOM");
+        String selectedScreenRoom = getIntent().getStringExtra(IntentKey.SELECTED_SCREEN_ROOM.name());
         if (screenNumberTV != null) {
             screenNumberTV.setText(selectedScreenRoom != null ? selectedScreenRoom : "Screen 1");
         }
 
-        String selectedShowtime = getIntent().getStringExtra("SELECTED_SHOWTIME");
+        String selectedShowtime = getIntent().getStringExtra(IntentKey.SELECTED_SHOWTIME.name());
         if (movieShowtimeTV != null) {
             movieShowtimeTV.setText(selectedShowtime);
         }
@@ -376,11 +370,6 @@ public class PaymentBookingActivity extends AppCompatActivity {
         }
     }
 
-    private Map<SeatType, List<Seat>> groupSeatsByType(List<Seat> seats) {
-        return seats.stream()
-                .collect(Collectors.groupingBy(Seat::getType));
-    }
-
     @SuppressLint("DefaultLocale")
     private void setCombosDetails() {
         TextView noOfCombosTV = findViewById(R.id.noOfCombos);
@@ -411,27 +400,27 @@ public class PaymentBookingActivity extends AppCompatActivity {
                     .setPositiveButton("OK", (dialog, id) -> {
                         // Chuyển sang PayingMethodActivity
                         Intent intent = new Intent(getApplicationContext(), PayingMethodActivity.class);
-                        intent.putExtra("MOVIE_NAME", getIntent().getStringExtra("MOVIE_NAME"));
-                        intent.putExtra("CINEMA_NAME", getIntent().getStringExtra("CINEMA_NAME"));
-                        intent.putExtra("SELECTED_DATE", getIntent().getStringExtra("SELECTED_DATE"));
-                        intent.putExtra("SELECTED_SHOWTIME", getIntent().getStringExtra("SELECTED_SHOWTIME"));
-                        intent.putExtra("SELECTED_SCREEN_ROOM", getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
+                        intent.putExtra(IntentKey.MOVIE_NAME.name(), getIntent().getStringExtra(IntentKey.MOVIE_NAME.name()));
+                        intent.putExtra(IntentKey.CINEMA_NAME.name(), getIntent().getStringExtra(IntentKey.CINEMA_NAME.name()));
+                        intent.putExtra(IntentKey.SELECTED_DATE.name(), getIntent().getStringExtra(IntentKey.SELECTED_DATE.name()));
+                        intent.putExtra(IntentKey.SELECTED_SHOWTIME.name(), getIntent().getStringExtra(IntentKey.SELECTED_SHOWTIME.name()));
+                        intent.putExtra(IntentKey.SELECTED_SCREEN_ROOM.name(), getIntent().getStringExtra(IntentKey.SELECTED_SCREEN_ROOM.name()));
 
                         // Booking
-                        intent.putExtra("MOVIE_ID", movieId);
-                        intent.putExtra("SELECTED_CITY_ID", selectedCityId);
-                        intent.putExtra("SELECTED_CINEMA_ID", selectedCinemaId);
-                        intent.putExtra("SELECTED_SCREEN_ID", selectedScreenId);
-                        intent.putExtra("SELECTED_SCHEDULE_ID", selectedScheduleId);
+                        intent.putExtra(IntentKey.MOVIE_ID.name(), movieId);
+                        intent.putExtra(IntentKey.SELECTED_CITY_ID.name(), selectedCityId);
+                        intent.putExtra(IntentKey.SELECTED_CINEMA_ID.name(), selectedCinemaId);
+                        intent.putExtra(IntentKey.SELECTED_SCREEN_ID.name(), selectedScreenId);
+                        intent.putExtra(IntentKey.SELECTED_SCHEDULE_ID.name(), selectedScheduleId);
                         intent.putIntegerArrayListExtra("SELECTED_TICKET_IDS", new ArrayList<>(selectedTicketIds));
                         intent.putIntegerArrayListExtra("SELECTED_SEAT_IDS", new ArrayList<>(selectedSeatIds));
                         intent.putIntegerArrayListExtra("SELECTED_FOOD_IDS", new ArrayList<>(selectedFoodIds));
                         intent.putIntegerArrayListExtra("SELECTED_DRINK_IDS", new ArrayList<>(selectedDrinkIds));
                         if (selectedMovieCouponId != 0 && selectedMovieCouponId > 0) {
-                            intent.putExtra("SELECTED_MOVIE_COUPON_ID", selectedMovieCouponId);
+                            intent.putExtra(IntentKey.SELECTED_MOVIE_COUPON_ID.name(), selectedMovieCouponId);
                         }
                         if (selectedUserCouponId != 0 && selectedUserCouponId > 0) {
-                            intent.putExtra("SELECTED_USER_COUPON_ID", selectedUserCouponId);
+                            intent.putExtra(IntentKey.SELECTED_USER_COUPON_ID.name(), selectedUserCouponId);
                         }
 
                         startActivity(intent);

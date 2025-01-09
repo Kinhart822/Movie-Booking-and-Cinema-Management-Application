@@ -4,19 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -120,7 +113,4 @@ public class ForgotPassword_Activity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    private boolean validateForgotPassword(String text) {
-        return !text.isEmpty();
-    }
 }

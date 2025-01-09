@@ -14,7 +14,7 @@ import java.util.List;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingResponse;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.MovieRespondResponse;
+import vn.edu.usth.mcma.frontend.constants.IntentKey;
 
 public class RatingMovie_Adapter extends RecyclerView.Adapter<RatingMovie_ViewHolder> {
 //    private final Context context;
@@ -71,33 +71,12 @@ public class RatingMovie_Adapter extends RecyclerView.Adapter<RatingMovie_ViewHo
                 .into(holder.imageView);
         holder.nameView.setText(bookingResponse.getMovieName());
         holder.typeView.setText(bookingResponse.getBookingNo());
-
-
-//        // Chỗ này sẽ click vô được item trong recycle view
-//        holder.itemView.setOnClickListener(v -> {
-//            Intent intent = new Intent(context, RatingMovie_Activity.class);
-//            intent.putExtra("movie_name", item.getMovie_name());
-//            intent.putExtra("movie_type", item.getMovie_type());
-//            intent.putExtra("movie_image", item.getMovie_image());
-//            context.startActivity(intent);
-//        });
-
-
-        // Xử lý sự kiện click item
-//        holder.itemView.setOnClickListener(v ->
-//                onItemClickListener.onItemClick(item.getMovie_name(), item.getMovie_type(), item.getMovie_image()));
-
-//        holder.itemView.setOnClickListener(v -> {
-//            // Gọi callback để hiển thị dialog từ Fragment
-//            onItemClickListener.onItemClick(bookingResponse.getMovieName(), bookingResponse.getBookingNo(), bookingResponse.getImageUrlMovie());
-//        });
-
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, RatingMovie_Activity.class);
-            intent.putExtra("movieId", bookingResponse.getMovieId()); // Pass movieId
-            intent.putExtra("movie_name", bookingResponse.getMovieName());
-            intent.putExtra("movie_type", bookingResponse.getBookingNo());
-            intent.putExtra("movie_image", bookingResponse.getImageUrlMovie());
+            intent.putExtra(IntentKey.movieId.name(), bookingResponse.getMovieId()); // Pass movieId
+            intent.putExtra(IntentKey.movie_name.name(), bookingResponse.getMovieName());
+            intent.putExtra(IntentKey.movie_type.name(), bookingResponse.getBookingNo());
+            intent.putExtra(IntentKey.movie_image.name(), bookingResponse.getImageUrlMovie());
             context.startActivity(intent);
         });
     }

@@ -3,18 +3,13 @@ package vn.edu.usth.mcma.frontend.Personal;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import vn.edu.usth.mcma.R;
-
-import android.app.AlertDialog;
+import vn.edu.usth.mcma.frontend.constants.IntentKey;
 
 import com.bumptech.glide.Glide;
 
@@ -50,8 +45,8 @@ public class Movie_Feedback_Adapter extends RecyclerView.Adapter<Movie_Feedback_
 
         holder.itemView.setOnClickListener(view -> {
             Intent intent = new Intent(context, View_Movie_Feedback02_Activity.class);
-            intent.putExtra("movie_feedback_id", item.getMovieId());
-            intent.putExtra("movie_feedback_name", item.getMovie_name());
+            intent.putExtra(IntentKey.movie_feedback_id.name(), item.getMovieId());
+            intent.putExtra(IntentKey.movie_feedback_name.name(), item.getMovie_name());
             context.startActivity(intent);
         });
     }

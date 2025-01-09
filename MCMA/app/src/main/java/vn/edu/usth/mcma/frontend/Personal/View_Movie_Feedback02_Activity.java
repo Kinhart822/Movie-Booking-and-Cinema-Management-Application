@@ -18,6 +18,7 @@ import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.MovieRespondResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetAllFeedBackAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
+import vn.edu.usth.mcma.frontend.constants.IntentKey;
 
 public class View_Movie_Feedback02_Activity extends AppCompatActivity {
 
@@ -41,12 +42,12 @@ public class View_Movie_Feedback02_Activity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         // Lấy tên phim từ Intent (nếu cần)
-        String movieName = getIntent().getStringExtra("movie_feedback_name");
+        String movieName = getIntent().getStringExtra(IntentKey.movie_feedback_name.name());
         if (movieName != null) {
             // Xử lý tên phim, ví dụ hiển thị trong UI
         }
 
-        movieId = getIntent().getIntExtra("movie_feedback_id", 0);
+        movieId = getIntent().getIntExtra(IntentKey.movie_feedback_id.name(), 0);
 
         RetrofitService retrofitService = new RetrofitService(this);
         getAllFeedBackAPI = retrofitService.getRetrofit().create(GetAllFeedBackAPI.class);

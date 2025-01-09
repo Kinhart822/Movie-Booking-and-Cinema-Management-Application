@@ -43,6 +43,7 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetScheduleAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.MovieScheduleAdapter;
+import vn.edu.usth.mcma.frontend.constants.IntentKey;
 
 public class TheaterScheduleActivity extends AppCompatActivity
         implements MovieScheduleAdapter.OnShowtimeClickListener {
@@ -57,9 +58,9 @@ public class TheaterScheduleActivity extends AppCompatActivity
         setContentView(R.layout.activity_theater_schedule);
 
         // Get theater details from intent
-        theaterId = getIntent().getIntExtra("CINEMA_ID", -1);
-        String theaterName = getIntent().getStringExtra("THEATER_NAME");
-        String theaterAddress = getIntent().getStringExtra("THEATER_ADDRESS");
+        theaterId = getIntent().getIntExtra(IntentKey.CINEMA_ID.name(), -1);
+        String theaterName = getIntent().getStringExtra(IntentKey.THEATER_NAME.name());
+        String theaterAddress = getIntent().getStringExtra(IntentKey.THEATER_ADDRESS.name());
 
         // Set theater details in toolbar
         TextView nameTextView = findViewById(R.id.theater_name);
@@ -257,20 +258,20 @@ public class TheaterScheduleActivity extends AppCompatActivity
                     MovieResponse movieResponse = response.body();
                     // Handle movie details (e.g., display in a new activity)
                     Intent intent = new Intent(TheaterScheduleActivity.this, MovieDetailsActivity.class);
-                    intent.putExtra("MOVIE_TITLE", movieResponse.getName());
-                    intent.putExtra("MOVIE_NAME", movieResponse.getName());
-                    intent.putExtra("MOVIE_GENRES", new ArrayList<>(movieResponse.getGenres().stream().map(Genre::getName).collect(Collectors.toList())));
-                    intent.putExtra("MOVIE_LENGTH", movieResponse.getLength());
-                    intent.putExtra("MOVIE_DESCRIPTION", movieResponse.getDescription());
-                    intent.putExtra("PUBLISHED_DATE", movieResponse.getPublishDate());
-                    intent.putExtra("IMAGE_URL", movieResponse.getImageUrl());
-                    intent.putExtra("BACKGROUND_IMAGE_URL", movieResponse.getBackgroundImageUrl());
-                    intent.putExtra("TRAILER", movieResponse.getTrailerUrl());
-                    intent.putExtra("MOVIE_RATING", movieResponse.getRating().getName());
-                    intent.putExtra("MOVIE_PERFORMER_NAME", new ArrayList<>(movieResponse.getPerformers().stream().map(Performer::getName).collect(Collectors.toList())));
-                    intent.putStringArrayListExtra("MOVIE_PERFORMER_TYPE", new ArrayList<>(movieResponse.getPerformers().stream().map(Performer::getType).collect(Collectors.toList())));
-                    intent.putExtra("MOVIE_COMMENT", new ArrayList<>(movieResponse.getReviews().stream().map(Review::getUserComment).collect(Collectors.toList())));
-                    intent.putExtra("AVERAGE_STAR", movieResponse.getReviews().stream().mapToInt(Review::getUserVote).average().orElse(0.0));
+                    intent.putExtra(IntentKey.MOVIE_TITLE.name(), movieResponse.getName());
+                    intent.putExtra(IntentKey.MOVIE_NAME.name(), movieResponse.getName());
+                    intent.putExtra(IntentKey.MOVIE_GENRES.name(), new ArrayList<>(movieResponse.getGenres().stream().map(Genre::getName).collect(Collectors.toList())));
+                    intent.putExtra(IntentKey.MOVIE_LENGTH.name(), movieResponse.getLength());
+                    intent.putExtra(IntentKey.MOVIE_DESCRIPTION.name(), movieResponse.getDescription());
+                    intent.putExtra(IntentKey.PUBLISHED_DATE.name(), movieResponse.getPublishDate());
+                    intent.putExtra(IntentKey.IMAGE_URL.name(), movieResponse.getImageUrl());
+                    intent.putExtra(IntentKey.BACKGROUND_IMAGE_URL.name(), movieResponse.getBackgroundImageUrl());
+                    intent.putExtra(IntentKey.TRAILER.name(), movieResponse.getTrailerUrl());
+                    intent.putExtra(IntentKey.MOVIE_RATING.name(), movieResponse.getRating().getName());
+                    intent.putExtra(IntentKey.MOVIE_PERFORMER_NAME.name(), new ArrayList<>(movieResponse.getPerformers().stream().map(Performer::getName).collect(Collectors.toList())));
+                    intent.putStringArrayListExtra(IntentKey.MOVIE_PERFORMER_TYPE.name(), new ArrayList<>(movieResponse.getPerformers().stream().map(Performer::getType).collect(Collectors.toList())));
+                    intent.putExtra(IntentKey.MOVIE_COMMENT.name(), new ArrayList<>(movieResponse.getReviews().stream().map(Review::getUserComment).collect(Collectors.toList())));
+                    intent.putExtra(IntentKey.AVERAGE_STAR.name(), movieResponse.getReviews().stream().mapToInt(Review::getUserVote).average().orElse(0.0));
                 }
             }
 

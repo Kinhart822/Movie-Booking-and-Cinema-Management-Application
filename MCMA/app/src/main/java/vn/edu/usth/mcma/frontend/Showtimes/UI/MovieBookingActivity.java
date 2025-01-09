@@ -42,6 +42,7 @@ import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
 
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.MovieDataProvider;
 import vn.edu.usth.mcma.frontend.Showtimes.Utils.TheaterDataProvider;
+import vn.edu.usth.mcma.frontend.constants.IntentKey;
 
 public class MovieBookingActivity extends AppCompatActivity {
     private RecyclerView theatersRecyclerView;
@@ -65,13 +66,13 @@ public class MovieBookingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_booking);
 
-        movieTitle = getIntent().getStringExtra("MOVIE_TITLE");
-        movieId = getIntent().getLongExtra("MOVIE_ID", -1L);
+        movieTitle = getIntent().getStringExtra(IntentKey.MOVIE_TITLE.name());
+        movieId = getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L);
         citiesSection = findViewById(R.id.cities_section);
         theatersSection = findViewById(R.id.theaters_section);
         citiesContainer = findViewById(R.id.cities_container);
 
-        movieTitle = getIntent().getStringExtra("MOVIE_TITLE");
+        movieTitle = getIntent().getStringExtra(IntentKey.MOVIE_TITLE.name());
 
         selectedCity = TheaterDataProvider.getCities().get(0);
 
@@ -273,22 +274,19 @@ public class MovieBookingActivity extends AppCompatActivity {
                 intent.putExtra(TicketSelectionActivity.EXTRA_GUEST_QUANTITY, guestQuantity);
                 intent.putExtra(TicketSelectionActivity.EXTRA_THEATER, theater);
                 intent.putExtra(TicketSelectionActivity.EXTRA_MOVIE, selectedMovie);
-                intent.putExtra("SELECTED_SHOWTIME", showtime);
-                intent.putExtra("SELECTED_DATE", date);
-                intent.putExtra("SELECTED_SCREEN", screenId);
-                intent.putExtra("SELECTED_SCREEN_ROOM", screenRoom);
-//                intent.putExtra("THEATER_NAME", theater.getName());
-                int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
-                intent.putExtra("MOVIE_BANNER", movieBannerResId);
+                intent.putExtra(IntentKey.SELECTED_SHOWTIME.name(), showtime);
+                intent.putExtra(IntentKey.SELECTED_DATE.name(), date);
+                intent.putExtra(IntentKey.SELECTED_SCREEN.name(), screenId);
+                intent.putExtra(IntentKey.SELECTED_SCREEN_ROOM.name(), screenRoom);
+                int movieBannerResId = getIntent().getIntExtra(IntentKey.MOVIE_BANNER.name(), 0);
+                intent.putExtra(IntentKey.MOVIE_BANNER.name(), movieBannerResId);
 
                 // Booking
-                intent.putExtra("MOVIE_ID", movieId);
-                intent.putExtra("SELECTED_CITY_ID", selectedCityId);
-                intent.putExtra("SELECTED_CINEMA_ID", selectedCinemaId);
-                intent.putExtra("SELECTED_SCREEN_ID", selectedScreenId);
-                intent.putExtra("SELECTED_SCHEDULE_ID", selectedScheduleId);
-
-//                intent.putExtra("MOVIE_TITLE", movieTitle);
+                intent.putExtra(IntentKey.MOVIE_ID.name(), movieId);
+                intent.putExtra(IntentKey.SELECTED_CITY_ID.name(), selectedCityId);
+                intent.putExtra(IntentKey.SELECTED_CINEMA_ID.name(), selectedCinemaId);
+                intent.putExtra(IntentKey.SELECTED_SCREEN_ID.name(), selectedScreenId);
+                intent.putExtra(IntentKey.SELECTED_SCHEDULE_ID.name(), selectedScheduleId);
                 startActivity(intent);
             }
 
