@@ -17,27 +17,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.AvailableSeatResponse;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.HeldSeatResponse;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.UnavailableSeatResponse;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.BookingProcessAPIs.GetAllAvailableSeatsByScreenAPI;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.BookingProcessAPIs.GetAllHeldSeatsByScreenAPI;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.BookingProcessAPIs.GetAllUnavailableSeatsByScreenAPI;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.SeatTypeResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.Seat;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.SeatAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
+import vn.edu.usth.mcma.frontend.ConnectAPI.helper.SeatMapHelper;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.SeatAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketItem;
+import vn.edu.usth.mcma.frontend.constants.IntentKey;
 
 public class SeatSelectionActivity extends AppCompatActivity {
     private double totalTicketPrice;
@@ -45,10 +45,8 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private RecyclerView seatRecyclerView;
     private SeatAdapter seatAdapter;
     private Theater selectedTheater;
-    private String selectedShowtime;
     private Movie selectedMovie;
-    private TextView showtime;
-    private int guestQuantity;
+    private int desiredSeatCount;
     private double totalTicketAndSeatPrice;
     private int totalSeatCount;
     private List<TicketItem> tickets = new ArrayList<>();
@@ -58,248 +56,129 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private Long selectedScreenId;
     private Long selectedScheduleId;
     private List<Long> selectedTicketIds = new ArrayList<>();
+    private SeatAPI seatAPI;
+    private Map<Integer, SeatTypeResponse> seatTypes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seat_selection);
 
-        movieId = getIntent().getLongExtra("MOVIE_ID", -1L);
-        selectedCityId = getIntent().getLongExtra("SELECTED_CITY_ID", -1L);
-        selectedCinemaId = getIntent().getLongExtra("SELECTED_CINEMA_ID", -1L);
-        selectedScheduleId = getIntent().getLongExtra("SELECTED_SCHEDULE_ID", -1L);
+        movieId = getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L);
+        selectedCityId = getIntent().getLongExtra(IntentKey.SELECTED_CITY_ID.name(), -1L);
+        selectedCinemaId = getIntent().getLongExtra(IntentKey.SELECTED_CINEMA_ID.name(), -1L);
+        selectedScheduleId = getIntent().getLongExtra(IntentKey.SELECTED_SCHEDULE_ID.name(), -1L);
 
-        totalTicketCount = getIntent().getIntExtra("TOTAL_TICKET_COUNT", 0);
-        Log.d("SeatSelection", "TOTAL_TICKET_COUNT received: " + totalTicketCount);
-        tickets = getIntent().getParcelableArrayListExtra("SELECTED_TICKET_ITEMS");
-        Log.d("SeatSelection", "SELECTED_TICKET_ITEMS received: " + tickets);
-        selectedTicketIds = Arrays.stream(Objects.requireNonNull(getIntent().getLongArrayExtra("SELECTED_TICKET_IDS"))).boxed().collect(Collectors.toList());
-        Log.d("SeatSelection", "SELECTED_TICKET_ITEMS received: " + selectedTicketIds);
+        totalTicketCount = getIntent().getIntExtra(IntentKey.TOTAL_TICKET_COUNT.name(), 0);
+        Log.d("SeatSelection", IntentKey.TOTAL_TICKET_COUNT.name()+" received: " + totalTicketCount);
+        tickets = getIntent().getParcelableArrayListExtra(IntentKey.SELECTED_TICKET_ITEMS.name());
+        Log.d("SeatSelection", IntentKey.SELECTED_TICKET_ITEMS.name()+" received: " + tickets);
+//      todo  selectedTicketIds = Arrays.stream(Objects.requireNonNull(getIntent().getLongArrayExtra(IntentKey.SELECTED_TICKET_IDS.name()))).boxed().collect(Collectors.toList());
+        Log.d("SeatSelection", IntentKey.SELECTED_TICKET_ITEMS.name()+" received: " + selectedTicketIds);
 
-        totalTicketPrice = getIntent().getDoubleExtra("TOTAL_TICKET_PRICE", 0.0);
-        selectedTheater = (Theater) getIntent().getSerializableExtra("SELECTED_THEATER");
-        selectedShowtime = getIntent().getStringExtra("SELECTED_SHOWTIME");
-        selectedMovie = (Movie) getIntent().getSerializableExtra("SELECTED_MOVIE");
-        guestQuantity = totalTicketCount;
+        totalTicketPrice = getIntent().getDoubleExtra(IntentKey.TOTAL_TICKET_PRICE.name(), 0.0);
+        selectedTheater = (Theater) getIntent().getSerializableExtra(IntentKey.SELECTED_THEATER.name());
+        selectedMovie = (Movie) getIntent().getSerializableExtra(IntentKey.SELECTED_MOVIE.name());
+        desiredSeatCount = totalTicketCount;
 
         setupTheaterInfo();
         setupRecyclerView();
         setupCheckoutButton();
         setupBackButton();
+        prepareAPIClients();
+        fetchAllSeatTypes();
         fetchAllSeats();
+    }
+    private void prepareAPIClients() {
+        RetrofitService retrofitService = new RetrofitService(this);
+        seatAPI = retrofitService.getRetrofit().create(SeatAPI.class);
     }
     private void setupRecyclerView() {
         seatRecyclerView = findViewById(R.id.seatRecyclerView);
         seatRecyclerView.setLayoutManager(new GridLayoutManager(this, 10));
     }
+    private void fetchAllSeatTypes() {
+        seatTypes = new HashMap<>();
+        seatAPI
+                .getAllSeatTypes()
+                .enqueue(new Callback<List<SeatTypeResponse>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<SeatTypeResponse>> call, @NonNull Response<List<SeatTypeResponse>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            response.body()
+                                    .forEach(st -> seatTypes.put(st.getId(), st));
+                        } else {
+                            Toast.makeText(SeatSelectionActivity.this, "Failed to fetch seatType list", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NonNull Call<List<SeatTypeResponse>> call, @NonNull Throwable t) {
+                        Toast.makeText(SeatSelectionActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
     private void fetchAllSeats() {
-        selectedScreenId = getIntent().getLongExtra("SELECTED_SCREEN_ID", -1L);
-        RetrofitService retrofitService = new RetrofitService(this);
-        GetAllAvailableSeatsByScreenAPI api = retrofitService.getRetrofit().create(GetAllAvailableSeatsByScreenAPI.class);
-
-        api.getAvailableSeatsByScreen(selectedScreenId).enqueue(new Callback<List<AvailableSeatResponse>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<AvailableSeatResponse>> call, @NonNull Response<List<AvailableSeatResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<AvailableSeatResponse> availableSeats = response.body();
-                    // Fetch other seat types (Unavailable and Held)
-                    fetchUnavailableAndHeldSeats(selectedScreenId, availableSeats);
-                } else {
-                    Toast.makeText(SeatSelectionActivity.this, "Failed to fetch available seats", Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Call<List<AvailableSeatResponse>> call, @NonNull Throwable t) {
-                Toast.makeText(SeatSelectionActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        selectedScreenId = getIntent().getLongExtra(IntentKey.SELECTED_SCREEN_ID.name(), -1L);
+        seatAPI
+                .getAllSeatsByScreenId(selectedScreenId)
+                .enqueue(new Callback<List<Seat>>() {
+                    @SuppressLint("NotifyDataSetChanged")
+                    @Override
+                    public void onResponse(@NonNull Call<List<Seat>> call, @NonNull Response<List<Seat>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            SeatMapHelper seatMapHelper = new SeatMapHelper(response.body());
+                            seatAdapter = new SeatAdapter(
+                                    seatMapHelper.getSeatMatrix(),
+                                    seatMapHelper.getRootSeatMatrix(),
+                                    seatTypes,
+                                    SeatSelectionActivity.this,
+                                    seat -> updateSelectedSeatsDisplay(),
+                                    desiredSeatCount);
+                            seatRecyclerView.setAdapter(seatAdapter);
+                            seatAdapter.notifyDataSetChanged();
+                        } else {
+                            String cinemaName = getIntent().getStringExtra(IntentKey.THEATER_NAME.name());
+                            Toast.makeText(SeatSelectionActivity.this, "Failed to fetch seats of " + cinemaName, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NonNull Call<List<Seat>> call, @NonNull Throwable t) {
+                        Toast.makeText(SeatSelectionActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
-    private void fetchUnavailableAndHeldSeats(Long screenId, List<AvailableSeatResponse> availableSeats) {
-        RetrofitService retrofitService = new RetrofitService(this);
-        GetAllUnavailableSeatsByScreenAPI getAllUnavailableSeatsByScreenAPI = retrofitService.getRetrofit().create(GetAllUnavailableSeatsByScreenAPI.class);
-        getAllUnavailableSeatsByScreenAPI.getUnavailableSeatsByScreen(screenId).enqueue(new Callback<List<UnavailableSeatResponse>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<UnavailableSeatResponse>> call, @NonNull Response<List<UnavailableSeatResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<UnavailableSeatResponse> unavailableSeats = response.body();
-                    fetchHeldSeats(screenId, availableSeats, unavailableSeats);
-                } else {
-                    Toast.makeText(SeatSelectionActivity.this, "Failed to fetch unavailable seats", Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Call<List<UnavailableSeatResponse>> call, @NonNull Throwable t) {
-                Toast.makeText(SeatSelectionActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-//    private void fetchHeldSeats(int screenId, List<AvailableSeatResponse> availableSeats, List<UnavailableSeatResponse> unavailableSeats) {
-//        RetrofitService retrofitService = new RetrofitService(this);
-//        GetAllHeldSeatsByScreenAPI getAllHeldSeatsByScreenAPI = retrofitService.getRetrofit().create(GetAllHeldSeatsByScreenAPI.class);
-//        getAllHeldSeatsByScreenAPI.getHeldSeatsByScreen(screenId).enqueue(new Callback<List<HeldSeatResponse>>() {
-//            @Override
-//            public void onResponse(Call<List<HeldSeatResponse>> call, Response<List<HeldSeatResponse>> response) {
-//                if (response.isSuccessful() && response.body() != null) {
-//                    List<HeldSeatResponse> heldSeats = response.body();
-//
-//                    Object[][] seatMatrix = new Object[][];
-//                    List<Object> allSeats = new ArrayList<>();
-//                    allSeats.addAll(availableSeats);
-//                    allSeats.addAll(unavailableSeats);
-//                    allSeats.addAll(heldSeats);
-//
-//                    placeSeatsInMatrix(seatMatrix, allSeats);
-//
-//                    // Cập nhật giao diện với SeatAdapter
-//                    seatAdapter = new SeatAdapter(seatMatrix, SeatSelectionActivity.this, new SeatAdapter.OnSeatSelectedListener() {
-//                        @Override
-//                        public void onSeatSelected(AvailableSeatResponse seat) {
-//                            updateSelectedSeatsDisplay();
-//                        }
-//                    }, guestQuantity);
-//
-//                    seatRecyclerView.setAdapter(seatAdapter);
-//                    seatAdapter.notifyDataSetChanged();
-//                } else {
-//                    Toast.makeText(SeatSelectionActivity.this, "Failed to fetch held seats", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<HeldSeatResponse>> call, Throwable t) {
-//                Toast.makeText(SeatSelectionActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-private void fetchHeldSeats(Long screenId, List<AvailableSeatResponse> availableSeats, List<UnavailableSeatResponse> unavailableSeats) {
-    RetrofitService retrofitService = new RetrofitService(this);
-    GetAllHeldSeatsByScreenAPI getAllHeldSeatsByScreenAPI = retrofitService.getRetrofit().create(GetAllHeldSeatsByScreenAPI.class);
-    getAllHeldSeatsByScreenAPI.getHeldSeatsByScreen(screenId).enqueue(new Callback<List<HeldSeatResponse>>() {
-        @Override
-        public void onResponse(@NonNull Call<List<HeldSeatResponse>> call, @NonNull Response<List<HeldSeatResponse>> response) {
-            if (response.isSuccessful() && response.body() != null) {
-                List<HeldSeatResponse> heldSeats = response.body();
-
-                // Tính toán maxRow và maxColumn từ danh sách ghế
-                int maxRow = 0;
-                int maxColumn = 0;
-
-                // Tính toán maxRow và maxColumn từ các ghế có sẵn
-                for (AvailableSeatResponse seat : availableSeats) {
-                    int row = getRow(seat);
-                    int col = getColumn(seat);
-                    if (row > maxRow) maxRow = row;
-                    if (col > maxColumn) maxColumn = col;
-                }
-
-                // Tính toán maxRow và maxColumn từ các ghế không có sẵn
-                for (UnavailableSeatResponse seat : unavailableSeats) {
-                    int row = getRow(seat);
-                    int col = getColumn(seat);
-                    if (row > maxRow) maxRow = row;
-                    if (col > maxColumn) maxColumn = col;
-                }
-
-                // Tính toán maxRow và maxColumn từ các ghế đã giữ
-                for (HeldSeatResponse seat : heldSeats) {
-                    int row = getRow(seat);
-                    int col = getColumn(seat);
-                    if (row > maxRow) maxRow = row;
-                    if (col > maxColumn) maxColumn = col;
-                }
-
-                // Tạo ma trận với kích thước động
-                Object[][] seatMatrix = new Object[maxRow][maxColumn];
-                List<Object> allSeats = new ArrayList<>();
-                allSeats.addAll(availableSeats);
-                allSeats.addAll(unavailableSeats);
-                allSeats.addAll(heldSeats);
-
-                placeSeatsInMatrix(seatMatrix, allSeats);
-
-                // Cập nhật giao diện với SeatAdapter
-                seatAdapter = new SeatAdapter(seatMatrix, SeatSelectionActivity.this, seat -> updateSelectedSeatsDisplay(), guestQuantity);
-
-                seatRecyclerView.setAdapter(seatAdapter);
-                seatAdapter.notifyDataSetChanged();
-            } else {
-                Toast.makeText(SeatSelectionActivity.this, "Failed to fetch held seats", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        public void onFailure(@NonNull Call<List<HeldSeatResponse>> call, @NonNull Throwable t) {
-            Toast.makeText(SeatSelectionActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    });
-}
-
-private void placeSeatsInMatrix(Object[][] matrix, List<?> seats) {
-    for (Object seat : seats) {
-        int row = getRow(seat) - 1;
-        int col = getColumn(seat) - 1;
-        if (row >= 0 && row < matrix.length && col >= 0 && col < matrix[0].length && matrix[row][col] == null) {
-            matrix[row][col] = seat;
-        }
-    }
-}
-
-    private int getRow(Object seat) {
-        if (seat instanceof AvailableSeatResponse) {
-            return ((AvailableSeatResponse) seat).getSeatRow();
-        } else if (seat instanceof UnavailableSeatResponse) {
-            return ((UnavailableSeatResponse) seat).getSeatRow();
-        } else if (seat instanceof HeldSeatResponse) {
-            return ((HeldSeatResponse) seat).getSeatRow();
-        }
-        return 0;
-    }
-
-    private int getColumn(Object seat) {
-        if (seat instanceof AvailableSeatResponse) {
-            return ((AvailableSeatResponse) seat).getSeatColumn();
-        } else if (seat instanceof UnavailableSeatResponse) {
-            return ((UnavailableSeatResponse) seat).getSeatColumn();
-        } else if (seat instanceof HeldSeatResponse) {
-            return ((HeldSeatResponse) seat).getSeatColumn();
-        }
-        return 0;
-    }
-
-
     @SuppressLint("SetTextI18n")
     public void updateSelectedSeatsDisplay() {
         TextView noOfSeatsTV = findViewById(R.id.no_of_seats);
         TextView seatPriceTV = findViewById(R.id.seat_price_total);
         Button checkoutButton = findViewById(R.id.checkout_button);
 
-        Set<AvailableSeatResponse> selectedSeats = seatAdapter.getSelectedSeats();
+        List<Seat> selectedSeats = seatAdapter.getSelectedRootSeats();
         int seatCount = selectedSeats.size();
         noOfSeatsTV.setText(seatCount + " seat(s)");
-
         // Tính giá tiền ghế
-        double seatPriceAdditional = calculateTotalPrice(selectedSeats);
-        double totalPrice = totalTicketPrice + seatPriceAdditional;
-        totalTicketAndSeatPrice = totalPrice;
+        double totalSeatPrice = calculateTotalSeatPrice(selectedSeats);
+        double finalPrice = totalTicketPrice + totalSeatPrice;
+        totalTicketAndSeatPrice = finalPrice;
         totalSeatCount = seatCount;
-        seatPriceTV.setText(formatCurrency(totalPrice));
-
+        seatPriceTV.setText(formatCurrency(finalPrice));
         // Kích hoạt nút "Checkout" nếu số ghế chọn đúng
-        boolean isCorrectSeatCount = seatCount == guestQuantity;
+        boolean isCorrectSeatCount = seatCount == desiredSeatCount;
         checkoutButton.setEnabled(isCorrectSeatCount);
-        checkoutButton.setBackgroundResource(
-                isCorrectSeatCount ? R.drawable.rounded_active_background : R.drawable.rounded_dark_background
+        checkoutButton.setBackgroundResource(isCorrectSeatCount
+                ? R.drawable.rounded_active_background
+                : R.drawable.rounded_dark_background
         );
     }
-
     @SuppressLint("SetTextI18n")
     private void setupTheaterInfo() {
         TextView theaterNameTV = findViewById(R.id.theater_name);
         TextView movieNameTV = findViewById(R.id.movie_name2);
         TextView screenNumberTV = findViewById(R.id.screen_number);
         TextView releaseDateTV = findViewById(R.id.movie_release_date);
-        showtime = findViewById(R.id.movie_duration);
+        TextView showtime = findViewById(R.id.movie_duration);
         // Get selected screen room from intent
-        String selectedScreenRoom = getIntent().getStringExtra("SELECTED_SCREEN_ROOM");
+        String selectedScreenRoom = getIntent().getStringExtra(IntentKey.SELECTED_SCREEN_ROOM.name());
         if (selectedScreenRoom != null) {
             screenNumberTV.setText(selectedScreenRoom);
         } else {
@@ -308,69 +187,70 @@ private void placeSeatsInMatrix(Object[][] matrix, List<?> seats) {
         theaterNameTV.setText(selectedTheater.getName());
         movieNameTV.setText(selectedMovie.getTitle());
 
-        String selectedDate = getIntent().getStringExtra("SELECTED_DATE");
+        String selectedDate = getIntent().getStringExtra(IntentKey.SELECTED_DATE.name());
         if (releaseDateTV != null) {
             releaseDateTV.setText(selectedDate);
         }
 
-        String selectedShowtime = getIntent().getStringExtra("SELECTED_SHOWTIME");
-        if(showtime != null){
+        String selectedShowtime = getIntent().getStringExtra(IntentKey.SELECTED_SHOWTIME.name());
+        if (showtime != null) {
             showtime.setText(selectedShowtime);
         }
     }
-    private double calculateTotalPrice(Set<AvailableSeatResponse> selectedSeats) {
+
+    private double calculateTotalSeatPrice(List<Seat> selectedSeats) {
         return selectedSeats.stream()
-                .mapToDouble(seat -> seat.getSeatPrice() != null ? seat.getSeatPrice().intValue() : 0)
+                .mapToDouble(seat -> Objects
+                        .requireNonNull(seatTypes.get(seat.getTypeId()))
+                        .getPrice())
                 .sum();
     }
+
     private String formatCurrency(double price) {
         NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
         return format.format(price);
     }
+
     private void setupCheckoutButton() {
         Button checkoutButton = findViewById(R.id.checkout_button);
         checkoutButton.setOnClickListener(v -> {
-            Set<AvailableSeatResponse> selectedSeats = seatAdapter.getSelectedSeats();
+            List<Seat> selectedSeats = seatAdapter.getSelectedRootSeats();
             int seatCount = selectedSeats.size();
-            if (seatCount != guestQuantity) {
+            if (seatCount != desiredSeatCount) {
                 Toast.makeText(this, "Please choose the correct number of seats", Toast.LENGTH_SHORT).show();
                 return;
             }
-            List<Integer> selectedSeatIds = new ArrayList<>();
-            List<AvailableSeatResponse> selectedSeatsList = new ArrayList<>(selectedSeats);
-            for (AvailableSeatResponse seat : selectedSeatsList) {
-                selectedSeatIds.add(seat.getSeatId());
-            }
             // Prepare intent for ComboSelectionActivity
-            List<TicketItem> ticketItems = getIntent().getParcelableArrayListExtra("TICKET_ITEMS");
+            List<TicketItem> ticketItems = getIntent().getParcelableArrayListExtra(IntentKey.TICKET_ITEMS.name());
             Intent intent = new Intent(this, ComboSelectionActivity.class);
             assert ticketItems != null;
-            intent.putParcelableArrayListExtra("TICKET_ITEMS", new ArrayList<>(ticketItems));
-//            intent.putParcelableArrayListExtra(ComboSelectionActivity.EXTRA_SELECTED_SEATS, new ArrayList<>(selectedSeats));
+            intent.putParcelableArrayListExtra(IntentKey.TICKET_ITEMS.name(), new ArrayList<>(ticketItems));
             // Pass through extras from previous activities
-            intent.putExtra(ComboSelectionActivity.EXTRA_THEATER, getIntent().getSerializableExtra("SELECTED_THEATER"));
-            intent.putExtra("THEATER_NAME", getIntent().getStringExtra("THEATER_NAME"));
-            intent.putExtra(ComboSelectionActivity.EXTRA_MOVIE, getIntent().getSerializableExtra("SELECTED_MOVIE"));
-            intent.putExtra("SELECTED_SHOWTIME", getIntent().getStringExtra("SELECTED_SHOWTIME"));
-            intent.putExtra("SELECTED_SCREEN_ROOM", getIntent().getStringExtra("SELECTED_SCREEN_ROOM"));
-            int movieBannerResId = getIntent().getIntExtra("MOVIE_BANNER", 0);
-            intent.putExtra("MOVIE_BANNER", movieBannerResId);
-            intent.putExtra("SELECTED_DATE", getIntent().getStringExtra("SELECTED_DATE"));
-            intent.putExtra("MOVIE_TITLE", getIntent().getStringExtra("MOVIE_TITLE"));
-            intent.putExtra("TOTAL_TICKET_AND_SEAT_PRICE", totalTicketAndSeatPrice);
-            intent.putExtra("TOTAL_SEAT_COUNT", totalSeatCount);
-            intent.putExtra("TOTAL_TICKET_COUNT", totalTicketCount);
-            intent.putParcelableArrayListExtra("SELECTED_TICKET_ITEMS", new ArrayList<>(tickets));
-            intent.putExtra("TOTAL_TICKET_PRICE", totalTicketPrice);
-            intent.putParcelableArrayListExtra("SELECTED_SEAT_ITEMS", new ArrayList<>(selectedSeatsList));
+            intent.putExtra(ComboSelectionActivity.EXTRA_THEATER, getIntent().getSerializableExtra(IntentKey.SELECTED_THEATER.name()));
+            intent.putExtra(IntentKey.THEATER_NAME.name(), getIntent().getStringExtra(IntentKey.THEATER_NAME.name()));
+            intent.putExtra(ComboSelectionActivity.EXTRA_MOVIE, getIntent().getSerializableExtra(IntentKey.SELECTED_MOVIE.name()));
+            intent.putExtra(IntentKey.SELECTED_SHOWTIME.name(), getIntent().getStringExtra(IntentKey.SELECTED_SHOWTIME.name()));
+            intent.putExtra(IntentKey.SELECTED_SCREEN_ROOM.name(), getIntent().getStringExtra(IntentKey.SELECTED_SCREEN_ROOM.name()));
+            int movieBannerResId = getIntent().getIntExtra(IntentKey.MOVIE_BANNER.name(), 0);
+            intent.putExtra(IntentKey.MOVIE_BANNER.name(), movieBannerResId);
+            intent.putExtra(IntentKey.SELECTED_DATE.name(), getIntent().getStringExtra(IntentKey.SELECTED_DATE.name()));
+            intent.putExtra(IntentKey.MOVIE_TITLE.name(), getIntent().getStringExtra(IntentKey.MOVIE_TITLE.name()));
+            intent.putExtra(IntentKey.TOTAL_TICKET_AND_SEAT_PRICE.name(), totalTicketAndSeatPrice);
+            intent.putExtra(IntentKey.TOTAL_SEAT_COUNT.name(), totalSeatCount);
+            intent.putExtra(IntentKey.TOTAL_TICKET_COUNT.name(), totalTicketCount);
+            intent.putParcelableArrayListExtra(IntentKey.SELECTED_TICKET_ITEMS.name(), new ArrayList<>(tickets));
+            intent.putExtra(IntentKey.TOTAL_TICKET_PRICE.name(), totalTicketPrice);
+            intent.putParcelableArrayListExtra(IntentKey.SELECTED_SEAT_ITEMS.name(), new ArrayList<>(selectedSeats));
             // Booking
-            intent.putExtra("MOVIE_ID", movieId);
-            intent.putExtra("SELECTED_CITY_ID", selectedCityId);
-            intent.putExtra("SELECTED_CINEMA_ID", selectedCinemaId);
-            intent.putExtra("SELECTED_SCREEN_ID", selectedScreenId);
-            intent.putExtra("SELECTED_SCHEDULE_ID", selectedScheduleId);
-            intent.putExtra("SELECTED_TICKET_IDS", new ArrayList<>(selectedTicketIds));
-            intent.putIntegerArrayListExtra("SELECTED_SEAT_IDS", new ArrayList<>(selectedSeatIds));
+            intent.putExtra(IntentKey.MOVIE_ID.name(), movieId);
+            intent.putExtra(IntentKey.SELECTED_CITY_ID.name(), selectedCityId);
+            intent.putExtra(IntentKey.SELECTED_CINEMA_ID.name(), selectedCinemaId);
+            intent.putExtra(IntentKey.SELECTED_SCREEN_ID.name(), selectedScreenId);
+            intent.putExtra(IntentKey.SELECTED_SCHEDULE_ID.name(), selectedScheduleId);
+            intent.putExtra(IntentKey.SELECTED_TICKET_IDS.name(), selectedTicketIds.stream().mapToLong(Long::longValue).toArray());
+
+            //todo
+//            intent.putIntegerArrayListExtra(IntentKey.SELECTED_SEAT_IDS.name(), new ArrayList<>(selectedSeatIds));
             // start
             startActivity(intent);
         });

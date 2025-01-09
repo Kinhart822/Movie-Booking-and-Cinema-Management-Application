@@ -25,36 +25,6 @@ public class Seat implements Parcelable {
         this.isAvailable = isAvailable;
     }
 
-    // Getters and setters
-
-
-    public SeatStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(SeatStatus status) {
-        this.status = status;
-    }
-
-    public String getId() {
-        return id;
-    }
-    public SeatType getType() {
-        return type;
-    }
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-    public void setAvailable(boolean available) {
-        isAvailable = available;
-    }
-    public void setType(SeatType type) {
-        this.type = type;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
-
     // Parcelable implementation
     protected Seat(Parcel in) {
         id = in.readString();

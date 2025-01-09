@@ -3,7 +3,7 @@ package vn.edu.usth.mcma.frontend.Showtimes.Models;
 import vn.edu.usth.mcma.R;
 
 public enum SeatType {
-    STAND(R.drawable.ic_seat_stand),
+    STAND(R.drawable.ic_seat_standard),
     VIP(R.drawable.ic_seat_vip),
     COUPLE(R.drawable.ic_seat_couple),
     SOLD(R.drawable.ic_seat_sold),

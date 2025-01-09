@@ -1,9 +1,9 @@
-package vn.edu.usth.mcma.frontend.ConnectAPI.Enum;
+package vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response;
 
 import lombok.Data;
 
 @Data
-public class SeatType {
+public class SeatTypeResponse {
     private Integer id;
     private String name;
     private String description;

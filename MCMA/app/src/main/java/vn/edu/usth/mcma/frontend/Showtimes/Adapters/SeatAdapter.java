@@ -1,6 +1,7 @@
 package vn.edu.usth.mcma.frontend.Showtimes.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,251 +12,169 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 import lombok.Getter;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.AvailableSeatResponse;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.HeldSeatResponse;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.UnavailableSeatResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.SeatAvailability;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.SeatAvailables;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.SeatTypeResponse;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.Seat;
 import vn.edu.usth.mcma.frontend.Showtimes.UI.SeatSelectionActivity;
 
 public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder> {
-    private final Object[][] seatMatrix;
+    private final Map<Integer, Map<Integer, Seat>> seatMatrix;
+    private final Map<Integer, Map<Integer, List<Seat>>> rootSeatMatrix;
+    private final Map<Integer, SeatTypeResponse> seatTypes;
     private final Context context;
     private final OnSeatSelectedListener listener;
-    @Getter
-    private final Set<AvailableSeatResponse> selectedSeats = new HashSet<>();
-    private final int maxSeats;
+    private int numberOfTicketCounts = 0;
+    private int desiredNumberOfTickets;
+    private int numberOfColumnsPerRow;
+    private final List<Seat> selectedSeats;
+    @Getter // this contains list of root seats
+    private final List<Seat> selectedRootSeats;
+    private final String TAG = SeatAdapter.class.getName();
 
     public interface OnSeatSelectedListener {
-        void onSeatSelected(AvailableSeatResponse seat);
+        void onSeatSelected(Seat seat);
     }
-
     public SeatAdapter(
-            Object[][] seatMatrix,
+            Map<Integer, Map<Integer, Seat>> seatMatrix,
+            Map<Integer, Map<Integer, List<Seat>>> rootSeatMatrix,
+            Map<Integer, SeatTypeResponse> seatTypes,
             Context context,
             OnSeatSelectedListener listener,
-            int maxSeats
-    ) {
+            int desiredNumberOfTickets) {
         this.seatMatrix = seatMatrix;
+        this.rootSeatMatrix = rootSeatMatrix;
+        this.seatTypes = seatTypes;
         this.context = context;
         this.listener = listener;
-        this.maxSeats = maxSeats;
+        this.desiredNumberOfTickets = desiredNumberOfTickets;
+        this.selectedSeats = new ArrayList<>();
+        this.selectedRootSeats  = new ArrayList<>();
     }
-
     @NonNull
     @Override
     public SeatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+        View view = LayoutInflater
+                .from(parent.getContext())
                 .inflate(R.layout.seat_selection_item, parent, false);
+        Log.d("SeatAdapter",seatMatrix.toString());
+        numberOfColumnsPerRow = Objects
+                .requireNonNull(seatMatrix.get(1))
+                .size();
         return new SeatViewHolder(view);
     }
-
-//    @SuppressLint("SetTextI18n")
-//    @Override
-//    public void onBindViewHolder(@NonNull SeatViewHolder holder, int position) {
-//
-//        int totalCols = seatMatrix.length;
-//        int  totalRows= seatMatrix[0].length;
-//
-//        int row = position / totalRows;
-//        int col = position % totalCols;
-//
-//        Object seat = seatMatrix[row][col];
-//
-//        if (seat instanceof AvailableSeatResponse) {
-//            AvailableSeatResponse availableSeat = (AvailableSeatResponse) seat;
-//            holder.seatTextView.setText(availableSeat.getAvailableSeat());
-//            updateSeatBackground(holder, availableSeat);
-//
-//            holder.itemView.setOnClickListener(v -> {
-//                if (!"Unavailable".equalsIgnoreCase(availableSeat.getSeatStatus()) && !"Held".equalsIgnoreCase(availableSeat.getSeatStatus())) {
-//                    toggleSeatSelection(availableSeat, holder, row, col);
-//                }
-//            });
-//        } else if (seat instanceof UnavailableSeatResponse) {
-//            UnavailableSeatResponse unavailableSeat = (UnavailableSeatResponse) seat;
-//            holder.seatTextView.setText(unavailableSeat.getUnAvailableSeat());
-//            updateSeatBackground(holder, unavailableSeat);
-//        } else if (seat instanceof HeldSeatResponse) {
-//            HeldSeatResponse heldSeat = (HeldSeatResponse) seat;
-//            holder.seatTextView.setText(heldSeat.getHeldSeat());
-//            updateSeatBackground(holder, heldSeat);
-//        } else {
-//            holder.itemView.setBackground(null);
-//            holder.itemView.setOnClickListener(null);
-//            holder.seatTextView.setText("");
-//            return;
-//        }
-//    }
-
     @Override
     public void onBindViewHolder(@NonNull SeatViewHolder holder, int position) {
-        int totalRows = seatMatrix.length; // Rows represent the horizontal layout
-        int totalCols = seatMatrix[0].length; // Columns represent the vertical layout
-
-        int row = position / totalCols; // Correcting the row calculation
-        int col = position % totalCols; // Correcting the column calculation
-
-        Object seat = seatMatrix[row][col];
-
-        if (seat instanceof AvailableSeatResponse) {
-            AvailableSeatResponse availableSeat = (AvailableSeatResponse) seat;
-            holder.seatTextView.setText(availableSeat.getAvailableSeat());
-            updateSeatBackground(holder, availableSeat);
-
-            holder.itemView.setOnClickListener(v -> {
-                if (!"Unavailable".equalsIgnoreCase(availableSeat.getSeatStatus()) && !"Held".equalsIgnoreCase(availableSeat.getSeatStatus())) {
-                    toggleSeatSelection(availableSeat, holder, row, col);
-                }
-            });
-        } else if (seat instanceof UnavailableSeatResponse) {
-            UnavailableSeatResponse unavailableSeat = (UnavailableSeatResponse) seat;
-            holder.seatTextView.setText(unavailableSeat.getUnAvailableSeat());
-            updateSeatBackground(holder, unavailableSeat);
-        } else if (seat instanceof HeldSeatResponse) {
-            HeldSeatResponse heldSeat = (HeldSeatResponse) seat;
-            holder.seatTextView.setText(heldSeat.getHeldSeat());
-            updateSeatBackground(holder, heldSeat);
-        } else {
-            holder.itemView.setBackground(null);
+        int row = position / numberOfColumnsPerRow;
+        int col = position % numberOfColumnsPerRow;
+        Seat seat = Objects
+                .requireNonNull(seatMatrix.get(row))
+                .get(col);
+        assert seat != null;
+        String name = seat.getName();
+        int seatTypeId = seat.getTypeId();
+        int availabilityId = seat.getAvailability();
+        if (name != null) {
+            holder.seatTextView.setText(name);
+            holder.itemView.setBackground(ContextCompat
+                    .getDrawable(context, SeatAvailability
+                            .getById(availabilityId)
+                            .getBackgroundId()));
             holder.itemView.setOnClickListener(null);
+            if (availabilityId == SeatAvailability.Available.getId()) {
+                holder.itemView.setBackground(ContextCompat
+                        .getDrawable(context, SeatAvailables
+                                .getById(seatTypeId)
+                                .getBackgroundId()));
+                holder.itemView.setOnClickListener(v -> toggleSeat(seat, holder));
+            }
+            if (selectedSeats.contains(seat)) {
+                holder.itemView.setBackground(ContextCompat
+                        .getDrawable(context, SeatAvailables.SELECTED.getBackgroundId()));
+            }
+        } else {
             holder.seatTextView.setText("");
+            holder.itemView.setBackground(ContextCompat
+                    .getDrawable(context, R.drawable.ic_seat_empty));
+            holder.itemView.setOnClickListener(null);
         }
     }
-
-    private void toggleSeatSelection(AvailableSeatResponse seat, SeatViewHolder holder, int row, int col) {
-        // Kiểm tra nếu ghế là loại "Couple"
-        if ("couple".equalsIgnoreCase(seat.getAvailableSeatsType())) {
-            // Tìm ghế đôi liền kề
-            int[] adjacentPosition = findAdjacentCoupleSeat(row, col);
-
-            if (adjacentPosition != null) {
-                int adjacentRow = adjacentPosition[0];
-                int adjacentCol = adjacentPosition[1];
-                AvailableSeatResponse adjacentSeat = (AvailableSeatResponse) seatMatrix[adjacentRow][adjacentCol];
-
-                // Chọn hoặc bỏ chọn cả hai ghế
-                if (selectedSeats.contains(seat) || selectedSeats.contains(adjacentSeat)) {
-                    selectedSeats.remove(seat);
-                    selectedSeats.remove(adjacentSeat);
-                } else {
-                    if (selectedSeats.size() + 2 <= maxSeats) {
-                        selectedSeats.add(seat);
-                        selectedSeats.add(adjacentSeat);
-                    } else {
-                        Toast.makeText(context, "Maximum seats selected!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-
-                // Cập nhật giao diện của cả hai ghế
-                notifyItemChanged(row * seatMatrix[0].length + col);
-                notifyItemChanged(adjacentRow * seatMatrix[0].length + adjacentCol);
-            }
-        } else {
-            // Xử lý chọn ghế thường
-            if (selectedSeats.contains(seat)) {
-                selectedSeats.remove(seat);
-            } else {
-                if (selectedSeats.size() < maxSeats) {
-                    selectedSeats.add(seat);
-                } else {
-                    Toast.makeText(context, "Maximum seats selected!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-
-            // Cập nhật giao diện ghế
-            notifyItemChanged(row * seatMatrix[0].length + col);
+    private void toggleSeat(Seat seat, SeatViewHolder holder) {
+        int rootRow = seat.getRootRow();
+        int rootCol = seat.getRootCol();
+        List<Seat> rectangle = Objects
+                .requireNonNull(Objects
+                        .requireNonNull(rootSeatMatrix
+                                .get(rootRow))
+                .get(rootCol));
+        Optional<Seat> rootSeatOpt = rectangle
+                .parallelStream()
+                .filter(s -> s.getRootRow() == rootRow && s.getRootCol() == rootCol)
+                .findAny();
+        Seat rootSeat = null;
+        if (rootSeatOpt.isPresent()) {
+            rootSeat = rootSeatOpt.get();
         }
-
-        // Cập nhật danh sách ghế đã chọn trong Activity
+        // HashSet for better performance
+        if (new HashSet<>(selectedSeats).containsAll(rectangle)) {
+            selectedSeats.removeAll(rectangle);
+            selectedRootSeats.remove(rootSeat);
+        } else {
+            if (isNumberOfTicketsExceeded(seat)) {
+                Toast.makeText(context, "Desired number of seats exceeded!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            selectedSeats.addAll(rectangle);
+            selectedRootSeats.add(rootSeat);
+        }
+        rectangle.forEach(s -> notifyItemChanged(s.getRow() * numberOfColumnsPerRow + s.getCol()));
         if (context instanceof SeatSelectionActivity) {
             ((SeatSelectionActivity) context).updateSelectedSeatsDisplay();
         }
-
-        // Gọi listener nếu có
         if (listener != null) {
             listener.onSeatSelected(seat);
         }
     }
-
-
-    private int[] findAdjacentCoupleSeat(int row, int col) {
-        // Tìm ghế liền kề bên phải
-        if (col + 1 < 10) {
-            Object adjacentSeat = seatMatrix[row][col + 1];
-            if (adjacentSeat instanceof AvailableSeatResponse &&
-                    "Couple".equalsIgnoreCase(((AvailableSeatResponse) adjacentSeat).getAvailableSeatsType())) {
-                return new int[]{row, col + 1};
-            }
+    private boolean isNumberOfTicketsExceeded(Seat seat) {
+        int numberOfAdditionalTicket = getNumberOfTicketCount(seat);
+        int count = selectedRootSeats
+                .stream()
+                .mapToInt(this::getNumberOfTicketCount)
+                .sum();
+        int total = count + numberOfAdditionalTicket;
+        Log.d(TAG, "isNumberOfTicketsExceeded: "+total);
+        if (total > desiredNumberOfTickets) {
+            return true;
         }
-
-        // Tìm ghế liền kề bên trái
-        if (col - 1 >= 0) {
-            Object adjacentSeat = seatMatrix[row][col - 1];
-            if (adjacentSeat instanceof AvailableSeatResponse &&
-                    "Couple".equalsIgnoreCase(((AvailableSeatResponse) adjacentSeat).getAvailableSeatsType())) {
-                return new int[]{row, col - 1};
-            }
-        }
-
-        return null;
+        desiredNumberOfTickets = total;
+        return false;
     }
-
-
-    private void updateSeatBackground(SeatViewHolder holder, AvailableSeatResponse seat) {
-        int backgroundResId;
-
-        if (selectedSeats.contains(seat)) {
-            backgroundResId = R.drawable.ic_seat_selecting;
-        } else {
-            switch (seat.getAvailableSeatsType()) {
-                case "VIP":
-                    backgroundResId = R.drawable.ic_seat_vip;
-                    break;
-                case "Couple":
-                    backgroundResId = R.drawable.ic_seat_couple;
-                    break;
-                default:
-                    backgroundResId = R.drawable.standard;
-                    break;
-            }
-        }
-        holder.seatTextView.setBackground(ContextCompat.getDrawable(context, backgroundResId));
+    private int getNumberOfTicketCount(Seat seat) {
+        return (
+                Objects.equals(seat.getTypeId(), SeatAvailables.LOVERS.getId()) ||
+                        Objects.equals(seat.getTypeId(), SeatAvailables.BED.getId()))
+                ? 2
+                : 1;
     }
-
-    private void updateSeatBackground(SeatViewHolder holder, UnavailableSeatResponse seat) {
-        int backgroundResId = R.drawable.ic_seat_unavailable;
-
-        holder.seatTextView.setBackground(ContextCompat.getDrawable(context, backgroundResId));
-    }
-
-    private void updateSeatBackground(SeatViewHolder holder, HeldSeatResponse seat) {
-        int backgroundResId = R.drawable.ic_seat_stand;
-
-        holder.seatTextView.setBackground(ContextCompat.getDrawable(context, backgroundResId));
-    }
-
-
+    // Rows * Columns
     @Override
     public int getItemCount() {
-//        return 100;
-//        return seatMatrix[0].length * seatMatrix.length;
-        return seatMatrix.length * seatMatrix[0].length; // Rows * Columns
-
+        return seatMatrix.size() * Objects.requireNonNull(seatMatrix.get(1)).size();
     }
-
     static class SeatViewHolder extends RecyclerView.ViewHolder {
         TextView seatTextView;
-
         SeatViewHolder(@NonNull View itemView) {
             super(itemView);
             seatTextView = itemView.findViewById(R.id.seatTextView);
-
         }
     }
 }

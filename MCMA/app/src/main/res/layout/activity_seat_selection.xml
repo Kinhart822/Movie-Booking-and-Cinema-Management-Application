@@ -188,7 +188,7 @@
                     android:id="@+id/view_stand_seat"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:background="@drawable/ic_seat_stand" />
+                    android:background="@drawable/ic_seat_standard" />
 
                 <TextView
                     android:id="@+id/text_stand_seat"
