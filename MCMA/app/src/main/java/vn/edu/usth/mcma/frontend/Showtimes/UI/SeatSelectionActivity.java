@@ -16,13 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,7 +53,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private Long selectedCinemaId;
     private Long selectedScreenId;
     private Long selectedScheduleId;
-    private List<Long> selectedTicketIds = new ArrayList<>();
+    private final List<Long> selectedTicketIds = new ArrayList<>();
     private SeatAPI seatAPI;
     private Map<Integer, SeatTypeResponse> seatTypes;
 
@@ -101,7 +99,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
         seatTypes = new HashMap<>();
         seatAPI
                 .getAllSeatTypes()
-                .enqueue(new Callback<List<SeatTypeResponse>>() {
+                .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<List<SeatTypeResponse>> call, @NonNull Response<List<SeatTypeResponse>> response) {
                         if (response.isSuccessful() && response.body() != null) {
@@ -121,7 +119,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
         selectedScreenId = getIntent().getLongExtra(IntentKey.SELECTED_SCREEN_ID.name(), -1L);
         seatAPI
                 .getAllSeatsByScreenId(selectedScreenId)
-                .enqueue(new Callback<List<Seat>>() {
+                .enqueue(new Callback<>() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void onResponse(@NonNull Call<List<Seat>> call, @NonNull Response<List<Seat>> response) {
@@ -141,6 +139,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
                             Toast.makeText(SeatSelectionActivity.this, "Failed to fetch seats of " + cinemaName, Toast.LENGTH_SHORT).show();
                         }
                     }
+
                     @Override
                     public void onFailure(@NonNull Call<List<Seat>> call, @NonNull Throwable t) {
                         Toast.makeText(SeatSelectionActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
@@ -179,11 +178,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
         TextView showtime = findViewById(R.id.movie_duration);
         // Get selected screen room from intent
         String selectedScreenRoom = getIntent().getStringExtra(IntentKey.SELECTED_SCREEN_ROOM.name());
-        if (selectedScreenRoom != null) {
-            screenNumberTV.setText(selectedScreenRoom);
-        } else {
-            screenNumberTV.setText("Default name");
-        }
+        screenNumberTV.setText(Objects.requireNonNullElse(selectedScreenRoom, "Default name"));
         theaterNameTV.setText(selectedTheater.getName());
         movieNameTV.setText(selectedMovie.getTitle());
 

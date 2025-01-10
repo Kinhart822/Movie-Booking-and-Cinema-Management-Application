@@ -9,6 +9,6 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.HighRatingMovieRespon
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.SearchMovieByGenreResponse;
 
 public interface SearchMovieByGenre {
-    @GET("/api/v1/user/view/highRatingMovies")
+    @GET("/api/v1/user/view/highRatingMovies")//todo: correct
     Call<List<SearchMovieByGenreResponse>> getAllMoviesByGenre(@Query("movieGenreId") Integer movieGenreId);;
 }

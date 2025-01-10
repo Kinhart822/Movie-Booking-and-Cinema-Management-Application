@@ -2,68 +2,17 @@ package vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response;
 
 import java.util.List;
 
+import lombok.Data;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Genre;
+
+@Data
 public class HighRatingMovieResponse {
-    private Integer movieId;
-    private String movieName;
-    private Integer movieLength;
-    private String publishedDate;
+    private Integer id;
+    private String name;
+    private Integer length;
+    private String publishDate;
     private String imageUrl;
-    private String backgroundUrl;
-    private List<String> movieGenreNameList;
-
-    public Integer getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(Integer movieId) {
-        this.movieId = movieId;
-    }
-
-    public String getMovieName() {
-        return movieName;
-    }
-
-    public void setMovieName(String movieName) {
-        this.movieName = movieName;
-    }
-
-    public Integer getMovieLength() {
-        return movieLength;
-    }
-
-    public void setMovieLength(Integer movieLength) {
-        this.movieLength = movieLength;
-    }
-
-    public String getPublishedDate() {
-        return publishedDate;
-    }
-
-    public void setPublishedDate(String publishedDate) {
-        this.publishedDate = publishedDate;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public String getBackgroundUrl() {
-        return backgroundUrl;
-    }
-
-    public void setBackgroundUrl(String backgroundUrl) {
-        this.backgroundUrl = backgroundUrl;
-    }
-
-    public List<String> getMovieGenreNameList() {
-        return movieGenreNameList;
-    }
-
-    public void setMovieGenreNameList(List<String> movieGenreNameList) {
-        this.movieGenreNameList = movieGenreNameList;
-    }
+    private String backgroundImageUrl;
+    private List<Genre> genres;
+    private Double avgVote;
 }

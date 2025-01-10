@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ViewFlipper;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -63,9 +64,9 @@ public class HomeFragment extends Fragment {
     private void fetchHighRatingMovies() {
         RetrofitService retrofitService = new RetrofitService(requireContext());
         GetHighRatingMovieAPI getHighRatingMovieAPI = retrofitService.getRetrofit().create(GetHighRatingMovieAPI.class);
-        getHighRatingMovieAPI.getHighRatingMovies().enqueue(new Callback<List<HighRatingMovieResponse>>() {
+        getHighRatingMovieAPI.getHighRatingMovies().enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<List<HighRatingMovieResponse>> call, Response<List<HighRatingMovieResponse>> response) {
+            public void onResponse(@NonNull Call<List<HighRatingMovieResponse>> call, @NonNull Response<List<HighRatingMovieResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<HighRatingMovieResponse> movies = response.body();
 

@@ -69,7 +69,7 @@ public class PayingMethodActivity extends AppCompatActivity {
 
         selectedScheduleId = getIntent().getIntExtra(IntentKey.SELECTED_SCHEDULE_ID.name(), -1);
         selectedTicketIds = getIntent().getIntegerArrayListExtra(IntentKey.SELECTED_TICKET_IDS.name());
-        selectedRootSeats = getIntent().getParcelableArrayListExtra(IntentKey.SELECTED_ROOT_SEATS.name());
+//        selectedRootSeats = getIntent().getParcelableArrayListExtra(IntentKey.SELECTED_ROOT_SEATS.name());
         selectedFoodIds = getIntent().getIntegerArrayListExtra(IntentKey.SELECTED_FOOD_IDS.name());
         selectedDrinkIds = getIntent().getIntegerArrayListExtra(IntentKey.SELECTED_DRINK_IDS.name());
         selectedMovieCouponId = getIntent().getIntExtra(IntentKey.SELECTED_MOVIE_COUPON_ID.name(), -1);
