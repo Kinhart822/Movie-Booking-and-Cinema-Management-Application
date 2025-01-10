@@ -11,8 +11,8 @@ public class HighRatingMovieResponse {
     private String name;
     private Integer length;
     private String publishDate;
-    private String imageUrl;
-    private String backgroundImageUrl;
+    private String imageBase64;
+    private String imageBackgroundBase64;
     private List<Genre> genres;
     private Double avgVote;
 }

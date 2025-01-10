@@ -1,6 +1,8 @@
 package vn.edu.usth.mcma.frontend.component.Home;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,38 +27,34 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.Response.HighRatingMovieResponse;
+import vn.edu.usth.mcma.frontend.helper.ImageDecoder;
 import vn.edu.usth.mcma.frontend.network.apis.GetHighRatingMovieAPI;
 import vn.edu.usth.mcma.frontend.network.RetrofitService;
 import vn.edu.usth.mcma.frontend.component.Search.Search_Activity;
 
 public class HomeFragment extends Fragment {
 
-    private ViewFlipper v_flipper;
+    private ViewFlipper viewFlipper;
     private TabLayout tabLayout;
-    private ViewPager2 viewPager;
+    private ViewPager2 viewPager2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-
         tabLayout = v.findViewById(R.id.type_tablayout);
-        viewPager = v.findViewById(R.id.type_viewPager2);
+        viewPager2 = v.findViewById(R.id.type_viewPager2);
 
         // Setup TabLayout and ViewPager2
         setupViewPagerAndTabs();
-
         LinearLayout to_search_activity = v.findViewById(R.id.search_bar);
-        to_search_activity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(requireContext(), Search_Activity.class );
-                startActivity(i);
-            }
+        to_search_activity.setOnClickListener(view -> {
+            Intent i = new Intent(requireContext(), Search_Activity.class );
+            startActivity(i);
         });
 
-        v_flipper = v.findViewById(R.id.view_flipper);
+        viewFlipper = v.findViewById(R.id.view_flipper);
 
         fetchHighRatingMovies();
         return v;
@@ -64,55 +62,54 @@ public class HomeFragment extends Fragment {
 
     private void fetchHighRatingMovies() {
         RetrofitService retrofitService = new RetrofitService(requireContext());
-        GetHighRatingMovieAPI getHighRatingMovieAPI = retrofitService.getRetrofit().create(GetHighRatingMovieAPI.class);
-        getHighRatingMovieAPI.getHighRatingMovies().enqueue(new Callback<>() {
+        GetHighRatingMovieAPI apiClient = retrofitService.getRetrofit().create(GetHighRatingMovieAPI.class);
+        apiClient.getHighRatingMovies().enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<List<HighRatingMovieResponse>> call, @NonNull Response<List<HighRatingMovieResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<HighRatingMovieResponse> movies = response.body();
-
-                    if (v_flipper != null && v_flipper.getChildCount() == 0) {
+                    if (viewFlipper != null && viewFlipper.getChildCount() == 0) {
                         for (HighRatingMovieResponse movie : movies) {
-                            String imageUrl = movie.getImageUrl(); // Fetch the image URL
-                            Log.d("ImageURL", "URL: " + imageUrl); // Debug log
-                            if (imageUrl != null && !imageUrl.isEmpty()) {
-                                flipperImages(imageUrl);
+                            String imageBase64 = movie.getImageBase64(); // Fetch the image URL
+                            if (imageBase64 != null && !imageBase64.isEmpty()) {
+                                ImageDecoder imageDecoder = new ImageDecoder(imageBase64);
+                                flipperImages(imageDecoder.getResult());
                             }
                         }
-                        v_flipper.setVisibility(View.VISIBLE); // Ensure visibility
+                        viewFlipper.setVisibility(View.VISIBLE); // Ensure visibility
                     }
                 } else {
                     Log.e("HighRatingMovies", "Failed to fetch data: " + response.message());
                 }
             }
-
             @Override
-            public void onFailure(Call<List<HighRatingMovieResponse>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<HighRatingMovieResponse>> call, @NonNull Throwable t) {
                 Log.e("HighRatingMovies", "API call failed: " + t.getMessage());
             }
         });
     }
-    private void flipperImages(String image) {
-        if (v_flipper == null || getContext() == null) return;
-
-        ImageView imageView = new ImageView(getContext());
-        Glide.with(getContext())
-                .load(image)
+    private void flipperImages(Bitmap bitmap) {
+        Context context = getContext();
+        if (viewFlipper == null || context == null) return;
+        ImageView imageView = new ImageView(context);
+        Glide.with(context)
+                .load(bitmap)
+                .placeholder(R.drawable.placeholder1080x1920)
                 .into(imageView);
 
-        v_flipper.addView(imageView);
-        v_flipper.setFlipInterval(3000);
-        v_flipper.setAutoStart(true);
-        v_flipper.setInAnimation(getContext(), android.R.anim.slide_in_left);
-        v_flipper.setOutAnimation(getContext(), android.R.anim.slide_out_right);
+        viewFlipper.addView(imageView);
+        viewFlipper.setFlipInterval(3000);
+        viewFlipper.setAutoStart(true);
+        viewFlipper.setInAnimation(context, android.R.anim.slide_in_left);
+        viewFlipper.setOutAnimation(context, android.R.anim.slide_out_right);
     }
 
     private void setupViewPagerAndTabs() {
         FilmPagerAdapter adapter = new FilmPagerAdapter(this);
-        viewPager.setAdapter(adapter);
-        viewPager.setUserInputEnabled(false);
+        viewPager2.setAdapter(adapter);
+        viewPager2.setUserInputEnabled(false);
 
-        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+        new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
             switch (position) {
                 case 0:
                     tab.setText("Now Showing");
