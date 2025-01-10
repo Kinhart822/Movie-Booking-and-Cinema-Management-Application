@@ -25,21 +25,19 @@ import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.Genre;
 import vn.edu.usth.mcma.frontend.dto.Response.NowShowingResponse;
 import vn.edu.usth.mcma.frontend.dto.Response.Performer;
 import vn.edu.usth.mcma.frontend.dto.Response.Review;
-import vn.edu.usth.mcma.frontend.network.apis.NowShowingMovieAPI;
-import vn.edu.usth.mcma.frontend.network.RetrofitService;
 import vn.edu.usth.mcma.frontend.component.Showtimes.UI.MovieBookingActivity;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class NowShowingFragment extends Fragment {
     private final List<NowShowingResponse> nowShowingResponseList = new ArrayList<>();
     private NowShowing_Adapter adapter;
-    private RecyclerView recyclerView;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_now_showing, container, false);
 
-        recyclerView = v.findViewById(R.id.recyclerview_now_showing);
+        RecyclerView recyclerView = v.findViewById(R.id.recyclerview_now_showing);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
 
         adapter = new NowShowing_Adapter(requireContext(), nowShowingResponseList, new FilmViewInterface() {
@@ -63,14 +61,13 @@ public class NowShowingFragment extends Fragment {
     }
 
     private void fetchNowShowingMovies() {
-        RetrofitService retrofitService = new RetrofitService(requireContext());
-        NowShowingMovieAPI nowShowingMovieAPI = retrofitService.getRetrofit().create(NowShowingMovieAPI.class);
-
-        nowShowingMovieAPI.getAvailableNowShowingMovies().enqueue(new Callback<List<NowShowingResponse>>() {
+        ApiService
+                .getMovieApi(requireContext())
+                .getAvailableNowShowingMovies()
+                .enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<List<NowShowingResponse>> call, @NonNull Response<List<NowShowingResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-
                     Log.d("NowShowingFragment", "Movies received: " + response.body().size());
                     updateMovieList(response.body());
                 } else {

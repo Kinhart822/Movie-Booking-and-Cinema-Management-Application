@@ -23,9 +23,8 @@ import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.Genre;
 import vn.edu.usth.mcma.frontend.dto.Response.ComingSoonResponse;
 import vn.edu.usth.mcma.frontend.dto.Response.Performer;
-import vn.edu.usth.mcma.frontend.network.apis.ComingSoonMovieAPI;
-import vn.edu.usth.mcma.frontend.network.RetrofitService;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class ComingSoonFragment extends Fragment {
     private List<ComingSoonResponse> comingSoonResponseList = new ArrayList<>();
@@ -56,10 +55,9 @@ public class ComingSoonFragment extends Fragment {
     }
 
     private void fetchComingSoonMovies() {
-        RetrofitService retrofitService = new RetrofitService(requireContext());
-        ComingSoonMovieAPI comingSoonMovieAPI = retrofitService.getRetrofit().create(ComingSoonMovieAPI.class);
-
-        comingSoonMovieAPI.getAvailableComingSoonMovies().enqueue(new Callback<List<ComingSoonResponse>>() {
+        ApiService
+                .getMovieApi(requireContext())
+                .getAvailableComingSoonMovies().enqueue(new Callback<List<ComingSoonResponse>>() {
             @Override
             public void onResponse(Call<List<ComingSoonResponse>> call, Response<List<ComingSoonResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {

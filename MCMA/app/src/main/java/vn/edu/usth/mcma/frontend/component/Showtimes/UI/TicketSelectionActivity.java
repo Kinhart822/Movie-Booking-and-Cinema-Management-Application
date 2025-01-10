@@ -8,6 +8,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,8 +24,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.TicketResponse;
-import vn.edu.usth.mcma.frontend.network.apis.BookingProcessAPIs.GetAllTicketsAPI;
-import vn.edu.usth.mcma.frontend.network.RetrofitService;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Adapters.TicketAdapter;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Theater;
@@ -47,7 +47,6 @@ public class TicketSelectionActivity extends AppCompatActivity {
     private TextView theaterNameTV;
     private TextView releaseDateTV;
     private TextView screenRoomTV;
-    private Movie selectedMovie;
     private TextView showtime;
     private double totalTicketPrice;
     private int totalCount;
@@ -77,24 +76,24 @@ public class TicketSelectionActivity extends AppCompatActivity {
     }
 
     private void fetchAndDisplayTickets() {
-        RetrofitService retrofitService = new RetrofitService(this);
-        GetAllTicketsAPI ticketsAPI = retrofitService.getRetrofit().create(GetAllTicketsAPI.class);
-        ticketsAPI.getAllTickets().enqueue(new Callback<List<TicketResponse>>() {
-            @Override
-            public void onResponse(Call<List<TicketResponse>> call, Response<List<TicketResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<TicketItem> ticketItems = mapResponseToTicketItems(response.body());
-                    ticketAdapter.updateItems(ticketItems);
-                } else {
-                    showError("Failed to load tickets.");
-                }
-            }
+        ApiService
+                .getBookingApi(this)
+                .getAllTickets().enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<TicketResponse>> call, @NonNull Response<List<TicketResponse>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            List<TicketItem> ticketItems = mapResponseToTicketItems(response.body());
+                            ticketAdapter.updateItems(ticketItems);
+                        } else {
+                            showError("Failed to load tickets.");
+                        }
+                    }
 
-            @Override
-            public void onFailure(Call<List<TicketResponse>> call, Throwable t) {
-                showError("Error: " + t.getMessage());
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<List<TicketResponse>> call, @NonNull Throwable t) {
+                        showError("Error: " + t.getMessage());
+                    }
+                });
     }
 
     private List<TicketItem> mapResponseToTicketItems(List<TicketResponse> ticketResponses) {
@@ -169,13 +168,12 @@ public class TicketSelectionActivity extends AppCompatActivity {
                     .sum();
             if (totalSelectedTickets == guestQuantity) {
                 List<Integer> selectedTicketIds = new ArrayList<>();
-                List<TicketItem> ticketItemList = new ArrayList<>();
                 for (TicketItem item : ticketAdapter.getSelectedTicketItems()) {
                     for (int i = 0; i < item.getQuantity(); i++) {
                         selectedTicketIds.add(item.getTicketIds()); // Add ticket ID to the list
                     }
                 }
-                ticketItemList.addAll(ticketAdapter.getSelectedTicketItems());
+                List<TicketItem> ticketItemList = new ArrayList<>(ticketAdapter.getSelectedTicketItems());
                 Intent intent = new Intent(this, SeatSelectionActivity.class);
                 // Crucially, pass the ticket items
                 intent.putParcelableArrayListExtra(IntentKey.TICKET_ITEMS.name(), new ArrayList<>(ticketAdapter.getSelectedTicketItems()));

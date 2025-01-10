@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,28 +31,19 @@ import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.CinemaResponse;
 import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.CityResponse;
-import vn.edu.usth.mcma.frontend.network.apis.BookingProcessAPIs.GetAllCitiesAPI;
-import vn.edu.usth.mcma.frontend.network.apis.BookingProcessAPIs.GetCinemaByCityIdAPI;
-import vn.edu.usth.mcma.frontend.network.RetrofitService;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Adapters.TheaterShowtimesAdapter;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Movie;
-import vn.edu.usth.mcma.frontend.component.Showtimes.Models.MovieDetails;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Theater;
 
-import vn.edu.usth.mcma.frontend.component.Showtimes.Utils.MovieDataProvider;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Utils.TheaterDataProvider;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 
 public class MovieBookingActivity extends AppCompatActivity {
-    private RecyclerView theatersRecyclerView;
     private TheaterShowtimesAdapter theaterAdapter;
-    private String selectedDate;
-    private Button selectedDateButton;
     private Button selectedCityButton;
     private String selectedCity;
     private LinearLayout citiesContainer;
-    private View citiesSection;
-    private View theatersSection;
     private String movieTitle;
     private Long movieId;
     private long selectedCityId;
@@ -68,8 +58,8 @@ public class MovieBookingActivity extends AppCompatActivity {
 
         movieTitle = getIntent().getStringExtra(IntentKey.MOVIE_TITLE.name());
         movieId = getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L);
-        citiesSection = findViewById(R.id.cities_section);
-        theatersSection = findViewById(R.id.theaters_section);
+        View citiesSection = findViewById(R.id.cities_section);
+        View theatersSection = findViewById(R.id.theaters_section);
         citiesContainer = findViewById(R.id.cities_container);
 
         movieTitle = getIntent().getStringExtra(IntentKey.MOVIE_TITLE.name());
@@ -86,59 +76,56 @@ public class MovieBookingActivity extends AppCompatActivity {
     }
 
     private void fetchCitiesByMovie(Long movieId) {
-        RetrofitService retrofitService = new RetrofitService(this);
-        GetAllCitiesAPI getAllCitiesAPI = retrofitService.getRetrofit().create(GetAllCitiesAPI.class);
+        ApiService
+                .getMovieApi(this)
+                .getCitiesByMovieId(movieId).enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<CityResponse>> call, @NonNull Response<List<CityResponse>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            List<CityResponse> cities = response.body();
 
-        getAllCitiesAPI.getCitiesByMovieId(movieId).enqueue(new Callback<List<CityResponse>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<CityResponse>> call, @NonNull Response<List<CityResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<CityResponse> cities = response.body();
+                            if (!cities.isEmpty()) {
+                                // Chọn thành phố đầu tiên làm mặc định
+                                CityResponse defaultCity = cities.get(0);
+                                selectedCity = defaultCity.getCityName();
+                                long defaultCityId = defaultCity.getCityId();
 
-                    if (!cities.isEmpty()) {
-                        // Chọn thành phố đầu tiên làm mặc định
-                        CityResponse defaultCity = cities.get(0);
-                        selectedCity = defaultCity.getCityName();
-                        long defaultCityId = defaultCity.getCityId();
+                                fetchCinemasByCity(movieId, defaultCityId);
+                            }
 
-                        fetchCinemasByCity(movieId, defaultCityId);
+                            setupCityButtons(movieId, cities);
+
+                        } else {
+                            Toast.makeText(MovieBookingActivity.this, "Failed to fetch cities", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
-                    setupCityButtons(movieId, cities);
-
-                } else {
-                    Toast.makeText(MovieBookingActivity.this, "Failed to fetch cities", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<CityResponse>> call, @NonNull Throwable t) {
-                Toast.makeText(MovieBookingActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<List<CityResponse>> call, @NonNull Throwable t) {
+                        Toast.makeText(MovieBookingActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void fetchCinemasByCity(Long movieId, Long cityId) {
-        RetrofitService retrofitService = new RetrofitService(this);
-        GetCinemaByCityIdAPI apiService = retrofitService.getRetrofit().create(GetCinemaByCityIdAPI.class);
+        ApiService
+                .getCinemaApi(this)
+                .getCinemasByMovieIdAndCityId(movieId, cityId).enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<CinemaResponse>> call, @NonNull Response<List<CinemaResponse>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            List<CinemaResponse> cinemas = response.body();
+                            updateTheatersList(cinemas); // Populate theaters dynamically
+                        } else {
+                            Toast.makeText(MovieBookingActivity.this, "Failed to fetch cinemas", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
-        Call<List<CinemaResponse>> call = apiService.getCinemasByMovieIdAndCityId(movieId, cityId);
-        call.enqueue(new Callback<List<CinemaResponse>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<CinemaResponse>> call, @NonNull Response<List<CinemaResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<CinemaResponse> cinemas = response.body();
-                    updateTheatersList(cinemas); // Populate theaters dynamically
-                } else {
-                    Toast.makeText(MovieBookingActivity.this, "Failed to fetch cinemas", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<CinemaResponse>> call, Throwable t) {
-                Toast.makeText(MovieBookingActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<List<CinemaResponse>> call, @NonNull Throwable t) {
+                        Toast.makeText(MovieBookingActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
 
@@ -200,10 +187,8 @@ public class MovieBookingActivity extends AppCompatActivity {
         toolbarTitle.setText(movieTitle);
 
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
-        CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
 
         // Get movie details
-        MovieDetails movieDetails = MovieDataProvider.getMovieDetails(movieTitle);
 
         // Setup collapsing toolbar behavior
         appBarLayout.addOnOffsetChangedListener((appBarLayout1, verticalOffset) -> {
@@ -238,19 +223,16 @@ public class MovieBookingActivity extends AppCompatActivity {
                     .address(cinema.getAddress()).build());
         }
 
-        theaterAdapter.setTheaters(cityTheaters, selectedDate, movieTitle);
+        theaterAdapter.setTheaters(cityTheaters);
     }
 
     private void setupTheatersList() {
-        theatersRecyclerView = findViewById(R.id.theaters_recycler_view);
-        theaterAdapter = new TheaterShowtimesAdapter(new TheaterShowtimesAdapter.OnShowtimeClickListener() {
-            @Override
-            public void onShowtimeClick(Theater theater, String date, String showtime, Long screenId, String screenRoom, Long scheduleId) {
-                selectedCinemaId = theater.getId(); // Lấy theaterId
-                selectedScreenId = screenId;
-                selectedScheduleId = scheduleId;
-                showQuantityTicketDialog(theater,date, showtime, screenId, screenRoom);
-            }
+        RecyclerView theatersRecyclerView = findViewById(R.id.theaters_recycler_view);
+        theaterAdapter = new TheaterShowtimesAdapter((theater, date, showtime, screenId, screenRoom, scheduleId) -> {
+            selectedCinemaId = theater.getId(); // Lấy theaterId
+            selectedScreenId = screenId;
+            selectedScheduleId = scheduleId;
+            showQuantityTicketDialog(theater,date, showtime, screenId, screenRoom);
         },movieId);
         theatersRecyclerView.setAdapter(theaterAdapter);
         theatersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -262,7 +244,6 @@ public class MovieBookingActivity extends AppCompatActivity {
         QuantityTicketDialog dialog = new QuantityTicketDialog(this, new QuantityTicketDialog.OnDialogActionListener() {
             @Override
             public void onContinueClicked(int guestQuantity) {
-                MovieDetails movieDetails = MovieDataProvider.getMovieDetails(movieTitle);
                 List<String> showtimes = TheaterDataProvider.generateShowtimes();
                 Movie selectedMovie = new Movie(
                         "movie_" + movieTitle.toLowerCase().replace(" ", "_"),

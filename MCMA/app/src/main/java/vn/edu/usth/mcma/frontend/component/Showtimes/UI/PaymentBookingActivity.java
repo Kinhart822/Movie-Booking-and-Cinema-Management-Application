@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,8 +27,7 @@ import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.CouponResponse;
 import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.Seat.AvailableSeatResponse;
-import vn.edu.usth.mcma.frontend.network.apis.BookingProcessAPIs.GetAllCouponAPI;
-import vn.edu.usth.mcma.frontend.network.RetrofitService;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Adapters.ComboDetailsAdapter;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Adapters.CouponAdapter;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Adapters.SeatDetailsAdapter;
@@ -39,11 +39,7 @@ import vn.edu.usth.mcma.frontend.component.Showtimes.Utils.PriceCalculator;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 
 public class PaymentBookingActivity extends AppCompatActivity {
-    private RecyclerView ticketDetailsRecyclerView;
-    private RecyclerView seatDetailsRecyclerView;
-    private RecyclerView comboDetailsRecyclerView;
     private List<AvailableSeatResponse> selectedSeats = new ArrayList<>();
-    private List<ComboItem> selectedComboItems;
     private double totalPrice;
     private Button buttonCoupon;
     private Coupon selectedCoupon;
@@ -53,12 +49,9 @@ public class PaymentBookingActivity extends AppCompatActivity {
     private int totalTicketCount;
     private int totalComboCount;
     private List<TicketItem> ticketItems = new ArrayList<>();
-    private double totalTicketPrice;
     private List<ComboItem> comboItems = new ArrayList<>();
     private int movieId;
     private List<Coupon> couponList = new ArrayList<>();
-    private String movieName;
-    private String cinemaName;
     private int selectedCityId;
     private int selectedCinemaId;
     private int selectedScreenId;
@@ -76,9 +69,7 @@ public class PaymentBookingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_payment_booking);
 
         ImageButton backButton = findViewById(R.id.back_button);
-        backButton.setOnClickListener(view -> {
-            onBackPressed();
-        });
+        backButton.setOnClickListener(view -> onBackPressed());
 
         movieId = getIntent().getIntExtra(IntentKey.MOVIE_ID.name(), -1);
         selectedCityId = getIntent().getIntExtra(IntentKey.SELECTED_CITY_ID.name(), -1);
@@ -96,7 +87,7 @@ public class PaymentBookingActivity extends AppCompatActivity {
         ticketItems = getIntent().getParcelableArrayListExtra(IntentKey.SELECTED_TICKET_ITEMS.name());
         Log.d("PaymentBookingActivity", IntentKey.SELECTED_TICKET_ITEMS.name()+" received: " + ticketItems);
 
-        totalTicketPrice = getIntent().getDoubleExtra(IntentKey.TOTAL_TICKET_PRICE.name(), 0.0);
+        double totalTicketPrice = getIntent().getDoubleExtra(IntentKey.TOTAL_TICKET_PRICE.name(), 0.0);
         Log.d("PaymentBookingActivity", IntentKey.TOTAL_TICKET_PRICE.name()+" received: " + totalTicketPrice);
 
         totalComboCount = getIntent().getIntExtra(IntentKey.TOTAL_COMBO_COUNT.name(), 0);
@@ -185,70 +176,70 @@ public class PaymentBookingActivity extends AppCompatActivity {
 
     private List<Coupon> fetchCoupons(int movieId) {
         List<Coupon> coupons = new ArrayList<>();
-        RetrofitService retrofitService = new RetrofitService(this);
-        GetAllCouponAPI apiService = retrofitService.getRetrofit().create(GetAllCouponAPI.class);
+        ApiService
+                .getAccountApi(this)
+                .getAllCouponByUser()
+                .enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<CouponResponse>> call, @NonNull Response<List<CouponResponse>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            List<CouponResponse> userCouponResponses = response.body();
+                            for (CouponResponse couponResponse : userCouponResponses) {
+                                List<String> names = couponResponse.getCouponNameList();
+                                List<String> descriptions = couponResponse.getCouponDescriptionList();
+                                List<BigDecimal> discountRates = couponResponse.getDiscountRateList();
 
-        // Fetch coupons by user
-        Call<List<CouponResponse>> userCouponsCall = apiService.getAllCouponByUser();
-        userCouponsCall.enqueue(new Callback<List<CouponResponse>>() {
-            @Override
-            public void onResponse(Call<List<CouponResponse>> call, Response<List<CouponResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<CouponResponse> userCouponResponses = response.body();
-                    for (CouponResponse couponResponse : userCouponResponses) {
-                        List<String> names = couponResponse.getCouponNameList();
-                        List<String> descriptions = couponResponse.getCouponDescriptionList();
-                        List<BigDecimal> discountRates = couponResponse.getDiscountRateList();
+                                for (int i = 0; i < names.size(); i++) {
+                                    String name = names.get(i);
+                                    String description = descriptions.get(i);
+                                    double discountRate = discountRates.get(i).doubleValue();
+                                    int couponId = couponResponse.getCouponIds().get(i);
 
-                        for (int i = 0; i < names.size(); i++) {
-                            String name = names.get(i);
-                            String description = descriptions.get(i);
-                            double discountRate = discountRates.get(i).doubleValue();
-                            int couponId = couponResponse.getCouponIds().get(i);
-
-                            String couponName = String.format("%s - %s - %s%%", name, description, discountRate * 100);
-                            coupons.add(new Coupon(couponName, 0, couponId));
+                                    String couponName = String.format("%s - %s - %s%%", name, description, discountRate * 100);
+                                    coupons.add(new Coupon(couponName, 0, couponId));
+                                }
+                            }
                         }
                     }
-                }
-            }
 
-            @Override
-            public void onFailure(Call<List<CouponResponse>> call, Throwable t) {
-                Log.e("CouponFetch", "Error fetching user coupons", t);
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<List<CouponResponse>> call, @NonNull Throwable t) {
+                        Log.e("CouponFetch", "Error fetching user coupons", t);
+                    }
+                });
 
         // Fetch coupons by movie
-        Call<List<CouponResponse>> movieCouponsCall = apiService.getAllCouponsByMovie(movieId);
-        movieCouponsCall.enqueue(new Callback<List<CouponResponse>>() {
-            @Override
-            public void onResponse(Call<List<CouponResponse>> call, Response<List<CouponResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<CouponResponse> movieCouponResponses = response.body();
-                    for (CouponResponse couponResponse : movieCouponResponses) {
-                        List<String> names = couponResponse.getCouponNameList();
-                        List<String> descriptions = couponResponse.getCouponDescriptionList();
-                        List<BigDecimal> discountRates = couponResponse.getDiscountRateList();
+        ApiService
+                .getMovieApi(this)
+                .getAllCouponsByMovie(movieId)
+                .enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<CouponResponse>> call, @NonNull Response<List<CouponResponse>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            List<CouponResponse> movieCouponResponses = response.body();
+                            for (CouponResponse couponResponse : movieCouponResponses) {
+                                List<String> names = couponResponse.getCouponNameList();
+                                List<String> descriptions = couponResponse.getCouponDescriptionList();
+                                List<BigDecimal> discountRates = couponResponse.getDiscountRateList();
 
-                        for (int i = 0; i < names.size(); i++) {
-                            String name = names.get(i);
-                            String description = descriptions.get(i);
-                            double discountRate = discountRates.get(i).doubleValue();
-                            int couponId = couponResponse.getCouponIds().get(i); // Lấy ID từ response
+                                for (int i = 0; i < names.size(); i++) {
+                                    String name = names.get(i);
+                                    String description = descriptions.get(i);
+                                    double discountRate = discountRates.get(i).doubleValue();
+                                    int couponId = couponResponse.getCouponIds().get(i); // Lấy ID từ response
 
-                            String couponName = String.format("%s - %s - %s%%", name, description, discountRate * 100);
-                            coupons.add(new Coupon(couponName, 1, couponId));
+                                    String couponName = String.format("%s - %s - %s%%", name, description, discountRate * 100);
+                                    coupons.add(new Coupon(couponName, 1, couponId));
+                                }
+                            }
                         }
                     }
-                }
-            }
 
-            @Override
-            public void onFailure(Call<List<CouponResponse>> call, Throwable t) {
-                Log.e("CouponFetch", "Error fetching movie coupons", t);
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<List<CouponResponse>> call, @NonNull Throwable t) {
+                        Log.e("CouponFetch", "Error fetching movie coupons", t);
+                    }
+                });
 
         return coupons;
     }
@@ -274,13 +265,11 @@ public class PaymentBookingActivity extends AppCompatActivity {
         String selectedMovie = getIntent().getStringExtra(IntentKey.MOVIE_NAME.name());
         if (selectedMovie != null) {
             movieTitleTV.setText(selectedMovie);
-            movieName = selectedMovie;
         }
 
         String selectedTheater = getIntent().getStringExtra(IntentKey.CINEMA_NAME.name());
         if (selectedTheater != null) {
             theaterNameTV.setText(selectedTheater);
-            cinemaName = selectedTheater;
         }
 
         String selectedDate = getIntent().getStringExtra(IntentKey.SELECTED_DATE.name());
@@ -310,7 +299,7 @@ public class PaymentBookingActivity extends AppCompatActivity {
     }
 
     private void setTicketDetails() {
-        ticketDetailsRecyclerView = findViewById(R.id.ticket_details_recycler_view);
+        RecyclerView ticketDetailsRecyclerView = findViewById(R.id.ticket_details_recycler_view);
         if (ticketItems != null) {
             // Filter out ticket types with zero quantity and create TicketDetailsItems
             List<TicketDetailsAdapter.TicketDetailsItem> ticketDetailItems = ticketItems.stream()
@@ -335,7 +324,7 @@ public class PaymentBookingActivity extends AppCompatActivity {
     private void setSeatsDetails() {
         TextView noOfSeatsTV = findViewById(R.id.noOfSeats);
         noOfSeatsTV.setText(String.format("%d ticket(s)", totalTicketCount));
-        seatDetailsRecyclerView = findViewById(R.id.seat_details_recycler_view);
+        RecyclerView seatDetailsRecyclerView = findViewById(R.id.seat_details_recycler_view);
 
         if (selectedSeats != null) {
             List<SeatDetailsAdapter.SeatDetailItem> seatDetailItems = new ArrayList<>();
@@ -374,7 +363,7 @@ public class PaymentBookingActivity extends AppCompatActivity {
     private void setCombosDetails() {
         TextView noOfCombosTV = findViewById(R.id.noOfCombos);
         noOfCombosTV.setText(String.format("%d combo(s)", totalComboCount));
-        comboDetailsRecyclerView = findViewById(R.id.combo_details_recycler_view);
+        RecyclerView comboDetailsRecyclerView = findViewById(R.id.combo_details_recycler_view);
 
         if (comboItems != null) {
             List<ComboDetailsAdapter.ComboDetailItem> comboDetailItems = comboItems.stream()

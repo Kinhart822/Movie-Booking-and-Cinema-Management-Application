@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,21 +20,18 @@ import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.Genre;
 import vn.edu.usth.mcma.frontend.dto.Response.NowShowingResponse;
-import vn.edu.usth.mcma.frontend.network.apis.NowShowingMovieAPI;
-import vn.edu.usth.mcma.frontend.network.RetrofitService;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class Movie_Feedback_Activity extends AppCompatActivity {
-    private RecyclerView recyclerView;
     private Movie_Feedback_Adapter adapter;
     private List<Movie_Feedback_Item> items;
-    private NowShowingMovieAPI nowShowingMovieAPI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_feedback);
 
-        recyclerView = findViewById(R.id.recyclerview_movie_list_feedback);
+        RecyclerView recyclerView = findViewById(R.id.recyclerview_movie_list_feedback);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         items = new ArrayList<>();
@@ -45,9 +43,6 @@ public class Movie_Feedback_Activity extends AppCompatActivity {
         adapter = new Movie_Feedback_Adapter(this, items);
         recyclerView.setAdapter(adapter);
 
-        RetrofitService retrofitService = new RetrofitService(this);
-        nowShowingMovieAPI = retrofitService.getRetrofit().create(NowShowingMovieAPI.class);
-
         fetchNowShowingMovies();
 
         ImageButton backButton = findViewById(R.id.back_button);
@@ -55,34 +50,37 @@ public class Movie_Feedback_Activity extends AppCompatActivity {
     }
 
     private void fetchNowShowingMovies() {
-        nowShowingMovieAPI.getAvailableNowShowingMovies().enqueue(new Callback<List<NowShowingResponse>>() {
-            @Override
-            public void onResponse(Call<List<NowShowingResponse>> call, Response<List<NowShowingResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    // Clear current items
-                    items.clear();
-                    // Map NowShowingResponse
-                    for (NowShowingResponse movie : response.body()) {
-                        String genres = TextUtils.join(", ", movie.getGenres().stream().map(Genre::getName).collect(Collectors.toList()));
+        ApiService
+                .getMovieApi(this)
+                .getAvailableNowShowingMovies()
+                .enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<NowShowingResponse>> call, @NonNull Response<List<NowShowingResponse>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            // Clear current items
+                            items.clear();
+                            // Map NowShowingResponse
+                            for (NowShowingResponse movie : response.body()) {
+                                String genres = TextUtils.join(", ", movie.getGenres().stream().map(Genre::getName).collect(Collectors.toList()));
 
-                        items.add(new Movie_Feedback_Item(
-                                movie.getId(),
-                                movie.getName(),
-                                genres,
-                                movie.getImageUrl()
-                        ));
+                                items.add(new Movie_Feedback_Item(
+                                        movie.getId(),
+                                        movie.getName(),
+                                        genres,
+                                        movie.getImageUrl()
+                                ));
+                            }
+                            // Notify adapter about data changes
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(Movie_Feedback_Activity.this, "Failed to fetch movies", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    // Notify adapter about data changes
-                    adapter.notifyDataSetChanged();
-                } else {
-                    Toast.makeText(Movie_Feedback_Activity.this, "Failed to fetch movies", Toast.LENGTH_SHORT).show();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<List<NowShowingResponse>> call, Throwable t) {
-                Toast.makeText(Movie_Feedback_Activity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<List<NowShowingResponse>> call, @NonNull Throwable t) {
+                        Toast.makeText(Movie_Feedback_Activity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

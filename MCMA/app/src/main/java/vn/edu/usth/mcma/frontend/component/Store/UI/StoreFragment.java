@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,13 +27,11 @@ import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.Response.ListFoodAndDrinkToOrderingResponse;
 import vn.edu.usth.mcma.frontend.dto.Response.ViewCinemaResponse;
-import vn.edu.usth.mcma.frontend.network.apis.GetCinemaListAPI;
-import vn.edu.usth.mcma.frontend.network.apis.ViewAllFoodsAndDrinksByCinemaAPI;
-import vn.edu.usth.mcma.frontend.network.RetrofitService;
 import vn.edu.usth.mcma.frontend.component.Store.Adapters.ComboAdapter;
 import vn.edu.usth.mcma.frontend.component.Store.Adapters.TheaterAdapter;
 import vn.edu.usth.mcma.frontend.component.Store.Models.ComboItem;
 import vn.edu.usth.mcma.frontend.component.Store.Models.Theater;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterClickListener {
     private Theater selectedTheater;
@@ -67,10 +64,7 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
         noDataContainer = view.findViewById(R.id.no_data_container);
         buttonTheater = view.findViewById(R.id.theater_button);
         comboRecyclerView = view.findViewById(R.id.combo_recycler_view);
-        Button checkoutButton = view.findViewById(R.id.checkout_button);
         comboMenuContainer = view.findViewById(R.id.combo_menu_container);
-        ImageView noDataImage = view.findViewById(R.id.no_data_image);
-        TextView noDataText = view.findViewById(R.id.no_data_text);
     }
 
     private void showTheaterSelectionDialog() {
@@ -118,30 +112,29 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
     }
 
     private void fetchComboItems(int cinemaId) {
-        RetrofitService retrofitService = new RetrofitService(requireContext());
-        ViewAllFoodsAndDrinksByCinemaAPI apiService = retrofitService.getRetrofit().create(ViewAllFoodsAndDrinksByCinemaAPI.class);
+        ApiService
+                .getCinemaApi(requireContext())
+                .viewFoodsAndDrinks(cinemaId).enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<ListFoodAndDrinkToOrderingResponse>> call, @NonNull Response<List<ListFoodAndDrinkToOrderingResponse>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            List<ListFoodAndDrinkToOrderingResponse> comboData = response.body();
+                            List<ComboItem> comboItems = convertResponseToComboItems(comboData);
+                            updateComboList(comboItems);
+                        } else {
+                            Log.e("StoreFragment", "Failed to load combos: " + response.message());
+                            Toast.makeText(requireActivity(), "No available combos", Toast.LENGTH_SHORT).show();
+                            showNoDataView();
+                        }
+                    }
 
-        apiService.ViewFoodsAndDrinks(cinemaId).enqueue(new Callback<List<ListFoodAndDrinkToOrderingResponse>>() {
-            @Override
-            public void onResponse(Call<List<ListFoodAndDrinkToOrderingResponse>> call, Response<List<ListFoodAndDrinkToOrderingResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<ListFoodAndDrinkToOrderingResponse> comboData = response.body();
-                    List<ComboItem> comboItems = convertResponseToComboItems(comboData);
-                    updateComboList(comboItems);
-                } else {
-                    Log.e("StoreFragment", "Failed to load combos: " + response.message());
-                    Toast.makeText(requireActivity(), "No available combos", Toast.LENGTH_SHORT).show();
-                    showNoDataView();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<ListFoodAndDrinkToOrderingResponse>> call, Throwable t) {
-                Log.e("StoreFragment", "API Call Failed: " + t.getMessage(), t);
-                Toast.makeText(requireActivity(), "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
-                showNoDataView();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<List<ListFoodAndDrinkToOrderingResponse>> call, @NonNull Throwable t) {
+                        Log.e("StoreFragment", "API Call Failed: " + t.getMessage(), t);
+                        Toast.makeText(requireActivity(), "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                        showNoDataView();
+                    }
+                });
     }
 
     private List<ComboItem> convertResponseToComboItems(List<ListFoodAndDrinkToOrderingResponse> comboData) {
@@ -194,45 +187,44 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
     }
 
     private void getTheaterList() {
-        RetrofitService retrofitService = new RetrofitService(requireContext());
-        GetCinemaListAPI getCinemaListAPI = retrofitService.getRetrofit().create(GetCinemaListAPI.class);
+        ApiService
+                .getCinemaApi(requireContext())
+                .getCinemaList().enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ViewCinemaResponse> call, @NonNull Response<ViewCinemaResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            ViewCinemaResponse cinemaResponse = response.body();
+                            List<Long> cinemaIdList = cinemaResponse.getCinemaIdList();
+                            List<String> cinemaNameList = cinemaResponse.getCinemaNameList();
 
-        getCinemaListAPI.getCinemaList().enqueue(new Callback<ViewCinemaResponse>() {
-            @Override
-            public void onResponse(Call<ViewCinemaResponse> call, Response<ViewCinemaResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    ViewCinemaResponse cinemaResponse = response.body();
-                    List<Long> cinemaIdList = cinemaResponse.getCinemaIdList();
-                    List<String> cinemaNameList = cinemaResponse.getCinemaNameList();
+                            if (cinemaIdList == null || cinemaNameList == null) {
+                                Log.e("StoreFragment", "Cinema lists are null");
+                                Toast.makeText(requireActivity(), "No theaters to show", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
 
-                    if (cinemaIdList == null || cinemaNameList == null) {
-                        Log.e("StoreFragment", "Cinema lists are null");
-                        Toast.makeText(requireActivity(), "No theaters to show", Toast.LENGTH_SHORT).show();
-                        return;
+                            theaters.clear();
+                            for (int i = 0; i < cinemaIdList.size(); i++) {
+                                theaters.add(new Theater(
+                                        String.valueOf(cinemaIdList.get(i)),
+                                        cinemaNameList.get(i)
+                                ));
+                            }
+
+                            updateTheaterList(theaters);
+                        } else {
+                            Log.e("StoreFragment", "Error: " + response.message());
+                            Toast.makeText(requireActivity(), "No theaters to show", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
-                    theaters.clear();
-                    for (int i = 0; i < cinemaIdList.size(); i++) {
-                        theaters.add(new Theater(
-                                String.valueOf(cinemaIdList.get(i)),
-                                cinemaNameList.get(i)
-                        ));
+
+                    @Override
+                    public void onFailure(@NonNull Call<ViewCinemaResponse> call, @NonNull Throwable t) {
+                        Log.e("StoreFragment", "API Call Failed: " + t.getMessage(), t);
+                        Toast.makeText(requireActivity(), "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
                     }
-
-                    updateTheaterList(theaters);
-                } else {
-                    Log.e("StoreFragment", "Error: " + response.message());
-                    Toast.makeText(requireActivity(), "No theaters to show", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-
-            @Override
-            public void onFailure(Call<ViewCinemaResponse> call, Throwable t) {
-                Log.e("StoreFragment", "API Call Failed: " + t.getMessage(), t);
-                Toast.makeText(requireActivity(), "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+                });
     }
 
     private void updateTheaterList(List<Theater> theaterList) {

@@ -35,20 +35,15 @@ import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.ScreenResponse;
 import vn.edu.usth.mcma.frontend.dto.Response.Schedule;
-import vn.edu.usth.mcma.frontend.network.apis.BookingProcessAPIs.GetDateScheduleByScreenIdAPI;
-import vn.edu.usth.mcma.frontend.network.apis.BookingProcessAPIs.GetScreenByCinemaIdAPI;
-import vn.edu.usth.mcma.frontend.network.RetrofitService;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Theater;
 
 public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtimesAdapter.TheaterViewHolder> {
 
     private List<Theater> theaters = new ArrayList<>();
-    private String selectedDate;
-    private String movieTitle;
-    private OnShowtimeClickListener listener;
-    private SparseBooleanArray expandedStates = new SparseBooleanArray();
+    private final OnShowtimeClickListener listener;
+    private final SparseBooleanArray expandedStates = new SparseBooleanArray();
     private Long selectedScreenId;
-    private Integer selectedScheduleId;
     private final Long movieId;
 
     public interface OnShowtimeClickListener {
@@ -60,15 +55,10 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
         this.movieId = movieId; // Initialize movieId
     }
 
-    public void setTheaters(List<Theater> theaters, String selectedDate, String movieTitle) {
+    public void setTheaters(List<Theater> theaters) {
         this.theaters = theaters;
-        this.selectedDate = selectedDate;
-        this.movieTitle = movieTitle;
         expandedStates.clear();
         notifyDataSetChanged();
-    }
-    public void setOnShowtimeClickListener(OnShowtimeClickListener listener) {
-        this.listener = listener;
     }
 
     @NonNull
@@ -90,13 +80,13 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
     }
 
     class TheaterViewHolder extends RecyclerView.ViewHolder {
-        private TextView theaterName;
-        private TextView theaterAddress;
-        private FlexboxLayout showtimesContainer;
-        private FlexboxLayout screenRoomsContainer;
-        private ImageView arrowIcon;
-        private View divider;
-        private ConstraintLayout headerLayout;
+        private final TextView theaterName;
+        private final TextView theaterAddress;
+        private final FlexboxLayout showtimesContainer;
+        private final FlexboxLayout screenRoomsContainer;
+        private final ImageView arrowIcon;
+        private final View divider;
+        private final ConstraintLayout headerLayout;
         private String selectedScreenRoom;
         private Long selectedCinemaId;
 
@@ -156,66 +146,63 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
             Context context = itemView.getContext();
             ColorStateList textColorStateList = ContextCompat.getColorStateList(context, R.color.button_text_selector);
 
-            // Use RetrofitService directly
-            RetrofitService retrofitService = new RetrofitService(context);
-            GetScreenByCinemaIdAPI apiService = retrofitService.getRetrofit().create(GetScreenByCinemaIdAPI.class);
+            ApiService
+                    .getCinemaApi(context)
+                    .getScreenByCinemaId(cinemaId).enqueue(new Callback<>() {
+                        @SuppressLint("SetTextI18n")
+                        @Override
+                        public void onResponse(@NonNull Call<List<ScreenResponse>> call, @NonNull Response<List<ScreenResponse>> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                List<ScreenResponse> screens = response.body();
 
-            Call<List<ScreenResponse>> call = apiService.getScreenByCinemaId(cinemaId);
-            call.enqueue(new Callback<List<ScreenResponse>>() {
-                @SuppressLint("SetTextI18n")
-                @Override
-                public void onResponse(Call<List<ScreenResponse>> call, Response<List<ScreenResponse>> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        List<ScreenResponse> screens = response.body();
+                                for (ScreenResponse screen : screens) {
+                                    Button screenRoomButton = new Button(context);
+                                    screenRoomButton.setText(screen.getName());
 
-                        for (ScreenResponse screen : screens) {
-                            Button screenRoomButton = new Button(context);
-                            screenRoomButton.setText(screen.getName());
+                                    FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
+                                            FlexboxLayout.LayoutParams.WRAP_CONTENT,
+                                            FlexboxLayout.LayoutParams.WRAP_CONTENT
+                                    );
+                                    params.setMargins(8, 8, 8, 8);
+                                    screenRoomButton.setLayoutParams(params);
+                                    screenRoomButton.setBackground(ContextCompat.getDrawable(context, R.drawable.date_button_selector));
+                                    screenRoomButton.setTextColor(textColorStateList);
+                                    screenRoomButton.setAllCaps(false);
+                                    screenRoomButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
 
-                            FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
-                                    FlexboxLayout.LayoutParams.WRAP_CONTENT,
-                                    FlexboxLayout.LayoutParams.WRAP_CONTENT
-                            );
-                            params.setMargins(8, 8, 8, 8);
-                            screenRoomButton.setLayoutParams(params);
-                            screenRoomButton.setBackground(ContextCompat.getDrawable(context, R.drawable.date_button_selector));
-                            screenRoomButton.setTextColor(textColorStateList);
-                            screenRoomButton.setAllCaps(false);
-                            screenRoomButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                                    screenRoomButton.setOnClickListener(v -> {
 
-                            screenRoomButton.setOnClickListener(v -> {
+                                        // Log the screen ID
+                                        Log.d("ScreenRoomClick", "Clicked Screen: " + screen.getId());
 
-                                // Log the screen ID
-                                Log.d("ScreenRoomClick", "Clicked Screen: " + screen.getId());
+                                        // Reset previous button state if any
+                                        for (int j = 0; j < screenRoomsContainer.getChildCount(); j++) {
+                                            screenRoomsContainer.getChildAt(j).setSelected(false);
+                                        }
 
-                                // Reset previous button state if any
-                                for (int j = 0; j < screenRoomsContainer.getChildCount(); j++) {
-                                    screenRoomsContainer.getChildAt(j).setSelected(false);
+                                        // Select current button
+                                        screenRoomButton.setSelected(true);
+
+                                        // Store selected screen room
+                                        selectedScreenRoom = screenRoomButton.getText().toString();
+                                        selectedScreenId = screen.getId();
+                                        // Populate showtimes
+                                        showtimesContainer.setVisibility(View.VISIBLE);
+                                        populateShowtimes(theater, movieId);
+                                    });
+
+                                    screenRoomsContainer.addView(screenRoomButton);
                                 }
-
-                                // Select current button
-                                screenRoomButton.setSelected(true);
-
-                                // Store selected screen room
-                                selectedScreenRoom = screenRoomButton.getText().toString();
-                                selectedScreenId = screen.getId();
-                                // Populate showtimes
-                                showtimesContainer.setVisibility(View.VISIBLE);
-                                populateShowtimes(theater,movieId);
-                            });
-
-                            screenRoomsContainer.addView(screenRoomButton);
+                            } else {
+                                Toast.makeText(context, "Failed to fetch screen rooms", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    } else {
-                        Toast.makeText(context, "Failed to fetch screen rooms", Toast.LENGTH_SHORT).show();
-                    }
-                }
 
-                @Override
-                public void onFailure(Call<List<ScreenResponse>> call, Throwable t) {
-                    Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+                        @Override
+                        public void onFailure(@NonNull Call<List<ScreenResponse>> call, @NonNull Throwable t) {
+                            Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
         }
 
 
@@ -228,11 +215,10 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
             }
             ColorStateList textColorStateList = ContextCompat.getColorStateList(context, R.color.button_text_selector);
 
-            RetrofitService retrofitService = new RetrofitService(context);
-            GetDateScheduleByScreenIdAPI dateScheduleByScreenIdAPI = retrofitService.getRetrofit().create(GetDateScheduleByScreenIdAPI.class);
-
-            dateScheduleByScreenIdAPI.getAllSchedulesByMovieAndScreen(movieId, selectedScreenId)
-                    .enqueue(new Callback<List<Schedule>>() {
+            ApiService
+                    .getMovieApi(context)
+                    .getAllSchedulesByMovieAndScreen(movieId, selectedScreenId)
+                    .enqueue(new Callback<>() {
                         @Override
                         public void onResponse(@NonNull Call<List<Schedule>> call, @NonNull Response<List<Schedule>> response) {
                             if (response.isSuccessful() && response.body() != null) {
@@ -245,11 +231,11 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                 Map<String, Map<String, Long>> schedulesByDateAndTime = new LinkedHashMap<>();
                                 List<String> dates = schedules
                                         .stream()
-                                        .map(s -> s.getStartTime().substring(0,10))
+                                        .map(s -> s.getStartTime().substring(0, 10))
                                         .collect(Collectors.toList());
                                 List<String> times = schedules
                                         .stream()
-                                        .map(s -> s.getStartTime().substring(11,16))
+                                        .map(s -> s.getStartTime().substring(11, 16))
                                         .collect(Collectors.toList());
                                 List<Long> scheduleIds = schedules
                                         .stream()
@@ -324,6 +310,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
 //                                        for (String time : schedulesByDate.get(date)) {
 
                                         Map<String, Long> timesForDate = schedulesByDateAndTime.get(date);
+                                        assert timesForDate != null;
                                         for (Map.Entry<String, Long> entry : timesForDate.entrySet()) {
                                             String time = entry.getKey();
                                             Long scheduleId = entry.getValue();

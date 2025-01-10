@@ -23,6 +23,7 @@ import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.component.Home.Fragment_changing;
 import vn.edu.usth.mcma.frontend.component.Login.LoginFragment;
 import vn.edu.usth.mcma.frontend.component.Notification.Notification_Activity;
+import vn.edu.usth.mcma.frontend.constant.SharedPreferencesKey;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,16 +36,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("TOLogin", MODE_PRIVATE);
-        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
-        long expirationTime = sharedPreferences.getLong("expirationTime", 0);
+        SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferencesKey.AUTH.name(), MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean(SharedPreferencesKey.AUTH_IS_LOGGED_IN.name(), false);
+        long expirationTime = sharedPreferences.getLong(SharedPreferencesKey.AUTH_EXPIRATION_TIME.name(), 0);
 
         if (!isLoggedIn || System.currentTimeMillis() > expirationTime) {
             // If not logged in
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.remove("auth_token");  // Only remove the auth token
-            editor.remove("isLoggedIn");
-            editor.remove("expirationTime");
+            editor.remove(SharedPreferencesKey.AUTH_TOKEN.name());  // Only remove the auth token
+            editor.remove(SharedPreferencesKey.AUTH_IS_LOGGED_IN.name());
+            editor.remove(SharedPreferencesKey.AUTH_EXPIRATION_TIME.name());
             editor.apply();
             navigateToLoginFragment();
             return;

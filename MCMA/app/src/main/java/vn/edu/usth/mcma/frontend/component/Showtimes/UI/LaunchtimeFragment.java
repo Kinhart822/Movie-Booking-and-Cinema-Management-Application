@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,13 +22,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.Response.ViewCinemaResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.ViewCityResponse;
-import vn.edu.usth.mcma.frontend.network.apis.GetCinemaListAPI;
-import vn.edu.usth.mcma.frontend.network.RetrofitService;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Theater;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Utils.TheaterDataProvider;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Adapters.TheaterAdapter;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnTheaterClickListener {
     private TheaterAdapter theaterAdapter;
@@ -57,28 +56,7 @@ public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnThe
     }
 
     private void loadCitiesFromAPI() {
-        TheaterDataProvider.getCities(new Callback<ViewCityResponse>() {
-            @Override
-            public void onResponse(Call<ViewCityResponse> call, Response<ViewCityResponse> response) {
-                if (isAdded() && response.isSuccessful() && response.body() != null) {
-                    List<Integer> cityIds = response.body().getCityIds();
-                    List<String> cityNames = response.body().getCityNameList();
-
-                    if (!cityNames.isEmpty()) {
-                        setupCityButtons(cityIds, cityNames);
-                    } else {
-                        Toast.makeText(requireContext(), "No cities available", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ViewCityResponse> call, Throwable t) {
-                if (isAdded()) {
-                    Toast.makeText(requireContext(), "Failed to load cities. Please try again later.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        TheaterDataProvider.getCities();
     }
 
     private void setupCityButtons(List<Integer> cityIds, List<String> cityNames) {
@@ -119,44 +97,40 @@ public class LaunchtimeFragment extends Fragment implements TheaterAdapter.OnThe
     }
 
     private void updateTheaterList() {
-        RetrofitService retrofitService = new RetrofitService(requireContext());
-        GetCinemaListAPI apiService = retrofitService
-                .getRetrofit()
-                .create(GetCinemaListAPI.class);
+        ApiService
+                .getCinemaApi(requireContext())
+                .getCinemaListByCity(currentCityId).enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ViewCinemaResponse> call, @NonNull Response<ViewCinemaResponse> response) {
+                        if (isAdded() && response.isSuccessful() && response.body() != null) {
+                            // Process the response
+                            List<Theater> theaters = new ArrayList<>();
+                            List<Long> cinemaIds = response.body().getCinemaIdList();
+                            List<String> cinemaNames = response.body().getCinemaNameList();
+                            List<String> cinemaAddressNames = response.body().getCinemaAddressList();
 
-        Call<ViewCinemaResponse> call = apiService.getCinemaListByCity(currentCityId);
-        call.enqueue(new Callback<ViewCinemaResponse>() {
-            @Override
-            public void onResponse(Call<ViewCinemaResponse> call, Response<ViewCinemaResponse> response) {
-                if (isAdded() && response.isSuccessful() && response.body() != null) {
-                    // Process the response
-                    List<Theater> theaters = new ArrayList<>();
-                    List<Long> cinemaIds = response.body().getCinemaIdList();
-                    List<String> cinemaNames = response.body().getCinemaNameList();
-                    List<String> cinemaAddressNames = response.body().getCinemaAddressList();
+                            for (int i = 0; i < cinemaNames.size(); i++) {
+                                Long id = cinemaIds.get(i);
+                                String name = cinemaNames.get(i);
+                                String address = i < cinemaAddressNames.size() ? cinemaAddressNames.get(i) : "Address not available";
 
-                    for (int i = 0; i < cinemaNames.size(); i++) {
-                        Long id = cinemaIds.get(i);
-                        String name = cinemaNames.get(i);
-                        String address = i < cinemaAddressNames.size() ? cinemaAddressNames.get(i) : "Address not available";
+                                theaters.add(new Theater(id, name != null && !name.isEmpty() ? name : "Unnamed Cinema",
+                                        address, currentCity, R.drawable.theater_image1));
+                            }
 
-                        theaters.add(new Theater(id, name != null && !name.isEmpty() ? name : "Unnamed Cinema",
-                                address, currentCity, R.drawable.theater_image1));
+                            if (theaterAdapter != null) {
+                                theaterAdapter.setTheaters(theaters);
+                            }
+                        }
                     }
 
-                    if (theaterAdapter != null) {
-                        theaterAdapter.setTheaters(theaters);
+                    @Override
+                    public void onFailure(@NonNull Call<ViewCinemaResponse> call, @NonNull Throwable t) {
+                        if (isAdded()) {
+                            Toast.makeText(requireContext(), "Failed to load theater list. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ViewCinemaResponse> call, Throwable t) {
-                if (isAdded()) {
-                    Toast.makeText(requireContext(), "Failed to load theater list. Please try again.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+                });
     }
 
     @Override

@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,19 +29,16 @@ import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.Genre;
 import vn.edu.usth.mcma.frontend.dto.Response.MovieGenreResponse;
 import vn.edu.usth.mcma.frontend.dto.Response.Performer;
 import vn.edu.usth.mcma.frontend.dto.Response.SearchMovieByNameResponse;
-import vn.edu.usth.mcma.frontend.network.apis.GetAllMovieGenres;
-import vn.edu.usth.mcma.frontend.network.apis.SearchMovieByName;
-import vn.edu.usth.mcma.frontend.network.RetrofitService;
 import vn.edu.usth.mcma.frontend.component.Home.OnlyDetailsActivity;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class Search_Activity extends AppCompatActivity {
     private SearchView searchView;
     private Search_Adapter adapter;
-    private List<SearchMovieByNameResponse> items = new ArrayList<>();
+    private final List<SearchMovieByNameResponse> items = new ArrayList<>();
     private List<SearchMovieByNameResponse> filteredItems;
     private List<View> buttons;
-    private List<MovieGenreResponse> genres;
     private LinearLayout genreButtonContainer;
 
     @Override
@@ -60,12 +58,7 @@ public class Search_Activity extends AppCompatActivity {
 
 //        filteredItems.addAll(items);
 
-        adapter = new Search_Adapter(this, filteredItems, new SearchViewInterface() {
-            @Override
-            public void onItemClick(int position) {
-                openMovieDetailsActivity(position);
-            }
-        });
+        adapter = new Search_Adapter(this, filteredItems, this::openMovieDetailsActivity);
         recyclerView.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -116,31 +109,31 @@ public class Search_Activity extends AppCompatActivity {
     }
 
     private void fetchAndDisplayGenres() {
-        RetrofitService retrofitService = new RetrofitService(this);
-        GetAllMovieGenres getAllMovieGenres = retrofitService.getRetrofit().create(GetAllMovieGenres.class);
-        getAllMovieGenres.getAllMovieGenres().enqueue(new Callback<List<MovieGenreResponse>>() {
-            @Override
-            public void onResponse(Call<List<MovieGenreResponse>> call, Response<List<MovieGenreResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<MovieGenreResponse> genres = response.body();
+        ApiService
+                .getMovieApi(this)
+                .getAllMovieGenres().enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<MovieGenreResponse>> call, @NonNull Response<List<MovieGenreResponse>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            List<MovieGenreResponse> genres = response.body();
 
-                    // Add "All" button first
-                    addGenreButton("All");
+                            // Add "All" button first
+                            addGenreButton("All");
 
-                    // Add buttons for each genre dynamically
-                    for (MovieGenreResponse genre : genres) {
-                        addGenreButton(genre.getGenreName());
+                            // Add buttons for each genre dynamically
+                            for (MovieGenreResponse genre : genres) {
+                                addGenreButton(genre.getGenreName());
+                            }
+                        } else {
+                            Toast.makeText(Search_Activity.this, "Failed to fetch genres", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                } else {
-                    Toast.makeText(Search_Activity.this, "Failed to fetch genres", Toast.LENGTH_SHORT).show();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<List<MovieGenreResponse>> call, Throwable t) {
-                Toast.makeText(Search_Activity.this, "Failed to fetch genres", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<List<MovieGenreResponse>> call, @NonNull Throwable t) {
+                        Toast.makeText(Search_Activity.this, "Failed to fetch genres", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void addGenreButton(String genreName) {
@@ -177,37 +170,29 @@ public class Search_Activity extends AppCompatActivity {
     private void fetchMoviesFromApi() {
         String title = searchView.getQuery().toString().trim();
 
-        RetrofitService retrofitService = new RetrofitService(this);
-        SearchMovieByName searchMovieByName = retrofitService.getRetrofit().create(SearchMovieByName.class);
-        searchMovieByName.searchMovies(title).enqueue(new Callback<List<SearchMovieByNameResponse>>() {
-            @Override
-            public void onResponse(Call<List<SearchMovieByNameResponse>> call, Response<List<SearchMovieByNameResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    items.clear();
-                    items.addAll(response.body());
-                    filteredItems.clear();
-                    filteredItems.addAll(items); // Initially show all movies
-                    adapter.notifyDataSetChanged();
-                } else {
-                    Toast.makeText(Search_Activity.this, "Failed to fetch movies", Toast.LENGTH_SHORT).show();
-                }
-            }
+        ApiService
+                .getMovieApi(this)
+                .searchMovies(title)
+                .enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<SearchMovieByNameResponse>> call, @NonNull Response<List<SearchMovieByNameResponse>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            items.clear();
+                            items.addAll(response.body());
+                            filteredItems.clear();
+                            filteredItems.addAll(items); // Initially show all movies
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(Search_Activity.this, "Failed to fetch movies", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
-            @Override
-            public void onFailure(Call<List<SearchMovieByNameResponse>> call, Throwable t) {
-                Toast.makeText(Search_Activity.this, "Failed to fetch movies", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<List<SearchMovieByNameResponse>> call, @NonNull Throwable t) {
+                        Toast.makeText(Search_Activity.this, "Failed to fetch movies", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-    }
-
-    private void setupCategoryButton(View button, String category) {
-        buttons.add(button);
-        button.setOnClickListener(v -> {
-            resetButtonColors();
-            button.setBackgroundColor(Color.LTGRAY);
-            filterByCategory(category);
-        });
     }
 
     private void resetButtonColors() {

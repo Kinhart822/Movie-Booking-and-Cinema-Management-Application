@@ -13,8 +13,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.network.apis.BookingProcessAPIs.BookingAPI;
-import vn.edu.usth.mcma.frontend.network.RetrofitService;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 
 import android.app.AlertDialog;
 import android.widget.Toast;
@@ -57,9 +56,7 @@ public class Cancel_Booking_Adapter extends RecyclerView.Adapter<Cancel_Booking_
 //        holder.itemView.setOnClickListener(v -> {
 //            showCancelBookingDialog();
 //        });
-        holder.itemView.setOnClickListener(v -> {
-            showCancelBookingDialog(item);
-        });
+        holder.itemView.setOnClickListener(v -> showCancelBookingDialog(item));
     }
 
     @Override
@@ -125,34 +122,31 @@ public class Cancel_Booking_Adapter extends RecyclerView.Adapter<Cancel_Booking_
             dialog.dismiss();
         });
 
-        btn_no.setOnClickListener(view -> {
-            dialog.dismiss();
-        });
+        btn_no.setOnClickListener(view -> dialog.dismiss());
 
         dialog.show();
     }
 
     // Method to call API
     private void cancelBooking(int bookingId) {
-        RetrofitService retrofitService = new RetrofitService(context);
-        BookingAPI bookingAPI = retrofitService.getRetrofit().create(BookingAPI.class);
-        bookingAPI.cancelBooking(bookingId).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(context, "Booking cancelled successfully!", Toast.LENGTH_SHORT).show();
-                    removeItemFromList(bookingId);
-                    showCancellationSuccessDialog();
-                } else {
-                    Toast.makeText(context, "Failed to cancel booking", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        ApiService
+                .getBookingApi(context)
+                .cancelBooking(bookingId).enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(context, "Booking cancelled successfully!", Toast.LENGTH_SHORT).show();
+                            removeItemFromList(bookingId);
+                            showCancellationSuccessDialog();
+                        } else {
+                            Toast.makeText(context, "Failed to cancel booking", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                        Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
 

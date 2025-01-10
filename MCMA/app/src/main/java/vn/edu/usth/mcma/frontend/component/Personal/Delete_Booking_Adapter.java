@@ -13,8 +13,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.network.apis.BookingProcessAPIs.BookingAPI;
-import vn.edu.usth.mcma.frontend.network.RetrofitService;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 
 import android.app.AlertDialog;
 import android.widget.Toast;
@@ -53,9 +52,7 @@ public class Delete_Booking_Adapter extends RecyclerView.Adapter<Delete_Booking_
 //        holder.itemView.setOnClickListener(v -> {
 //            showCancelBookingDialog();
 //        });
-        holder.itemView.setOnClickListener(v -> {
-            showCancelBookingDialog(item);
-        });
+        holder.itemView.setOnClickListener(v -> showCancelBookingDialog(item));
     }
 
     @Override
@@ -81,34 +78,32 @@ public class Delete_Booking_Adapter extends RecyclerView.Adapter<Delete_Booking_
             dialog.dismiss();
         });
 
-        btn_no.setOnClickListener(view -> {
-            dialog.dismiss();
-        });
+        btn_no.setOnClickListener(view -> dialog.dismiss());
 
         // Show the dialog
         dialog.show();
     }
 
     private void deleteBooking(int bookingId, Delete_Booking_Item item) {
-        RetrofitService retrofitService = new RetrofitService(context);
-        BookingAPI bookingAPI = retrofitService.getRetrofit().create(BookingAPI.class);
-        bookingAPI.deleteBooking(bookingId).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(context, "Booking deleted successfully!", Toast.LENGTH_SHORT).show();
-                    removeItemFromList(bookingId);
-                    showDeletedSuccessDialog(item);
-                } else {
-//                    Toast.makeText(context, "Failed to reinstate booking", Toast.LENGTH_SHORT).show();
-                }
-            }
+        ApiService
+                .getBookingApi(context)
+                .deleteBooking(bookingId).enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(context, "Booking deleted successfully!", Toast.LENGTH_SHORT).show();
+                            removeItemFromList(bookingId);
+                            showDeletedSuccessDialog(item);
+                        } else {
+                    Toast.makeText(context, "Failed to reinstate booking", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                        Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void removeItemFromList(int bookingId) {
@@ -134,9 +129,7 @@ public class Delete_Booking_Adapter extends RecyclerView.Adapter<Delete_Booking_
         builder.setTitle("Booking Deleted");
         builder.setMessage("Your booking for " + item.getMovie_name() + " has been successfully deleted. Booking Number: " + item.getBookingId());
 
-        builder.setPositiveButton("OK", (dialog, which) -> {
-            dialog.dismiss();
-        });
+        builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
 
         AlertDialog dialog = builder.create();
         dialog.show();

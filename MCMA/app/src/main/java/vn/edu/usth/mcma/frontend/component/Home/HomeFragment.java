@@ -28,9 +28,8 @@ import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.Response.HighRatingMovieResponse;
 import vn.edu.usth.mcma.frontend.helper.ImageDecoder;
-import vn.edu.usth.mcma.frontend.network.apis.GetHighRatingMovieAPI;
-import vn.edu.usth.mcma.frontend.network.RetrofitService;
 import vn.edu.usth.mcma.frontend.component.Search.Search_Activity;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class HomeFragment extends Fragment {
 
@@ -61,9 +60,10 @@ public class HomeFragment extends Fragment {
     }
 
     private void fetchHighRatingMovies() {
-        RetrofitService retrofitService = new RetrofitService(requireContext());
-        GetHighRatingMovieAPI apiClient = retrofitService.getRetrofit().create(GetHighRatingMovieAPI.class);
-        apiClient.getHighRatingMovies().enqueue(new Callback<>() {
+        ApiService
+                .getMovieApi(requireContext())
+                .getHighRatingMovies()
+                .enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<List<HighRatingMovieResponse>> call, @NonNull Response<List<HighRatingMovieResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {

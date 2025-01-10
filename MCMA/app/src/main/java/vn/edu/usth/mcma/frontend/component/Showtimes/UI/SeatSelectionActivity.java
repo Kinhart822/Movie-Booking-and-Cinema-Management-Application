@@ -28,8 +28,7 @@ import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.Response.SeatTypeResponse;
 import vn.edu.usth.mcma.frontend.dto.Response.Seat;
-import vn.edu.usth.mcma.frontend.network.apis.SeatAPI;
-import vn.edu.usth.mcma.frontend.network.RetrofitService;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.helper.SeatMapHelper;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Adapters.SeatAdapter;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Movie;
@@ -54,7 +53,6 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private Long selectedScreenId;
     private Long selectedScheduleId;
     private final List<Long> selectedTicketIds = new ArrayList<>();
-    private SeatAPI seatAPI;
     private Map<Integer, SeatTypeResponse> seatTypes;
 
     @Override
@@ -83,13 +81,8 @@ public class SeatSelectionActivity extends AppCompatActivity {
         setupRecyclerView();
         setupCheckoutButton();
         setupBackButton();
-        prepareAPIClients();
         fetchAllSeatTypes();
         fetchAllSeats();
-    }
-    private void prepareAPIClients() {
-        RetrofitService retrofitService = new RetrofitService(this);
-        seatAPI = retrofitService.getRetrofit().create(SeatAPI.class);
     }
     private void setupRecyclerView() {
         seatRecyclerView = findViewById(R.id.seatRecyclerView);
@@ -97,7 +90,8 @@ public class SeatSelectionActivity extends AppCompatActivity {
     }
     private void fetchAllSeatTypes() {
         seatTypes = new HashMap<>();
-        seatAPI
+        ApiService
+                .getCinemaApi(this)
                 .getAllSeatTypes()
                 .enqueue(new Callback<>() {
                     @Override
@@ -117,7 +111,8 @@ public class SeatSelectionActivity extends AppCompatActivity {
     }
     private void fetchAllSeats() {
         selectedScreenId = getIntent().getLongExtra(IntentKey.SELECTED_SCREEN_ID.name(), -1L);
-        seatAPI
+        ApiService
+                .getCinemaApi(this)
                 .getAllSeatsByScreenId(selectedScreenId)
                 .enqueue(new Callback<>() {
                     @SuppressLint("NotifyDataSetChanged")

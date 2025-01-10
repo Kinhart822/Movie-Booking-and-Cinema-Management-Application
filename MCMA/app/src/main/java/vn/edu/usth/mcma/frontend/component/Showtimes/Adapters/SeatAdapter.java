@@ -174,7 +174,7 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
         TextView seatTextView;
         SeatViewHolder(@NonNull View itemView) {
             super(itemView);
-            seatTextView = itemView.findViewById(R.id.seatTextView);
+            seatTextView = itemView.findViewById(R.id.seatTextView);//todo monospace font
         }
     }
 }

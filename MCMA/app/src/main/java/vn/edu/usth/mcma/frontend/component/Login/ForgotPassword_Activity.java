@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.logging.Level;
@@ -18,16 +19,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.constant.SharedPreferencesKey;
 import vn.edu.usth.mcma.frontend.dto.Request.ForgotPasswordRequest;
 import vn.edu.usth.mcma.frontend.dto.Response.JwtAuthenticationResponse;
-import vn.edu.usth.mcma.frontend.network.apis.AuthenticationApi;
-import vn.edu.usth.mcma.frontend.network.RetrofitService;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class ForgotPassword_Activity extends AppCompatActivity {
 
     private EditText editTextEmail;
-
-    private Button resetButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +35,7 @@ public class ForgotPassword_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_forgot_password);
 
         editTextEmail = findViewById(R.id.text_email);
-        resetButton = findViewById(R.id.send_request);
-
-        RetrofitService retrofitService = new RetrofitService(this);
-        AuthenticationApi authenticationApi = retrofitService.getRetrofit().create(AuthenticationApi.class);
+        Button resetButton = findViewById(R.id.send_request);
 
         resetButton.setOnClickListener(view -> {
             String TextEmail = editTextEmail.getText().toString();
@@ -52,33 +48,34 @@ public class ForgotPassword_Activity extends AppCompatActivity {
             }
             ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest();
             forgotPasswordRequest.setEmail(TextEmail);
-            authenticationApi.forgotPassword(forgotPasswordRequest).enqueue(new Callback<JwtAuthenticationResponse>() {
+            ApiService
+                    .getAuthApi(this)
+                    .forgotPassword(forgotPasswordRequest).enqueue(new Callback<>() {
                 @Override
-                public void onResponse(Call<JwtAuthenticationResponse> call, Response<JwtAuthenticationResponse> response) {
-                    if(response.isSuccessful()){
+                public void onResponse(@NonNull Call<JwtAuthenticationResponse> call, @NonNull Response<JwtAuthenticationResponse> response) {
+                    if (response.isSuccessful()) {
                         // Get the token from the response body
+                        assert response.body() != null;
                         String token = response.body().getToken();
-
                         // Save the token in SharedPreferences
-                        SharedPreferences sharedPreferencesForToken = getSharedPreferences("AuthPreferences", Context.MODE_PRIVATE);
+                        SharedPreferences sharedPreferencesForToken = getSharedPreferences(SharedPreferencesKey.AUTH.name(), Context.MODE_PRIVATE);
                         SharedPreferences.Editor editorForToken = sharedPreferencesForToken.edit();
-                        editorForToken.putString("authToken", token);
+                        editorForToken.putString(SharedPreferencesKey.AUTH_TOKEN.name(), token);
                         editorForToken.apply();
 
                         Intent intent = new Intent(ForgotPassword_Activity.this, ResetPassword_Activity.class);
                         startActivity(intent);
                         finish();
                         Toast.makeText(ForgotPassword_Activity.this, "Send request to reset password successfully!", Toast.LENGTH_SHORT).show();
-                    }else {
-                        Toast.makeText(ForgotPassword_Activity.this, "Wrong Email!!!" , Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ForgotPassword_Activity.this, "Wrong Email!!!", Toast.LENGTH_SHORT).show();
                     }
-
                 }
 
                 @Override
-                public void onFailure(Call<JwtAuthenticationResponse> call, Throwable t) {
+                public void onFailure(@NonNull Call<JwtAuthenticationResponse> call, @NonNull Throwable t) {
                     Toast.makeText(ForgotPassword_Activity.this, "Send request to reset password failed!!!" + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    Logger.getLogger(Register_Activity.class.getName()).log(Level.SEVERE, "Error occurred, Please enter email again to send request", t);
+                    Logger.getLogger(ForgotPassword_Activity.class.getName()).log(Level.SEVERE, "Error occurred, Please enter email again to send request", t);
                 }
             });
 //            Intent intent = new Intent(this, vn.edu.usth.mcma.frontend.Login.ResetPassword_Activity.class);
@@ -102,9 +99,7 @@ public class ForgotPassword_Activity extends AppCompatActivity {
         });
 
         ImageButton back_button = findViewById(R.id.back_button);
-        back_button.setOnClickListener(view -> {
-            onBackPressed();
-        });
+        back_button.setOnClickListener(view -> onBackPressed());
 
     }
 

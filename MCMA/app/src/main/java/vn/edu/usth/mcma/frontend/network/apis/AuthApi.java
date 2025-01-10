@@ -11,7 +11,7 @@ import vn.edu.usth.mcma.frontend.dto.Request.SignInRequest;
 import vn.edu.usth.mcma.frontend.dto.Request.SignUpRequest;
 import vn.edu.usth.mcma.frontend.dto.Response.JwtAuthenticationResponse;
 
-public interface AuthenticationApi {
+public interface AuthApi {
     @POST("/api/v1/auth/sign-in")
     Call<JwtAuthenticationResponse> signIn(@Body SignInRequest signInRequest);
 

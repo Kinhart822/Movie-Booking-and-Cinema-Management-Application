@@ -30,30 +30,25 @@ import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.Request.BookingRequest;
 import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.SendBookingResponse;
 import vn.edu.usth.mcma.frontend.dto.Response.BookingResponse;
-import vn.edu.usth.mcma.frontend.network.apis.BookingProcessAPIs.BookingAPI;
-import vn.edu.usth.mcma.frontend.network.RetrofitService;
 import vn.edu.usth.mcma.frontend.component.Login.Register_Activity;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Adapters.PaymentMethodAdapter;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Booking.PaymentMethod;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class PayingMethodActivity extends AppCompatActivity {
     private RecyclerView paymentMethodsRecyclerView;
-    private PaymentMethodAdapter paymentMethodAdapter;
     private CheckBox termsCheckbox;
     private Button completePaymentButton;
     private PaymentMethod selectedPaymentMethodEnum;
     private vn.edu.usth.mcma.frontend.component.Showtimes.Models.PaymentMethod selectedPaymentMethod;
-    private TextView movieTitleTV, theaterNameTV, screenNumberTV, movieDateTV, movieShowtimeTV;
-    private String movieName;
-    private String cinemaName;
     private int movieId;
     private int selectedCityId;
     private int selectedCinemaId;
     private int selectedScreenId;
     private int selectedScheduleId;
     private List<Integer> selectedTicketIds = new ArrayList<>();
-    private List<Integer> selectedSeatIds = new ArrayList<>();
+    private final List<Integer> selectedSeatIds = new ArrayList<>();
     private List<Integer> selectedFoodIds = new ArrayList<>();
     private List<Integer> selectedDrinkIds = new ArrayList<>();
     private int selectedMovieCouponId;
@@ -82,11 +77,11 @@ public class PayingMethodActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        movieTitleTV = findViewById(R.id.movieTitle);
-        theaterNameTV = findViewById(R.id.theaterName);
-        screenNumberTV = findViewById(R.id.screen_number);
-        movieDateTV = findViewById(R.id.movieDate);
-        movieShowtimeTV = findViewById(R.id.movieDuration);
+        TextView movieTitleTV = findViewById(R.id.movieTitle);
+        TextView theaterNameTV = findViewById(R.id.theaterName);
+        TextView screenNumberTV = findViewById(R.id.screen_number);
+        TextView movieDateTV = findViewById(R.id.movieDate);
+        TextView movieShowtimeTV = findViewById(R.id.movieDuration);
         termsCheckbox = findViewById(R.id.termsCheckbox);
         completePaymentButton = findViewById(R.id.completePaymentButton);
         paymentMethodsRecyclerView = findViewById(R.id.paymentMethodsRecyclerView);
@@ -149,7 +144,7 @@ public class PayingMethodActivity extends AppCompatActivity {
             }
         }
 
-        paymentMethodAdapter = new PaymentMethodAdapter(uniquePaymentMethods);
+        PaymentMethodAdapter paymentMethodAdapter = new PaymentMethodAdapter(uniquePaymentMethods);
         paymentMethodAdapter.setOnPaymentMethodSelectedListener(paymentMethod -> {
             selectedPaymentMethod = paymentMethod;
             selectedPaymentMethodEnum = PaymentMethod.Bank_Transfer;
@@ -205,95 +200,93 @@ public class PayingMethodActivity extends AppCompatActivity {
         BookingRequest bookingRequest = builder.build();
 
         // Tạo đối tượng API
-        RetrofitService retrofitService = new RetrofitService(this);
-        BookingAPI bookingAPI = retrofitService.getRetrofit().create(BookingAPI.class);
-        Call<SendBookingResponse> call = bookingAPI.processBooking(bookingRequest);
-
-        // Gửi yêu cầu API
-        call.enqueue(new Callback<SendBookingResponse>() {
-            @Override
-            public void onResponse(Call<SendBookingResponse> call, Response<SendBookingResponse> response) {
-                if (response.isSuccessful()) {
-                    SendBookingResponse sendBookingResponse = response.body();
-                    if (sendBookingResponse != null) {
-                        Toast.makeText(getApplicationContext(), "Process Booking successfully!", Toast.LENGTH_SHORT).show();
-                        int bookingId = sendBookingResponse.getBookingId();
-                        completeBooking(bookingId, selectedPaymentMethodEnum);
+        ApiService
+                .getBookingApi(this)
+                .processBooking(bookingRequest)
+                .enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<SendBookingResponse> call, @NonNull Response<SendBookingResponse> response) {
+                        if (response.isSuccessful()) {
+                            SendBookingResponse sendBookingResponse = response.body();
+                            if (sendBookingResponse != null) {
+                                Toast.makeText(getApplicationContext(), "Process Booking successfully!", Toast.LENGTH_SHORT).show();
+                                int bookingId = sendBookingResponse.getBookingId();
+                                completeBooking(bookingId, selectedPaymentMethodEnum);
+                            }
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Failed to Process Booking.", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                } else {
-                    Toast.makeText(getApplicationContext(), "Failed to Process Booking.", Toast.LENGTH_SHORT).show();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<SendBookingResponse> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<SendBookingResponse> call, @NonNull Throwable t) {
+                        Toast.makeText(getApplicationContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void completeBooking(int bookingId, PaymentMethod paymentMethod) {
         BookingRequest bookingRequest = new BookingRequest(bookingId, paymentMethod);
 
-        RetrofitService retrofitService = new RetrofitService(this);
-        BookingAPI bookingAPI = retrofitService.getRetrofit().create(BookingAPI.class);
-        Call<BookingResponse> call = bookingAPI.completeBooking(bookingRequest);
-
-        // Gửi yêu cầu API
-        call.enqueue(new Callback<BookingResponse>() {
-            @Override
-            public void onResponse(Call<BookingResponse> call, Response<BookingResponse> response) {
-                if (response.isSuccessful()) {
-                    BookingResponse bookingResponse = response.body();
-                    if (bookingResponse != null) {
-                        if (paymentMethod.equals(PaymentMethod.Bank_Transfer)) {
-                            Toast.makeText(getApplicationContext(), "Complete Booking successfully!", Toast.LENGTH_SHORT).show();
-                            if (ContextCompat.checkSelfPermission(PayingMethodActivity.this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
-                                bookingMessageSuccessFully = String.format(
-                                        "Your booking for the movie \"%s\" is confirmed!\n" +
-                                                "Booking Number: %s\n" +
-                                                "Date & Time: %s - %s\n" +
-                                                "Cinema: %s, %s\n" +
-                                                "Screen: %s\n" +
-                                                "Tickets: %s\n" +
-                                                "Seats: %s\n" +
-                                                "Please confirm your booking by calling our hotline: 1234567890 or visiting our website.\n" +
-                                                "Thank you for booking with us!",
-                                                "Enjoy your movie!\n" +
-                                                "Best Regards,\n" +
-                                                "SpotCinema+",
-                                        bookingResponse.getMovieName(),
-                                        bookingResponse.getBookingNo(),
-                                        bookingResponse.getStartDateTime(),
-                                        bookingResponse.getEndDateTime(),
-                                        bookingResponse.getCinemaName(),
-                                        bookingResponse.getCityName(),
-                                        bookingResponse.getScreenName(),
-                                        String.join(", ", bookingResponse.getTicketTypeName()),
-                                        String.join(", ", bookingResponse.getSeatName())
-                                );
-                                sendSMS(bookingMessageSuccessFully);
-                            } else {
-                                ActivityCompat.requestPermissions(PayingMethodActivity.this,
-                                        new String[]{Manifest.permission.SEND_SMS},
-                                        100);
+        ApiService
+                .getBookingApi(this)
+                .completeBooking(bookingRequest)
+                .enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<BookingResponse> call, @NonNull Response<BookingResponse> response) {
+                        if (response.isSuccessful()) {
+                            BookingResponse bookingResponse = response.body();
+                            if (bookingResponse != null) {
+                                if (paymentMethod.equals(PaymentMethod.Bank_Transfer)) {
+                                    Toast.makeText(getApplicationContext(), "Complete Booking successfully!", Toast.LENGTH_SHORT).show();
+                                    if (ContextCompat.checkSelfPermission(PayingMethodActivity.this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
+                                        bookingMessageSuccessFully = String.format(
+                                                """
+                                                        Your booking for the movie "%s" is confirmed!
+                                                        Booking Number: %s
+                                                        Date & Time: %s - %s
+                                                        Cinema: %s, %s
+                                                        Screen: %s
+                                                        Tickets: %s
+                                                        Seats: %s
+                                                        Please confirm your booking by calling our hotline: 1234567890 or visiting our website.
+                                                        Thank you for booking with us!""",
+                                                """
+                                                        Enjoy your movie!
+                                                        Best Regards,
+                                                        SpotCinema+""",
+                                                bookingResponse.getMovieName(),
+                                                bookingResponse.getBookingNo(),
+                                                bookingResponse.getStartDateTime(),
+                                                bookingResponse.getEndDateTime(),
+                                                bookingResponse.getCinemaName(),
+                                                bookingResponse.getCityName(),
+                                                bookingResponse.getScreenName(),
+                                                String.join(", ", bookingResponse.getTicketTypeName()),
+                                                String.join(", ", bookingResponse.getSeatName())
+                                        );
+                                        sendSMS(bookingMessageSuccessFully);
+                                    } else {
+                                        ActivityCompat.requestPermissions(PayingMethodActivity.this,
+                                                new String[]{Manifest.permission.SEND_SMS},
+                                                100);
+                                    }
+                                } else if (paymentMethod.equals(PaymentMethod.Cash)) {
+                                    Toast.makeText(getApplicationContext(), "Your Booking Status will be Pending, and your seat(s) will be held.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), "Please go to your selected cinema to pay  for your booking before the start date of the movie!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), "Or else your booking will be canceled!!", Toast.LENGTH_LONG).show();
+                                }
                             }
-                        } else if (paymentMethod.equals(PaymentMethod.Cash)) {
-                            Toast.makeText(getApplicationContext(), "Your Booking Status will be Pending, and your seat(s) will be held.", Toast.LENGTH_LONG).show();
-                            Toast.makeText(getApplicationContext(), "Please go to your selected cinema to pay  for your booking before the start date of the movie!", Toast.LENGTH_LONG).show();
-                            Toast.makeText(getApplicationContext(), "Or else your booking will be canceled!!", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Failed to Complete Booking.", Toast.LENGTH_SHORT).show();
                         }
                     }
-                } else {
-                    Toast.makeText(getApplicationContext(), "Failed to Complete Booking.", Toast.LENGTH_SHORT).show();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<BookingResponse> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<BookingResponse> call, @NonNull Throwable t) {
+                        Toast.makeText(getApplicationContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override

@@ -17,14 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.Seat.AvailableSeatResponse;
 import vn.edu.usth.mcma.frontend.dto.Response.ListFoodAndDrinkToOrderingResponse;
-import vn.edu.usth.mcma.frontend.network.apis.ViewAllFoodsAndDrinksByCinemaAPI;
-import vn.edu.usth.mcma.frontend.network.RetrofitService;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Seat;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Adapters.ComboAdapter;
@@ -94,7 +89,7 @@ public class ComboSelectionActivity extends AppCompatActivity {
         handleIntentExtras();
         setupBackButton();
         setupCheckoutButton();
-        fetchComboItems(cinemaId);
+//        fetchComboItems(cinemaId);
     }
 
     @SuppressLint("DefaultLocale")
@@ -175,32 +170,31 @@ public class ComboSelectionActivity extends AppCompatActivity {
             Log.e("ComboSelectionActivity", "checkoutButton is null");
         }
     }
-
-    private void fetchComboItems(int cinemaId) {
-        RetrofitService retrofitService = new RetrofitService(this);
-        ViewAllFoodsAndDrinksByCinemaAPI apiService = retrofitService.getRetrofit().create(ViewAllFoodsAndDrinksByCinemaAPI.class);
-
-        apiService.ViewFoodsAndDrinks(cinemaId).enqueue(new Callback<List<ListFoodAndDrinkToOrderingResponse>>() {
-            @Override
-            public void onResponse(Call<List<ListFoodAndDrinkToOrderingResponse>> call, Response<List<ListFoodAndDrinkToOrderingResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<ListFoodAndDrinkToOrderingResponse> comboData = response.body();
-                    List<ComboItem> comboItems = convertResponseToComboItems(comboData);
-                    updateComboList(comboItems);
-                    comboItemList.addAll(comboItems);
-                } else {
-                    Log.e("ComboSelectionActivity", "Failed to load combos: " + response.message());
-                    Toast.makeText(ComboSelectionActivity.this, "No available combos", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<ListFoodAndDrinkToOrderingResponse>> call, Throwable t) {
-                Log.e("StoreFragment", "API Call Failed: " + t.getMessage(), t);
-                Toast.makeText(ComboSelectionActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+    //todo
+//    private void fetchComboItems(int cinemaId) {
+//        ApiService
+//                .getMovieApi(this)
+//                .getViewFoodsAndDrinks(cinemaId).enqueue(new Callback<List<ListFoodAndDrinkToOrderingResponse>>() {
+//            @Override
+//            public void onResponse(Call<List<ListFoodAndDrinkToOrderingResponse>> call, Response<List<ListFoodAndDrinkToOrderingResponse>> response) {
+//                if (response.isSuccessful() && response.body() != null) {
+//                    List<ListFoodAndDrinkToOrderingResponse> comboData = response.body();
+//                    List<ComboItem> comboItems = convertResponseToComboItems(comboData);
+//                    updateComboList(comboItems);
+//                    comboItemList.addAll(comboItems);
+//                } else {
+//                    Log.e("ComboSelectionActivity", "Failed to load combos: " + response.message());
+//                    Toast.makeText(ComboSelectionActivity.this, "No available combos", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<ListFoodAndDrinkToOrderingResponse>> call, Throwable t) {
+//                Log.e("StoreFragment", "API Call Failed: " + t.getMessage(), t);
+//                Toast.makeText(ComboSelectionActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//        });
+//    }
 
     private List<ComboItem> convertResponseToComboItems(List<ListFoodAndDrinkToOrderingResponse> comboData) {
         List<ComboItem> items = new ArrayList<>();

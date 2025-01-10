@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.frontend.component.Home;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
@@ -9,16 +10,13 @@ public class FilmPagerAdapter extends FragmentStateAdapter {
         super(fragment);
     }
 
+    @NonNull
     @Override
     public Fragment createFragment(int position) {
-        switch (position) {
-            case 0:
-                return new NowShowingFragment();
-            case 1:
-                return new ComingSoonFragment();
-            default:
-                return new NowShowingFragment();
-        }
+        return switch (position) {
+            case 1 -> new ComingSoonFragment();
+            default -> new NowShowingFragment();
+        };
     }
 
     @Override

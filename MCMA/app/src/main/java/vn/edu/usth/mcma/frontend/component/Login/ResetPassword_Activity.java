@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -19,15 +20,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.constant.SharedPreferencesKey;
 import vn.edu.usth.mcma.frontend.dto.Request.ResetPasswordRequest;
-import vn.edu.usth.mcma.frontend.network.apis.AuthenticationApi;
-import vn.edu.usth.mcma.frontend.network.RetrofitService;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class ResetPassword_Activity extends AppCompatActivity {
 
     private EditText editNewPassword, editConfirmPassword;
-
-    private Button changepassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,24 +36,19 @@ public class ResetPassword_Activity extends AppCompatActivity {
         initializeComponents();
 
         ImageButton back_button = findViewById(R.id.back_button);
-        back_button.setOnClickListener(view -> {
-            onBackPressed();
-        });
+        back_button.setOnClickListener(view -> onBackPressed());
     }
 
     private void initializeComponents() {
         editNewPassword = findViewById(R.id.text_password1);
         editConfirmPassword = findViewById(R.id.text_password2);
-        changepassword = findViewById(R.id.change_password);
-
-        RetrofitService retrofitService = new RetrofitService(this);
-        AuthenticationApi authenticationApi = retrofitService.getRetrofit().create(AuthenticationApi.class);
+        Button changePassword = findViewById(R.id.change_password);
 
         // Retrieve the token from SharedPreferences
-        SharedPreferences sharedPreferencesForToken = getSharedPreferences("AuthPreferences", Context.MODE_PRIVATE);
-        String token = sharedPreferencesForToken.getString("authToken", null);
+        SharedPreferences sharedPreferencesForToken = getSharedPreferences(SharedPreferencesKey.AUTH.name(), Context.MODE_PRIVATE);
+        String token = sharedPreferencesForToken.getString(SharedPreferencesKey.AUTH_TOKEN.name(), null);
 
-        changepassword.setOnClickListener(view -> {
+        changePassword.setOnClickListener(view -> {
             String newPassword = editNewPassword.getText().toString();
             String confirmPassword = editConfirmPassword.getText().toString();
 
@@ -77,28 +71,30 @@ public class ResetPassword_Activity extends AppCompatActivity {
             resetPasswordRequest.setConfirmPassword(confirmPassword);
 
             // Call the API
-            authenticationApi.resetPassword(resetPasswordRequest).enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
+            ApiService
+                    .getAuthApi(this)
+                    .resetPassword(resetPasswordRequest).enqueue(new Callback<>() {
+                        @Override
+                        public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
 
-                    if (response.isSuccessful() && response.body() != null) {
-                        // Password reset was successful
-                        Toast.makeText(ResetPassword_Activity.this, "Reset Password successful!", Toast.LENGTH_SHORT).show();
-                        Fragment loginFragment = new LoginFragment();
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(android.R.id.content, loginFragment);
-                        transaction.commit();
-                    } else {
-                        Toast.makeText(ResetPassword_Activity.this, "Reset Password failed.", Toast.LENGTH_LONG).show();
-                    }
-                }
+                            if (response.isSuccessful() && response.body() != null) {
+                                // Password reset was successful
+                                Toast.makeText(ResetPassword_Activity.this, "Reset Password successful!", Toast.LENGTH_SHORT).show();
+                                Fragment loginFragment = new LoginFragment();
+                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                transaction.replace(android.R.id.content, loginFragment);
+                                transaction.commit();
+                            } else {
+                                Toast.makeText(ResetPassword_Activity.this, "Reset Password failed.", Toast.LENGTH_LONG).show();
+                            }
+                        }
 
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    Toast.makeText(ResetPassword_Activity.this, "Reset Password failed!!!" + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    Logger.getLogger(Register_Activity.class.getName()).log(Level.SEVERE, "Error occurred, Please enter password again to change", t);
-                }
-            });
+                        @Override
+                        public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                            Toast.makeText(ResetPassword_Activity.this, "Reset Password failed!!!" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            Logger.getLogger(ResetPassword_Activity.class.getName()).log(Level.SEVERE, "Error occurred, Please enter password again to change", t);
+                        }
+                    });
         });
     }
 

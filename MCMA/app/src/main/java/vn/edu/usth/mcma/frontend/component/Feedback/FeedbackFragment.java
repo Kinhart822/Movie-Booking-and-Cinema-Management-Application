@@ -20,11 +20,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.Response.BookingResponse;
-import vn.edu.usth.mcma.frontend.network.apis.GetAllBookingAPI;
-import vn.edu.usth.mcma.frontend.network.RetrofitService;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class FeedbackFragment extends Fragment {
-    private RecyclerView recyclerView;
     //    private List<RatingMovie_Item> items;
     private RatingMovie_Adapter adapter;
     private List<BookingResponse> items;
@@ -34,7 +32,7 @@ public class FeedbackFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_feedback, container, false);
 
-        recyclerView = v.findViewById(R.id.recyclerview_feedbackmovie);
+        RecyclerView recyclerView = v.findViewById(R.id.recyclerview_feedbackmovie);
         items = new ArrayList<>();
         fetchBookingList();
         adapter = new RatingMovie_Adapter(requireContext(), items);
@@ -43,26 +41,26 @@ public class FeedbackFragment extends Fragment {
         return v;
     }
     private void fetchBookingList() {
-        RetrofitService retrofitService = new RetrofitService(requireContext());
-        GetAllBookingAPI getAllBookingAPI = retrofitService.getRetrofit().create(GetAllBookingAPI.class);
-        getAllBookingAPI.getBookingHistory().enqueue(new Callback<List<BookingResponse>>() {
-            @Override
-            public void onResponse(Call<List<BookingResponse>> call, Response<List<BookingResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
+        ApiService
+                .getAccountApi(requireContext())
+                .getBookingHistory().enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<BookingResponse>> call, @NonNull Response<List<BookingResponse>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
 //                    Toast.makeText(requireActivity(), "Here's your feedbacks", Toast.LENGTH_SHORT).show();
-                    items.clear();
-                    items.addAll(response.body());
-                    adapter.notifyDataSetChanged();
-                } else {
-                    Toast.makeText(requireActivity(), "You haven't made any feedbacks", Toast.LENGTH_SHORT).show();
-                }
-            }
+                            items.clear();
+                            items.addAll(response.body());
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(requireActivity(), "You haven't made any feedbacks", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
-            @Override
-            public void onFailure(Call<List<BookingResponse>> call, Throwable t) {
-                Toast.makeText(requireActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<List<BookingResponse>> call, @NonNull Throwable t) {
+                        Toast.makeText(requireActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
 

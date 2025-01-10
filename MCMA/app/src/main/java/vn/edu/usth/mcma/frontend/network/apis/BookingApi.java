@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.network.apis.BookingProcessAPIs;
+package vn.edu.usth.mcma.frontend.network.apis;
 
 import java.util.List;
 
@@ -10,9 +10,10 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import vn.edu.usth.mcma.frontend.dto.Request.BookingRequest;
 import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.SendBookingResponse;
+import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.TicketResponse;
 import vn.edu.usth.mcma.frontend.dto.Response.BookingResponse;
 
-public interface BookingAPI {
+public interface BookingApi {
     @POST("/api/v1/user/booking/processingBooking")
     Call<SendBookingResponse> processBooking(@Body BookingRequest bookingRequest);
 
@@ -36,4 +37,6 @@ public interface BookingAPI {
 
     @DELETE("/api/v1/user/booking/delete-booking/{bookingId}")
     Call<Void> deleteBooking(@Path("bookingId") int bookingId);
+    @GET("/api/v1/user/booking/allTickets")
+    Call<List<TicketResponse>> getAllTickets();
 }

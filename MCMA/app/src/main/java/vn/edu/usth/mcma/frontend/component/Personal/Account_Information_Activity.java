@@ -5,6 +5,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.logging.Level;
@@ -15,8 +16,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.Response.UserDetailsResponse;
-import vn.edu.usth.mcma.frontend.network.apis.UserDetailsAPI;
-import vn.edu.usth.mcma.frontend.network.RetrofitService;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class Account_Information_Activity extends AppCompatActivity {
     private TextView tvEmail, tvLastname, tvFirstname, tvPhone, tvDob, tvAddress, tvGender;
@@ -41,29 +41,28 @@ public class Account_Information_Activity extends AppCompatActivity {
     }
 
     private void loadInformation() {
-        RetrofitService retrofitService = new RetrofitService(this);
-        UserDetailsAPI userDetailsAPI = retrofitService.getRetrofit().create(UserDetailsAPI.class);
-
-        userDetailsAPI.getUserDetailByUser()
-                .enqueue(new Callback<UserDetailsResponse>() {
+        ApiService
+                .getAccountApi(this)
+                .getUserDetailByUser()
+                .enqueue(new Callback<>() {
                     @Override
-                    public void onResponse(Call<UserDetailsResponse> call, Response<UserDetailsResponse> response) {
+                    public void onResponse(@NonNull Call<UserDetailsResponse> call, @NonNull Response<UserDetailsResponse> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             UserDetailsResponse userDetailsResponse = response.body();
                             tvEmail.setText(userDetailsResponse.getEmail());
                             tvLastname.setText(userDetailsResponse.getLastName());
                             tvFirstname.setText(userDetailsResponse.getFirstName());
                             tvPhone.setText(userDetailsResponse.getPhone());
-                            tvDob.setText(userDetailsResponse.getDateOfBirth().toString());
+                            tvDob.setText(userDetailsResponse.getDateOfBirth());
                             tvAddress.setText(userDetailsResponse.getAddress());
-                            tvGender.setText(userDetailsResponse.getGender().toString());
+                            tvGender.setText(userDetailsResponse.getGender());
 
                         } else {
                             Toast.makeText(Account_Information_Activity.this, "Failed to fetch data", Toast.LENGTH_SHORT).show();
                         }
                     }
 
-                    public void onFailure(Call<UserDetailsResponse> call, Throwable t) {
+                    public void onFailure(@NonNull Call<UserDetailsResponse> call, @NonNull Throwable t) {
                         Toast.makeText(Account_Information_Activity.this, "Failed to fetch data!!!" + t.getMessage(), Toast.LENGTH_SHORT).show();
                         Logger.getLogger(Account_Information_Activity.class.getName()).log(Level.SEVERE, "Error occurred", t);
                     }
