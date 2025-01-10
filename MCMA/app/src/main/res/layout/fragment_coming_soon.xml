@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".frontend.Home.NowShowingFragment">
+    tools:context=".frontend.components.Home.NowShowingFragment">
     <!-- RecyclerView for Now Showing films (Horizontal Scrollable) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_coming_soon"

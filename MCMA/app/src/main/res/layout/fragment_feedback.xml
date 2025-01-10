@@ -5,7 +5,7 @@
     android:id="@+id/feedback_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".frontend.Store.UI.StoreFragment">
+    tools:context=".frontend.components.Store.UI.StoreFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

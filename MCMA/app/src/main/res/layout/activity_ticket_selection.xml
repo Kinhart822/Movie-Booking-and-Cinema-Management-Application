@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".frontend.Showtimes.UI.ComboSelectionActivity">
+    tools:context=".frontend.components.Showtimes.UI.ComboSelectionActivity">
 
     <!-- Top Section -->
     <LinearLayout

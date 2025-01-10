@@ -20,8 +20,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.Home.Fragment_changing;
-import vn.edu.usth.mcma.frontend.Login.LoginFragment;
+import vn.edu.usth.mcma.frontend.components.Home.Fragment_changing;
+import vn.edu.usth.mcma.frontend.components.Login.LoginFragment;
+import vn.edu.usth.mcma.frontend.components.Notification.Notification_Activity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Dùng Intent để chuyển đến Notification_Activity
-                Intent intent = new Intent(MainActivity.this, vn.edu.usth.mcma.frontend.Notification.Notification_Activity.class);
+                Intent intent = new Intent(MainActivity.this, Notification_Activity.class);
                 startActivity(intent);
             }
         });
