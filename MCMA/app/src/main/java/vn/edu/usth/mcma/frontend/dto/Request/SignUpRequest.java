@@ -1,6 +1,6 @@
 package vn.edu.usth.mcma.frontend.dto.Request;
 
-import vn.edu.usth.mcma.frontend.constants.Gender;
+import vn.edu.usth.mcma.frontend.constant.Gender;
 
 public class SignUpRequest {
     private String firstName;

@@ -5,7 +5,7 @@
     android:id="@+id/store_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".frontend.components.Store.UI.StoreFragment">
+    tools:context=".frontend.component.Store.UI.StoreFragment">
 
     <!-- Main Content -->
     <LinearLayout

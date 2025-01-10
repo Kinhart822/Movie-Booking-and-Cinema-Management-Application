@@ -14,7 +14,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
-import vn.edu.usth.mcma.frontend.constants.IP;
+import vn.edu.usth.mcma.frontend.constant.IP;
 
 @Getter
 public class RetrofitService {

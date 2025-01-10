@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".frontend.components.Showtimes.UI.MovieBookingActivity">
+    tools:context=".frontend.component.Showtimes.UI.MovieBookingActivity">
 
     <!-- Toolbar Section -->
     <com.google.android.material.appbar.AppBarLayout

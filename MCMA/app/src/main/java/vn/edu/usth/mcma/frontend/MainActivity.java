@@ -20,9 +20,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.components.Home.Fragment_changing;
-import vn.edu.usth.mcma.frontend.components.Login.LoginFragment;
-import vn.edu.usth.mcma.frontend.components.Notification.Notification_Activity;
+import vn.edu.usth.mcma.frontend.component.Home.Fragment_changing;
+import vn.edu.usth.mcma.frontend.component.Login.LoginFragment;
+import vn.edu.usth.mcma.frontend.component.Notification.Notification_Activity;
 
 public class MainActivity extends AppCompatActivity {
 

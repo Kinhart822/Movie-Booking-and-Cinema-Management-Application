@@ -26,91 +26,91 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="tiramisu">
         <activity
-            android:name=".frontend.components.Showtimes.UI.PayingMethodActivity"
+            android:name=".frontend.component.Showtimes.UI.PayingMethodActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Home.OnlyDetailsActivity"
+            android:name=".frontend.component.Home.OnlyDetailsActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".frontend.components.Personal.Movie_Feedback_Activity"
+            android:name=".frontend.component.Personal.Movie_Feedback_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Feedback.View_Movie_Feedback_Activity"
+            android:name=".frontend.component.Feedback.View_Movie_Feedback_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Personal.Delete_Booking_Activity"
+            android:name=".frontend.component.Personal.Delete_Booking_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Personal.Revoke_Cancel_Booking_Activity"
+            android:name=".frontend.component.Personal.Revoke_Cancel_Booking_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Personal.View_Movie_Feedback02_Activity"
+            android:name=".frontend.component.Personal.View_Movie_Feedback02_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Personal.Cancel_Booking_Activity"
+            android:name=".frontend.component.Personal.Cancel_Booking_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Feedback.RatingMovie_Activity"
+            android:name=".frontend.component.Feedback.RatingMovie_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Showtimes.UI.TicketSelectionActivity"
+            android:name=".frontend.component.Showtimes.UI.TicketSelectionActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Showtimes.UI.PaymentBookingActivity"
+            android:name=".frontend.component.Showtimes.UI.PaymentBookingActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Showtimes.UI.ComboSelectionActivity"
+            android:name=".frontend.component.Showtimes.UI.ComboSelectionActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Showtimes.UI.SeatSelectionActivity"
+            android:name=".frontend.component.Showtimes.UI.SeatSelectionActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Showtimes.UI.MovieBookingActivity"
+            android:name=".frontend.component.Showtimes.UI.MovieBookingActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Showtimes.UI.MovieDetailsActivity"
+            android:name=".frontend.component.Showtimes.UI.MovieDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Personal.ViewFeedback_Activity"
+            android:name=".frontend.component.Personal.ViewFeedback_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Personal.Booking_History_Activity"
+            android:name=".frontend.component.Personal.Booking_History_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Personal.Change_Password_Account_Info_Activity"
+            android:name=".frontend.component.Personal.Change_Password_Account_Info_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Personal.Account_Information_Activity"
+            android:name=".frontend.component.Personal.Account_Information_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Personal.Edit_Update_Account_Info_Activity"
+            android:name=".frontend.component.Personal.Edit_Update_Account_Info_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Notification.Notification_Activity"
+            android:name=".frontend.component.Notification.Notification_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Login.ResetPassword_Activity"
+            android:name=".frontend.component.Login.ResetPassword_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Login.ForgotPassword_Activity"
+            android:name=".frontend.component.Login.ForgotPassword_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Login.Register_Activity"
+            android:name=".frontend.component.Login.Register_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.components.Showtimes.UI.TheaterScheduleActivity"
+            android:name=".frontend.component.Showtimes.UI.TheaterScheduleActivity"
             android:exported="false" />
         <activity
             android:name=".frontend.MainActivity"
             android:exported="false"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".frontend.components.Search.Search_Activity"
+            android:name=".frontend.component.Search.Search_Activity"
             android:exported="false" />
 
         <activity
-            android:name=".frontend.components.More.LoadingPageActivity"
+            android:name=".frontend.component.More.LoadingPageActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

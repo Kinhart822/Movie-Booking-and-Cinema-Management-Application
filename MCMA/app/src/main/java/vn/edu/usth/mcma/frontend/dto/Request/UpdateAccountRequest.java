@@ -2,7 +2,7 @@ package vn.edu.usth.mcma.frontend.dto.Request;
 
 import java.util.Date;
 
-import vn.edu.usth.mcma.frontend.constants.Gender;
+import vn.edu.usth.mcma.frontend.constant.Gender;
 
 public class UpdateAccountRequest {
 

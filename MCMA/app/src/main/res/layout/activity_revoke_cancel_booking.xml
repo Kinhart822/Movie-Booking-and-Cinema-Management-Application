@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".frontend.components.Personal.Cancel_Booking_Activity"
+    tools:context=".frontend.component.Personal.Cancel_Booking_Activity"
     android:orientation="vertical">
 
     <!-- Top Section -->

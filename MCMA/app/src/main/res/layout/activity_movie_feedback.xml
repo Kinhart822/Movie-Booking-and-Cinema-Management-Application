@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".frontend.components.Personal.Cancel_Booking_Activity">
+    tools:context=".frontend.component.Personal.Cancel_Booking_Activity">
 
     <!-- Top Section -->
     <LinearLayout

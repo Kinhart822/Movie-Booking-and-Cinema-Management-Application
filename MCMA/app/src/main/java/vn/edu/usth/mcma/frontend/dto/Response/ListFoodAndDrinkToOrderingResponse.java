@@ -2,7 +2,7 @@ package vn.edu.usth.mcma.frontend.dto.Response;
 
 import java.util.List;
 
-import vn.edu.usth.mcma.frontend.constants.SizeFoodOrDrink;
+import vn.edu.usth.mcma.frontend.constant.SizeFoodOrDrink;
 
 public class ListFoodAndDrinkToOrderingResponse {
     private String cinemaName;

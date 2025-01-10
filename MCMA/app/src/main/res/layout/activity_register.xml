@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context=".frontend.components.Login.Register_Activity">
+    tools:context=".frontend.component.Login.Register_Activity">
 
     <ScrollView
         android:layout_width="match_parent"
