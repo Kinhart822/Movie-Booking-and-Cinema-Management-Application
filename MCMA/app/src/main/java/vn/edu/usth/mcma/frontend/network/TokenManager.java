@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import vn.edu.usth.mcma.frontend.constant.SharedPreferencesKey;
 
 public class TokenManager {
-    private SharedPreferences authPrefs;
+    private final SharedPreferences authPrefs;
 
     public TokenManager(Context context) {
         authPrefs = context.getSharedPreferences(SharedPreferencesKey.AUTH.name(), Context.MODE_PRIVATE);

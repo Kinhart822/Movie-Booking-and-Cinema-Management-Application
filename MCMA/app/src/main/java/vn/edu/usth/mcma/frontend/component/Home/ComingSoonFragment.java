@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,15 +28,14 @@ import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class ComingSoonFragment extends Fragment {
-    private List<ComingSoonResponse> comingSoonResponseList = new ArrayList<>();
+    private final List<ComingSoonResponse> comingSoonResponseList = new ArrayList<>();
     private ComingSoon_Adapter adapter;
-    private RecyclerView recyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_coming_soon, container, false);
 
-        recyclerView = v.findViewById(R.id.recyclerview_coming_soon);
+        RecyclerView recyclerView = v.findViewById(R.id.recyclerview_coming_soon);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
 
         adapter = new ComingSoon_Adapter(requireContext(), comingSoonResponseList, new FilmViewInterface() {
@@ -57,23 +57,23 @@ public class ComingSoonFragment extends Fragment {
     private void fetchComingSoonMovies() {
         ApiService
                 .getMovieApi(requireContext())
-                .getAvailableComingSoonMovies().enqueue(new Callback<List<ComingSoonResponse>>() {
-            @Override
-            public void onResponse(Call<List<ComingSoonResponse>> call, Response<List<ComingSoonResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    updateMovieList(response.body());
-                } else {
-                    Log.e("ComingSoonFragment", "Error: " + response.message());
-                    Toast.makeText(requireActivity(), "No movies to show", Toast.LENGTH_SHORT).show();
-                }
-            }
+                .getAvailableComingSoonMovies().enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<ComingSoonResponse>> call, @NonNull Response<List<ComingSoonResponse>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            updateMovieList(response.body());
+                        } else {
+                            Log.e("ComingSoonFragment", "Error: " + response.message());
+                            Toast.makeText(requireActivity(), "No movies to show", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
-            @Override
-            public void onFailure(Call<List<ComingSoonResponse>> call, Throwable t) {
-                Log.e("ComingSoonFragment", "API Call Failed: " + t.getMessage(), t);
-                Toast.makeText(requireActivity(), "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<List<ComingSoonResponse>> call, @NonNull Throwable t) {
+                        Log.e("ComingSoonFragment", "API Call Failed: " + t.getMessage(), t);
+                        Toast.makeText(requireActivity(), "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     private void updateMovieList(List<ComingSoonResponse> newMovies) {
