@@ -90,7 +90,7 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
                             .getById(availabilityId)
                             .getBackgroundId()));
             holder.itemView.setOnClickListener(null);
-            if (availabilityId == SeatAvailability.Available.getId()) {
+            if (availabilityId == SeatAvailability.Buyable.getId()) {
                 holder.itemView.setBackground(ContextCompat
                         .getDrawable(context, SeatAvailables
                                 .getById(seatTypeId)

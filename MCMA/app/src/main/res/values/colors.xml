@@ -60,4 +60,12 @@
     <color name="blue_type">#3F51B5</color>
 
     <color name="GreenBtn">#008000</color>
+    <color name="seat_sold">#70FF0000</color>
+    <color name="seat_held">#700000FF</color>
+    <color name="seat_selecting">#7000FF00</color>
+    <color name="seat_blank">#424242</color>
+    <color name="seat_standard">#C0C0C0</color>
+    <color name="seat_vip">#FFD700</color>
+    <color name="seat_lovers">#FF4081</color>
+    <color name="seat_bed">#6A0DAD</color>
 </resources>

@@ -11,7 +11,7 @@ public enum SeatAvailables {
     SELECTED(-2, R.drawable.ic_seat_selecting),
     NORMAL(1, R.drawable.ic_seat_standard),
     VIP(2, R.drawable.ic_seat_vip),
-    LOVERS(3, R.drawable.ic_seat_couple),
+    LOVERS(3, R.drawable.ic_seat_lovers),
     BED(4, R.drawable.ic_seat_bed),;
     private final Integer id;
     private final int backgroundId;

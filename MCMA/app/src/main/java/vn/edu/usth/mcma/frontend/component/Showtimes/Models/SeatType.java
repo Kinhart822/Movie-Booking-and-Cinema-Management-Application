@@ -5,7 +5,7 @@ import vn.edu.usth.mcma.R;
 public enum SeatType {
     STAND(R.drawable.ic_seat_standard),
     VIP(R.drawable.ic_seat_vip),
-    COUPLE(R.drawable.ic_seat_couple),
+    COUPLE(R.drawable.ic_seat_lovers),
     SOLD(R.drawable.ic_seat_sold),
     SELECTING(R.drawable.ic_seat_selecting);
 

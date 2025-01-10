@@ -8,8 +8,8 @@ import vn.edu.usth.mcma.R;
 
 @Getter
 public enum SeatAvailability {
-    Unavailable(0, R.drawable.ic_seat_unavailable),
-    Available(1, R.drawable.ic_seat_empty),
+    Sold(0, R.drawable.ic_seat_sold),
+    Buyable(1, R.drawable.ic_seat_empty),
     Held(2, R.drawable.ic_seat_held),;
     private final int id;
     private final Integer backgroundId;
