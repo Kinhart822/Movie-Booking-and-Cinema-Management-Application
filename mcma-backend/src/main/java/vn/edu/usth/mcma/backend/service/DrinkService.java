@@ -11,7 +11,7 @@ import vn.edu.usth.mcma.backend.dto.DrinkRequest;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.DrinkRepository;
-import vn.edu.usth.mcma.backend.security.JwtUtil;
+import vn.edu.usth.mcma.backend.security.JwtHelper;
 
 import java.time.Instant;
 import java.util.List;
@@ -21,9 +21,9 @@ import java.util.List;
 @AllArgsConstructor
 public class DrinkService {
     private final DrinkRepository drinkRepository;
-    private final JwtUtil jwtUtil;
+    private final JwtHelper jwtUtil;
     public ApiResponse createDrink(DrinkRequest request) {
-        Long userId = jwtUtil.getUserIdFromToken();
+        Long userId = jwtUtil.getIdUserRequesting();
         Drink drink = new Drink();
         drink.setName(request.getName());
         drink.setDescription(request.getDescription());
@@ -41,7 +41,7 @@ public class DrinkService {
         return drinkRepository.findAllByNameContaining(query, pageable);
     }
     public ApiResponse updateDrink(Long id, DrinkRequest request) {
-        Long userId = jwtUtil.getUserIdFromToken();
+        Long userId = jwtUtil.getIdUserRequesting();
         Drink drink = drinkRepository
                 .findById(id)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
@@ -57,7 +57,7 @@ public class DrinkService {
         return ApiResponse.success();
     }
     public ApiResponse deleteDrink(Long id) {
-        Long userId = jwtUtil.getUserIdFromToken();
+        Long userId = jwtUtil.getIdUserRequesting();
         Drink drink = drinkRepository
                 .findById(id)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));

@@ -1,13 +1,9 @@
 package vn.edu.usth.mcma.backend.security;
 
 import constants.UserType;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -19,19 +15,12 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import vn.edu.usth.mcma.backend.service.UserService;
-
-import java.io.IOException;
-import java.util.Optional;
 
 @Configuration
 @EnableWebSecurity
@@ -40,7 +29,6 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserService userService;
-    private final CustomLogoutHandler logoutHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -48,28 +36,17 @@ public class SecurityConfig {
                 .cors(corsCustomizer())
                 .csrf(csrfCustomizer())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/api/v1/auth/sign-in",
-                                "/api/v1/auth/sign-up",
-                                "/api/v1/auth/reset-password/**",
-                                "/api/v1/user/search-movie-by-name",
-                                "/api/v1/user/search-movie-by-genre",
-                                "/api/v1/user/search-movie-by-movie-genre-name",
-                                "/api/v1/user/booking/**",
-                                "/api/v1/user/view/**").permitAll()
+                        .requestMatchers(//todo: separate auth/account && clean up && see if swagger need permit && create admin need auth, user dont need
+                                ApiEndpoints.PERMITTED.getApis()).permitAll()
                         .requestMatchers("/api/v1/admin/**").hasAuthority(UserType.ADMIN.name())
                         .requestMatchers("/api/v1/user/**").hasAuthority(UserType.USER.name())
                         .anyRequest().authenticated()
                 )
+                // after login, only need jwt to authenticate subsequence requests
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider()).addFilterBefore(
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(
                         jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class
-                )
-                .logout(l -> l.logoutUrl("/api/v1/logout")
-                        .addLogoutHandler(logoutHandler)
-                        .logoutSuccessHandler(this::customLogoutSuccessHandler)
                 );
         return http.build();
     }
@@ -96,7 +73,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userService.getUserDetailsService());
+        authenticationProvider.setUserDetailsService(userService.getUserDetailsCustomService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
@@ -106,42 +83,10 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    // used in auth service: sign in
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
             throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
-    public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
-        return (request, response, authentication) -> {
-            Optional<String> roleOptional = authentication.getAuthorities().stream()
-                    .findFirst()
-                    .map(GrantedAuthority::getAuthority);
-
-            String role = roleOptional.orElse(null);
-            assert role != null;
-            if (role.equals(UserType.USER.name())) {
-                response.sendRedirect("/api/v1/user");
-            } else if (role.equals(UserType.ADMIN.name())) {
-                response.sendRedirect("/api/v1/admin");
-            } else {
-                response.sendRedirect("/signUp");
-            }
-        };
-    }
-
-    private void customLogoutSuccessHandler(HttpServletRequest hsRequest, HttpServletResponse response, Authentication authentication) throws IOException {
-        SecurityContextHolder.clearContext();
-
-        response.setStatus(HttpStatus.OK.value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
-        // Create JSON response message
-        String jsonResponse = "{\"message\": \"Logout successful\"}";
-
-        // Write the response back
-        response.getWriter().write(jsonResponse);
-        response.getWriter().flush();
     }
 }

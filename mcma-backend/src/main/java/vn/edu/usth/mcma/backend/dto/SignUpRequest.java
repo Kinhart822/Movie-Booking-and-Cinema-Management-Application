@@ -16,22 +16,21 @@ import java.util.Date;
 
 @Data
 public class SignUpRequest {
-    @NotBlank(message = "firstName must be not blank")
-    private String firstName;
-    @NotNull(message = "lastName must be not null")
-    private String lastName;
-    @PhoneNumber(message = "phone invalid format")
-    private String phone;
-    @NotNull(message = "dateOfBirth must be not null")
-    private Instant dateOfBirth;
-    private Integer sex;
-    @NotNull(message = "address must be not null")
-    private String address;
     @NotBlank
     @Email
     private String email;
     @NotBlank
     @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
-    private Integer type;
+    @NotBlank(message = "firstName must be not blank")
+    private String firstName;
+    @NotNull(message = "lastName must be not null")
+    private String lastName;
+    private Integer sex;
+    @NotNull(message = "dateOfBirth must be not null")
+    private Instant dateOfBirth;
+    @PhoneNumber(message = "phone invalid format")
+    private String phone;
+    @NotNull(message = "address must be not null")
+    private String address;
 }

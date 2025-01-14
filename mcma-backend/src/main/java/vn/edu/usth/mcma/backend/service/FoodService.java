@@ -11,7 +11,7 @@ import vn.edu.usth.mcma.backend.dto.FoodRequest;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.FoodRepository;
-import vn.edu.usth.mcma.backend.security.JwtUtil;
+import vn.edu.usth.mcma.backend.security.JwtHelper;
 
 import java.time.Instant;
 import java.util.List;
@@ -21,9 +21,9 @@ import java.util.List;
 @AllArgsConstructor
 public class FoodService {
     private final FoodRepository foodRepository;
-    private final JwtUtil jwtUtil;
+    private final JwtHelper jwtUtil;
     public ApiResponse createFood(FoodRequest request) {
-        Long userId = jwtUtil.getUserIdFromToken();
+        Long userId = jwtUtil.getIdUserRequesting();
         Food food = new Food();
         food.setName(request.getName());
         food.setDescription(request.getDescription());
@@ -40,7 +40,7 @@ public class FoodService {
         return foodRepository.findAllByNameContaining(query, pageable);
     }
     public ApiResponse updateFood(Long id, FoodRequest request) {
-        Long userId = jwtUtil.getUserIdFromToken();
+        Long userId = jwtUtil.getIdUserRequesting();
         Food food = foodRepository
                 .findById(id)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
@@ -55,7 +55,7 @@ public class FoodService {
         return ApiResponse.success();
     }
     public ApiResponse deleteFood(Long id) {
-        Long userId = jwtUtil.getUserIdFromToken();
+        Long userId = jwtUtil.getIdUserRequesting();
         Food food = foodRepository
                 .findById(id)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));

@@ -13,6 +13,7 @@ import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.MovieRepository;
 import vn.edu.usth.mcma.backend.repository.ScheduleRepository;
 import vn.edu.usth.mcma.backend.repository.ScreenRepository;
+import vn.edu.usth.mcma.backend.security.JwtHelper;
 
 import java.time.Instant;
 import java.util.List;

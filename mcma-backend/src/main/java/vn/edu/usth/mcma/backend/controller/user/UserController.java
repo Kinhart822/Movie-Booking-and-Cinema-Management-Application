@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.dto.*;
-import vn.edu.usth.mcma.backend.security.JwtUtil;
+import vn.edu.usth.mcma.backend.security.JwtHelper;
 import vn.edu.usth.mcma.backend.service.BookingService;
 import vn.edu.usth.mcma.backend.service.MovieService;
 import vn.edu.usth.mcma.backend.service.SeatService;
@@ -18,13 +18,13 @@ import java.util.List;
 public class UserController {
     private final MovieService movieService;
     private final BookingService bookingService;
-    private final JwtUtil jwtUtil;
+    private final JwtHelper jwtUtil;
     private final ViewService viewService;
     private final SeatService seatService;
 
     @GetMapping
     public ResponseEntity<String> sayHello() {
-        Long userId = jwtUtil.getUserIdFromToken();
+        Long userId = jwtUtil.getIdUserRequesting();
         return ResponseEntity.ok("Hello, User! Your ID is: %d".formatted(userId));
     }
     // TODO: Search Movies
@@ -237,11 +237,10 @@ public class UserController {
     public ResponseEntity<List<HomePageMovie>> getAvailableComingSoonMovies() {
         return ResponseEntity.ok(viewService.getAvailableComingSoonMovies());
     }
-//    @GetMapping("/view/highRatingMovies")
-//    public ResponseEntity<List<HighRatingMovieResponse>> getHighRatingMovies() {
-//        List<HighRatingMovieResponse> highRatingMovieResponses = viewService.getHighRatingMovies();
-//        return ResponseEntity.ok(highRatingMovieResponses);
-//    }
+    @GetMapping("/view/highRatingMovies")
+    public ResponseEntity<List<HighRatingMovie>> getHighRatingMovies() {
+        return ResponseEntity.ok(viewService.getHighRatingMovies());
+    }
 //    @GetMapping("/view/allMovieGenres")
 //    public ResponseEntity<List<MovieGenreResponse>> getAllMovieGenres() {
 //        List<MovieGenreResponse> movieGenreResponses = viewService.getAllMovieGenres();

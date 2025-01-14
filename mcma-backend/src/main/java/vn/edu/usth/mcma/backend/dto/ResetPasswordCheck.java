@@ -5,5 +5,4 @@ import lombok.Data;
 @Data
 public class ResetPasswordCheck {
     private String resetKey;
-    private Integer type;
 }

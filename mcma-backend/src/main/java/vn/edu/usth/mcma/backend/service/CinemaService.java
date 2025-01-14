@@ -4,11 +4,12 @@ import constants.ApiResponseCode;
 import constants.CommonStatus;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import vn.edu.usth.mcma.backend.dto.CinemaProjection;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.CityRepository;
-import vn.edu.usth.mcma.backend.security.JwtUtil;
+import vn.edu.usth.mcma.backend.security.JwtHelper;
 import vn.edu.usth.mcma.backend.dto.CinemaRequest;
 import vn.edu.usth.mcma.backend.repository.CinemaRepository;
 import vn.edu.usth.mcma.backend.entity.Cinema;
@@ -16,15 +17,16 @@ import vn.edu.usth.mcma.backend.entity.Cinema;
 import java.time.Instant;
 import java.util.List;
 
+@Transactional
 @Service
 @AllArgsConstructor
 public class CinemaService {
     private final CinemaRepository cinemaRepository;
     private final CityRepository cityRepository;
-    private final JwtUtil jwtUtil;
+    private final JwtHelper jwtUtil;
 
     public ApiResponse createCinema(CinemaRequest request) {
-        Long userId = jwtUtil.getUserIdFromToken();
+        Long userId = jwtUtil.getIdUserRequesting();
         Instant now = Instant.now();
         cinemaRepository
                 .save(Cinema
@@ -56,7 +58,7 @@ public class CinemaService {
                         .name(request.getName())
                         .address(request.getAddress())
                         .status(request.getStatus())
-                        .lastModifiedBy(jwtUtil.getUserIdFromToken())
+                        .lastModifiedBy(jwtUtil.getIdUserRequesting())
                         .lastModifiedDate(Instant.now())
                         .build());
         return ApiResponse.success();
@@ -67,13 +69,13 @@ public class CinemaService {
                 .save(cinema
                         .toBuilder()
                         .status(CommonStatus.ACTIVE.getStatus() + CommonStatus.INACTIVE.getStatus() - cinema.getStatus())
-                        .lastModifiedBy(jwtUtil.getUserIdFromToken())
+                        .lastModifiedBy(jwtUtil.getIdUserRequesting())
                         .lastModifiedDate(Instant.now())
                         .build());
         return ApiResponse.success();
     }
     public ApiResponse deactivateCinemas(List<Long> ids) {
-        Long userId = jwtUtil.getUserIdFromToken();
+        Long userId = jwtUtil.getIdUserRequesting();
         Instant now = Instant.now();
         cinemaRepository
                 .saveAll(cinemaRepository

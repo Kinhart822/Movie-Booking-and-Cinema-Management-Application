@@ -15,7 +15,7 @@ import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.CinemaRepository;
 import vn.edu.usth.mcma.backend.repository.ScreenRepository;
 import vn.edu.usth.mcma.backend.repository.ScreenTypeRepository;
-import vn.edu.usth.mcma.backend.security.JwtUtil;
+import vn.edu.usth.mcma.backend.security.JwtHelper;
 
 import java.time.Instant;
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ScreenService {
     private final ScreenRepository screenRepository;
-    private final JwtUtil jwtUtil;
+    private final JwtHelper jwtUtil;
     private final CinemaRepository cinemaRepository;
     private final ScreenTypeRepository screenTypeRepository;
 
@@ -36,7 +36,7 @@ public class ScreenService {
         ScreenType screenType = screenTypeRepository
                 .findById(request.getTypeId())
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
-        Long userId = jwtUtil.getUserIdFromToken();
+        Long userId = jwtUtil.getIdUserRequesting();
         Instant now = Instant.now();
         screenRepository
                 .save(Screen
@@ -69,7 +69,7 @@ public class ScreenService {
         ScreenType screenType = screenTypeRepository
                 .findById(request.getTypeId())
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
-        Long userId = jwtUtil.getUserIdFromToken();
+        Long userId = jwtUtil.getIdUserRequesting();
         Instant now = Instant.now();
         screenRepository.save(screen
                 .toBuilder()
@@ -88,13 +88,13 @@ public class ScreenService {
         screenRepository.save(screen
                 .toBuilder()
                 .status(CommonStatus.ACTIVE.getStatus() + CommonStatus.INACTIVE.getStatus() - screen.getStatus())
-                .lastModifiedBy(jwtUtil.getUserIdFromToken())
+                .lastModifiedBy(jwtUtil.getIdUserRequesting())
                 .lastModifiedDate(Instant.now())
                 .build());
         return ApiResponse.success();
     }
     public ApiResponse deactivateScreens(List<Long> ids) {
-        Long userId = jwtUtil.getUserIdFromToken();
+        Long userId = jwtUtil.getIdUserRequesting();
         Instant now = Instant.now();
         screenRepository
                 .saveAll(screenRepository

@@ -18,7 +18,7 @@ import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.helper.SeatHelper;
 import vn.edu.usth.mcma.backend.repository.ScreenRepository;
 import vn.edu.usth.mcma.backend.repository.SeatRepository;
-import vn.edu.usth.mcma.backend.security.JwtUtil;
+import vn.edu.usth.mcma.backend.security.JwtHelper;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -31,8 +31,8 @@ import java.util.Map;
 public class SeatService {
     private final SeatRepository seatRepository;
     private final ScreenRepository screenRepository;
-    private final JwtUtil jwtUtil;
     private final SeatAvailability DEFAULT_SEAT_AVAILABILITY = SeatAvailability.Available;
+    private final JwtHelper jwtUtil;
 
     public ApiResponse initSeatMap(Long screenId, List<SeatHelperInput> seatHelperInputs) {
         Screen screen = screenRepository
@@ -42,7 +42,7 @@ public class SeatService {
         if (!findSeatMapByScreenId(screenId).isEmpty()) {
             throw new BusinessException(ApiResponseCode.INITIATED_SEAT_MAP);
         }
-        Long userId = jwtUtil.getUserIdFromToken();
+        Long userId = jwtUtil.getIdUserRequesting();
         Instant now = Instant.now();
         SeatHelper seatHelper = new SeatHelper(seatHelperInputs);
         seatRepository.saveAll(seatHelper
@@ -92,7 +92,7 @@ public class SeatService {
         if (!screen.isMutable()) {
             throw new BusinessException(ApiResponseCode.BUSY_SCREEN);
         }
-        Long userId = jwtUtil.getUserIdFromToken();
+        Long userId = jwtUtil.getIdUserRequesting();
         Instant now = Instant.now();
         SeatHelper seatHelper = new SeatHelper(seatHelperInputs);
         Map<Integer, Map<Integer, SeatTile>> seatGrid = seatHelper.getSeatGrid();

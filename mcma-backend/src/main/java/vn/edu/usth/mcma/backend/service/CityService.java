@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
-import vn.edu.usth.mcma.backend.security.JwtUtil;
+import vn.edu.usth.mcma.backend.security.JwtHelper;
 import vn.edu.usth.mcma.backend.dto.CityRequest;
 import vn.edu.usth.mcma.backend.repository.CityRepository;
 import vn.edu.usth.mcma.backend.entity.City;
@@ -22,9 +22,9 @@ import java.util.List;
 @AllArgsConstructor
 public class CityService {
     private final CityRepository cityRepository;
-    private final JwtUtil jwtUtil;
+    private final JwtHelper jwtUtil;
     public ApiResponse createCity(CityRequest request) {
-        Long userId = jwtUtil.getUserIdFromToken();
+        Long userId = jwtUtil.getIdUserRequesting();
         City city = new City();
         city.setName(request.getName());
         city.setStatus(CommonStatus.ACTIVE.getStatus());
@@ -37,7 +37,7 @@ public class CityService {
         return cityRepository.findAllByNameContaining(query, pageable);
     }
     public ApiResponse updateCity(Long id, CityRequest request) {
-        Long userId = jwtUtil.getUserIdFromToken();
+        Long userId = jwtUtil.getIdUserRequesting();
         City city = cityRepository
                 .findById(id)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
@@ -48,7 +48,7 @@ public class CityService {
         return ApiResponse.success();
     }
     public ApiResponse deleteCity(Long id) {
-        Long userId = jwtUtil.getUserIdFromToken();
+        Long userId = jwtUtil.getIdUserRequesting();
         City city = cityRepository
                 .findById(id)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));

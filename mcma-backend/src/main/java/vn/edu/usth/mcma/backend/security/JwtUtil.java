@@ -1,46 +1,96 @@
 package vn.edu.usth.mcma.backend.security;
 
-import constants.ApiResponseCode;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import vn.edu.usth.mcma.backend.entity.Token;
-import vn.edu.usth.mcma.backend.exception.BusinessException;
-import vn.edu.usth.mcma.backend.service.TokenService;
+import vn.edu.usth.mcma.backend.entity.User;
+
+import java.security.Key;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+
+import static vn.edu.usth.mcma.backend.config.AppConfig.dotenv;
 
 @Component
-@RequiredArgsConstructor
 public class JwtUtil {
-    private final TokenService tokenService;
-    /**
-     * Extracts the user ID from the Bearer token in the current HTTP request's Authorization header.
-     *
-     * @return the user ID associated with the token
-     * @throws BusinessException
-     * BusinessException if the token is missing, invalid, or expired
-     */
-    public Long getUserIdFromToken() {
-        HttpServletRequest request = getCurrentHttpRequest();
-        if (request == null) {
-            throw new BusinessException(ApiResponseCode.INVALID_HTTP_REQUEST);
-        }
-        Token storedToken = tokenService.checkTokenExistenceByRequest(request);
-        if (storedToken == null) {
-            throw new BusinessException(ApiResponseCode.INVALID_TOKEN);
-        }
-        return storedToken.getUser().getId();
+    private static final String JWT_SECRET_KEY = dotenv().get("JWT_SECRET_KEY");
+    private static final long ACCESS_EXPIRATION_TIME = Long.parseLong(Objects.requireNonNull(dotenv().get("ACCESS_EXPIRATION_TIME")));
+    private static final long REFRESH_EXPIRATION_TIME = Long.parseLong(Objects.requireNonNull(dotenv().get("REFRESH_EXPIRATION_TIME")));
+    private static final String USER_ID_CLAIM = "userId";
+    private static final String ROLES_CLAIM = "roles";
+
+    public String generateAccessToken(UserDetails userDetails) {
+        return buildToken(userDetails, ACCESS_EXPIRATION_TIME);
+    }
+    public String generateRefreshToken(UserDetails userDetails) {
+        return buildToken(userDetails, REFRESH_EXPIRATION_TIME);
+    }
+    private String buildToken(UserDetails userDetails, long expirationTime) {
+        User user = (User) userDetails;
+        long now = System.currentTimeMillis();
+        return Jwts
+                .builder()
+                .setSubject(user.getUsername())
+                .claim(USER_ID_CLAIM, user.getId())
+                .claim(ROLES_CLAIM, user.getRoles())
+                .setIssuedAt(new Date(now))
+                .setExpiration(new Date(now + expirationTime))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String extractUsername(String token) {
+        return extractClaimsFromToken(token).getSubject();
+    }
+    public Long extractUserId(String token) {
+        return extractClaimsFromToken(token).get(USER_ID_CLAIM, Long.class);
+    }
+    public List<?> extractRoles(String token) {
+        return extractClaimsFromToken(token).get(ROLES_CLAIM, List.class);
+    }
+    public Date extractIssuedDate(String token) {
+        return extractClaimsFromToken(token).getIssuedAt();
+    }
+    public Date extractExpirationDate(String token) {
+        return extractClaimsFromToken(token).getExpiration();
     }
 
     /**
-     * Retrieves the current HttpServletRequest from the RequestContextHolder.
-     *
-     * @return the current HttpServletRequest
+     * can validate access token
+     * @param token from http request
+     * @param userDetails represent user
+     * @return true if subject of token is user and token is not expired; else false
      */
-    private HttpServletRequest getCurrentHttpRequest() {
-        ServletRequestAttributes attributes =
-                (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        return (attributes != null) ? attributes.getRequest() : null;
+    public boolean isAccessTokenValid(String token, UserDetails userDetails) {
+        String username = extractUsername(token);
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    }
+
+    public boolean isTokenExpired(String token) {
+        return extractExpirationDate(token).before(new Date());
+    }
+
+    /**
+     * @param token the token
+     * @throws io.jsonwebtoken.ExpiredJwtException this calls .parseClaimsJws() that throw the exception automatically
+     * @return Claims
+     */
+    private Claims extractClaimsFromToken(String token) {
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    private Key getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(JWT_SECRET_KEY);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }
