@@ -7,10 +7,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.*;
 import vn.edu.usth.mcma.backend.entity.Movie;
+import vn.edu.usth.mcma.backend.entity.Rating;
 import vn.edu.usth.mcma.backend.entity.Schedule;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.MovieRepository;
+import vn.edu.usth.mcma.backend.repository.RatingRepository;
 import vn.edu.usth.mcma.backend.repository.ScheduleRepository;
 import vn.edu.usth.mcma.backend.repository.ScreenRepository;
 import vn.edu.usth.mcma.backend.security.JwtHelper;
@@ -24,7 +26,41 @@ import java.util.List;
 public class MovieService {
     private final MovieRepository movieRepository;
     private final ScreenRepository screenRepository;
-    private final ScheduleRepository movieScheduleRepository;
+    private final ScheduleRepository scheduleRepository;
+    private final JwtHelper jwtUtil;
+    private final RatingRepository ratingRepository;
+
+    /*
+     * ========
+     * movie
+     * ========
+     */
+    public ApiResponse updateMovie(Long movieId, MovieRequest movieRequest) {
+        Movie movie = movieRepository
+                .findById(movieId)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+        Rating rating = ratingRepository
+                .findById(movieRequest.getRatingId())
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+        Long userId = jwtUtil.getIdUserRequesting();
+        Instant now = Instant.now();
+        movieRepository
+                .save(movie
+                        .toBuilder()
+                        .name(movieRequest.getName())
+                        .description(movieRequest.getDescription())
+                        .imageBase64(movieRequest.getImageBase64())
+                        .backgroundImageBase64(movieRequest.getBackgroundImageBase64())
+                        .length(movieRequest.getLength())
+                        .publishDate(Instant.parse(movieRequest.getPublishDate()))
+                        .trailerUrl(movieRequest.getTrailerUrl())
+                        .status(movieRequest.getStatus())
+                        .rating(rating)
+                        .lastModifiedBy(userId)
+                        .lastModifiedDate(now)
+                        .build());
+        return ApiResponse.success();
+    }
     /*
      * ========
      * schedule
@@ -42,10 +78,10 @@ public class MovieService {
         if (startTime.isBefore(Instant.now())) {
             throw new BusinessException(ApiResponseCode.INVALID_START_TIME);
         }
-        if (!movieScheduleRepository.eventsInRange(startTime, endTime).isEmpty()) {
+        if (!scheduleRepository.eventsInRange(request.getScreenId(), startTime, endTime).isEmpty()) {
             throw new BusinessException(ApiResponseCode.SCREEN_OCCUPIED);
         }
-        movieScheduleRepository.save(Schedule
+        scheduleRepository.save(Schedule
                 .builder()
                 .screen(screenRepository
                         .findById(request.getScreenId())
@@ -69,8 +105,8 @@ public class MovieService {
                         .id(m.getId())
                         .name(m.getName())
                         .description(m.getDescription())
-                        .imageUrl(m.getImageUrl())
-                        .backgroundImageUrl(m.getBackgroundImageUrl())
+                        .imageUrl(m.getImageBase64())
+                        .backgroundImageUrl(m.getBackgroundImageBase64())
                         .length(m.getLength()/60)
                         .publishDate(m.getPublishDate().toString().substring(0,10))
                         .trailerUrl(m.getTrailerUrl())

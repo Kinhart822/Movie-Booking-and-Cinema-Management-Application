@@ -123,7 +123,38 @@ values ('At', 'Nguyen', 1, '2004-04-11 00:00:00', 'at0@gmail.com', '0976289114',
         utc_timestamp()),
        ('Duc', 'Nguyen', 1, '2004-04-11 00:00:00', 'minhduc@gmail.com', '0969123456',
         '$2a$10$IPQMZ8Vc59ChIs1nIst7ZOB2jv1uT5S.m0mmSHkRSc.PYBwVsbn1G', 'Hawktuah', 0, 1, 0, utc_timestamp(), 0,
+        utc_timestamp()),
+       ('Dummy User 0', '', 1, '2004-04-11 00:00:00', 'd0@gmail.com', '0123456789',
+        '$2a$10$do2lQSohzuLfiSljWORi0Oc3OVG37mtPWxR/cAmJSsOLebcF4A5Oi', 'Hanoi, Viet Nam', 1, 1, 1, utc_timestamp(), 1,
+        utc_timestamp()),
+       ('Dummy User 1', '', 1, '2004-04-11 00:00:00', 'd1@gmail.com', '0123456789',
+        '$2a$10$do2lQSohzuLfiSljWORi0Oc3OVG37mtPWxR/cAmJSsOLebcF4A5Oi', 'Hanoi, Viet Nam', 1, 1, 1, utc_timestamp(), 1,
+        utc_timestamp()),
+       ('Dummy User 2', '', 1, '2004-04-11 00:00:00', 'd2@gmail.com', '0123456789',
+        '$2a$10$do2lQSohzuLfiSljWORi0Oc3OVG37mtPWxR/cAmJSsOLebcF4A5Oi', 'Hanoi, Viet Nam', 1, 1, 1, utc_timestamp(), 1,
+        utc_timestamp()),
+       ('Dummy User 3', '', 1, '2004-04-11 00:00:00', 'd3@gmail.com', '0123456789',
+        '$2a$10$do2lQSohzuLfiSljWORi0Oc3OVG37mtPWxR/cAmJSsOLebcF4A5Oi', 'Hanoi, Viet Nam', 1, 1, 1, utc_timestamp(), 1,
+        utc_timestamp()),
+       ('Dummy User 4', '', 1, '2004-04-11 00:00:00', 'd4@gmail.com', '0123456789',
+        '$2a$10$do2lQSohzuLfiSljWORi0Oc3OVG37mtPWxR/cAmJSsOLebcF4A5Oi', 'Hanoi, Viet Nam', 1, 1, 1, utc_timestamp(), 1,
+        utc_timestamp()),
+       ('Dummy User 5', '', 1, '2004-04-11 00:00:00', 'd5@gmail.com', '0123456789',
+        '$2a$10$do2lQSohzuLfiSljWORi0Oc3OVG37mtPWxR/cAmJSsOLebcF4A5Oi', 'Hanoi, Viet Nam', 1, 1, 1, utc_timestamp(), 1,
+        utc_timestamp()),
+       ('Dummy User 6', '', 1, '2004-04-11 00:00:00', 'd6@gmail.com', '0123456789',
+        '$2a$10$do2lQSohzuLfiSljWORi0Oc3OVG37mtPWxR/cAmJSsOLebcF4A5Oi', 'Hanoi, Viet Nam', 1, 1, 1, utc_timestamp(), 1,
+        utc_timestamp()),
+       ('Dummy User 7', '', 1, '2004-04-11 00:00:00', 'd7@gmail.com', '0123456789',
+        '$2a$10$do2lQSohzuLfiSljWORi0Oc3OVG37mtPWxR/cAmJSsOLebcF4A5Oi', 'Hanoi, Viet Nam', 1, 1, 1, utc_timestamp(), 1,
+        utc_timestamp()),
+       ('Dummy User 8', '', 1, '2004-04-11 00:00:00', 'd8@gmail.com', '0123456789',
+        '$2a$10$do2lQSohzuLfiSljWORi0Oc3OVG37mtPWxR/cAmJSsOLebcF4A5Oi', 'Hanoi, Viet Nam', 1, 1, 1, utc_timestamp(), 1,
+        utc_timestamp()),
+       ('Dummy User 9', '', 1, '2004-04-11 00:00:00', 'd9@gmail.com', '0123456789',
+        '$2a$10$do2lQSohzuLfiSljWORi0Oc3OVG37mtPWxR/cAmJSsOLebcF4A5Oi', 'Hanoi, Viet Nam', 1, 1, 1, utc_timestamp(), 1,
         utc_timestamp());
+;
 insert into mcma.rating (name, description, status, created_by, last_modified_by, created_date, last_modified_date)
 values ('PG-13', 'Parental Guidance-13', 1, 1, 1, utc_timestamp(), utc_timestamp()),
        ('R', 'Restricted', 1, 1, 1, utc_timestamp(), utc_timestamp()),
@@ -147,6 +178,10 @@ values ('Inception', 148, '2010-07-16 00:00:00', 1, 1, 1, utc_timestamp(), 1, ut
        ('Family Ties', 95, '2023-08-08 00:00:00', 2, 1, 1, utc_timestamp(), 1, utc_timestamp()),
        ('Mystery Mansion', 110, '2023-09-30 00:00:00', 3, 1, 1, utc_timestamp(), 1, utc_timestamp()),
        ('The Last Stand', 115, '2023-10-12 00:00:00', 3, 1, 1, utc_timestamp(), 1, utc_timestamp());
+insert into mcma.movie (created_by, created_date, last_modified_by, last_modified_date, background_image_base64,
+                        description, image_base64, length, name, publish_date, status, trailer_url, rating_id)
+VALUES (1, utc_timestamp(), 1, utc_timestamp(), null, null, null, 125, 'Spirited Away', '2001-07-20', 1,
+        'https://youtu.be/ByXuk9QqQkk', 3);
 insert into mcma.genre (name, description, status, created_by, last_modified_by, created_date, last_modified_date)
 values ('Action', 'Action-packed movie', 1, 1, 1, utc_timestamp(), utc_timestamp()),
        ('Comedy', 'Humorous movie', 1, 1, 1, utc_timestamp(), utc_timestamp()),
@@ -269,3 +304,15 @@ values ('Adult', 'Ticket for adults', 15, 1, 1, utc_timestamp(), utc_timestamp()
 
 # insert into schedule (screen_id, movie_id, start_time, end_time, status, created_by,last_modified_by,created_date,last_modified_date)
 # values (1,3,'2025-06-01 00:00:00'),
+insert into mcma.review (movie_id, user_id, user_vote, user_comment, status, last_modified_by, created_date,
+                         last_modified_date)
+values (4, 8, 1, 'bad thing', 1, 8, utc_timestamp(), utc_timestamp()),
+       (4, 9, 2, 'small bad', 1, 9, utc_timestamp(), utc_timestamp()),
+       (4, 10, 3, 'ok', 1, 10, utc_timestamp(), utc_timestamp()),
+       (4, 11, 4, 'more ok', 1, 11, utc_timestamp(), utc_timestamp()),
+       (4, 12, 5, 'great', 1, 12, utc_timestamp(), utc_timestamp()),
+       (4, 13, 4, 'hahaha', 1, 13, utc_timestamp(), utc_timestamp()),
+       (4, 14, 3, 'okay', 1, 14, utc_timestamp(), utc_timestamp()),
+       (4, 15, 2, 'meh', 1, 15, utc_timestamp(), utc_timestamp()),
+       (4, 16, 5, 'wonderful', 1, 16, utc_timestamp(), utc_timestamp()),
+       (4, 17, 5, 'qua tuyet voi', 1, 17, utc_timestamp(), utc_timestamp());

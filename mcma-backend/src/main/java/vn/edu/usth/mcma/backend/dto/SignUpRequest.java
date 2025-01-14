@@ -1,18 +1,13 @@
 package vn.edu.usth.mcma.backend.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 import vn.edu.usth.mcma.backend.dto.validator.PhoneNumber;
 
 import java.time.Instant;
-import java.util.Date;
 
 @Data
 public class SignUpRequest {

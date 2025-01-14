@@ -31,8 +31,8 @@ import java.util.Map;
 public class SeatService {
     private final SeatRepository seatRepository;
     private final ScreenRepository screenRepository;
-    private final SeatAvailability DEFAULT_SEAT_AVAILABILITY = SeatAvailability.Available;
     private final JwtHelper jwtUtil;
+    private final SeatAvailability DEFAULT_SEAT_AVAILABILITY = SeatAvailability.Buyable;
 
     public ApiResponse initSeatMap(Long screenId, List<SeatHelperInput> seatHelperInputs) {
         Screen screen = screenRepository

@@ -27,7 +27,7 @@ public class DrinkService {
         Drink drink = new Drink();
         drink.setName(request.getName());
         drink.setDescription(request.getDescription());
-        drink.setImageUrl(request.getImageUrl());
+        drink.setImageBase64(request.getImageUrl());
 //      debug  drink.setSize(request.getSize());
         drink.setVolume(request.getVolume());
 //      debug  drink.setPrice(request.getPrice());
@@ -47,7 +47,7 @@ public class DrinkService {
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         drink.setName(request.getName());
         drink.setDescription(request.getDescription());
-        drink.setImageUrl(request.getImageUrl());
+        drink.setImageBase64(request.getImageUrl());
 //      debug  drink.setSize(request.getSize());
         drink.setVolume(request.getVolume());
 //      debug  drink.setPrice(request.getPrice());

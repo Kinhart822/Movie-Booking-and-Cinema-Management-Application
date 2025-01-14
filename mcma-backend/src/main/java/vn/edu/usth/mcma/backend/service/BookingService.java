@@ -37,7 +37,7 @@ public class BookingService {
                         .id(g.getId())
                         .name(g.getName())
                         .description(g.getDescription())
-                        .imageUrl(g.getImageUrl())
+                        .imageUrl(g.getImageBase64())
                         .build())
                 .toList();
         // performers
@@ -93,8 +93,8 @@ public class BookingService {
                 .description(movie.getDescription())
                 .publishDate(movie.getPublishDate().toString().substring(0,10))
                 .trailerUrl(movie.getTrailerUrl())
-                .imageUrl(movie.getImageUrl())
-                .backgroundImageUrl(movie.getBackgroundImageUrl())
+                .imageUrl(movie.getImageBase64())
+                .backgroundImageUrl(movie.getBackgroundImageBase64())
                 .schedules(schedules)
                 .genres(genres)
                 .performers(performers)

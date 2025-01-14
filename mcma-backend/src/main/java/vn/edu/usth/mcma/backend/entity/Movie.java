@@ -14,7 +14,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 public class Movie extends AbstractAuditing implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -25,11 +25,11 @@ public class Movie extends AbstractAuditing implements Serializable {
     private String name;
     @Column
     private String description;
-    @Column
-    private String imageUrl;
-    @Column
-    private String backgroundImageUrl;
-    // length in seconds
+    @Column(columnDefinition = "LONGTEXT")
+    private String imageBase64;
+    @Column(columnDefinition = "LONGTEXT")
+    private String backgroundImageBase64;
+    // length in minute
     @Column
     private Integer length;
     @Column
