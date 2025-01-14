@@ -16,8 +16,9 @@ public enum ApiEndpoints {
             "/api/v1/user/search-movie-by-name",
             "/api/v1/user/search-movie-by-genre",
             "/api/v1/user/search-movie-by-movie-genre-name",
-            "/api/v1/user/booking/**",
-            "/api/v1/user/view/**"),;
+            "/api/v1/user/booking/**"
+//            "/api/v1/user/view/**"
+    ),;
     private final String[] apis;
     ApiEndpoints(String... apis) {
         this.apis = apis;

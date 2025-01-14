@@ -43,6 +43,7 @@ public class AuthService {
                             username,
                             signInRequest.getPassword()));
         } catch (BadCredentialsException e){
+            // wrong password
             throw new BusinessException(ApiResponseCode.BAD_CREDENTIALS);
         } catch (Exception e) {
             throw new BusinessException(ApiResponseCode.BAD_REQUEST);

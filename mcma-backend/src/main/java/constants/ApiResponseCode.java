@@ -11,7 +11,7 @@ public enum ApiResponseCode {
     SEAT_TYPE_NOT_FOUND("404", "SEAT_TYPE_NOT_FOUND"),
     USERNAME_NOT_EXISTED_OR_DEACTIVATED("404", "Username not found or inactive"),
     USERNAME_EXISTED("409", "USERNAME_EXISTED"),
-    BAD_CREDENTIALS("401", "BAD_CREDENTIALS"),
+    BAD_CREDENTIALS("400", "Wrong password"),
     INVALID_HTTP_REQUEST("400", "INVALID_HTTP_REQUEST"),
     INVALID_HTTP_REQUEST_HEADER("400", "Authorization Header not found, or wrong type"),
     INVALID_TYPE("403", "INVALID_TYPE"),
