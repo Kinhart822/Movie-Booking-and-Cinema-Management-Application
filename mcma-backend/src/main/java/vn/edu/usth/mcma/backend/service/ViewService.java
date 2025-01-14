@@ -7,8 +7,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.*;
-import vn.edu.usth.mcma.backend.entity.Movie;
 import vn.edu.usth.mcma.backend.entity.Schedule;
+import vn.edu.usth.mcma.backend.repository.GenreRepository;
 import vn.edu.usth.mcma.backend.repository.MovieRepository;
 import vn.edu.usth.mcma.backend.repository.ReviewRepository;
 import vn.edu.usth.mcma.backend.repository.ScheduleRepository;
@@ -23,34 +23,7 @@ public class ViewService {
     private final MovieRepository movieRepository;
     private final ScheduleRepository scheduleRepository;
     private final ReviewRepository reviewRepository;
-
-//    private CityRepository cityRepository;
-
-//    private CinemaRepository cinemaRepository;
-
-//    private CouponRepository couponRepository;
-
-//    private MovieRepository movieRepository;
-
-//    private MovieScheduleRepository movieScheduleRepository;
-
-//    private ScreenRepository screenRepository;
-
-//    private FoodRepository foodRepository;
-
-//    private DrinkRepository drinkRepository;
-
-//    private BookingRepository bookingRepository;
-
-//    private MovieGenreRepository movieGenreRepository;
-
-//    private CommentRepository commentRepository;
-
-//    private MoviePerformerRepository moviePerformerRepository;
-
-//    private MovieRatingDetailRepository movieRatingDetailRepository;
-
-//    private RatingRepository ratingRepository;
+    private final GenreRepository genreRepository;
 
 //    public ViewCityResponse getAvailableCities() {
 //        List<City> cities = cityRepository.findAll();
@@ -515,8 +488,8 @@ public class ViewService {
                         .description(m.getDescription())
                         .publishDate(m.getPublishDate().toString().substring(0,10))
                         .trailerUrl(m.getTrailerUrl())
-                        .imageUrl(m.getImageUrl())
-                        .backgroundImageUrl(m.getBackgroundImageUrl())
+                        .imageUrl(m.getImageBase64())
+                        .backgroundImageUrl(m.getBackgroundImageBase64())
                         .genres(m
                                 .getGenreSet()
                                 .stream()
@@ -525,7 +498,7 @@ public class ViewService {
                                         .id(g.getId())
                                         .name(g.getName())
                                         .description(g.getDescription())
-                                        .imageUrl(g.getImageUrl())
+                                        .imageUrl(g.getImageBase64())
                                         .build())
                                 .toList())
                         .performers(m
@@ -560,24 +533,44 @@ public class ViewService {
                 .toList();
     }
 
-//    public List<HighRatingMovieResponse> getHighRatingMovies() {
-//        List<Movie> highRatingMovies = movieRepository.findHighestRatingMovies(4.5, 5.0);
-//
-//        return highRatingMovies.stream().map(movie -> {
-//            HighRatingMovieResponse response = new HighRatingMovieResponse();
-//            response.setMovieId(movie.getId());
-//            response.setMovieName(movie.getName());
-//            response.setMovieLength(movie.getLength());
-//            response.setPublishedDate(new SimpleDateFormat("dd/MM/yyyy").format(movie.getDatePublish()));
-//            response.setImageUrl(movie.getImageUrl());
-//            response.setBackgroundUrl(movie.getBackgroundImageUrl());
-//            response.setMovieGenreNameList(
-//                    movie.getMovieGenreSet().stream()
-//                            .map(movieGenre -> movieGenre.getMovieGenreDetail().getName())
-//                            .toList());
-//            return response;
-//        }).toList();
-//    }
+    public List<HighRatingMovie> getHighRatingMovies() {
+        List<HighRatingMovieProjection> projections = reviewRepository.findHighestRatingMovies(CommonStatus.ACTIVE.getStatus(), Instant.now());
+        Map<Long, Double> avgVotes = new HashMap<>();
+        projections.forEach(p -> {
+            avgVotes.put(p.getId(), p.getAvgVote());
+        });
+        return movieRepository
+                .findAllById(projections
+                        .stream()
+                        .map(HighRatingMovieProjection::getId)
+                        .toList())
+                .stream()
+                .map(m-> HighRatingMovie
+                        .builder()
+                        .id(m.getId())
+                        .name(m.getName())
+                        .length(m.getLength())
+                        .publishDate(m
+                                .getPublishDate()
+                                .toString()
+                                .substring(0,10))
+                        .imageBase64(m.getImageBase64())
+                        .imageBackgroundBase64(m.getBackgroundImageBase64())
+                        .genres(m
+                                .getGenreSet()
+                                .stream()
+                                .map(g -> GenrePresentation
+                                        .builder()
+                                        .id(g.getId())
+                                        .name(g.getName())
+                                        .description(g.getDescription())
+                                        .imageUrl(g.getImageBase64())
+                                        .build())
+                                .toList())
+                        .avgVote(avgVotes.get(m.getId()))
+                        .build())
+                .toList();
+    }
 //
 //    public List<MovieGenreResponse> getAllMovieGenres() {
 //        List<MovieGenre> genres = movieGenreRepository.findAll();
@@ -603,8 +596,8 @@ public class ViewService {
                         .description(m.getDescription())
                         .publishDate(m.getPublishDate().toString().substring(0,10))
                         .trailerUrl(m.getTrailerUrl())
-                        .imageUrl(m.getImageUrl())
-                        .backgroundImageUrl(m.getBackgroundImageUrl())
+                        .imageUrl(m.getImageBase64())
+                        .backgroundImageUrl(m.getBackgroundImageBase64())
                         .genres(m
                                 .getGenreSet()
                                 .stream()
@@ -613,7 +606,7 @@ public class ViewService {
                                         .id(g.getId())
                                         .name(g.getName())
                                         .description(g.getDescription())
-                                        .imageUrl(g.getImageUrl())
+                                        .imageUrl(g.getImageBase64())
                                         .build())
                                 .toList())
                         .performers(m

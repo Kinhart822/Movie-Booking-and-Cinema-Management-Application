@@ -1,10 +1,9 @@
 package vn.edu.usth.mcma.backend.controller.admin;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import vn.edu.usth.mcma.backend.dto.MovieRequest;
 import vn.edu.usth.mcma.backend.dto.MovieScheduleRequest;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.service.MovieService;
@@ -15,6 +14,15 @@ import vn.edu.usth.mcma.backend.service.MovieService;
 public class MovieController {
     private final MovieService movieService;
 
+    /*
+     * ========
+     * movie
+     * ========
+     */
+    @PutMapping("/movie/{movieId}")
+    public ResponseEntity<ApiResponse> updateMovie(@PathVariable Long movieId, @RequestBody MovieRequest movieRequest) {
+        return ResponseEntity.ok(movieService.updateMovie(movieId, movieRequest));
+    }
     /*
      * ========
      * schedule
