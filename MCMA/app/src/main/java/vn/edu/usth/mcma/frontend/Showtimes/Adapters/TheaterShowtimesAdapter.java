@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.util.Log;
+import android.util.Pair;
 import android.util.SparseBooleanArray;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -24,10 +25,17 @@ import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayout;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -238,31 +246,37 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                             if (response.isSuccessful() && response.body() != null) {
                                 ScheduleResponse scheduleResponse = response.body();
 
-//                                // Group schedules by date
-//                                Map<String, List<String>> schedulesByDate = new LinkedHashMap<>();
-//                                List<String> dates = scheduleResponse.getDate();
-//                                List<String> times = scheduleResponse.getTime();
-                                Map<String, Map<String, Integer>> schedulesByDateAndTime = new LinkedHashMap<>();
                                 List<String> dates = scheduleResponse.getDate();
                                 List<String> times = scheduleResponse.getTime();
                                 List<Integer> scheduleIds = scheduleResponse.getScheduleId();
 
+                                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                                Date today = new Date();
 
-//                                // Assuming dates and times are aligned, map them together
-//                                for (int i = 0; i < dates.size(); i++) {
-//                                    String date = dates.get(i);
-//                                    String time = times.get(i);
-//
-//                                    schedulesByDate.computeIfAbsent(date, k -> new ArrayList<>()).add(time);
-//                                }
+                                Map<String, List<Pair<String, Integer>>> schedulesByDateAndTime = new TreeMap<>((d1, d2) -> {
+                                    try {
+                                        return sdf.parse(d1).compareTo(sdf.parse(d2));
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                        return 0;
+                                    }
+                                });
 
                                 for (int i = 0; i < dates.size(); i++) {
-                                    String date = dates.get(i);
-                                    String time = times.get(i);
-                                    Integer scheduleId = scheduleIds.get(i);
+                                    try {
+                                        Date scheduleDate = sdf.parse(dates.get(i));
+                                        if (scheduleDate != null && scheduleDate.after(today)) {
+                                            String date = dates.get(i);
+                                            String time = times.get(i);
+                                            Integer scheduleId = scheduleIds.get(i);
 
-                                    schedulesByDateAndTime.computeIfAbsent(date, k -> new LinkedHashMap<>())
-                                            .put(time, scheduleId);
+                                            schedulesByDateAndTime.computeIfAbsent(date, k -> new ArrayList<>())
+                                                    .add(new Pair<>(time, scheduleId));
+                                        }
+                                    } catch (ParseException e) {
+                                        Toast.makeText(context, "Error parsing date: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
                                 }
 
                                 // Create layout for date buttons
@@ -281,9 +295,10 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                 ));
                                 timeLayout.setFlexWrap(FlexWrap.WRAP);
 
-                                // Add date and time buttons
-//                                for (String date : schedulesByDate.keySet()) {
-                                for (String date : schedulesByDateAndTime.keySet()) {
+                                for (Map.Entry<String, List<Pair<String, Integer>>> entry : schedulesByDateAndTime.entrySet()) {
+                                    String date = entry.getKey();
+                                    List<Pair<String, Integer>> timesForDate = entry.getValue();
+
                                     Button dateButton = new Button(context);
                                     dateButton.setText(date);
                                     dateButton.setTextColor(textColorStateList);
@@ -291,7 +306,6 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                     dateButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                                     dateButton.setBackground(ContextCompat.getDrawable(context, R.drawable.date_button_selector));
 
-                                    // Set layout params
                                     FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
                                             FlexboxLayout.LayoutParams.WRAP_CONTENT,
                                             FlexboxLayout.LayoutParams.WRAP_CONTENT
@@ -299,25 +313,17 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                     params.setMargins(8, 8, 8, 8);
                                     dateButton.setLayoutParams(params);
 
-                                    // Handle date button click
                                     dateButton.setOnClickListener(v -> {
-                                        // Reset previous date button states
                                         for (int j = 0; j < dateLayout.getChildCount(); j++) {
                                             dateLayout.getChildAt(j).setSelected(false);
                                         }
-                                        // Set the clicked button as selected
                                         dateButton.setSelected(true);
 
-                                        // Clear the time layout
                                         timeLayout.removeAllViews();
 
-                                        // Populate time buttons for the selected date
-//                                        for (String time : schedulesByDate.get(date)) {
-
-                                        Map<String, Integer> timesForDate = schedulesByDateAndTime.get(date);
-                                        for (Map.Entry<String, Integer> entry : timesForDate.entrySet()) {
-                                            String time = entry.getKey();
-                                            Integer scheduleId = entry.getValue();
+                                        for (Pair<String, Integer> timePair : timesForDate) {
+                                            String time = timePair.first;
+                                            Integer scheduleId = timePair.second;
 
                                             Button timeButton = new Button(context);
                                             timeButton.setText(time);
@@ -326,7 +332,6 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                             timeButton.setAllCaps(false);
                                             timeButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
 
-                                            // Set time button layout params
                                             FlexboxLayout.LayoutParams timeParams = new FlexboxLayout.LayoutParams(
                                                     FlexboxLayout.LayoutParams.WRAP_CONTENT,
                                                     FlexboxLayout.LayoutParams.WRAP_CONTENT
@@ -334,16 +339,12 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                             timeParams.setMargins(8, 8, 8, 8);
                                             timeButton.setLayoutParams(timeParams);
 
-                                            // Handle time button click
                                             timeButton.setOnClickListener(v1 -> {
-                                                // Reset previous time button states
                                                 for (int k = 0; k < timeLayout.getChildCount(); k++) {
                                                     timeLayout.getChildAt(k).setSelected(false);
                                                 }
-                                                // Set the clicked button as selected
                                                 timeButton.setSelected(true);
 
-                                                // Pass selected scheduleId to the listener
                                                 listener.onShowtimeClick(theater, date, time, selectedScreenId, selectedScreenRoom, scheduleId);
                                             });
 
@@ -351,7 +352,6 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                         }
                                     });
 
-                                    // Add date button to date layout
                                     dateLayout.addView(dateButton);
                                 }
 

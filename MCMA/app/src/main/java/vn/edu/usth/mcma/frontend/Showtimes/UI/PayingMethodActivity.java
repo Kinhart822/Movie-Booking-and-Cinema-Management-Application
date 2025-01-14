@@ -1,29 +1,23 @@
 package vn.edu.usth.mcma.frontend.Showtimes.UI;
 
-import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.telephony.SmsManager;
+import android.os.CountDownTimer;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,7 +28,6 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.SendBo
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.BookingProcessAPIs.BookingAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
-import vn.edu.usth.mcma.frontend.Login.Register_Activity;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.PaymentMethodAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Booking.PaymentMethod;
 
@@ -46,8 +39,6 @@ public class PayingMethodActivity extends AppCompatActivity {
     private PaymentMethod selectedPaymentMethodEnum;
     private vn.edu.usth.mcma.frontend.Showtimes.Models.PaymentMethod selectedPaymentMethod;
     private TextView movieTitleTV, theaterNameTV, screenNumberTV, movieDateTV, movieShowtimeTV;
-    private String movieName;
-    private String cinemaName;
     private int movieId;
     private int selectedCityId;
     private int selectedCinemaId;
@@ -59,7 +50,8 @@ public class PayingMethodActivity extends AppCompatActivity {
     private List<Integer> selectedDrinkIds = new ArrayList<>();
     private int selectedMovieCouponId;
     private int selectedUserCouponId;
-    private static String bookingMessageSuccessFully;
+    private TextView countdownTimer;
+    private CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +73,41 @@ public class PayingMethodActivity extends AppCompatActivity {
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(view -> onBackPressed());
 
+        countdownTimer = findViewById(R.id.countdown_timer);
+        startCountdownTimer();
+
         initializeViews();
         setupPaymentMethodsRecyclerView();
         handlePaymentCompletion();
+    }
+
+    private void startCountdownTimer() {
+        countDownTimer = new CountDownTimer(5 * 60 * 1000, 1000) { // 5 phút
+            @SuppressLint("DefaultLocale")
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long minutes = millisUntilFinished / 1000 / 60;
+                long seconds = (millisUntilFinished / 1000) % 60;
+
+                countdownTimer.setText(String.format("%02d:%02d", minutes, seconds));
+            }
+
+            @Override
+            public void onFinish() {
+                Toast.makeText(PayingMethodActivity.this, "Time's up!!", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        };
+
+        countDownTimer.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
     }
 
     private void initializeViews() {
@@ -170,15 +194,19 @@ public class PayingMethodActivity extends AppCompatActivity {
     private void handlePaymentCompletion() {
         completePaymentButton.setOnClickListener(v -> {
             if (selectedPaymentMethod == null) {
-                Toast.makeText(this, "Please select payment method\n", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please select payment method!", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (!termsCheckbox.isChecked()) {
-                Toast.makeText(this, "Please agree to the terms\n", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please agree to the terms!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             sendBookingRequest();
+
+            if (countDownTimer != null) {
+                countDownTimer.cancel();
+            }
 
             Intent intent = new Intent(this, vn.edu.usth.mcma.frontend.MainActivity.class);
             intent.putExtra("navigate_to", "HomeFragment");
@@ -253,40 +281,10 @@ public class PayingMethodActivity extends AppCompatActivity {
                     if (bookingResponse != null) {
                         if (paymentMethod.equals(PaymentMethod.Bank_Transfer)) {
                             Toast.makeText(getApplicationContext(), "Complete Booking successfully!", Toast.LENGTH_SHORT).show();
-                            if (ContextCompat.checkSelfPermission(PayingMethodActivity.this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
-                                bookingMessageSuccessFully = String.format(
-                                        "Your booking for the movie \"%s\" is confirmed!\n" +
-                                                "Booking Number: %s\n" +
-                                                "Date & Time: %s - %s\n" +
-                                                "Cinema: %s, %s\n" +
-                                                "Screen: %s\n" +
-                                                "Tickets: %s\n" +
-                                                "Seats: %s\n" +
-                                                "Please confirm your booking by calling our hotline: 1234567890 or visiting our website.\n" +
-                                                "Thank you for booking with us!",
-                                                "Enjoy your movie!\n" +
-                                                "Best Regards,\n" +
-                                                "SpotCinema+",
-                                        bookingResponse.getMovieName(),
-                                        bookingResponse.getBookingNo(),
-                                        bookingResponse.getStartDateTime(),
-                                        bookingResponse.getEndDateTime(),
-                                        bookingResponse.getCinemaName(),
-                                        bookingResponse.getCityName(),
-                                        bookingResponse.getScreenName(),
-                                        String.join(", ", bookingResponse.getTicketTypeName()),
-                                        String.join(", ", bookingResponse.getSeatName())
-                                );
-                                sendSMS(bookingMessageSuccessFully);
-                            } else {
-                                ActivityCompat.requestPermissions(PayingMethodActivity.this,
-                                        new String[]{Manifest.permission.SEND_SMS},
-                                        100);
-                            }
                         } else if (paymentMethod.equals(PaymentMethod.Cash)) {
-                            Toast.makeText(getApplicationContext(), "Your Booking Status will be Pending, and your seat(s) will be held.", Toast.LENGTH_LONG).show();
-                            Toast.makeText(getApplicationContext(), "Please go to your selected cinema to pay  for your booking before the start date of the movie!", Toast.LENGTH_LONG).show();
-                            Toast.makeText(getApplicationContext(), "Or else your booking will be canceled!!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Your Booking Status will be Pending, and your seat(s) will be held.\n" +
+                                    "Please go to your selected cinema to pay  for your booking before the start date of the movie!\n" +
+                                    "Or else your booking will be canceled!!\"", Toast.LENGTH_LONG).show();
                         }
                     }
                 } else {
@@ -299,27 +297,5 @@ public class PayingMethodActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == 100 && grantResults. length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            sendSMS(bookingMessageSuccessFully);
-        } else {
-            Toast.makeText(this, "Permission Denied !! ", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void sendSMS(String message) {
-        if (Register_Activity.phoneNumber != 0){
-            SmsManager smsManager = SmsManager.getDefault();
-
-            smsManager.sendTextMessage(String.valueOf(Register_Activity.phoneNumber), null, message, null, null);
-            Toast.makeText(this, "SMS Sent Successfully!", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this,"Please try again!", Toast.LENGTH_SHORT).show();
-        }
     }
 }
