@@ -17,6 +17,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
+import vn.edu.usth.mcma.frontend.MainActivity;
 import vn.edu.usth.mcma.frontend.component.Login.LoginFragment;
 import vn.edu.usth.mcma.frontend.constant.IP;
 
@@ -28,13 +29,14 @@ public class ApiClient {
             AuthPrefsManager authPrefsManager = new AuthPrefsManager(context);
             CustomAuthenticator authenticator = new CustomAuthenticator(authPrefsManager);
             authenticator.setCallback(() -> {
-                new Handler(Looper.getMainLooper())
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler
                         .post(() -> Toast
                                 .makeText(context, "Session expired. Please log in again.", Toast.LENGTH_SHORT)
                                 .show());
-                new Handler(Looper.getMainLooper())
+                handler
                         .postDelayed(() -> {
-                            Intent intent = new Intent(context, LoginFragment.class);
+                            Intent intent = new Intent(context, MainActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             context.startActivity(intent);
                         }, 2000);
