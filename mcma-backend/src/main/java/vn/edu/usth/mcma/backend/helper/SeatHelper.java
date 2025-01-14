@@ -115,7 +115,7 @@ public class SeatHelper {
                 columnMap.forEach((col, seat) -> seatHelperOutputs.add(createSeatResponse(seat)));
                 return;
             }
-            AtomicInteger currentNumber = new AtomicInteger(1);
+            AtomicInteger currentNumber = new AtomicInteger(0);
             columnMap.forEach((col, seat) -> {
                 if (seat.getTypeId() == SeatType.NOT_PLACEABLE.getId() || seat.getTypeId() == SeatType.PLACEABLE.getId()) {
                     seatHelperOutputs.add(createSeatResponse(seat));

@@ -1,7 +1,7 @@
 package constants;
 
 public enum SeatAvailability {
-    Unavailable,
-    Available,
+    Sold,
+    Buyable,
     Held,
 }
