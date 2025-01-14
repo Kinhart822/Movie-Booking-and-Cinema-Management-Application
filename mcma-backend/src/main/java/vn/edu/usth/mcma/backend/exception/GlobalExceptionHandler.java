@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Arrays;
+
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler extends RuntimeException {
@@ -28,8 +30,10 @@ public class GlobalExceptionHandler extends RuntimeException {
     }
     // fallback
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleException(Exception e) {
+    public ResponseEntity<ApiResponse> handleException(Exception e) {
         log.error("Unknown exception occurred: {}", e.getMessage(), e);
-        return ResponseEntity.status(500).body(e);
+        return ResponseEntity
+                .status(500)
+                .body(new ApiResponse("500", "INTERNAL_SERVER_ERROR", e.getMessage(), Arrays.toString(e.getStackTrace())));
     }
 }
