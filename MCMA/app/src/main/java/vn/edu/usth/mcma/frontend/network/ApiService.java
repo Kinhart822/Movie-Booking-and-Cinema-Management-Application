@@ -13,7 +13,7 @@ public class ApiService {
     private static AccountApi accountApi;
     private static MovieApi movieApi;
     private static CinemaApi cinemaApi;
-    private static vn.edu.usth.mcma.frontend.network.apis.BookingApi bookingApi;
+    private static BookingApi bookingApi;
 
     public static AuthApi getAuthApi(Context context) {
         if (authApi == null) {

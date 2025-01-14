@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Response.MovieRespondResponse;
+import vn.edu.usth.mcma.frontend.dto.response.MovieRespondResponse;
 
 public class Feedback_Adapter extends RecyclerView.Adapter<Feedback_ViewHolder> {
 

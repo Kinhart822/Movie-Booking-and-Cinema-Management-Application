@@ -5,6 +5,7 @@ public enum IP {
     MINOXD_LAPTOP("192.168.0.109"),
     MINOXD_PX6A("10.34.61.77"),
     MINOXD_MLCM("192.168.1.89"),
+    MINOXD_CIRCLE_K("172.19.201.40"),
     ;
     private final String ip;
     IP(String ip) {

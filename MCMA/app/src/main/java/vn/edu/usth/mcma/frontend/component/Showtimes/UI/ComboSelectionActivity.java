@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.Seat.AvailableSeatResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.ListFoodAndDrinkToOrderingResponse;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.Seat.AvailableSeatResponse;
+import vn.edu.usth.mcma.frontend.dto.response.ListFoodAndDrinkToOrderingResponse;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Seat;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Adapters.ComboAdapter;

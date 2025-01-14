@@ -46,7 +46,7 @@ public class ResetPassword_Activity extends AppCompatActivity {
 
         // Retrieve the token from SharedPreferences
         SharedPreferences sharedPreferencesForToken = getSharedPreferences(SharedPreferencesKey.AUTH.name(), Context.MODE_PRIVATE);
-        String token = sharedPreferencesForToken.getString(SharedPreferencesKey.AUTH_TOKEN.name(), null);
+        String token = sharedPreferencesForToken.getString(SharedPreferencesKey.AUTH_ACCESS_TOKEN.name(), null);
 
         changePassword.setOnClickListener(view -> {
             String newPassword = editNewPassword.getText().toString();

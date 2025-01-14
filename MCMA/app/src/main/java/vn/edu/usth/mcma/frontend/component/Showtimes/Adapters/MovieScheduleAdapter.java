@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.Genre;
-import vn.edu.usth.mcma.frontend.dto.Response.Performer;
-import vn.edu.usth.mcma.frontend.dto.Response.Review;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.Genre;
+import vn.edu.usth.mcma.frontend.dto.response.Performer;
+import vn.edu.usth.mcma.frontend.dto.response.Review;
 import vn.edu.usth.mcma.frontend.component.Home.OnlyDetailsActivity;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;

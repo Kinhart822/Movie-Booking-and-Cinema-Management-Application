@@ -7,11 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.Genre;
-import vn.edu.usth.mcma.frontend.dto.Response.Performer;
-import vn.edu.usth.mcma.frontend.dto.Response.Rating;
-import vn.edu.usth.mcma.frontend.dto.Response.Review;
-import vn.edu.usth.mcma.frontend.dto.Response.Schedule;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.Genre;
+import vn.edu.usth.mcma.frontend.dto.response.Performer;
+import vn.edu.usth.mcma.frontend.dto.response.Rating;
+import vn.edu.usth.mcma.frontend.dto.response.Review;
+import vn.edu.usth.mcma.frontend.dto.response.Schedule;
 
 @Data
 @Builder

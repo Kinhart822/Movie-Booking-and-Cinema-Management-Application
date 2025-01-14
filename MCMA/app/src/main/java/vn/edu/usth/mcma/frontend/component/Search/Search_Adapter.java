@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.Genre;
-import vn.edu.usth.mcma.frontend.dto.Response.SearchMovieByNameResponse;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.Genre;
+import vn.edu.usth.mcma.frontend.dto.response.SearchMovieByNameResponse;
 
 public class Search_Adapter extends RecyclerView.Adapter<Search_ViewHolder> {
     private SearchViewInterface searchViewInterface;

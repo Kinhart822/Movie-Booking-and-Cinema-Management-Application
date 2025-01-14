@@ -6,13 +6,13 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.CinemaResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.ScreenResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.ListFoodAndDrinkToOrderingResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.ScheduleSelectedByCinemaResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.SeatTypeResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.Seat;
-import vn.edu.usth.mcma.frontend.dto.Response.ViewCinemaResponse;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CinemaResponse;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.ScreenResponse;
+import vn.edu.usth.mcma.frontend.dto.response.ListFoodAndDrinkToOrderingResponse;
+import vn.edu.usth.mcma.frontend.dto.response.ScheduleSelectedByCinemaResponse;
+import vn.edu.usth.mcma.frontend.dto.response.SeatTypeResponse;
+import vn.edu.usth.mcma.frontend.dto.response.Seat;
+import vn.edu.usth.mcma.frontend.dto.response.ViewCinemaResponse;
 
 public interface CinemaApi {
     @GET("/api/v1/user/booking/seat-types")

@@ -3,12 +3,9 @@ package vn.edu.usth.mcma.frontend;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -17,16 +14,16 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.component.Home.Fragment_changing;
 import vn.edu.usth.mcma.frontend.component.Login.LoginFragment;
 import vn.edu.usth.mcma.frontend.component.Notification.Notification_Activity;
 import vn.edu.usth.mcma.frontend.constant.SharedPreferencesKey;
+import vn.edu.usth.mcma.frontend.network.AuthPrefsManager;
 
 public class MainActivity extends AppCompatActivity {
-
+    private AuthPrefsManager authPrefsManager;
     private ViewPager2 mViewPager;
     private DrawerLayout mDrawerLayout;
     private BottomNavigationView bottomNavigationView;
@@ -35,45 +32,42 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferencesKey.AUTH.name(), MODE_PRIVATE);
-        boolean isLoggedIn = sharedPreferences.getBoolean(SharedPreferencesKey.AUTH_IS_LOGGED_IN.name(), false);
-        long expirationTime = sharedPreferences.getLong(SharedPreferencesKey.AUTH_EXPIRATION_TIME.name(), 0);
-
-        if (!isLoggedIn || System.currentTimeMillis() > expirationTime) {
-            // If not logged in
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.remove(SharedPreferencesKey.AUTH_TOKEN.name());  // Only remove the auth token
-            editor.remove(SharedPreferencesKey.AUTH_IS_LOGGED_IN.name());
-            editor.remove(SharedPreferencesKey.AUTH_EXPIRATION_TIME.name());
-            editor.apply();
+        authPrefsManager = new AuthPrefsManager(this);
+        if (!authPrefsManager.isLoggedIn()) {
             navigateToLoginFragment();
             return;
         }
+//        SharedPreferences authPrefs = getSharedPreferences(SharedPreferencesKey.AUTH.name(), MODE_PRIVATE);
+////        boolean isLoggedIn = authPrefs.getBoolean(SharedPreferencesKey.AUTH_IS_LOGGED_IN.name(), false);
+////        long expirationTime = authPrefs.getLong(SharedPreferencesKey.AUTH_EXPIRATION_TIME.name(), 0);
+//
+//        if (!isLoggedIn || System.currentTimeMillis() > expirationTime) {
+//            authPrefs
+//                    .edit()
+//                    .remove(SharedPreferencesKey.AUTH_ACCESS_TOKEN.name())
+////                    .remove(SharedPreferencesKey.AUTH_IS_LOGGED_IN.name())
+////                    .remove(SharedPreferencesKey.AUTH_EXPIRATION_TIME.name())
+//                    .apply();
+//            return;
+//        }
 
         // Khởi tạo DrawerLayout
         mDrawerLayout = findViewById(R.id.main_activity);
 
         // Menu button mở Drawer
         ImageButton menuButton = findViewById(R.id.menu_button);
-        menuButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    mDrawerLayout.openDrawer(GravityCompat.START);
-                }
+        menuButton.setOnClickListener(view -> {
+            if (!mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                mDrawerLayout.openDrawer(GravityCompat.START);
             }
         });
 
         // Notification button
         ImageButton notificationButton = findViewById(R.id.notification_button);
-        notificationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Dùng Intent để chuyển đến Notification_Activity
-                Intent intent = new Intent(MainActivity.this, Notification_Activity.class);
-                startActivity(intent);
-            }
+        notificationButton.setOnClickListener(view -> {
+            // Dùng Intent để chuyển đến Notification_Activity
+            Intent intent = new Intent(MainActivity.this, Notification_Activity.class);
+            startActivity(intent);
         });
 
         // Navigation Drawer click listeners
@@ -86,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         Fragment_changing adapter = new Fragment_changing(getSupportFragmentManager(), getLifecycle());
         mViewPager.setAdapter(adapter);
         mViewPager.setUserInputEnabled(false);
-
         mViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -109,38 +102,34 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
             }
-
             @Override
             public void onPageScrollStateChanged(int state) {
                 super.onPageScrollStateChanged(state);
             }
         });
 
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.home_page) {
-                    mViewPager.setCurrentItem(0, true); // Switch to the first fragment
-                    return true;
-                }
-                if (item.getItemId() == R.id.showtimes_page) {
-                    mViewPager.setCurrentItem(1, true); // Switch to the first fragment
-                    return true;
-                }
-                if (item.getItemId() == R.id.store_page) {
-                    mViewPager.setCurrentItem(2, true); // Switch to the first fragment
-                    return true;
-                }
-                if (item.getItemId() == R.id.feedback_page) {
-                    mViewPager.setCurrentItem(3, true); // Switch to the first fragment
-                    return true;
-                }
-                if (item.getItemId() == R.id.personal_page) {
-                    mViewPager.setCurrentItem(4, true); // Switch to the first fragment
-                    return true;
-                }
-                return false;
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.home_page) {
+                mViewPager.setCurrentItem(0, true);
+                return true;
             }
+            if (item.getItemId() == R.id.showtimes_page) {
+                mViewPager.setCurrentItem(1, true);
+                return true;
+            }
+            if (item.getItemId() == R.id.store_page) {
+                mViewPager.setCurrentItem(2, true);
+                return true;
+            }
+            if (item.getItemId() == R.id.feedback_page) {
+                mViewPager.setCurrentItem(3, true);
+                return true;
+            }
+            if (item.getItemId() == R.id.personal_page) {
+                mViewPager.setCurrentItem(4, true);
+                return true;
+            }
+            return false;
         });
     }
 
@@ -150,19 +139,21 @@ public class MainActivity extends AppCompatActivity {
             closeToHomePage();
             mDrawerLayout.closeDrawer(GravityCompat.START);
         });
-
+        LinearLayout toShowtimesFragment = findViewById(R.id.showtimes_side_navigation);
+        toShowtimesFragment.setOnClickListener(view -> {
+            closeToShowtimesPage();
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        });
         LinearLayout toStoreFragment = findViewById(R.id.store_side_navigation);
         toStoreFragment.setOnClickListener(view -> {
             closeToStorePage();
             mDrawerLayout.closeDrawer(GravityCompat.START);
         });
-
         LinearLayout toPersonalFragment = findViewById(R.id.personal_side_navigation);
         toPersonalFragment.setOnClickListener(view -> {
             closeToPersonalPage();
             mDrawerLayout.closeDrawer(GravityCompat.START);
         });
-
         LinearLayout toFeedbackFragment = findViewById(R.id.feedback_side_navigation);
         toFeedbackFragment.setOnClickListener(view -> {
             closeToFeedbackPage();
@@ -171,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void navigateToLoginFragment() {
-        // Chuyển hướng đến LoginFragment
         Fragment loginFragment = new LoginFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(android.R.id.content, loginFragment);
@@ -181,19 +171,15 @@ public class MainActivity extends AppCompatActivity {
     public void closeToHomePage() {
         mViewPager.setCurrentItem(0, true);
     }
-
     public void closeToShowtimesPage() {
         mViewPager.setCurrentItem(1, true);
     }
-
     public void closeToStorePage() {
         mViewPager.setCurrentItem(2, true);
     }
-
     public void closeToFeedbackPage() {
         mViewPager.setCurrentItem(3, true);
     }
-
     public void closeToPersonalPage() {
         mViewPager.setCurrentItem(4, true);
     }

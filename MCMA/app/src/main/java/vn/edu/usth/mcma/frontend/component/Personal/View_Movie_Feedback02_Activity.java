@@ -16,8 +16,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Response.MovieRespondResponse;
-import vn.edu.usth.mcma.frontend.network.ApiClient;
+import vn.edu.usth.mcma.frontend.dto.response.MovieRespondResponse;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 

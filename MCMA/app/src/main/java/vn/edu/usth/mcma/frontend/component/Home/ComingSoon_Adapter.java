@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.Genre;
-import vn.edu.usth.mcma.frontend.dto.Response.ComingSoonResponse;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.Genre;
+import vn.edu.usth.mcma.frontend.dto.response.ComingSoonResponse;
 
 public class ComingSoon_Adapter extends RecyclerView.Adapter<ComingSoon_ViewHolder> {
     private final FilmViewInterface filmViewInterface;

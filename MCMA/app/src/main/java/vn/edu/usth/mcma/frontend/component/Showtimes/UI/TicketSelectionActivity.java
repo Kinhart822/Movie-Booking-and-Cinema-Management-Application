@@ -23,7 +23,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.TicketResponse;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.TicketResponse;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Adapters.TicketAdapter;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Movie;

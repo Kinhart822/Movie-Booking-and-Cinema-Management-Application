@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import lombok.Getter;
-import vn.edu.usth.mcma.frontend.dto.Response.Seat;
+import vn.edu.usth.mcma.frontend.dto.response.Seat;
 
 public class SeatMapHelper {
     private final List<Seat> seats;

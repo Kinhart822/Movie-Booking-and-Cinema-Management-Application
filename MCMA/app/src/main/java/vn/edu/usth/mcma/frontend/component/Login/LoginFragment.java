@@ -1,6 +1,5 @@
 package vn.edu.usth.mcma.frontend.component.Login;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,83 +22,62 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.constant.SharedPreferencesKey;
-import vn.edu.usth.mcma.frontend.dto.Request.RefreshTokenRequest;
 import vn.edu.usth.mcma.frontend.dto.Request.SignInRequest;
-import vn.edu.usth.mcma.frontend.dto.Response.JwtAuthenticationResponse;
+import vn.edu.usth.mcma.frontend.dto.response.SignInResponse;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.MainActivity;
+import vn.edu.usth.mcma.frontend.network.AuthPrefsManager;
 
 public class LoginFragment extends Fragment {
+    private final int JWT_EXPIRATION_TIME = 60000;
     private EditText editTextEmail, editTextPassword;
+    private AuthPrefsManager authPrefsManager;
+    private final String TAG = LoginFragment.class.getName();
 
-    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-
+        authPrefsManager = new AuthPrefsManager(requireContext());
         // Chỗ này tránh click lỗi sẽ nhảy sang layout khác
         view.setOnClickListener(v -> {
-
         });
 
         editTextEmail = view.findViewById(R.id.editText);
         editTextPassword = view.findViewById(R.id.editText2);
+
         Button buttonLogin = view.findViewById(R.id.login_button);
-
         buttonLogin.setOnClickListener(v -> {
-            String email = editTextEmail.getText().toString();
-            String password = editTextPassword.getText().toString();
-
-            // Create the SignInRequest object
-            SignInRequest signInRequest = new SignInRequest();
-            signInRequest.setEmail(email);
-            signInRequest.setPassword(password);
-
             ApiService
                     .getAuthApi(requireContext())
-                    .signIn(signInRequest)
+                    .signIn(SignInRequest
+                            .builder()
+                            .email(editTextEmail.getText().toString())
+                            .password(editTextPassword.getText().toString())
+                            .build())
                     .enqueue(new Callback<>() {
                         @Override
-                        public void onResponse(@NonNull Call<JwtAuthenticationResponse> call, @NonNull Response<JwtAuthenticationResponse> response) {
+                        public void onResponse(@NonNull Call<SignInResponse> call, @NonNull Response<SignInResponse> response) {
                             if (response.isSuccessful()) {
                                 Toast.makeText(getActivity(), "Login successful!", Toast.LENGTH_SHORT).show();
                                 assert response.body() != null;
-                                String token = response.body().getToken();
-                                int userId = response.body().getUserId();
-                                saveUserIdToPreferences(userId);
 
-                                saveAuthToken(token);
+                                saveAuthPrefs(response.body(), editTextEmail.getText().toString());
+//                                saveProfilePrefs(response.body().getUserId());
 
-                                // Lưu trạng thái đăng nhập và thời gian hết hạn trong SharedPreferences
-                                SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(SharedPreferencesKey.AUTH.name(), Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putBoolean(SharedPreferencesKey.AUTH_IS_LOGGED_IN.name(), true);
-                                editor.apply(); // Save userId persistently
-
-                                // Tính thời gian hết hạn từ thời điểm hiện tại
-                                long expirationTime = System.currentTimeMillis() + 1440000; // 1440000ms = 24 phút
-                                editor.putLong(SharedPreferencesKey.AUTH_EXPIRATION_TIME.name(), expirationTime);
-                                editor.apply();
-
-                                // Điều hướng
-                                Intent intent = new Intent(getActivity(), MainActivity.class);
+                                Intent intent = new Intent(requireContext(), MainActivity.class);
                                 startActivity(intent);
                                 requireActivity().finish();
                             } else {
                                 Toast.makeText(getActivity(), "Wrong email or password", Toast.LENGTH_SHORT).show();
                             }
                         }
-
                         @Override
-                        public void onFailure(@NonNull Call<JwtAuthenticationResponse> call, @NonNull Throwable t) {
+                        public void onFailure(@NonNull Call<SignInResponse> call, @NonNull Throwable t) {
                             Toast.makeText(getActivity(), "Login failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-
                         }
                     });
-
             // Check token expiration
-            checkAndRefreshToken();
         });
         TextView create_account = view.findViewById(R.id.create_account);
         create_account.setOnClickListener(view1 -> {
@@ -115,60 +94,23 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
-    private void saveAuthToken(String token) {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(SharedPreferencesKey.AUTH.name(), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(SharedPreferencesKey.AUTH_TOKEN.name(), token);
-        editor.apply();
-    }
-
-    private void saveUserIdToPreferences(int userId) {
-        SharedPreferences sharedPreferences = requireContext().getSharedPreferences(SharedPreferencesKey.PROFILE.name(), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(SharedPreferencesKey.PROFILE_ID.name(), userId);
-        editor.apply();
-    }
-
-    private void checkAndRefreshToken() {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(SharedPreferencesKey.AUTH.name(), Context.MODE_PRIVATE);
-        long expirationTime = sharedPreferences.getLong(SharedPreferencesKey.AUTH_EXPIRATION_TIME.name(), 0);
-        if (System.currentTimeMillis() <= expirationTime) {
-            return;
+    private void saveAuthPrefs(SignInResponse response, String email) {
+        authPrefsManager.saveEmail(email);
+        authPrefsManager.saveAccessToken(response.getAccessToken());
+        authPrefsManager.saveIsLoggedIn(true);
+//                .putBoolean(SharedPreferencesKey.AUTH_IS_LOGGED_IN.name(), true)
+//                .putLong(SharedPreferencesKey.AUTH_EXPIRATION_TIME.name(), System.currentTimeMillis() + JWT_EXPIRATION_TIME)
+        if (response.getRefreshToken() != null) {
+            authPrefsManager.saveRefreshToken(response.getRefreshToken());
         }
-        String refreshToken = getRefreshTokenFromPreferences();
-        if (refreshToken == null) {
-            return;
-        }
-        RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest(refreshToken);
-        ApiService
-                .getAuthApi(requireContext())
-                .refresh(refreshTokenRequest).enqueue(new Callback<>() {
-                    @Override
-                    public void onResponse(@NonNull Call<JwtAuthenticationResponse> call, @NonNull Response<JwtAuthenticationResponse> response) {
-                        if (response.isSuccessful()) {
-                            assert response.body() != null;
-                            String newToken = response.body().getToken();
-                            saveAuthToken(newToken);
-                            // Update expiration time
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            long newExpirationTime = System.currentTimeMillis() + 1440000; // 24 minutes
-                            editor.putLong(SharedPreferencesKey.AUTH_EXPIRATION_TIME.name(), newExpirationTime);
-                            editor.apply();
-                            Toast.makeText(getActivity(), "Token refreshed", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getActivity(), "Failed to refresh token", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<JwtAuthenticationResponse> call, @NonNull Throwable t) {
-                        Toast.makeText(getActivity(), "Failed to refresh token: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        Log.d(TAG, "saveAuthPrefs: response" + response);
     }
 
-    private String getRefreshTokenFromPreferences() {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(SharedPreferencesKey.AUTH.name(), Context.MODE_PRIVATE);
-        return sharedPreferences.getString(SharedPreferencesKey.AUTH_TOKEN.name(), null);
+    private void saveProfilePrefs(int userId) {
+        SharedPreferences profilePrefs = requireContext()
+                .getSharedPreferences(SharedPreferencesKey.PROFILE.name(), Context.MODE_PRIVATE);
+        profilePrefs.edit()
+                .putInt(SharedPreferencesKey.PROFILE_ID.name(), userId)
+                .apply();
     }
 }

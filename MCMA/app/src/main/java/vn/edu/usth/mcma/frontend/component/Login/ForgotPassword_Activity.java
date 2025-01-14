@@ -21,7 +21,7 @@ import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.constant.SharedPreferencesKey;
 import vn.edu.usth.mcma.frontend.dto.Request.ForgotPasswordRequest;
-import vn.edu.usth.mcma.frontend.dto.Response.JwtAuthenticationResponse;
+import vn.edu.usth.mcma.frontend.dto.response.JwtAuthenticationResponse;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class ForgotPassword_Activity extends AppCompatActivity {
@@ -56,11 +56,11 @@ public class ForgotPassword_Activity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         // Get the token from the response body
                         assert response.body() != null;
-                        String token = response.body().getToken();
+                        String token = response.body().getAccessToken();
                         // Save the token in SharedPreferences
                         SharedPreferences sharedPreferencesForToken = getSharedPreferences(SharedPreferencesKey.AUTH.name(), Context.MODE_PRIVATE);
                         SharedPreferences.Editor editorForToken = sharedPreferencesForToken.edit();
-                        editorForToken.putString(SharedPreferencesKey.AUTH_TOKEN.name(), token);
+                        editorForToken.putString(SharedPreferencesKey.AUTH_ACCESS_TOKEN.name(), token);
                         editorForToken.apply();
 
                         Intent intent = new Intent(ForgotPassword_Activity.this, ResetPassword_Activity.class);

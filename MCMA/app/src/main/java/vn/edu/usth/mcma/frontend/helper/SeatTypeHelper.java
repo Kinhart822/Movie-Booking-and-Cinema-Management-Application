@@ -2,7 +2,7 @@ package vn.edu.usth.mcma.frontend.helper;
 
 import java.util.Map;
 
-import vn.edu.usth.mcma.frontend.dto.Response.SeatTypeResponse;
+import vn.edu.usth.mcma.frontend.dto.response.SeatTypeResponse;
 
 public class SeatTypeHelper {
     private Map<Integer, SeatTypeResponse> seatTypes;

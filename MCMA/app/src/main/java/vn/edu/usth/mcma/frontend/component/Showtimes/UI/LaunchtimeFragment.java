@@ -21,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Response.ViewCinemaResponse;
+import vn.edu.usth.mcma.frontend.dto.response.ViewCinemaResponse;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Theater;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Utils.TheaterDataProvider;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Adapters.TheaterAdapter;

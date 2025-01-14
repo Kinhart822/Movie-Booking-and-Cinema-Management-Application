@@ -9,22 +9,22 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class AuthInterceptor implements Interceptor {
-    private final TokenManager tokenManager;
+    private final AuthPrefsManager authPrefsManager;
 
-    public AuthInterceptor(TokenManager tokenManager) {
-        this.tokenManager = tokenManager;
+    public AuthInterceptor(AuthPrefsManager authPrefsManager) {
+        this.authPrefsManager = authPrefsManager;
     }
     @NonNull
     @Override
     public Response intercept(@NonNull Chain chain) throws IOException {
-        String token = tokenManager.getToken();
+        String accessToken = authPrefsManager.getAccessToken();
         Request originalRequest = chain.request();
-        if (token == null) {
+        if (accessToken == null) {
             return chain.proceed(originalRequest);
         }
         Request newRequest = originalRequest
                 .newBuilder()
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", "Bearer " + accessToken)
                 .build();
         return chain.proceed(newRequest);
     }

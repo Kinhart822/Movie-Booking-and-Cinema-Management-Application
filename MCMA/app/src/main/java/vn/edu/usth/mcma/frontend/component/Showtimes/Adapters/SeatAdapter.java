@@ -23,8 +23,8 @@ import lombok.Getter;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.constant.SeatAvailability;
 import vn.edu.usth.mcma.frontend.constant.SeatAvailables;
-import vn.edu.usth.mcma.frontend.dto.Response.SeatTypeResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.Seat;
+import vn.edu.usth.mcma.frontend.dto.response.SeatTypeResponse;
+import vn.edu.usth.mcma.frontend.dto.response.Seat;
 import vn.edu.usth.mcma.frontend.component.Showtimes.UI.SeatSelectionActivity;
 
 public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder> {

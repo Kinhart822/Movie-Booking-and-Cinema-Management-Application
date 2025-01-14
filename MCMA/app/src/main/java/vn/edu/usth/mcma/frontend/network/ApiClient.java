@@ -1,7 +1,12 @@
 package vn.edu.usth.mcma.frontend.network;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 
@@ -12,6 +17,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
+import vn.edu.usth.mcma.frontend.component.Login.LoginFragment;
 import vn.edu.usth.mcma.frontend.constant.IP;
 
 public class ApiClient {
@@ -19,13 +25,28 @@ public class ApiClient {
     private static Retrofit retrofit;
     public static Retrofit getClient(Context context) {
         if (retrofit == null) {
-            TokenManager tokenManager = new TokenManager(context);
+            AuthPrefsManager authPrefsManager = new AuthPrefsManager(context);
+            CustomAuthenticator authenticator = new CustomAuthenticator(authPrefsManager);
+            authenticator.setCallback(() -> {
+                new Handler(Looper.getMainLooper())
+                        .post(() -> Toast
+                                .makeText(context, "Session expired. Please log in again.", Toast.LENGTH_SHORT)
+                                .show());
+                new Handler(Looper.getMainLooper())
+                        .postDelayed(() -> {
+                            Intent intent = new Intent(context, LoginFragment.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            context.startActivity(intent);
+                        }, 2000);
+
+            });
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             OkHttpClient client = new OkHttpClient
                     .Builder()
+                    .authenticator(authenticator)
                     .addInterceptor(loggingInterceptor)
-                    .addInterceptor(new AuthInterceptor(tokenManager))
+                    .addInterceptor(new AuthInterceptor(authPrefsManager))
                     .connectTimeout(60, TimeUnit.SECONDS)
                     .readTimeout(60, TimeUnit.SECONDS)
                     .writeTimeout(60, TimeUnit.SECONDS)

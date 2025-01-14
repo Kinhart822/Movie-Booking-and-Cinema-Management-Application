@@ -5,18 +5,20 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import vn.edu.usth.mcma.frontend.dto.Request.ForgotPasswordRequest;
-import vn.edu.usth.mcma.frontend.dto.Request.RefreshTokenRequest;
+import vn.edu.usth.mcma.frontend.dto.Request.RefreshRequest;
 import vn.edu.usth.mcma.frontend.dto.Request.ResetPasswordRequest;
 import vn.edu.usth.mcma.frontend.dto.Request.SignInRequest;
 import vn.edu.usth.mcma.frontend.dto.Request.SignUpRequest;
-import vn.edu.usth.mcma.frontend.dto.Response.JwtAuthenticationResponse;
+import vn.edu.usth.mcma.frontend.dto.response.JwtAuthenticationResponse;
+import vn.edu.usth.mcma.frontend.dto.response.RefreshResponse;
+import vn.edu.usth.mcma.frontend.dto.response.SignInResponse;
 
 public interface AuthApi {
     @POST("/api/v1/auth/sign-in")
-    Call<JwtAuthenticationResponse> signIn(@Body SignInRequest signInRequest);
+    Call<SignInResponse> signIn(@Body SignInRequest signInRequest);
 
     @POST("/api/v1/auth/refresh")
-    Call<JwtAuthenticationResponse> refresh(@Body RefreshTokenRequest refreshTokenRequest);
+    Call<RefreshResponse> refresh(@Body RefreshRequest refreshRequest);
 
     @POST("/api/v1/auth/sign-up")
     Call<Void> signUp(@Body SignUpRequest signUpRequest);

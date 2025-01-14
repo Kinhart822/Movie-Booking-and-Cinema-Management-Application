@@ -13,7 +13,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Response.NotificationResponse;
+import vn.edu.usth.mcma.frontend.dto.response.NotificationResponse;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class Notification_Activity extends AppCompatActivity {

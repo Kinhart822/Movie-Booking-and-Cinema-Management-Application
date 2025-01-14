@@ -25,8 +25,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Response.ListFoodAndDrinkToOrderingResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.ViewCinemaResponse;
+import vn.edu.usth.mcma.frontend.dto.response.ListFoodAndDrinkToOrderingResponse;
+import vn.edu.usth.mcma.frontend.dto.response.ViewCinemaResponse;
 import vn.edu.usth.mcma.frontend.component.Store.Adapters.ComboAdapter;
 import vn.edu.usth.mcma.frontend.component.Store.Adapters.TheaterAdapter;
 import vn.edu.usth.mcma.frontend.component.Store.Models.ComboItem;
@@ -200,7 +200,6 @@ public class StoreFragment extends Fragment implements TheaterAdapter.OnTheaterC
                             if (cinemaIdList == null || cinemaNameList == null) {
                                 Log.e("StoreFragment", "Cinema lists are null");
                                 Toast.makeText(requireActivity(), "No theaters to show", Toast.LENGTH_SHORT).show();
-                                return;
                             }
 
                             theaters.clear();

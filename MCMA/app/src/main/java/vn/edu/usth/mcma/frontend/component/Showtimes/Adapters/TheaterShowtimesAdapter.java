@@ -33,8 +33,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.ScreenResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.Schedule;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.ScreenResponse;
+import vn.edu.usth.mcma.frontend.dto.response.Schedule;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Theater;
 

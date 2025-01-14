@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Response.BookingResponse;
+import vn.edu.usth.mcma.frontend.dto.response.BookingResponse;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 
 public class RatingMovie_Adapter extends RecyclerView.Adapter<RatingMovie_ViewHolder> {

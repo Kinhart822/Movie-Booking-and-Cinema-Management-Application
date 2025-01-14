@@ -21,9 +21,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.Genre;
-import vn.edu.usth.mcma.frontend.dto.Response.ComingSoonResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.Performer;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.Genre;
+import vn.edu.usth.mcma.frontend.dto.response.ComingSoonResponse;
+import vn.edu.usth.mcma.frontend.dto.response.Performer;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 

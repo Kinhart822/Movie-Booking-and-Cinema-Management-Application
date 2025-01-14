@@ -9,16 +9,16 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import vn.edu.usth.mcma.frontend.dto.Request.MovieRespondRequest;
-import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.CityResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.CouponResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.ComingSoonResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.HighRatingMovieResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.MovieGenreResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.MovieRespondResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.MovieResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.NowShowingResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.Schedule;
-import vn.edu.usth.mcma.frontend.dto.Response.SearchMovieByNameResponse;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CityResponse;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CouponResponse;
+import vn.edu.usth.mcma.frontend.dto.response.ComingSoonResponse;
+import vn.edu.usth.mcma.frontend.dto.response.HighRatingMovieResponse;
+import vn.edu.usth.mcma.frontend.dto.response.MovieGenreResponse;
+import vn.edu.usth.mcma.frontend.dto.response.MovieRespondResponse;
+import vn.edu.usth.mcma.frontend.dto.response.MovieResponse;
+import vn.edu.usth.mcma.frontend.dto.response.NowShowingResponse;
+import vn.edu.usth.mcma.frontend.dto.response.Schedule;
+import vn.edu.usth.mcma.frontend.dto.response.SearchMovieByNameResponse;
 
 public interface MovieApi {
     @POST("/api/v1/user/movieRespond/add")

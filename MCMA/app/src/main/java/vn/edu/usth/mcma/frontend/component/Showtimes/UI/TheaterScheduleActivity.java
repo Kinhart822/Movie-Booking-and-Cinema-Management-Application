@@ -32,11 +32,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.Genre;
-import vn.edu.usth.mcma.frontend.dto.Response.MovieResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.Performer;
-import vn.edu.usth.mcma.frontend.dto.Response.Review;
-import vn.edu.usth.mcma.frontend.dto.Response.ScheduleSelectedByCinemaResponse;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.Genre;
+import vn.edu.usth.mcma.frontend.dto.response.MovieResponse;
+import vn.edu.usth.mcma.frontend.dto.response.Performer;
+import vn.edu.usth.mcma.frontend.dto.response.Review;
+import vn.edu.usth.mcma.frontend.dto.response.ScheduleSelectedByCinemaResponse;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Adapters.MovieScheduleAdapter;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
@@ -111,7 +111,6 @@ public class TheaterScheduleActivity extends AppCompatActivity
 
                             if (uniqueDates.isEmpty()) {
                                 Toast.makeText(TheaterScheduleActivity.this, "No schedule found for this cinema.", Toast.LENGTH_SHORT).show();
-                                return;
                             }
 
                             for (int i = 0; i < uniqueDates.size(); i++) {

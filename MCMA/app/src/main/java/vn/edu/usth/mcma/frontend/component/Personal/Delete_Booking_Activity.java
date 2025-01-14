@@ -16,7 +16,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Response.BookingResponse;
+import vn.edu.usth.mcma.frontend.dto.response.BookingResponse;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class Delete_Booking_Activity extends AppCompatActivity {

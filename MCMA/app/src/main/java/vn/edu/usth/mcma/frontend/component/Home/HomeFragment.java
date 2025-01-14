@@ -1,15 +1,15 @@
 package vn.edu.usth.mcma.frontend.component.Home;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import androidx.annotation.NonNull;
@@ -26,13 +26,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Response.HighRatingMovieResponse;
+import vn.edu.usth.mcma.frontend.dto.response.HighRatingMovieResponse;
 import vn.edu.usth.mcma.frontend.helper.ImageDecoder;
 import vn.edu.usth.mcma.frontend.component.Search.Search_Activity;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class HomeFragment extends Fragment {
-
+    private final String TAG = HomeFragment.class.getName();
     private ViewFlipper viewFlipper;
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
@@ -54,6 +54,10 @@ public class HomeFragment extends Fragment {
         });
 
         viewFlipper = v.findViewById(R.id.view_flipper);
+        viewFlipper.setFlipInterval(3000);
+        viewFlipper.setAutoStart(true);
+        viewFlipper.setInAnimation(requireContext(), android.R.anim.slide_in_left);
+        viewFlipper.setOutAnimation(requireContext(), android.R.anim.slide_out_right);
 
         fetchHighRatingMovies();
         return v;
@@ -69,13 +73,8 @@ public class HomeFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     List<HighRatingMovieResponse> movies = response.body();
                     if (viewFlipper != null && viewFlipper.getChildCount() == 0) {
-                        for (HighRatingMovieResponse movie : movies) {
-                            String imageBase64 = movie.getImageBase64(); // Fetch the image URL
-                            if (imageBase64 != null && !imageBase64.isEmpty()) {
-                                ImageDecoder imageDecoder = new ImageDecoder(imageBase64);
-                                flipperImages(imageDecoder.getResult());
-                            }
-                        }
+                        ImageDecoder imageDecoder = new ImageDecoder();
+                        movies.forEach(m -> addFlipperChild(m, imageDecoder));
                         viewFlipper.setVisibility(View.VISIBLE); // Ensure visibility
                     }
                 } else {
@@ -88,20 +87,49 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-    private void flipperImages(Bitmap bitmap) {
-        Context context = getContext();
-        if (viewFlipper == null || context == null) return;
-        ImageView imageView = new ImageView(context);
-        Glide.with(context)
-                .load(bitmap)
-                .placeholder(R.drawable.placeholder1080x1920)
-                .into(imageView);
+    private void addFlipperChild(HighRatingMovieResponse movie, ImageDecoder imageDecoder) {
+        if (viewFlipper == null) return;
+        ImageView poster = new ImageView(requireContext());
+        poster.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                8));
+        TextView name = new TextView(requireContext());
+        name.setText(movie.getName());
+        name.setGravity(Gravity.CENTER);
+        name.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1));
+        TextView avgVote = new TextView(requireContext());
+        avgVote.setText(String.format("%.1f ⭐", movie.getAvgVote()));
+        avgVote.setGravity(Gravity.CENTER);
+        avgVote.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1));
+        LinearLayout description = new LinearLayout(requireContext());
+        description.setOrientation(LinearLayout.VERTICAL);
+        description.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                1));
+        description.addView(name);
+        description.addView(avgVote);
+        description.setGravity(Gravity.CENTER);
+        LinearLayout child = new LinearLayout(requireContext());
+        child.setOrientation(LinearLayout.VERTICAL);
+        child.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT));
+        child.addView(poster);
+        child.addView(description);
 
-        viewFlipper.addView(imageView);
-        viewFlipper.setFlipInterval(3000);
-        viewFlipper.setAutoStart(true);
-        viewFlipper.setInAnimation(context, android.R.anim.slide_in_left);
-        viewFlipper.setOutAnimation(context, android.R.anim.slide_out_right);
+        Glide.with(requireContext())
+                .load(imageDecoder.decode(movie.getImageBase64()))
+                .placeholder(R.drawable.placeholder1080x1920)
+                .into(poster);
+        viewFlipper.addView(child);
     }
 
     private void setupViewPagerAndTabs() {

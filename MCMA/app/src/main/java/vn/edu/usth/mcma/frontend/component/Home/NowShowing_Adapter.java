@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.Genre;
-import vn.edu.usth.mcma.frontend.dto.Response.NowShowingResponse;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.Genre;
+import vn.edu.usth.mcma.frontend.dto.response.NowShowingResponse;
 
 public class NowShowing_Adapter extends RecyclerView.Adapter<NowShowing_ViewHolder> {
     private final FilmViewInterface filmViewInterface;

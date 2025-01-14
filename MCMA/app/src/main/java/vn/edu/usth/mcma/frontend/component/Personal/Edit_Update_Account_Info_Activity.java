@@ -139,7 +139,7 @@ public class Edit_Update_Account_Info_Activity extends AppCompatActivity {
         editor.putString(SharedPreferencesKey.PROFILE_DOB.name(), dob);
         editor.putString(SharedPreferencesKey.PROFILE_ADDRESS.name(), address);
         editor.putString(SharedPreferencesKey.PROFILE_SEX.name(), gender);
-        editor.putString(SharedPreferencesKey.PROFILE_EMAIL.name(), email);
+//        editor.putString(SharedPreferencesKey.PROFILE_EMAIL.name(), email);
 
         editor.apply();
     }

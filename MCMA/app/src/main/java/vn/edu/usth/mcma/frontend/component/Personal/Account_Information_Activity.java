@@ -15,7 +15,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Response.UserDetailsResponse;
+import vn.edu.usth.mcma.frontend.dto.response.UserDetailsResponse;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class Account_Information_Activity extends AppCompatActivity {

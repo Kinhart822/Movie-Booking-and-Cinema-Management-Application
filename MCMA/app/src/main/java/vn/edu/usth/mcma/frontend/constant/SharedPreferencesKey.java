@@ -2,9 +2,11 @@ package vn.edu.usth.mcma.frontend.constant;
 
 public enum SharedPreferencesKey {
     AUTH,
-    AUTH_TOKEN,
+    AUTH_EMAIL,
+    AUTH_ACCESS_TOKEN,
+    AUTH_REFRESH_TOKEN,
     AUTH_IS_LOGGED_IN,
-    AUTH_EXPIRATION_TIME,
+//    AUTH_EXPIRATION_TIME,
     PROFILE,
     PROFILE_ID,
     PROFILE_FIRST_NAME,
@@ -13,7 +15,7 @@ public enum SharedPreferencesKey {
     PROFILE_DOB,
     PROFILE_ADDRESS,
     PROFILE_SEX,
-    PROFILE_EMAIL,
+//    PROFILE_EMAIL,
 
     ;
 }

@@ -11,11 +11,11 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import vn.edu.usth.mcma.frontend.dto.Request.ChangePasswordRequest;
 import vn.edu.usth.mcma.frontend.dto.Request.UpdateAccountRequest;
-import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.CouponResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.BookingResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.MovieRespondResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.NotificationResponse;
-import vn.edu.usth.mcma.frontend.dto.Response.UserDetailsResponse;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CouponResponse;
+import vn.edu.usth.mcma.frontend.dto.response.BookingResponse;
+import vn.edu.usth.mcma.frontend.dto.response.MovieRespondResponse;
+import vn.edu.usth.mcma.frontend.dto.response.NotificationResponse;
+import vn.edu.usth.mcma.frontend.dto.response.UserDetailsResponse;
 
 public interface AccountApi {
     @PUT("/api/v1/auth/update-account/{userId}")

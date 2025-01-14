@@ -18,8 +18,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Response.BookingProcess.Genre;
-import vn.edu.usth.mcma.frontend.dto.Response.NowShowingResponse;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.Genre;
+import vn.edu.usth.mcma.frontend.dto.response.NowShowingResponse;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class Movie_Feedback_Activity extends AppCompatActivity {
