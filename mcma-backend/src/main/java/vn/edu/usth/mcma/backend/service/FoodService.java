@@ -21,9 +21,9 @@ import java.util.List;
 @AllArgsConstructor
 public class FoodService {
     private final FoodRepository foodRepository;
-    private final JwtHelper jwtUtil;
+    private final JwtHelper jwtHelper;
     public ApiResponse createFood(FoodRequest request) {
-        Long userId = jwtUtil.getIdUserRequesting();
+        Long userId = jwtHelper.getIdUserRequesting();
         Food food = new Food();
         food.setName(request.getName());
         food.setDescription(request.getDescription());
@@ -40,7 +40,7 @@ public class FoodService {
         return foodRepository.findAllByNameContaining(query, pageable);
     }
     public ApiResponse updateFood(Long id, FoodRequest request) {
-        Long userId = jwtUtil.getIdUserRequesting();
+        Long userId = jwtHelper.getIdUserRequesting();
         Food food = foodRepository
                 .findById(id)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
@@ -55,7 +55,7 @@ public class FoodService {
         return ApiResponse.success();
     }
     public ApiResponse deleteFood(Long id) {
-        Long userId = jwtUtil.getIdUserRequesting();
+        Long userId = jwtHelper.getIdUserRequesting();
         Food food = foodRepository
                 .findById(id)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));

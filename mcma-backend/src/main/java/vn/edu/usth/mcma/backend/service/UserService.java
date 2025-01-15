@@ -32,10 +32,6 @@ public class UserService {
         return this.userDetailsCustomService.loadUserByUsername(username);
     }
 
-    public boolean checkEmailExistence(String email) {
-        return userRepository.existsByEmailIgnoreCase(email);
-    }
-
     public Optional<User> resetPasswordRequest(String email) {
         return userRepository
                 .findByEmailIgnoreCaseAndStatus(email, CommonStatus.ACTIVE.getStatus())

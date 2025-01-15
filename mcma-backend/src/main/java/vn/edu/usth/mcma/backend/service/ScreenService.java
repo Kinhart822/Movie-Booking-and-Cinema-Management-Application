@@ -25,7 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ScreenService {
     private final ScreenRepository screenRepository;
-    private final JwtHelper jwtUtil;
+    private final JwtHelper jwtHelper;
     private final CinemaRepository cinemaRepository;
     private final ScreenTypeRepository screenTypeRepository;
 
@@ -36,7 +36,7 @@ public class ScreenService {
         ScreenType screenType = screenTypeRepository
                 .findById(request.getTypeId())
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
-        Long userId = jwtUtil.getIdUserRequesting();
+        Long userId = jwtHelper.getIdUserRequesting();
         Instant now = Instant.now();
         screenRepository
                 .save(Screen
@@ -69,7 +69,7 @@ public class ScreenService {
         ScreenType screenType = screenTypeRepository
                 .findById(request.getTypeId())
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
-        Long userId = jwtUtil.getIdUserRequesting();
+        Long userId = jwtHelper.getIdUserRequesting();
         Instant now = Instant.now();
         screenRepository.save(screen
                 .toBuilder()
@@ -88,13 +88,13 @@ public class ScreenService {
         screenRepository.save(screen
                 .toBuilder()
                 .status(CommonStatus.ACTIVE.getStatus() + CommonStatus.INACTIVE.getStatus() - screen.getStatus())
-                .lastModifiedBy(jwtUtil.getIdUserRequesting())
+                .lastModifiedBy(jwtHelper.getIdUserRequesting())
                 .lastModifiedDate(Instant.now())
                 .build());
         return ApiResponse.success();
     }
     public ApiResponse deactivateScreens(List<Long> ids) {
-        Long userId = jwtUtil.getIdUserRequesting();
+        Long userId = jwtHelper.getIdUserRequesting();
         Instant now = Instant.now();
         screenRepository
                 .saveAll(screenRepository

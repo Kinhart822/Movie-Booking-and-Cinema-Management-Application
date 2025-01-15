@@ -23,10 +23,10 @@ import java.util.List;
 public class CinemaService {
     private final CinemaRepository cinemaRepository;
     private final CityRepository cityRepository;
-    private final JwtHelper jwtUtil;
+    private final JwtHelper jwtHelper;
 
     public ApiResponse createCinema(CinemaRequest request) {
-        Long userId = jwtUtil.getIdUserRequesting();
+        Long userId = jwtHelper.getIdUserRequesting();
         Instant now = Instant.now();
         cinemaRepository
                 .save(Cinema
@@ -58,7 +58,7 @@ public class CinemaService {
                         .name(request.getName())
                         .address(request.getAddress())
                         .status(request.getStatus())
-                        .lastModifiedBy(jwtUtil.getIdUserRequesting())
+                        .lastModifiedBy(jwtHelper.getIdUserRequesting())
                         .lastModifiedDate(Instant.now())
                         .build());
         return ApiResponse.success();
@@ -69,13 +69,13 @@ public class CinemaService {
                 .save(cinema
                         .toBuilder()
                         .status(CommonStatus.ACTIVE.getStatus() + CommonStatus.INACTIVE.getStatus() - cinema.getStatus())
-                        .lastModifiedBy(jwtUtil.getIdUserRequesting())
+                        .lastModifiedBy(jwtHelper.getIdUserRequesting())
                         .lastModifiedDate(Instant.now())
                         .build());
         return ApiResponse.success();
     }
     public ApiResponse deactivateCinemas(List<Long> ids) {
-        Long userId = jwtUtil.getIdUserRequesting();
+        Long userId = jwtHelper.getIdUserRequesting();
         Instant now = Instant.now();
         cinemaRepository
                 .saveAll(cinemaRepository

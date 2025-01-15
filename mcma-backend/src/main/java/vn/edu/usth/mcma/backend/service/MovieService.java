@@ -27,7 +27,7 @@ public class MovieService {
     private final MovieRepository movieRepository;
     private final ScreenRepository screenRepository;
     private final ScheduleRepository scheduleRepository;
-    private final JwtHelper jwtUtil;
+    private final JwtHelper jwtHelper;
     private final RatingRepository ratingRepository;
 
     /*
@@ -42,7 +42,7 @@ public class MovieService {
         Rating rating = ratingRepository
                 .findById(movieRequest.getRatingId())
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
-        Long userId = jwtUtil.getIdUserRequesting();
+        Long userId = jwtHelper.getIdUserRequesting();
         Instant now = Instant.now();
         movieRepository
                 .save(movie

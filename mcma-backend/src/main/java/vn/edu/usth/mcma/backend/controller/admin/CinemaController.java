@@ -98,8 +98,4 @@ public class CinemaController {
     public ResponseEntity<ApiResponse> updateSeatMap(@PathVariable Long screenId, @Valid @RequestBody List<SeatHelperInput> seatHelperInputs) {
         return ResponseEntity.ok(seatService.updateSeatMap(screenId, seatHelperInputs));
     }
-//    @DeleteMapping("/seat/{id}")
-//    public ApiResponse deleteSeat(@PathVariable Long id) {
-//        return seatService.deleteSeat(id);
-//    }
 }

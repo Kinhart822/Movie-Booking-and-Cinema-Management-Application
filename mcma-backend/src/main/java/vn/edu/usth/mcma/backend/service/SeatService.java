@@ -31,7 +31,7 @@ import java.util.Map;
 public class SeatService {
     private final SeatRepository seatRepository;
     private final ScreenRepository screenRepository;
-    private final JwtHelper jwtUtil;
+    private final JwtHelper jwtHelper;
     private final SeatAvailability DEFAULT_SEAT_AVAILABILITY = SeatAvailability.Buyable;
 
     public ApiResponse initSeatMap(Long screenId, List<SeatHelperInput> seatHelperInputs) {
@@ -42,7 +42,7 @@ public class SeatService {
         if (!findSeatMapByScreenId(screenId).isEmpty()) {
             throw new BusinessException(ApiResponseCode.INITIATED_SEAT_MAP);
         }
-        Long userId = jwtUtil.getIdUserRequesting();
+        Long userId = jwtHelper.getIdUserRequesting();
         Instant now = Instant.now();
         SeatHelper seatHelper = new SeatHelper(seatHelperInputs);
         seatRepository.saveAll(seatHelper
@@ -92,7 +92,7 @@ public class SeatService {
         if (!screen.isMutable()) {
             throw new BusinessException(ApiResponseCode.BUSY_SCREEN);
         }
-        Long userId = jwtUtil.getIdUserRequesting();
+        Long userId = jwtHelper.getIdUserRequesting();
         Instant now = Instant.now();
         SeatHelper seatHelper = new SeatHelper(seatHelperInputs);
         Map<Integer, Map<Integer, SeatTile>> seatGrid = seatHelper.getSeatGrid();

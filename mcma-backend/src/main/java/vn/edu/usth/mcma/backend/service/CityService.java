@@ -22,9 +22,9 @@ import java.util.List;
 @AllArgsConstructor
 public class CityService {
     private final CityRepository cityRepository;
-    private final JwtHelper jwtUtil;
+    private final JwtHelper jwtHelper;
     public ApiResponse createCity(CityRequest request) {
-        Long userId = jwtUtil.getIdUserRequesting();
+        Long userId = jwtHelper.getIdUserRequesting();
         City city = new City();
         city.setName(request.getName());
         city.setStatus(CommonStatus.ACTIVE.getStatus());
@@ -37,7 +37,7 @@ public class CityService {
         return cityRepository.findAllByNameContaining(query, pageable);
     }
     public ApiResponse updateCity(Long id, CityRequest request) {
-        Long userId = jwtUtil.getIdUserRequesting();
+        Long userId = jwtHelper.getIdUserRequesting();
         City city = cityRepository
                 .findById(id)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
@@ -48,7 +48,7 @@ public class CityService {
         return ApiResponse.success();
     }
     public ApiResponse deleteCity(Long id) {
-        Long userId = jwtUtil.getIdUserRequesting();
+        Long userId = jwtHelper.getIdUserRequesting();
         City city = cityRepository
                 .findById(id)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
