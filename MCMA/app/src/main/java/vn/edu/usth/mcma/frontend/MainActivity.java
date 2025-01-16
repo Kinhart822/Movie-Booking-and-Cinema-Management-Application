@@ -1,7 +1,6 @@
 package vn.edu.usth.mcma.frontend;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -19,11 +18,9 @@ import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.component.Home.Fragment_changing;
 import vn.edu.usth.mcma.frontend.component.Login.LoginFragment;
 import vn.edu.usth.mcma.frontend.component.Notification.Notification_Activity;
-import vn.edu.usth.mcma.frontend.constant.SharedPreferencesKey;
 import vn.edu.usth.mcma.frontend.network.AuthPrefsManager;
 
 public class MainActivity extends AppCompatActivity {
-    private AuthPrefsManager authPrefsManager;
     private ViewPager2 mViewPager;
     private DrawerLayout mDrawerLayout;
     private BottomNavigationView bottomNavigationView;
@@ -32,24 +29,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        authPrefsManager = new AuthPrefsManager(this);
+        AuthPrefsManager authPrefsManager = new AuthPrefsManager(this);
         if (!authPrefsManager.isLoggedIn()) {
             navigateToLoginFragment();
             return;
         }
-//        SharedPreferences authPrefs = getSharedPreferences(SharedPreferencesKey.AUTH.name(), MODE_PRIVATE);
-////        boolean isLoggedIn = authPrefs.getBoolean(SharedPreferencesKey.AUTH_IS_LOGGED_IN.name(), false);
-////        long expirationTime = authPrefs.getLong(SharedPreferencesKey.AUTH_EXPIRATION_TIME.name(), 0);
-//
-//        if (!isLoggedIn || System.currentTimeMillis() > expirationTime) {
-//            authPrefs
-//                    .edit()
-//                    .remove(SharedPreferencesKey.AUTH_ACCESS_TOKEN.name())
-////                    .remove(SharedPreferencesKey.AUTH_IS_LOGGED_IN.name())
-////                    .remove(SharedPreferencesKey.AUTH_EXPIRATION_TIME.name())
-//                    .apply();
-//            return;
-//        }
 
         // Khởi tạo DrawerLayout
         mDrawerLayout = findViewById(R.id.main_activity);

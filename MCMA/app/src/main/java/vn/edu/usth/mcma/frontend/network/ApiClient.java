@@ -6,7 +6,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
+import androidx.annotation.NonNull;
+
 import com.google.gson.Gson;
 
 
@@ -18,7 +19,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import vn.edu.usth.mcma.frontend.MainActivity;
-import vn.edu.usth.mcma.frontend.component.Login.LoginFragment;
 import vn.edu.usth.mcma.frontend.constant.IP;
 
 public class ApiClient {
@@ -27,21 +27,7 @@ public class ApiClient {
     public static Retrofit getClient(Context context) {
         if (retrofit == null) {
             AuthPrefsManager authPrefsManager = new AuthPrefsManager(context);
-            CustomAuthenticator authenticator = new CustomAuthenticator(authPrefsManager);
-            authenticator.setCallback(() -> {
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler
-                        .post(() -> Toast
-                                .makeText(context, "Session expired. Please log in again.", Toast.LENGTH_SHORT)
-                                .show());
-                handler
-                        .postDelayed(() -> {
-                            Intent intent = new Intent(context, MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            context.startActivity(intent);
-                        }, 2000);
-
-            });
+            CustomAuthenticator authenticator = getCustomAuthenticator(context, authPrefsManager);
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             OkHttpClient client = new OkHttpClient
@@ -55,14 +41,34 @@ public class ApiClient {
                     .callTimeout(60, TimeUnit.SECONDS)
                     .retryOnConnectionFailure(true)
                     .build();
-        retrofit = new Retrofit
-                .Builder()
-                .baseUrl(BASE_URL)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create(new Gson()))
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .build();
+            retrofit = new Retrofit
+                    .Builder()
+                    .baseUrl(BASE_URL)
+                    .client(client)
+                    .addConverterFactory(GsonConverterFactory.create(new Gson()))
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .build();
         }
         return retrofit;
+    }
+
+    @NonNull
+    private static CustomAuthenticator getCustomAuthenticator(Context context, AuthPrefsManager authPrefsManager) {
+        CustomAuthenticator authenticator = new CustomAuthenticator(authPrefsManager);
+        authenticator.setCallback(() -> {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler
+                    .post(() -> Toast
+                            .makeText(context, "Session expired. Please log in again.", Toast.LENGTH_SHORT)
+                            .show());
+            handler
+                    .postDelayed(() -> {
+                        Intent intent = new Intent(context, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        context.startActivity(intent);
+                    }, 2000);
+
+        });
+        return authenticator;
     }
 }
