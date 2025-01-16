@@ -49,6 +49,15 @@
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
+            android:name=".frontend.Coupon.My_Voucher_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Coupon.Coupon_Details_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Coupon.Coupon_Activity"
+            android:exported="false" />
+        <activity
             android:name=".frontend.Personal.Movie_Feedback_Activity"
             android:exported="false" />
         <activity

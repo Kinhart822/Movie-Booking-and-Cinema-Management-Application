@@ -125,6 +125,31 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/coupon_page"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="12dp"
+                        android:layout_marginTop="15dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/edit_group_box">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Coupon/Voucher"
+                            android:textSize="16sp"
+                            android:textColor="@color/black" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_arrow_right"
+                            app:tint="@color/black" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:id="@+id/management_booking_button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
