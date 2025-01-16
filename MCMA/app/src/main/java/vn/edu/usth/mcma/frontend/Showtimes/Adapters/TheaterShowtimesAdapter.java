@@ -28,6 +28,7 @@ import com.google.android.flexbox.FlexboxLayout;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -60,10 +61,10 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
     private Integer movieId;
 
     public interface OnShowtimeClickListener {
-        void onShowtimeClick(Theater theater,String date, String showtime, Integer screenId, String screenRoom, Integer scheduleId);
+        void onShowtimeClick(Theater theater, String date, String showtime, Integer screenId, String screenRoom, Integer scheduleId);
     }
 
-    public TheaterShowtimesAdapter(OnShowtimeClickListener listener,Integer movieId) {
+    public TheaterShowtimesAdapter(OnShowtimeClickListener listener, Integer movieId) {
         this.listener = listener;
         this.movieId = movieId; // Initialize movieId
     }
@@ -75,6 +76,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
         expandedStates.clear();
         notifyDataSetChanged();
     }
+
     public void setOnShowtimeClickListener(OnShowtimeClickListener listener) {
         this.listener = listener;
     }
@@ -119,7 +121,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
             headerLayout = itemView.findViewById(R.id.header_layout);
         }
 
-        void bind(Theater theater, int position,Integer movieId) {
+        void bind(Theater theater, int position, Integer movieId) {
             theaterName.setText(theater.getName());
             theaterAddress.setText(theater.getAddress());
 
@@ -146,7 +148,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                 // Show/hide showtimes container
                 if (newState) {
                     screenRoomsContainer.setVisibility(View.VISIBLE);
-                    populateScreenRooms(theater,selectedCinemaId,movieId);
+                    populateScreenRooms(theater, selectedCinemaId, movieId);
                 } else {
                     screenRoomsContainer.setVisibility(View.GONE);
                     showtimesContainer.setVisibility(View.GONE);
@@ -155,9 +157,10 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
 
             // Populate showtimes only if expanded
             if (isExpanded) {
-                populateScreenRooms(theater,theater.getId(),movieId);
+                populateScreenRooms(theater, theater.getId(), movieId);
             }
         }
+
         private void populateScreenRooms(Theater theater, int cinemaId, Integer movieId) {
             screenRoomsContainer.removeAllViews();
 
@@ -209,7 +212,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                 selectedScreenId = screen.getScreenId();
                                 // Populate showtimes
                                 showtimesContainer.setVisibility(View.VISIBLE);
-                                populateShowtimes(theater,movieId);
+                                populateShowtimes(theater, movieId);
                             });
 
                             screenRoomsContainer.addView(screenRoomButton);
@@ -347,12 +350,44 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                             timeButton.setLayoutParams(timeParams);
 
                                             timeButton.setOnClickListener(v1 -> {
-                                                for (int k = 0; k < timeLayout.getChildCount(); k++) {
-                                                    timeLayout.getChildAt(k).setSelected(false);
-                                                }
-                                                timeButton.setSelected(true);
+//                                                for (int k = 0; k < timeLayout.getChildCount(); k++) {
+//                                                    timeLayout.getChildAt(k).setSelected(false);
+//                                                }
+//                                                timeButton.setSelected(true);
+//
+//                                                listener.onShowtimeClick(theater, date, time, selectedScreenId, selectedScreenRoom, scheduleId);
+//                                            });
 
-                                                listener.onShowtimeClick(theater, date, time, selectedScreenId, selectedScreenRoom, scheduleId);
+                                                // Combine the selected date and time to compare the full datetime
+                                                String dateTimeStr = dateButton.getText() + " " + time;
+                                                SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+                                                Date selectedDateTime = null;
+                                                try {
+                                                    selectedDateTime = dateTimeFormat.parse(dateTimeStr);
+                                                } catch (ParseException e) {
+                                                    Toast.makeText(context, "Error parsing date and time: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    return;
+                                                }
+
+                                                Calendar calendar = Calendar.getInstance();
+                                                calendar.setTime(selectedDateTime);
+                                                calendar.add(Calendar.MINUTE, 10);
+
+                                                Date selectedDateTimePlus10Minutes = calendar.getTime();
+
+                                                Date currentTime = new Date();
+
+                                                if (selectedDateTimePlus10Minutes.before(currentTime)) {
+                                                    Toast.makeText(context, "The schedule is over", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    // Proceed with the listener action if the time is in the future
+                                                    for (int k = 0; k < timeLayout.getChildCount(); k++) {
+                                                        timeLayout.getChildAt(k).setSelected(false);
+                                                    }
+                                                    timeButton.setSelected(true);
+
+                                                    listener.onShowtimeClick(theater, date, time, selectedScreenId, selectedScreenRoom, scheduleId);
+                                                }
                                             });
 
                                             timeLayout.addView(timeButton);
