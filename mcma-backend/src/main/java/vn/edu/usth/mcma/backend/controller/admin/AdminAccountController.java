@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.dto.*;
+import vn.edu.usth.mcma.backend.dto.account.AccountCreateRequest;
+import vn.edu.usth.mcma.backend.dto.account.AccountUpdateRequest;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.service.AccountService;
 
@@ -19,10 +21,12 @@ import java.util.Map;
 public class AdminAccountController {
     private final AccountService accountService;
 
+    @Operation(summary = "Create an admin account", description = "Admin can only be created by other admin")
     @PostMapping("/account/create")
-    public ResponseEntity<ApiResponse> createAdmin(@RequestBody SignUpRequest signUpRequest) {
-        return ResponseEntity.ok(accountService.createAdmin(signUpRequest));
+    public ResponseEntity<ApiResponse> createAdmin(@RequestBody @Valid AccountCreateRequest request) {
+        return ResponseEntity.ok(accountService.createAdmin(request));
     }
+    @Operation(summary = "Get profile of the current logged in admin")
     @GetMapping("/account/profile")
     public ResponseEntity<AdminPresentation> getAdmin() {
         return ResponseEntity.ok(accountService.getAdmin());
@@ -43,12 +47,12 @@ public class AdminAccountController {
     public ResponseEntity<ApiResponse> resetPasswordFinish(@RequestBody @Valid ResetPasswordFinish finish) {
         return ResponseEntity.ok(accountService.resetPasswordFinish(finish));
     }
-//    // TODO
-//    @PutMapping("/auth/update-account/{userId}")
-//    public ResponseEntity<String> updateAccount(@PathVariable Long userId, @RequestBody UpdateAccountRequest updateAccountRequest) {
-//        authService.updateAccount(userId, updateAccountRequest);
-//        return ResponseEntity.ok("Account updated successfully");
-//    }
+
+    @Operation(summary = "Update current logged in admin detail")
+    @PutMapping("/account/update")
+    public ResponseEntity<ApiResponse> updateAdmin(@RequestBody @Valid AccountUpdateRequest request) {
+        return ResponseEntity.ok(accountService.updateAccount(request));
+    }
 //    // TODO admin self delete admin delete other
 //    @DeleteMapping("/delete-account/{userId}")
 //    public ResponseEntity<String> deleteAccount(@PathVariable Long userId) {

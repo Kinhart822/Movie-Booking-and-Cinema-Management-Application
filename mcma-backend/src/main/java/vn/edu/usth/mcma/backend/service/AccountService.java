@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.*;
+import vn.edu.usth.mcma.backend.dto.account.AccountCreateRequest;
+import vn.edu.usth.mcma.backend.dto.account.AccountUpdateRequest;
 import vn.edu.usth.mcma.backend.entity.User;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
@@ -31,7 +33,7 @@ public class AccountService {
     private final UserService userService;
     private final EmailService emailService;
 
-    public ApiResponse createAdmin(SignUpRequest request) {
+    public ApiResponse createAdmin(AccountCreateRequest request) {
         String email = request.getEmail();
         if (userRepository.existsByEmailIgnoreCase(email)) {
             throw new BusinessException(ApiResponseCode.USERNAME_EXISTED);
@@ -43,12 +45,6 @@ public class AccountService {
                         .email(email)
                         .password(passwordEncoder.encode(request.getPassword()))
                         .roles(List.of(UserType.ADMIN.name()))
-                        .firstName(request.getFirstName())
-                        .lastName(request.getLastName())
-                        .sex(request.getSex())
-                        .dateOfBirth(request.getDateOfBirth())
-                        .phone(request.getPhone())
-                        .address(request.getAddress())
                         .status(CommonStatus.ACTIVE.getStatus())
                         .createdBy(userId)
                         .createdDate(now)
@@ -57,25 +53,22 @@ public class AccountService {
                         .build());
         return ApiResponse.success();
     }
-    public ApiResponse userSignUp(SignUpRequest request) {
+    public ApiResponse userSignUp(AccountCreateRequest request) {
         String email = request.getEmail();
         if (userRepository.existsByEmailIgnoreCase(email)) {
             throw new BusinessException(ApiResponseCode.USERNAME_EXISTED);
         }
+        Long userId = jwtHelper.getIdUserRequesting();
         Instant now = Instant.now();
         userRepository
                 .save(User.builder()
                         .email(email)
                         .password(passwordEncoder.encode(request.getPassword()))
                         .roles(List.of(UserType.USER.name()))
-                        .firstName(request.getFirstName())
-                        .lastName(request.getLastName())
-                        .sex(request.getSex())
-                        .dateOfBirth(request.getDateOfBirth())
-                        .phone(request.getPhone())
-                        .address(request.getAddress())
                         .status(CommonStatus.ACTIVE.getStatus())
+                        .createdBy(userId)
                         .createdDate(now)
+                        .lastModifiedBy(userId)
                         .lastModifiedDate(now)
                         .build());
         return ApiResponse.success();
@@ -140,36 +133,30 @@ public class AccountService {
         }
         return ApiResponse.success();
     }
-    //TODO
-//    public void updateAccount(Long userId, UpdateAccountRequest updateAccountRequest) {
-//        User user = userRepository
-//                .findById(userId)
-//                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
-//        if (updateAccountRequest.getEmail() != null) {
-//            user.setEmail(updateAccountRequest.getEmail());
-//        }
-//        if (updateAccountRequest.getFirstName() != null) {
-//            user.setFirstName(updateAccountRequest.getFirstName());
-//        }
-//        if (updateAccountRequest.getLastName() != null) {
-//            user.setLastName(updateAccountRequest.getLastName());
-//        }
-//        if (updateAccountRequest.getPhone() != null) {
-//            user.setPhone(updateAccountRequest.getPhone());
-//        }
-//        if (updateAccountRequest.getDateOfBirth() != null) {
-//            user.setDateOfBirth(updateAccountRequest.getDateOfBirth());
-//        }
-//        if (updateAccountRequest.getSex() != null) {
-//            user.setSex(updateAccountRequest.getSex());
-//        }
-//        if (updateAccountRequest.getAddress() != null) {
-//            user.setAddress(updateAccountRequest.getAddress());
-//        }
-//        user.setLastModifiedDate(Instant.now());
-//        user.setLastModifiedBy(userId);
-//        userRepository.save(user);
-//    }
+
+    /**
+     * use this to update account detail for both admin and user
+     * @param request contains firstName, lastName, sex, dateOfBirth, phone, address
+     * @return ApiResponse
+     */
+    public ApiResponse updateAccount(AccountUpdateRequest request) {
+        Long id = jwtHelper.getIdUserRequesting();
+        userRepository
+                .save(userRepository
+                        .findById(id)
+                        .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND))
+                        .toBuilder()
+                        .firstName(request.getFirstName())
+                        .lastName(request.getLastName())
+                        .sex(request.getSex())
+                        .dateOfBirth(request.getDateOfBirth())
+                        .phone(request.getPhone())
+                        .address(request.getAddress())
+                        .lastModifiedBy(id)
+                        .lastModifiedDate(Instant.now())
+                        .build());
+        return ApiResponse.success();
+    }
 //    public void deleteAccount(Long userId) {
 //        User user = userRepository
 //                .findById(userId)

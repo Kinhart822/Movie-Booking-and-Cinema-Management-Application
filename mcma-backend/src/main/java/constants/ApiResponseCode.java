@@ -24,7 +24,8 @@ public enum ApiResponseCode {
     BAD_REQUEST("400", "BAD_REQUEST"),
     INVALID_RESET_KEY("404", "Reset key is invalid"),
     INITIATED_SEAT_MAP("400", "SeatMap of this screen has already been initiated"),
-    BUSY_SCREEN("400", "Cannot update SeatMap: Screen is going to be used"),;
+    BUSY_SCREEN("400", "Cannot update SeatMap: Screen is going to be used"),
+    ;
     private final String status;
     private final String description;
 }
