@@ -127,6 +127,11 @@ public class Revoke_Cancel_Booking_Adapter extends RecyclerView.Adapter<Revoke_C
             // Remove the item and notify adapter
             items.remove(position);
             notifyItemRemoved(position);
+
+            if (items.isEmpty() && context instanceof Revoke_Cancel_Booking_Activity) {
+                // Hiển thị NoDataView từ Activity
+                ((Revoke_Cancel_Booking_Activity) context).showNoDataView();
+            }
         }
     }
 

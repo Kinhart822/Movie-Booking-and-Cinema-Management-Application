@@ -14,21 +14,15 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.SeatStatus;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.AvailableSeatResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.HeldSeatResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.Seat.UnavailableSeatResponse;
@@ -38,8 +32,6 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.BookingProcessAPIs.Get
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.SeatAdapter;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.Seat;
-import vn.edu.usth.mcma.frontend.Showtimes.Models.SeatType;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Theater;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.TicketItem;
 
@@ -89,15 +81,9 @@ public class SeatSelectionActivity extends AppCompatActivity {
         guestQuantity = totalTicketCount;
 
         setupTheaterInfo();
-        setupRecyclerView();
         setupCheckoutButton();
         setupBackButton();
         fetchAllSeats();
-    }
-
-    private void setupRecyclerView() {
-        seatRecyclerView = findViewById(R.id.seatRecyclerView);
-        seatRecyclerView.setLayoutManager(new GridLayoutManager(this, 10));
     }
 
     private void fetchAllSeats() {
@@ -146,121 +132,84 @@ public class SeatSelectionActivity extends AppCompatActivity {
         });
     }
 
-//    private void fetchHeldSeats(int screenId, List<AvailableSeatResponse> availableSeats, List<UnavailableSeatResponse> unavailableSeats) {
-//        RetrofitService retrofitService = new RetrofitService(this);
-//        GetAllHeldSeatsByScreenAPI getAllHeldSeatsByScreenAPI = retrofitService.getRetrofit().create(GetAllHeldSeatsByScreenAPI.class);
-//        getAllHeldSeatsByScreenAPI.getHeldSeatsByScreen(screenId).enqueue(new Callback<List<HeldSeatResponse>>() {
-//            @Override
-//            public void onResponse(Call<List<HeldSeatResponse>> call, Response<List<HeldSeatResponse>> response) {
-//                if (response.isSuccessful() && response.body() != null) {
-//                    List<HeldSeatResponse> heldSeats = response.body();
-//
-//                    Object[][] seatMatrix = new Object[][];
-//                    List<Object> allSeats = new ArrayList<>();
-//                    allSeats.addAll(availableSeats);
-//                    allSeats.addAll(unavailableSeats);
-//                    allSeats.addAll(heldSeats);
-//
-//                    placeSeatsInMatrix(seatMatrix, allSeats);
-//
-//                    // Cập nhật giao diện với SeatAdapter
-//                    seatAdapter = new SeatAdapter(seatMatrix, SeatSelectionActivity.this, new SeatAdapter.OnSeatSelectedListener() {
-//                        @Override
-//                        public void onSeatSelected(AvailableSeatResponse seat) {
-//                            updateSelectedSeatsDisplay();
-//                        }
-//                    }, guestQuantity);
-//
-//                    seatRecyclerView.setAdapter(seatAdapter);
-//                    seatAdapter.notifyDataSetChanged();
-//                } else {
-//                    Toast.makeText(SeatSelectionActivity.this, "Failed to fetch held seats", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<HeldSeatResponse>> call, Throwable t) {
-//                Toast.makeText(SeatSelectionActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-private void fetchHeldSeats(int screenId, List<AvailableSeatResponse> availableSeats, List<UnavailableSeatResponse> unavailableSeats) {
-    RetrofitService retrofitService = new RetrofitService(this);
-    GetAllHeldSeatsByScreenAPI getAllHeldSeatsByScreenAPI = retrofitService.getRetrofit().create(GetAllHeldSeatsByScreenAPI.class);
-    getAllHeldSeatsByScreenAPI.getHeldSeatsByScreen(screenId).enqueue(new Callback<List<HeldSeatResponse>>() {
-        @Override
-        public void onResponse(Call<List<HeldSeatResponse>> call, Response<List<HeldSeatResponse>> response) {
-            if (response.isSuccessful() && response.body() != null) {
-                List<HeldSeatResponse> heldSeats = response.body();
+    private void fetchHeldSeats(int screenId, List<AvailableSeatResponse> availableSeats, List<UnavailableSeatResponse> unavailableSeats) {
+        RetrofitService retrofitService = new RetrofitService(this);
+        GetAllHeldSeatsByScreenAPI getAllHeldSeatsByScreenAPI = retrofitService.getRetrofit().create(GetAllHeldSeatsByScreenAPI.class);
+        getAllHeldSeatsByScreenAPI.getHeldSeatsByScreen(screenId).enqueue(new Callback<List<HeldSeatResponse>>() {
+            @Override
+            public void onResponse(Call<List<HeldSeatResponse>> call, Response<List<HeldSeatResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<HeldSeatResponse> heldSeats = response.body();
 
-                // Tính toán maxRow và maxColumn từ danh sách ghế
-                int maxRow = 0;
-                int maxColumn = 0;
+                    // Tính toán maxRow và maxColumn từ danh sách ghế
+                    int maxRow = 0;
+                    int maxColumn = 0;
 
-                // Tính toán maxRow và maxColumn từ các ghế có sẵn
-                for (AvailableSeatResponse seat : availableSeats) {
-                    int row = getRow(seat);
-                    int col = getColumn(seat);
-                    if (row > maxRow) maxRow = row;
-                    if (col > maxColumn) maxColumn = col;
-                }
-
-                // Tính toán maxRow và maxColumn từ các ghế không có sẵn
-                for (UnavailableSeatResponse seat : unavailableSeats) {
-                    int row = getRow(seat);
-                    int col = getColumn(seat);
-                    if (row > maxRow) maxRow = row;
-                    if (col > maxColumn) maxColumn = col;
-                }
-
-                // Tính toán maxRow và maxColumn từ các ghế đã giữ
-                for (HeldSeatResponse seat : heldSeats) {
-                    int row = getRow(seat);
-                    int col = getColumn(seat);
-                    if (row > maxRow) maxRow = row;
-                    if (col > maxColumn) maxColumn = col;
-                }
-
-                // Tạo ma trận với kích thước động
-                Object[][] seatMatrix = new Object[maxRow][maxColumn];
-                List<Object> allSeats = new ArrayList<>();
-                allSeats.addAll(availableSeats);
-                allSeats.addAll(unavailableSeats);
-                allSeats.addAll(heldSeats);
-
-                placeSeatsInMatrix(seatMatrix, allSeats);
-
-                // Cập nhật giao diện với SeatAdapter
-                seatAdapter = new SeatAdapter(seatMatrix, SeatSelectionActivity.this, new SeatAdapter.OnSeatSelectedListener() {
-                    @Override
-                    public void onSeatSelected(AvailableSeatResponse seat) {
-                        updateSelectedSeatsDisplay();
+                    // Tính toán maxRow và maxColumn từ các ghế có sẵn
+                    for (AvailableSeatResponse seat : availableSeats) {
+                        int row = getRow(seat);
+                        int col = getColumn(seat);
+                        if (row > maxRow) maxRow = row;
+                        if (col > maxColumn) maxColumn = col;
                     }
-                }, guestQuantity);
 
-                seatRecyclerView.setAdapter(seatAdapter);
-                seatAdapter.notifyDataSetChanged();
-            } else {
-                Toast.makeText(SeatSelectionActivity.this, "Failed to fetch held seats", Toast.LENGTH_SHORT).show();
+                    // Tính toán maxRow và maxColumn từ các ghế không có sẵn
+                    for (UnavailableSeatResponse seat : unavailableSeats) {
+                        int row = getRow(seat);
+                        int col = getColumn(seat);
+                        if (row > maxRow) maxRow = row;
+                        if (col > maxColumn) maxColumn = col;
+                    }
+
+                    // Tính toán maxRow và maxColumn từ các ghế đã giữ
+                    for (HeldSeatResponse seat : heldSeats) {
+                        int row = getRow(seat);
+                        int col = getColumn(seat);
+                        if (row > maxRow) maxRow = row;
+                        if (col > maxColumn) maxColumn = col;
+                    }
+
+                    // Tạo ma trận với kích thước động
+                    Object[][] seatMatrix = new Object[maxRow][maxColumn];
+                    List<Object> allSeats = new ArrayList<>();
+                    allSeats.addAll(availableSeats);
+                    allSeats.addAll(unavailableSeats);
+                    allSeats.addAll(heldSeats);
+
+                    placeSeatsInMatrix(seatMatrix, allSeats);
+
+                    seatAdapter = new SeatAdapter(seatMatrix, SeatSelectionActivity.this, new SeatAdapter.OnSeatSelectedListener() {
+                        @Override
+                        public void onSeatSelected(AvailableSeatResponse seat) {
+                            updateSelectedSeatsDisplay();
+                        }
+                    }, guestQuantity);
+
+                    seatRecyclerView = findViewById(R.id.seatRecyclerView);
+                    seatRecyclerView.setLayoutManager(new GridLayoutManager(SeatSelectionActivity.this, seatMatrix[0].length + 1));
+                    seatRecyclerView.setAdapter(seatAdapter);
+                    seatAdapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(SeatSelectionActivity.this, "Failed to fetch held seats", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<HeldSeatResponse>> call, Throwable t) {
+                Toast.makeText(SeatSelectionActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void placeSeatsInMatrix(Object[][] matrix, List<?> seats) {
+        for (Object seat : seats) {
+            int row = getRow(seat) - 1;
+            int col = getColumn(seat) - 1;
+            if (row >= 0 && row < matrix.length && col >= 0 && col < matrix[0].length && matrix[row][col] == null) {
+                matrix[row][col] = seat;
             }
         }
-
-        @Override
-        public void onFailure(Call<List<HeldSeatResponse>> call, Throwable t) {
-            Toast.makeText(SeatSelectionActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    });
-}
-
-private void placeSeatsInMatrix(Object[][] matrix, List<?> seats) {
-    for (Object seat : seats) {
-        int row = getRow(seat) - 1;
-        int col = getColumn(seat) - 1;
-        if (row >= 0 && row < matrix.length && col >= 0 && col < matrix[0].length && matrix[row][col] == null) {
-            matrix[row][col] = seat;
-        }
     }
-}
 
     private int getRow(Object seat) {
         if (seat instanceof AvailableSeatResponse) {
@@ -334,7 +283,7 @@ private void placeSeatsInMatrix(Object[][] matrix, List<?> seats) {
         }
 
         String selectedShowtime = getIntent().getStringExtra("SELECTED_SHOWTIME");
-        if(showtime != null){
+        if (showtime != null) {
             showtime.setText(selectedShowtime);
         }
     }

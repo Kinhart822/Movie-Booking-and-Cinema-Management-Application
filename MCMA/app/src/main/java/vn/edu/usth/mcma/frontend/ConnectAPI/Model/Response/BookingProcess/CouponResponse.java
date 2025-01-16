@@ -10,6 +10,7 @@ public class CouponResponse {
     private List<BigDecimal> discountRateList;
     private List<Integer> minSpendReqList;
     private List<Integer> discountLimitList;
+    private List<Integer> pointToExchangeList;
 
     public CouponResponse(List<Integer> couponIds, List<String> couponNameList, List<String> couponDescriptionList, List<BigDecimal> discountRateList, List<Integer> minSpendReqList, List<Integer> discountLimitList) {
         this.couponIds = couponIds;
@@ -18,6 +19,24 @@ public class CouponResponse {
         this.discountRateList = discountRateList;
         this.minSpendReqList = minSpendReqList;
         this.discountLimitList = discountLimitList;
+    }
+
+    public CouponResponse(List<Integer> couponIds, List<String> couponNameList, List<String> couponDescriptionList, List<BigDecimal> discountRateList, List<Integer> minSpendReqList, List<Integer> discountLimitList, List<Integer> pointToExchangeList) {
+        this.couponIds = couponIds;
+        this.couponNameList = couponNameList;
+        this.couponDescriptionList = couponDescriptionList;
+        this.discountRateList = discountRateList;
+        this.minSpendReqList = minSpendReqList;
+        this.discountLimitList = discountLimitList;
+        this.pointToExchangeList = pointToExchangeList;
+    }
+
+    public List<Integer> getPointToExchangeList() {
+        return pointToExchangeList;
+    }
+
+    public void setPointToExchangeList(List<Integer> pointToExchangeList) {
+        this.pointToExchangeList = pointToExchangeList;
     }
 
     public List<Integer> getCouponIds() {

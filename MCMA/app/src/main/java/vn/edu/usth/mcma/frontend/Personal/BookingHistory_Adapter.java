@@ -44,7 +44,6 @@ public class BookingHistory_Adapter extends RecyclerView.Adapter<BookingHistory_
 //        holder.start_dateView.setText(items.get(position).getBooking_startdate());
 //        holder.end_dateView.setText(items.get(position).getBooking_enddate());
 //        holder.statusView.setText(items.get(position).getBooking_status());
-
     }
 
     @Override

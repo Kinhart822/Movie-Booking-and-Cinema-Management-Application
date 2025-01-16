@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.frontend.Feedback;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -28,19 +30,23 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetAllBookingAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 import vn.edu.usth.mcma.frontend.MainActivity;
+import vn.edu.usth.mcma.frontend.Personal.Revoke_Cancel_Booking_Item;
 
 public class FeedbackFragment extends Fragment {
     private RecyclerView recyclerView;
     //    private List<RatingMovie_Item> items;
     private RatingMovie_Adapter adapter;
+    private FrameLayout noDataContainer;
     private List<BookingResponse> items;
 
+    @SuppressLint("MissingInflatedId")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_feedback, container, false);
 
         recyclerView = v.findViewById(R.id.recyclerview_feedbackmovie);
+        noDataContainer = v.findViewById(R.id.feedback_no_data_container);
         items = new ArrayList<>();
 
 //        // Thêm dữ liệu mẫu vào danh sách
@@ -48,6 +54,7 @@ public class FeedbackFragment extends Fragment {
 //        items.add(new RatingMovie_Item("IronMan", "Drama", R.drawable.movie13));
 //        items.add(new RatingMovie_Item("Wicked", "Comedy", R.drawable.movie12));
 
+        showNoDataView();
         fetchBookingList();
 
 //        // Thiết lập adapter với callback showFeedbackDialog
@@ -106,6 +113,16 @@ public class FeedbackFragment extends Fragment {
 //        dialog.show();
 //    }
 
+    void showNoDataView() {
+        recyclerView.setVisibility(View.GONE);
+        noDataContainer.setVisibility(View.VISIBLE);
+    }
+
+    void hideNoDataView() {
+        recyclerView.setVisibility(View.VISIBLE);
+        noDataContainer.setVisibility(View.GONE);
+    }
+
     private void fetchBookingList() {
         RetrofitService retrofitService = new RetrofitService(requireContext());
         GetAllBookingAPI getAllBookingAPI = retrofitService.getRetrofit().create(GetAllBookingAPI.class);
@@ -115,16 +132,23 @@ public class FeedbackFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
 //                    Toast.makeText(requireActivity(), "Here's your feedbacks", Toast.LENGTH_SHORT).show();
                     items.clear();
-                    items.addAll(response.body());
-                    adapter.notifyDataSetChanged();
+
+                    if (response.body().isEmpty()) {
+                        showNoDataView();
+                    } else {
+                        items.addAll(response.body());
+                        hideNoDataView();
+                        adapter.notifyDataSetChanged();
+                    }
                 } else {
-                    Toast.makeText(requireActivity(), "You haven't made any feedbacks", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(requireActivity(), "You haven't made any feedbacks", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<BookingResponse>> call, Throwable t) {
-                Toast.makeText(requireActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(requireActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                showNoDataView();
             }
         });
     }

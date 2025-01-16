@@ -11,6 +11,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
@@ -23,6 +26,7 @@ public class OnlyDetailsActivity extends AppCompatActivity {
     private TextView synopsisTextView;
     private TextView expandCollapseTextView;
     private boolean isSynopsisExpanded = false;
+    private ExoPlayer exoPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +60,8 @@ public class OnlyDetailsActivity extends AppCompatActivity {
         List<String> movieCommentList = intent.getStringArrayListExtra("MOVIE_COMMENT");
         double averageStar = intent.getDoubleExtra("AVERAGE_STAR", 0.0);
 
+        String movieTrailerLink = intent.getStringExtra("TRAILER");
+
         // Set toolbar and collapsing toolbar title
         toolbarTitle.setText(movieName);
         if (getSupportActionBar() != null) {
@@ -70,16 +76,57 @@ public class OnlyDetailsActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         // Populate movie details
-        populateMovieDetails(movieName, movieGenres, movieLength, movieDescription, publishedDate, backgroundImageUrL, movieRatings, moviePerformerNameList, moviePerformerTypeList, movieCommentList, averageStar);
+//        populateMovieDetails(movieName, movieGenres, movieLength, movieDescription, publishedDate, backgroundImageUrL, movieRatings, moviePerformerNameList, moviePerformerTypeList, movieCommentList, averageStar);
+        populateMovieDetails(movieName, movieGenres, movieLength, movieDescription, publishedDate, movieTrailerLink, movieRatings, moviePerformerNameList, moviePerformerTypeList, movieCommentList, averageStar);
         setupSynopsisExpansion();
         setupToolbarBehavior(appBarLayout, toolbar);
     }
 
-    private void populateMovieDetails(String movieName, List<String> movieGenres, Integer movieLength, String movieDescription, String publishedDate, String backgroundImageUrL, List<String> movieRatings, List<String> moviePerformerNameList, List<String> moviePerformerTypeList, List<String> movieCommentList, Double averageStar) {
+//    private void populateMovieDetails(String movieName, List<String> movieGenres, Integer movieLength, String movieDescription, String publishedDate, String backgroundImageUrL, List<String> movieRatings, List<String> moviePerformerNameList, List<String> moviePerformerTypeList, List<String> movieCommentList, Double averageStar) {
+//        // Populate all TextViews with movie details
+//        ((TextView) findViewById(R.id.tv_movie_title)).setText(movieName);
+//        ImageView bannerView = findViewById(R.id.tv_movie_banner);
+//        Glide.with(this).load(backgroundImageUrL).into(bannerView);
+//
+//        ((TextView) findViewById(R.id.tv_movie_genres)).setText(String.join(", ", movieGenres));
+//        ((TextView) findViewById(R.id.tv_duration)).setText(String.format("%d minutes", movieLength));
+//        ((TextView) findViewById(R.id.tv_synopsis)).setText(movieDescription);
+//        ((TextView) findViewById(R.id.tv_release_date)).setText(publishedDate);
+//        ((TextView) findViewById(R.id.tv_classification)).setText(String.join(", ", movieRatings));
+//
+//        List<String> directors = new ArrayList<>();
+//        List<String> cast = new ArrayList<>();
+//
+//        if (moviePerformerTypeList != null && moviePerformerNameList != null && moviePerformerTypeList.size() == moviePerformerNameList.size()) {
+//            for (int i = 0; i < moviePerformerTypeList.size(); i++) {
+//                String type = moviePerformerTypeList.get(i).toLowerCase();
+//                String name = moviePerformerNameList.get(i);
+//
+//                if ("director".equals(type) || "0".equals(type)) {
+//                    directors.add(name);
+//                } else if ("actor".equals(type) || "1".equals(type)) {
+//                    cast.add(name);
+//                }
+//            }
+//        }
+//
+//        ((TextView) findViewById(R.id.tv_director)).setText(directors.isEmpty() ? "N/A" : String.join(", ", directors));
+//        ((TextView) findViewById(R.id.tv_cast)).setText(cast.isEmpty() ? "N/A" : String.join(", ", cast));
+//        ((TextView) findViewById(R.id.tv_star)).setText(String.valueOf(averageStar));
+//    }
+
+    private void populateMovieDetails(String movieName, List<String> movieGenres, Integer movieLength, String movieDescription, String publishedDate, String trailerLink, List<String> movieRatings, List<String> moviePerformerNameList, List<String> moviePerformerTypeList, List<String> movieCommentList, Double averageStar) {
         // Populate all TextViews with movie details
         ((TextView) findViewById(R.id.tv_movie_title)).setText(movieName);
-        ImageView bannerView = findViewById(R.id.tv_movie_banner);
-        Glide.with(this).load(backgroundImageUrL).into(bannerView);
+        // Setup video playback for banner
+        PlayerView playerView = findViewById(R.id.tv_movie_banner);
+        exoPlayer = new ExoPlayer.Builder(this).build();
+        playerView.setPlayer(exoPlayer);
+
+        MediaItem mediaItem = MediaItem.fromUri(trailerLink);
+        exoPlayer.setMediaItem(mediaItem);
+        exoPlayer.prepare();
+        exoPlayer.play();
 
         ((TextView) findViewById(R.id.tv_movie_genres)).setText(String.join(", ", movieGenres));
         ((TextView) findViewById(R.id.tv_duration)).setText(String.format("%d minutes", movieLength));
@@ -107,6 +154,7 @@ public class OnlyDetailsActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.tv_cast)).setText(cast.isEmpty() ? "N/A" : String.join(", ", cast));
         ((TextView) findViewById(R.id.tv_star)).setText(String.valueOf(averageStar));
     }
+
 
     private void setupSynopsisExpansion() {
         synopsisTextView.post(() -> {
@@ -142,5 +190,14 @@ public class OnlyDetailsActivity extends AppCompatActivity {
                 toolbar.setVisibility(View.GONE);
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (exoPlayer != null) {
+            exoPlayer.release();
+            exoPlayer = null;
+        }
     }
 }

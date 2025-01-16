@@ -31,17 +31,20 @@
             android:orientation="horizontal"
             android:padding="16dp">
 
+            <!-- Rating Section -->
             <Button
                 android:id="@+id/theater_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/gray_text"
+                android:background="@drawable/feedback_text_background"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
                 android:paddingLeft="90dp"
                 android:text="All Movie Theaters"
                 android:paddingRight="90dp"
                 android:textColor="@color/white"
+                android:textStyle="bold"
                 android:textSize="16sp" />
         </LinearLayout>
 

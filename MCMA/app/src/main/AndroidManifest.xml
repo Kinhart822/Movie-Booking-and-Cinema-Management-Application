@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -11,6 +13,7 @@
     <uses-feature
         android:name="android.hardware.telephony"
         android:required="false" />
+
     <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
@@ -25,6 +28,19 @@
         android:theme="@style/Theme.MCMA"
         android:usesCleartextTraffic="true"
         tools:targetApi="tiramisu">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAF271l6ZPCQ65cI_T4nvNI5Ezv-M0ufKE" />
+
+        <activity
+            android:name=".frontend.Showtimes.UI.GoogleMapActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MCMA"></activity>
+        <activity
+            android:name=".frontend.Showtimes.UI.RowSeatLetterActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MCMA" />
         <activity
             android:name=".frontend.Showtimes.UI.PayingMethodActivity"
             android:exported="false" />
@@ -108,7 +124,6 @@
         <activity
             android:name=".frontend.Search.Search_Activity"
             android:exported="false" />
-
         <activity
             android:name=".frontend.More.LoadingPageActivity"
             android:exported="true">

@@ -1,8 +1,8 @@
 package vn.edu.usth.mcma.frontend.Showtimes.UI;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -35,17 +34,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Enum.PerformerType;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.MovieResponse;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ScheduleResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ScheduleSelectedByCinemaResponse;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetAllInformationOfSelectedMovie;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetAllMovieAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetScheduleAPI;
 import vn.edu.usth.mcma.frontend.Showtimes.Models.Movie;
 import vn.edu.usth.mcma.frontend.Showtimes.Adapters.MovieScheduleAdapter;
-import vn.edu.usth.mcma.frontend.Showtimes.Utils.TheaterDataProvider;
 
-public class TheaterScheduleActivity extends AppCompatActivity
-        implements MovieScheduleAdapter.OnShowtimeClickListener {
+public class TheaterScheduleActivity extends AppCompatActivity implements MovieScheduleAdapter.OnShowtimeClickListener {
     private MovieScheduleAdapter movieAdapter;
     private String selectedDate;
     private Button selectedDateButton;
@@ -64,6 +60,7 @@ public class TheaterScheduleActivity extends AppCompatActivity
         // Set theater details in toolbar
         TextView nameTextView = findViewById(R.id.theater_name);
         TextView addressTextView = findViewById(R.id.theater_address);
+        LinearLayout nav_container = findViewById(R.id.nav_container);
         nameTextView.setText(theaterName);
         addressTextView.setText(theaterAddress);
 
@@ -71,8 +68,32 @@ public class TheaterScheduleActivity extends AppCompatActivity
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> finish());
 
+        nav_container.setOnClickListener(v -> openMapWithAddress(theaterAddress));
+        
         setupViews();
         setupDateButtons(theaterId);
+    }
+
+    private void openMapWithAddress(String theaterAddress) {
+        if (theaterAddress != null && !theaterAddress.isEmpty()) {
+            // Trường hợp muốn design lại theo ý mình
+//            Intent intent = new Intent(TheaterScheduleActivity.this, GoogleMapActivity.class);
+//            intent.putExtra("THEATER_ADDRESS", theaterAddress);
+//            startActivity(intent);
+
+            // Mở app lên
+            try {
+                String geoUri = "geo:0,0?q=" + Uri.encode(theaterAddress);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                intent.setPackage("com.google.android.apps.maps");
+                startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Unable to open map.", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Address not available.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setupViews() {
@@ -268,6 +289,7 @@ public class TheaterScheduleActivity extends AppCompatActivity
                     Intent intent = new Intent(TheaterScheduleActivity.this, MovieDetailsActivity.class);
                     intent.putExtra("MOVIE_TITLE", movieResponse.getMovieName());
                     intent.putExtra("MOVIE_NAME", movieResponse.getMovieName());
+                    intent.putExtra("MOVIE_TRAILER_LINK", movieResponse.getTrailerLink());
                     intent.putExtra("MOVIE_GENRES", new ArrayList<>(movieResponse.getMovieGenreNameList()));
                     intent.putExtra("MOVIE_LENGTH", movieResponse.getMovieLength());
                     intent.putExtra("MOVIE_DESCRIPTION", movieResponse.getDescription());

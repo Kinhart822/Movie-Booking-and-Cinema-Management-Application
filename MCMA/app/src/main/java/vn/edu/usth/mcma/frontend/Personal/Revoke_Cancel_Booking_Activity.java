@@ -1,6 +1,9 @@
 package vn.edu.usth.mcma.frontend.Personal;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -23,22 +26,19 @@ public class Revoke_Cancel_Booking_Activity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private Revoke_Cancel_Booking_Adapter adapter;
     private List<Revoke_Cancel_Booking_Item> items;
+    private FrameLayout noDataContainer;
     private BookingAPI bookingAPI;
 
-
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_revoke_cancel_booking);
 
         recyclerView = findViewById(R.id.recyclerview_revoke_cancel_booking);
+        noDataContainer = findViewById(R.id.revoke_cancel_booking_no_data_container);
 
         items = new ArrayList<>();
-//        items.add(new Revoke_Cancel_Booking_Item("Wolverine", "Action", R.drawable.movie4));
-//        items.add(new Revoke_Cancel_Booking_Item("IronMan", "Drama", R.drawable.movie13));
-//        items.add(new Revoke_Cancel_Booking_Item("Wicked", "Comedy", R.drawable.movie12));
-
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new Revoke_Cancel_Booking_Adapter(this, items);
         recyclerView.setAdapter(adapter);
@@ -46,13 +46,21 @@ public class Revoke_Cancel_Booking_Activity extends AppCompatActivity {
         RetrofitService retrofitService = new RetrofitService(this);
         bookingAPI = retrofitService.getRetrofit().create(BookingAPI.class);
 
+        showNoDataView();
         fetchCanceledBookings();
 
         ImageButton backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(view -> onBackPressed());
+    }
 
-        backButton.setOnClickListener(view -> {
-            onBackPressed();
-        });
+    void showNoDataView() {
+        recyclerView.setVisibility(View.GONE);
+        noDataContainer.setVisibility(View.VISIBLE);
+    }
+
+    void hideNoDataView() {
+        recyclerView.setVisibility(View.VISIBLE);
+        noDataContainer.setVisibility(View.GONE);
     }
 
     private void fetchCanceledBookings() {
@@ -62,19 +70,25 @@ public class Revoke_Cancel_Booking_Activity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     // Clear current items
                     items.clear();
-                    // Map BookingResponse to Cancel_Booking_Item
-                    for (BookingResponse booking : response.body()) {
-                        items.add(new Revoke_Cancel_Booking_Item(
-                                booking.getBookingId(),
-                                booking.getBookingNo(),
-                                booking.getMovieName(),
-                                "Booking No: " + booking.getBookingNo(),
-                                booking.getImageUrlMovie(),
-                                booking.getStartDateTime()
-                        ));
+
+                    // Map BookingResponse to Revoke_Cancel_Booking_Item
+                    if (response.body().isEmpty()) {
+                        showNoDataView();
+                    } else {
+                        for (BookingResponse booking : response.body()) {
+                            items.add(new Revoke_Cancel_Booking_Item(
+                                    booking.getBookingId(),
+                                    booking.getBookingNo(),
+                                    booking.getMovieName(),
+                                    "Booking No: " + booking.getBookingNo(),
+                                    booking.getImageUrlMovie(),
+                                    booking.getStartDateTime()
+                            ));
+                        }
+                        // Notify adapter about data changes
+                        hideNoDataView();
+                        adapter.notifyDataSetChanged();
                     }
-                    // Notify adapter about data changes
-                    adapter.notifyDataSetChanged();
                 } else {
 //                    Toast.makeText(Revoke_Cancel_Booking_Activity.this, "Failed to fetch bookings", Toast.LENGTH_SHORT).show();
                 }
@@ -82,8 +96,10 @@ public class Revoke_Cancel_Booking_Activity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<BookingResponse>> call, Throwable t) {
+                showNoDataView();
 //                Toast.makeText(Revoke_Cancel_Booking_Activity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 }
+

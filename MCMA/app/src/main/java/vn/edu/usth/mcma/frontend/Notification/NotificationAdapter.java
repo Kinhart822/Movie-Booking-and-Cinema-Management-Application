@@ -38,23 +38,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationViewHo
     public NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.noti_frame, parent, false);
         return new NotificationViewHolder(view);
-//        return new NotificationViewHolder(LayoutInflater.from(context).inflate(R.layout.noti_frame,parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
-//        NotificationResponse notificationResponse = items.get(position);
-//        // Assuming messages and dateCreated are lists, displaying the first item for simplicity
-//        if (!notificationResponse.getMessage().isEmpty() && !notificationResponse.getDateCreated().isEmpty()) {
-//            holder.nameView.setText(notificationResponse.getMessage().get(0));
-//            holder.timeView.setText(notificationResponse.getDateCreated().get(0));
-//        } else {
-//            holder.nameView.setText("No message available");
-//            holder.timeView.setText("No date available");
-//        }
         holder.nameView.setText(messages.get(position));
         holder.timeView.setText(dates.get(position));
-//        holder.avatarView.setImageResource(items.get(position).getAvatar());
     }
 
     @Override

@@ -251,7 +251,13 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                 List<Integer> scheduleIds = scheduleResponse.getScheduleId();
 
                                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-                                Date today = new Date();
+//                                Date today = new Date();
+                                Date today = null;
+                                try {
+                                    today = sdf.parse(sdf.format(new Date()));
+                                } catch (ParseException e) {
+                                    throw new RuntimeException(e);
+                                }
 
                                 Map<String, List<Pair<String, Integer>>> schedulesByDateAndTime = new TreeMap<>((d1, d2) -> {
                                     try {
@@ -265,7 +271,8 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                 for (int i = 0; i < dates.size(); i++) {
                                     try {
                                         Date scheduleDate = sdf.parse(dates.get(i));
-                                        if (scheduleDate != null && scheduleDate.after(today)) {
+
+                                        if (scheduleDate != null && (scheduleDate.equals(today) || scheduleDate.after(today))) {
                                             String date = dates.get(i);
                                             String time = times.get(i);
                                             Integer scheduleId = scheduleIds.get(i);

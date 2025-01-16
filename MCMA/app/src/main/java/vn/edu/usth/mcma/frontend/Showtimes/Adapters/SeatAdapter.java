@@ -1,6 +1,5 @@
 package vn.edu.usth.mcma.frontend.Showtimes.Adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,144 +43,232 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
         this.maxSeats = maxSeats;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        int totalCols = seatMatrix[0].length + 1; // Thêm cột cho chữ cái hàng
+        int col = position % totalCols;
+
+        // Loại item: chữ cái hàng (cột đầu tiên)
+        return (col == 0) ? 0 : 1;
+    }
+
     @NonNull
     @Override
     public SeatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.seat_selection_item, parent, false);
-        return new SeatViewHolder(view);
+//        View view = LayoutInflater.from(parent.getContext())
+//                .inflate(R.layout.seat_selection_item, parent, false);
+//        return new SeatViewHolder(view);
+        if (viewType == 0) { // Chữ cái hàng
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_row_seat_letter, parent, false);
+            return new SeatViewHolder(view, true);
+        } else { // Ghế
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.seat_selection_item, parent, false);
+            return new SeatViewHolder(view, false);
+        }
     }
 
-//    @SuppressLint("SetTextI18n")
 //    @Override
 //    public void onBindViewHolder(@NonNull SeatViewHolder holder, int position) {
+//        int totalRows = seatMatrix.length; // Rows represent the horizontal layout
+//        int totalCols = seatMatrix[0].length + 1; // Columns represent the vertical layout
 //
-//        int totalCols = seatMatrix.length;
-//        int  totalRows= seatMatrix[0].length;
+//        int row = position / totalCols; // Correcting the row calculation
+//        int col = position % totalCols; // Correcting the column calculation
 //
-//        int row = position / totalRows;
-//        int col = position % totalCols;
+////        Object seat = seatMatrix[row][col];
 //
-//        Object seat = seatMatrix[row][col];
-//
-//        if (seat instanceof AvailableSeatResponse) {
-//            AvailableSeatResponse availableSeat = (AvailableSeatResponse) seat;
-//            holder.seatTextView.setText(availableSeat.getAvailableSeat());
-//            updateSeatBackground(holder, availableSeat);
-//
-//            holder.itemView.setOnClickListener(v -> {
-//                if (!"Unavailable".equalsIgnoreCase(availableSeat.getSeatStatus()) && !"Held".equalsIgnoreCase(availableSeat.getSeatStatus())) {
-//                    toggleSeatSelection(availableSeat, holder, row, col);
-//                }
-//            });
-//        } else if (seat instanceof UnavailableSeatResponse) {
-//            UnavailableSeatResponse unavailableSeat = (UnavailableSeatResponse) seat;
-//            holder.seatTextView.setText(unavailableSeat.getUnAvailableSeat());
-//            updateSeatBackground(holder, unavailableSeat);
-//        } else if (seat instanceof HeldSeatResponse) {
-//            HeldSeatResponse heldSeat = (HeldSeatResponse) seat;
-//            holder.seatTextView.setText(heldSeat.getHeldSeat());
-//            updateSeatBackground(holder, heldSeat);
+//        if (col == 0) { // Chữ cái hàng
+//            char rowLetter = (char) ('A' + row);
+//            holder.rowLetterTextView.setText(String.valueOf(rowLetter));
 //        } else {
-//            holder.itemView.setBackground(null);
-//            holder.itemView.setOnClickListener(null);
-//            holder.seatTextView.setText("");
-//            return;
+//            int seatCol = position % (totalCols - 1);
+//
+//            Object seat = seatMatrix[row][seatCol];
+//
+//            if (seat instanceof AvailableSeatResponse) {
+//                AvailableSeatResponse availableSeat = (AvailableSeatResponse) seat;
+////            holder.seatTextView.setText(availableSeat.getAvailableSeat());
+//                updateSeatBackground(holder, availableSeat);
+//                holder.itemView.setOnClickListener(v -> {
+//                    if (!"Unavailable".equalsIgnoreCase(availableSeat.getSeatStatus()) && !"Held".equalsIgnoreCase(availableSeat.getSeatStatus())) {
+//                        toggleSeatSelection(availableSeat, holder, row, seatCol);
+//                    }
+//                });
+//            } else if (seat instanceof UnavailableSeatResponse) {
+//                UnavailableSeatResponse unavailableSeat = (UnavailableSeatResponse) seat;
+////            holder.seatTextView.setText(unavailableSeat.getUnAvailableSeat());
+//                updateSeatBackground(holder, unavailableSeat);
+//            } else if (seat instanceof HeldSeatResponse) {
+//                HeldSeatResponse heldSeat = (HeldSeatResponse) seat;
+////            holder.seatTextView.setText(heldSeat.getHeldSeat());
+//                updateSeatBackground(holder, heldSeat);
+//            } else {
+//                holder.itemView.setBackground(null);
+//                holder.itemView.setOnClickListener(null);
+////            holder.seatTextView.setText("");
+//            }
 //        }
 //    }
 
     @Override
     public void onBindViewHolder(@NonNull SeatViewHolder holder, int position) {
-        int totalRows = seatMatrix.length; // Rows represent the horizontal layout
-        int totalCols = seatMatrix[0].length; // Columns represent the vertical layout
+        int totalCols = seatMatrix[0].length + 1; // Thêm cột chữ cái hàng
+        int row = position / totalCols;
+        int col = position % totalCols;
 
-        int row = position / totalCols; // Correcting the row calculation
-        int col = position % totalCols; // Correcting the column calculation
-
-        Object seat = seatMatrix[row][col];
-
-        if (seat instanceof AvailableSeatResponse) {
-            AvailableSeatResponse availableSeat = (AvailableSeatResponse) seat;
-            holder.seatTextView.setText(availableSeat.getAvailableSeat());
-            updateSeatBackground(holder, availableSeat);
-
-            holder.itemView.setOnClickListener(v -> {
-                if (!"Unavailable".equalsIgnoreCase(availableSeat.getSeatStatus()) && !"Held".equalsIgnoreCase(availableSeat.getSeatStatus())) {
-                    toggleSeatSelection(availableSeat, holder, row, col);
+        if (row < seatMatrix.length) { // Kiểm tra để tránh lỗi ngoài giới hạn
+            if (col == 0) { // Chữ cái hàng
+                char rowLetter = (char) ('A' + row);
+                holder.rowLetterTextView.setText(String.valueOf(rowLetter));
+            } else {
+                int seatCol = col - 1; // Loại bỏ cột chữ cái
+                if (seatCol < seatMatrix[row].length) { // Kiểm tra giới hạn cột
+                    Object seat = seatMatrix[row][seatCol];
+                    if (seat instanceof AvailableSeatResponse) {
+                        AvailableSeatResponse availableSeat = (AvailableSeatResponse) seat;
+                        updateSeatBackground(holder, availableSeat);
+                        holder.itemView.setOnClickListener(v -> {
+                            if (!"Unavailable".equalsIgnoreCase(availableSeat.getSeatStatus()) &&
+                                    !"Held".equalsIgnoreCase(availableSeat.getSeatStatus())) {
+                                toggleSeatSelection(availableSeat, holder, row, seatCol);
+                            }
+                        });
+                    } else if (seat instanceof UnavailableSeatResponse) {
+                        UnavailableSeatResponse unavailableSeat = (UnavailableSeatResponse) seat;
+                        updateSeatBackground(holder, unavailableSeat);
+                    } else if (seat instanceof HeldSeatResponse) {
+                        HeldSeatResponse heldSeat = (HeldSeatResponse) seat;
+                        updateSeatBackground(holder, heldSeat);
+                    } else {
+                        holder.itemView.setBackground(null);
+                        holder.itemView.setOnClickListener(null);
+                    }
                 }
-            });
-        } else if (seat instanceof UnavailableSeatResponse) {
-            UnavailableSeatResponse unavailableSeat = (UnavailableSeatResponse) seat;
-            holder.seatTextView.setText(unavailableSeat.getUnAvailableSeat());
-            updateSeatBackground(holder, unavailableSeat);
-        } else if (seat instanceof HeldSeatResponse) {
-            HeldSeatResponse heldSeat = (HeldSeatResponse) seat;
-            holder.seatTextView.setText(heldSeat.getHeldSeat());
-            updateSeatBackground(holder, heldSeat);
-        } else {
-            holder.itemView.setBackground(null);
-            holder.itemView.setOnClickListener(null);
-            holder.seatTextView.setText("");
+            }
         }
     }
 
+
+//    private void toggleSeatSelection(AvailableSeatResponse seat, SeatViewHolder holder, int row, int col) {
+//        // Kiểm tra nếu ghế là loại "Couple"
+//        if ("couple".equalsIgnoreCase(seat.getAvailableSeatsType())) {
+//            // Tìm ghế đôi liền kề
+//            int[] adjacentPosition = findAdjacentCoupleSeat(row, col);
+//
+//            if (adjacentPosition != null) {
+//                int adjacentRow = adjacentPosition[0];
+//                int adjacentCol = adjacentPosition[1];
+//                AvailableSeatResponse adjacentSeat = (AvailableSeatResponse) seatMatrix[adjacentRow][adjacentCol];
+//
+//                // Chọn hoặc bỏ chọn cả hai ghế
+//                if (selectedSeats.contains(seat) || selectedSeats.contains(adjacentSeat)) {
+//                    selectedSeats.remove(seat);
+//                    selectedSeats.remove(adjacentSeat);
+//                } else {
+//                    if (selectedSeats.size() + 2 <= maxSeats) {
+//                        selectedSeats.add(seat);
+//                        selectedSeats.add(adjacentSeat);
+//                    } else {
+//                        Toast.makeText(context, "Maximum seats selected!", Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//                }
+//
+//                // Cập nhật giao diện của cả hai ghế
+//                notifyItemChanged(row * seatMatrix[0].length + col);
+//                notifyItemChanged(adjacentRow * seatMatrix[0].length + adjacentCol);
+//            }
+//        } else {
+//            // Xử lý chọn ghế thường
+//            if (selectedSeats.contains(seat)) {
+//                selectedSeats.remove(seat);
+//            } else {
+//                if (selectedSeats.size() < maxSeats) {
+//                    selectedSeats.add(seat);
+//                } else {
+//                    Toast.makeText(context, "Maximum seats selected!", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//            }
+//
+//            // Cập nhật giao diện ghế
+//            notifyItemChanged(row * seatMatrix[0].length + col);
+//        }
+//
+//        // Cập nhật danh sách ghế đã chọn trong Activity
+//        if (context instanceof SeatSelectionActivity) {
+//            ((SeatSelectionActivity) context).updateSelectedSeatsDisplay();
+//        }
+//
+//        // Gọi listener nếu có
+//        if (listener != null) {
+//            listener.onSeatSelected(seat);
+//        }
+//    }
+
     private void toggleSeatSelection(AvailableSeatResponse seat, SeatViewHolder holder, int row, int col) {
-        // Kiểm tra nếu ghế là loại "Couple"
         if ("couple".equalsIgnoreCase(seat.getAvailableSeatsType())) {
-            // Tìm ghế đôi liền kề
-            int[] adjacentPosition = findAdjacentCoupleSeat(row, col);
-
-            if (adjacentPosition != null) {
-                int adjacentRow = adjacentPosition[0];
-                int adjacentCol = adjacentPosition[1];
-                AvailableSeatResponse adjacentSeat = (AvailableSeatResponse) seatMatrix[adjacentRow][adjacentCol];
-
-                // Chọn hoặc bỏ chọn cả hai ghế
-                if (selectedSeats.contains(seat) || selectedSeats.contains(adjacentSeat)) {
-                    selectedSeats.remove(seat);
-                    selectedSeats.remove(adjacentSeat);
-                } else {
-                    if (selectedSeats.size() + 2 <= maxSeats) {
-                        selectedSeats.add(seat);
-                        selectedSeats.add(adjacentSeat);
-                    } else {
-                        Toast.makeText(context, "Maximum seats selected!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-
-                // Cập nhật giao diện của cả hai ghế
-                notifyItemChanged(row * seatMatrix[0].length + col);
-                notifyItemChanged(adjacentRow * seatMatrix[0].length + adjacentCol);
-            }
+            handleCoupleSeatSelection(seat, row, col);
         } else {
-            // Xử lý chọn ghế thường
-            if (selectedSeats.contains(seat)) {
-                selectedSeats.remove(seat);
-            } else {
-                if (selectedSeats.size() < maxSeats) {
-                    selectedSeats.add(seat);
-                } else {
-                    Toast.makeText(context, "Maximum seats selected!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-
-            // Cập nhật giao diện ghế
-            notifyItemChanged(row * seatMatrix[0].length + col);
+            handleSingleSeatSelection(seat, row, col);
         }
 
-        // Cập nhật danh sách ghế đã chọn trong Activity
+        // Update the UI and notify listeners
+        updateSeatSelectionUI(seat);
+    }
+
+    private void handleCoupleSeatSelection(AvailableSeatResponse seat, int row, int col) {
+        int[] adjacentPosition = findAdjacentCoupleSeat(row, col);
+
+        if (adjacentPosition != null) {
+            int adjacentRow = adjacentPosition[0];
+            int adjacentCol = adjacentPosition[1];
+            AvailableSeatResponse adjacentSeat = (AvailableSeatResponse) seatMatrix[adjacentRow][adjacentCol];
+
+            boolean isSelected = selectedSeats.contains(seat) || selectedSeats.contains(adjacentSeat);
+
+            if (isSelected) {
+                selectedSeats.remove(seat);
+                selectedSeats.remove(adjacentSeat);
+            } else if (selectedSeats.size() + 2 <= maxSeats) {
+                selectedSeats.add(seat);
+                selectedSeats.add(adjacentSeat);
+            } else {
+                Toast.makeText(context, "Maximum seats selected!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            notifyItemChanged(row * (seatMatrix[0].length + 1) + (col + 1)); // Adjust for row letter
+            notifyItemChanged(adjacentRow * (seatMatrix[0].length + 1) + (adjacentCol + 1));
+        }
+    }
+
+    private void handleSingleSeatSelection(AvailableSeatResponse seat, int row, int col) {
+        boolean isSelected = selectedSeats.contains(seat);
+
+        if (isSelected) {
+            selectedSeats.remove(seat);
+        } else if (selectedSeats.size() < maxSeats) {
+            selectedSeats.add(seat);
+        } else {
+            Toast.makeText(context, "Maximum seats selected!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        notifyItemChanged(row * (seatMatrix[0].length + 1) + (col + 1)); // Adjust for row letter
+    }
+
+    private void updateSeatSelectionUI(AvailableSeatResponse seat) {
         if (context instanceof SeatSelectionActivity) {
             ((SeatSelectionActivity) context).updateSelectedSeatsDisplay();
         }
 
-        // Gọi listener nếu có
         if (listener != null) {
             listener.onSeatSelected(seat);
         }
     }
-
 
     private int[] findAdjacentCoupleSeat(int row, int col) {
         // Tìm ghế liền kề bên phải
@@ -246,19 +333,26 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
 
     @Override
     public int getItemCount() {
-//        return 100;
-//        return seatMatrix[0].length * seatMatrix.length;
-        return seatMatrix.length * seatMatrix[0].length; // Rows * Columns
-
+        return seatMatrix.length * (seatMatrix[0].length + 1); // Rows * Columns
     }
 
     static class SeatViewHolder extends RecyclerView.ViewHolder {
         TextView seatTextView;
+        TextView rowLetterTextView;
 
-        SeatViewHolder(@NonNull View itemView) {
+//        SeatViewHolder(@NonNull View itemView) {
+//            super(itemView);
+//            seatTextView = itemView.findViewById(R.id.seatTextView);
+//            rowLetterTextView = itemView.findViewById(R.id.rowLetterTextView12);
+//        }
+
+        SeatViewHolder(@NonNull View itemView, boolean isRowLetter) {
             super(itemView);
-            seatTextView = itemView.findViewById(R.id.seatTextView);
-
+            if (isRowLetter) {
+                rowLetterTextView = itemView.findViewById(R.id.rowSeatLetterTextView);
+            } else {
+                seatTextView = itemView.findViewById(R.id.seatTextView);
+            }
         }
     }
 }

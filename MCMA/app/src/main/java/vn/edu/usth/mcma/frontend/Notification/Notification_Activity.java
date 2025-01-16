@@ -1,17 +1,14 @@
 package vn.edu.usth.mcma.frontend.Notification;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.SearchView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,18 +19,19 @@ import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.GetNotifications;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
 
 public class Notification_Activity extends AppCompatActivity {
-
-    private SearchView searchView;
     private RecyclerView recyclerView;
     private NotificationAdapter adapter;
+    private FrameLayout noDataContainer;
 
-
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
 
         recyclerView = findViewById(R.id.recyclerviewnotification);
+        noDataContainer = findViewById(R.id.noti_no_data_container);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new NotificationAdapter(this);
         recyclerView.setAdapter(adapter);
@@ -45,7 +43,18 @@ public class Notification_Activity extends AppCompatActivity {
             onBackPressed();
         });
 
+        showNoDataView();
         fetchNotification();
+    }
+
+    void showNoDataView() {
+        recyclerView.setVisibility(View.GONE);
+        noDataContainer.setVisibility(View.VISIBLE);
+    }
+
+    void hideNoDataView() {
+        recyclerView.setVisibility(View.VISIBLE);
+        noDataContainer.setVisibility(View.GONE);
     }
 
     private void fetchNotification() {
@@ -56,15 +65,24 @@ public class Notification_Activity extends AppCompatActivity {
             public void onResponse(Call<NotificationResponse> call, Response<NotificationResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     NotificationResponse notificationResponse = response.body();
-                    adapter.updateData(notificationResponse.getMessage(), notificationResponse.getDateCreated());
+
+                    if (notificationResponse.getMessage() == null || notificationResponse.getMessage().isEmpty() ||
+                            notificationResponse.getDateCreated() == null || notificationResponse.getDateCreated().isEmpty()) {
+                        showNoDataView();
+                    } else {
+                        hideNoDataView();
+                        adapter.updateData(notificationResponse.getMessage(), notificationResponse.getDateCreated());
+                    }
                 } else {
-                    Toast.makeText(Notification_Activity.this, "Failed to load notifications", Toast.LENGTH_SHORT).show();
+                    showNoDataView();
+//                    Toast.makeText(Notification_Activity.this, "Failed to load notifications", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<NotificationResponse> call, Throwable t) {
-                Toast.makeText(Notification_Activity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                showNoDataView();
+//                Toast.makeText(Notification_Activity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -66,12 +66,23 @@
             android:background="@color/white"
             android:padding="16dp">
 
-            <ImageView
+<!--            <ImageView-->
+<!--                android:id="@+id/tv_movie_banner"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="200dp"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+            <com.google.android.exoplayer2.ui.PlayerView
                 android:id="@+id/tv_movie_banner"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:scaleType="centerCrop"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:background="@drawable/border_button_management_booking"
+                android:backgroundTint="@color/black"
+                app:layout_constraintTop_toTopOf="parent"
+                app:resize_mode="fit"
+                app:use_controller="true"
+                tools:layout_editor_absoluteX="16dp" />
 
             <!-- Movie Title -->
             <TextView
