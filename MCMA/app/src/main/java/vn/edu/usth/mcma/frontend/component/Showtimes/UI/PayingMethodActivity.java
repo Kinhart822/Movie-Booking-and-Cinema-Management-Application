@@ -30,7 +30,7 @@ import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.Request.BookingRequest;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.SendBookingResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingResponse;
-import vn.edu.usth.mcma.frontend.component.Login.Register_Activity;
+import vn.edu.usth.mcma.frontend.component.auth.Register_Activity;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Adapters.PaymentMethodAdapter;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Booking.PaymentMethod;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;

@@ -16,7 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.component.Home.Fragment_changing;
-import vn.edu.usth.mcma.frontend.component.Login.LoginFragment;
+import vn.edu.usth.mcma.frontend.component.auth.SignInFragment;
 import vn.edu.usth.mcma.frontend.component.Notification.Notification_Activity;
 import vn.edu.usth.mcma.frontend.network.AuthPrefsManager;
 
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         AuthPrefsManager authPrefsManager = new AuthPrefsManager(this);
         if (!authPrefsManager.isLoggedIn()) {
-            navigateToLoginFragment();
+            navigateToSignInFragment();
             return;
         }
 
@@ -145,10 +145,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void navigateToLoginFragment() {
-        Fragment loginFragment = new LoginFragment();
+    private void navigateToSignInFragment() {
+        Fragment signInFragment = new SignInFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(android.R.id.content, loginFragment);
+        transaction.replace(android.R.id.content, signInFragment);
         transaction.commit();
     }
 

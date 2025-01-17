@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.Login;
+package vn.edu.usth.mcma.frontend.component.auth;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -80,9 +80,9 @@ public class ResetPassword_Activity extends AppCompatActivity {
                             if (response.isSuccessful() && response.body() != null) {
                                 // Password reset was successful
                                 Toast.makeText(ResetPassword_Activity.this, "Reset Password successful!", Toast.LENGTH_SHORT).show();
-                                Fragment loginFragment = new LoginFragment();
+                                Fragment signInFragment = new SignInFragment();
                                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                transaction.replace(android.R.id.content, loginFragment);
+                                transaction.replace(android.R.id.content, signInFragment);
                                 transaction.commit();
                             } else {
                                 Toast.makeText(ResetPassword_Activity.this, "Reset Password failed.", Toast.LENGTH_LONG).show();

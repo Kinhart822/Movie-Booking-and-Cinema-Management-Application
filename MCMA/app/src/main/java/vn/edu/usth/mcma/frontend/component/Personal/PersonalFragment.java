@@ -25,7 +25,7 @@ import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.constant.SharedPreferencesKey;
 import vn.edu.usth.mcma.frontend.network.ApiService;
-import vn.edu.usth.mcma.frontend.component.Login.LoginFragment;
+import vn.edu.usth.mcma.frontend.component.auth.SignInFragment;
 import vn.edu.usth.mcma.frontend.network.AuthPrefsManager;
 
 public class PersonalFragment extends Fragment {
@@ -139,9 +139,9 @@ public class PersonalFragment extends Fragment {
             AlertDialog dialog = builder.create();
 
             confirmButton.setOnClickListener(v6 -> {
-//                        Fragment loginFragment = new vn.edu.usth.mcma.frontend.Login.LoginFragment();
+//                        Fragment signInFragment = new vn.edu.usth.mcma.frontend.auth.SignInFragment();
 //                        FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
-//                        fragmentTransaction.replace(android.R.id.content, loginFragment);
+//                        fragmentTransaction.replace(android.R.id.content, signInFragment);
 //                        fragmentTransaction.commit();
 
                 deleteAccount();
@@ -205,10 +205,10 @@ public class PersonalFragment extends Fragment {
                             authPrefsManager.removeAll();
                             Toast.makeText(requireContext(), "Sign out successfully", Toast.LENGTH_SHORT).show();
 
-                            // Navigate to login fragment
-                            Fragment loginFragment = new LoginFragment();
+                            // Navigate to sign in fragment
+                            Fragment signInFragment = new SignInFragment();
                             FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
-                            fragmentTransaction.replace(android.R.id.content, loginFragment);
+                            fragmentTransaction.replace(android.R.id.content, signInFragment);
                             fragmentTransaction.commit();
                         } else {
                             // Log server error and notify the user
@@ -236,10 +236,10 @@ public class PersonalFragment extends Fragment {
                     // Account deleted successfully
                     Toast.makeText(requireContext(), "Account deleted successfully", Toast.LENGTH_SHORT).show();
 
-                    // Navigate to login fragment
-                    Fragment loginFragment = new LoginFragment();
+                    // Navigate to sign in fragment
+                    Fragment signInFragment = new SignInFragment();
                     FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(android.R.id.content, loginFragment);
+                    fragmentTransaction.replace(android.R.id.content, signInFragment);
                     fragmentTransaction.commit();
                 } else {
                     // Log server error and notify the user

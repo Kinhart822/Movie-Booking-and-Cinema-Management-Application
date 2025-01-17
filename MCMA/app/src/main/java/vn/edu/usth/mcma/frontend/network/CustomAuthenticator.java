@@ -39,7 +39,7 @@ public class CustomAuthenticator implements Authenticator {
             Log.d(TAG, "authenticate: need refresh");
             synchronized (this) {
                 if (authPrefsManager.getRefreshToken() == null) {
-                    Log.d(TAG, "authenticate: bug: refresh token is null, navigating to login screen");
+                    Log.d(TAG, "authenticate: bug: refresh token is null, navigating to sign in screen");
                     authPrefsManager.saveIsLoggedIn(false);
                     callback.onRefreshFailed();
                     return null;

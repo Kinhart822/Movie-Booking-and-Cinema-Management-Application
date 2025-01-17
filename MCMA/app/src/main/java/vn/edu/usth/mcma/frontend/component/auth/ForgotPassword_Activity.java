@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.Login;
+package vn.edu.usth.mcma.frontend.component.auth;
 
 import android.content.Context;
 import android.content.Intent;
@@ -78,7 +78,7 @@ public class ForgotPassword_Activity extends AppCompatActivity {
                     Logger.getLogger(ForgotPassword_Activity.class.getName()).log(Level.SEVERE, "Error occurred, Please enter email again to send request", t);
                 }
             });
-//            Intent intent = new Intent(this, vn.edu.usth.mcma.frontend.Login.ResetPassword_Activity.class);
+//            Intent intent = new Intent(this, vn.edu.usth.mcma.frontend.auth.ResetPassword_Activity.class);
 //            startActivity(intent);
 //            finish();
 
@@ -89,7 +89,7 @@ public class ForgotPassword_Activity extends AppCompatActivity {
 //                editor.putBoolean("isForgotPassword", true);
 //                editor.apply();
 //
-//                Intent intent = new Intent(this, vn.edu.usth.mcma.frontend.Login.ResetPassword_Activity.class);
+//                Intent intent = new Intent(this, vn.edu.usth.mcma.frontend.auth.ResetPassword_Activity.class);
 //                startActivity(intent);
 //                finish();
 //            }

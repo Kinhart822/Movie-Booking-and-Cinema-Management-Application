@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.Login;
+package vn.edu.usth.mcma.frontend.component.auth;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,15 +28,15 @@ import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.MainActivity;
 import vn.edu.usth.mcma.frontend.network.AuthPrefsManager;
 
-public class LoginFragment extends Fragment {
+public class SignInFragment extends Fragment {
     private EditText editTextEmail, editTextPassword;
     private AuthPrefsManager authPrefsManager;
-    private final String TAG = LoginFragment.class.getName();
+    private final String TAG = SignInFragment.class.getName();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        View view = inflater.inflate(R.layout.fragment_sign_in, container, false);
         authPrefsManager = new AuthPrefsManager(requireContext());
         // Chỗ này tránh click lỗi sẽ nhảy sang layout khác
         view.setOnClickListener(v -> {
@@ -45,8 +45,8 @@ public class LoginFragment extends Fragment {
         editTextEmail = view.findViewById(R.id.editText);
         editTextPassword = view.findViewById(R.id.editText2);
 
-        Button buttonLogin = view.findViewById(R.id.login_button);
-        buttonLogin.setOnClickListener(v -> {
+        Button buttonSignIn = view.findViewById(R.id.sign_in_button);
+        buttonSignIn.setOnClickListener(v -> {
             ApiService
                     .getAuthApi(requireContext())
                     .signIn(SignInRequest
@@ -58,7 +58,7 @@ public class LoginFragment extends Fragment {
                         @Override
                         public void onResponse(@NonNull Call<SignInResponse> call, @NonNull Response<SignInResponse> response) {
                             if (response.isSuccessful()) {
-                                Toast.makeText(getActivity(), "Login successful!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "Sign in successful!", Toast.LENGTH_SHORT).show();
                                 assert response.body() != null;
 
                                 saveAuthPrefs(response.body(), editTextEmail.getText().toString());
@@ -73,7 +73,7 @@ public class LoginFragment extends Fragment {
                         }
                         @Override
                         public void onFailure(@NonNull Call<SignInResponse> call, @NonNull Throwable t) {
-                            Toast.makeText(getActivity(), "Login failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Sign in failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
             // Check token expiration

@@ -17,7 +17,7 @@
     <string name="user">User</string>
     <string name="admin">Admin</string>
 
-    <string name="login_underlined"><u>Login</u></string>
+    <string name="sign_in_underlined"><u>Sign In</u></string>
     <string name="forgotpassword_underlined"><u>Forgot password ?</u></string>
     <string name="name_underlined"><u>Name</u></string>
     <!-- TODO: Remove or change this placeholder text -->

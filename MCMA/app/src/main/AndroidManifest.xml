@@ -90,13 +90,13 @@
             android:name=".frontend.component.Notification.Notification_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.Login.ResetPassword_Activity"
+            android:name=".frontend.component.auth.ResetPassword_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.Login.ForgotPassword_Activity"
+            android:name=".frontend.component.auth.ForgotPassword_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.Login.Register_Activity"
+            android:name=".frontend.component.auth.Register_Activity"
             android:exported="false" />
         <activity
             android:name=".frontend.component.Showtimes.UI.TheaterScheduleActivity"

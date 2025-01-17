@@ -59,7 +59,7 @@ public class ApiClient {
             Handler handler = new Handler(Looper.getMainLooper());
             handler
                     .post(() -> Toast
-                            .makeText(context, "Session expired. Please log in again.", Toast.LENGTH_SHORT)
+                            .makeText(context, "Session expired. Please sign in again.", Toast.LENGTH_SHORT)
                             .show());
             handler
                     .postDelayed(() -> {

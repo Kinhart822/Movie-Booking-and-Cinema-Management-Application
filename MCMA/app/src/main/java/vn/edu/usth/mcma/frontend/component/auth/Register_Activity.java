@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.Login;
+package vn.edu.usth.mcma.frontend.component.auth;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -142,9 +142,9 @@ public class Register_Activity extends AppCompatActivity {
                                 editor.putString(SharedPreferencesKey.PROFILE_LAST_NAME.name(), LastName);
                                 editor.apply();
 
-                                Fragment loginFragment = new LoginFragment();
+                                Fragment signInFragment = new SignInFragment();
                                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                transaction.replace(android.R.id.content, loginFragment);
+                                transaction.replace(android.R.id.content, signInFragment);
                                 transaction.commit();
                             } else {
                                 Toast.makeText(Register_Activity.this, "Wrong Format!!!", Toast.LENGTH_SHORT).show();
@@ -167,9 +167,9 @@ public class Register_Activity extends AppCompatActivity {
 //                editor.putBoolean("isRegister", true);
 //                editor.apply();
 //
-//                Fragment loginFragment = new LoginFragment();
+//                Fragment signInFragment = new SignInFragment();
 //                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//                transaction.replace(android.R.id.content, loginFragment);
+//                transaction.replace(android.R.id.content, signInFragment);
 //                transaction.commit();
 //            }
 //            else{
