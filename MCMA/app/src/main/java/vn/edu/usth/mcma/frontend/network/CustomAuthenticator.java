@@ -38,6 +38,12 @@ public class CustomAuthenticator implements Authenticator {
         if (response.code() == 401 || response.code() == 403) {
             Log.d(TAG, "authenticate: need refresh");
             synchronized (this) {
+                if (authPrefsManager.getRefreshToken() == null) {
+                    Log.d(TAG, "authenticate: bug: refresh token is null, navigating to login screen");
+                    authPrefsManager.saveIsLoggedIn(false);
+                    callback.onRefreshFailed();
+                    return null;
+                }
                 Retrofit retrofit = new Retrofit.Builder()
                         .client(new OkHttpClient.Builder()
                                 .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
@@ -52,11 +58,21 @@ public class CustomAuthenticator implements Authenticator {
                                 .refreshToken(authPrefsManager.getRefreshToken())
                                 .build())
                         .execute();
+                // server respond with new access token, client use it to continue with the request
                 if (refreshResponse.code() == 200) {
                     assert refreshResponse.body() != null;
-                    authPrefsManager.saveAccessToken(refreshResponse.body().getAccessToken());
+                    authPrefsManager.removeAccessToken();
+                    String newAccessToken = refreshResponse.body().getAccessToken();
+                    authPrefsManager.saveAccessToken(newAccessToken);
+                    Log.d(TAG, "authenticate: accessToken is refreshed");
+                    return response
+                            .request().newBuilder()
+                            .header("Authorization", "Bearer " + newAccessToken)
+                            .build();
                 }
+                // server did not respond with new access token, client try to sign-in again
                 if (refreshResponse.code() == 401) {
+                    Log.d(TAG, "authenticate: got 401 twice in a row means that refresh token expired");
                     authPrefsManager.saveAccessToken(null);
                     authPrefsManager.saveRefreshToken(null);
                     authPrefsManager.saveIsLoggedIn(false);

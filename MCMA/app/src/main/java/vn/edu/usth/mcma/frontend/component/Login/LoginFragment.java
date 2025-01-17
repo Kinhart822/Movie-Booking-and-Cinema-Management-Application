@@ -29,7 +29,6 @@ import vn.edu.usth.mcma.frontend.MainActivity;
 import vn.edu.usth.mcma.frontend.network.AuthPrefsManager;
 
 public class LoginFragment extends Fragment {
-    private final int JWT_EXPIRATION_TIME = 60000;
     private EditText editTextEmail, editTextPassword;
     private AuthPrefsManager authPrefsManager;
     private final String TAG = LoginFragment.class.getName();

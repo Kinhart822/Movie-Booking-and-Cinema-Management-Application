@@ -4,6 +4,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import vn.edu.usth.mcma.frontend.dto.Request.ForgotPasswordRequest;
 import vn.edu.usth.mcma.frontend.dto.Request.RefreshRequest;
 import vn.edu.usth.mcma.frontend.dto.Request.ResetPasswordRequest;
@@ -17,7 +18,7 @@ public interface AuthApi {
     @POST("/api/v1/auth/sign-in")
     Call<SignInResponse> signIn(@Body SignInRequest signInRequest);
 
-    @POST("/api/v1/auth/refresh")
+    @PUT("/api/v1/auth/refresh")
     Call<RefreshResponse> refresh(@Body RefreshRequest refreshRequest);
 
     @POST("/api/v1/auth/sign-up")
