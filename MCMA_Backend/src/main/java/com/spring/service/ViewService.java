@@ -25,6 +25,12 @@ public interface ViewService {
 
     List<CouponResponse> getAllCoupons();
 
+    CouponResponse viewCouponDetails(Integer couponId);
+
+    Integer viewUserPoints(Integer userId);
+
+    CouponResponse exchangeCoupon(Integer userId, Integer couponId);
+
     ViewCouponsResponse getAvailableCouponsForUser(Integer userId);
 
     ViewCouponsResponse getAvailableCouponsByMovieId(Integer movieId);

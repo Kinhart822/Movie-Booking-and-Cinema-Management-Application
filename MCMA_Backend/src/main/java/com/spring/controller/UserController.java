@@ -218,17 +218,17 @@ public class UserController {
         return ResponseEntity.ok(movieRespondResponse);
     }
 
-    @PutMapping("/movieRespond/update")
-    public ResponseEntity<MovieRespondResponse> updateRespond(HttpServletRequest request, @RequestBody MovieRespondRequest movieRespondRequest) {
+    @PutMapping("/movieRespond/update/{movieRespondId}")
+    public ResponseEntity<MovieRespondResponse> updateRespond(HttpServletRequest request, @PathVariable Integer movieRespondId, @RequestBody MovieRespondRequest movieRespondRequest) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        MovieRespondResponse movieRespondResponse = movieRespondService.updateMovieRespond(userId, movieRespondRequest);
+        MovieRespondResponse movieRespondResponse = movieRespondService.updateMovieRespond(userId, movieRespondId, movieRespondRequest);
         return ResponseEntity.ok(movieRespondResponse);
     }
 
-    @DeleteMapping("/movieRespond/delete/{movieId}")
-    public ResponseEntity<String> deleteRespond(HttpServletRequest request, @PathVariable Integer movieId) {
+    @DeleteMapping("/movieRespond/delete/{movieRespondId}")
+    public ResponseEntity<String> deleteRespond(HttpServletRequest request, @PathVariable Integer movieRespondId) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        movieRespondService.deleteMovieRespond(userId, movieId);
+        movieRespondService.deleteMovieRespond(userId, movieRespondId);
         return ResponseEntity.ok("Delete Movie Respond Successfully");
     }
 
@@ -288,6 +288,26 @@ public class UserController {
     public ResponseEntity<List<CouponResponse>> getAllCoupons() {
         List<CouponResponse> couponResponses = viewService.getAllCoupons();
         return ResponseEntity.ok(couponResponses);
+    }
+
+    @GetMapping("/view/couponDetails/{couponId}")
+    public ResponseEntity<CouponResponse> getCouponDetails(@PathVariable Integer couponId) {
+        CouponResponse couponResponse = viewService.viewCouponDetails(couponId);
+        return ResponseEntity.ok(couponResponse);
+    }
+
+    @GetMapping("/view/viewUserPoints")
+    public ResponseEntity<Integer> viewUserPoints(HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Integer userPoints = viewService.viewUserPoints(userId);
+        return ResponseEntity.ok(userPoints);
+    }
+
+    @PostMapping("/view/exchangeCoupon/{couponId}")
+    public ResponseEntity<CouponResponse> exchangeCoupon(HttpServletRequest request, @PathVariable Integer couponId) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        CouponResponse couponResponse = viewService.exchangeCoupon(userId, couponId);
+        return ResponseEntity.ok(couponResponse);
     }
 
     @GetMapping("/view/couponsByUser")

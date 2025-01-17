@@ -47,6 +47,9 @@ public class User implements UserDetails {
     @Column(name = "Password", nullable = false)
     private String password;
 
+    @Column(name = "User_Point")
+    private Integer userPoint;
+
     @Column(name = "User_Type")
     @Enumerated(EnumType.ORDINAL)
     private Type userType;
