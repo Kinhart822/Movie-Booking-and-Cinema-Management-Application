@@ -145,7 +145,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:contentDescription="Log Out"
+                            android:contentDescription="Sign out"
                             android:src="@drawable/ic_arrow_right"
                             app:tint="@color/black" />
                     </LinearLayout>
@@ -197,14 +197,14 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:contentDescription="Log Out"
+                            android:contentDescription="Sign out"
                             android:src="@drawable/ic_arrow_right"
                             app:tint="@color/black" />
                     </LinearLayout>
 
-                    <!-- Log Out Row -->
+                    <!-- Sign out Row -->
                     <LinearLayout
-                        android:id="@+id/account_information_log_out"
+                        android:id="@+id/account_information_sign_out"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -217,14 +217,14 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Log Out"
+                            android:text="Sign Out"
                             android:textSize="16sp"
                             android:textColor="@color/black" />
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:contentDescription="Log Out"
+                            android:contentDescription="Sign Out"
                             android:src="@drawable/ic_arrow_right"
                             app:tint="@color/black" />
                     </LinearLayout>

@@ -26,14 +26,17 @@ import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.constant.SharedPreferencesKey;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.component.Login.LoginFragment;
+import vn.edu.usth.mcma.frontend.network.AuthPrefsManager;
 
 public class PersonalFragment extends Fragment {
+    AuthPrefsManager authPrefsManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_personal, container, false);
+        authPrefsManager = new AuthPrefsManager(requireContext());
 
         LinearLayout to_edit_update = v.findViewById(R.id.account_information_edit_update);
         to_edit_update.setOnClickListener(view -> {
@@ -104,30 +107,23 @@ public class PersonalFragment extends Fragment {
 
 
 
-        LinearLayout logout_button = v.findViewById(R.id.account_information_log_out);
-        logout_button.setOnClickListener(view -> {
+        LinearLayout signOutButton = v.findViewById(R.id.account_information_sign_out);
+        signOutButton.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-            View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_logout, null);
+            View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_sign_out, null);
 
-            Button confirmButton = dialogView.findViewById(R.id.btn_confirm_logout);
-            Button cancelButton = dialogView.findViewById(R.id.btn_cancel_logout);
+            Button confirmButton = dialogView.findViewById(R.id.btn_confirm_sign_out);
+            Button cancelButton = dialogView.findViewById(R.id.btn_cancel_sign_out);
 
             builder.setView(dialogView);
             AlertDialog dialog = builder.create();
 
             confirmButton.setOnClickListener(v8 -> {
-//                        Fragment loginFragment = new vn.edu.usth.mcma.frontend.Login.LoginFragment();
-//                        FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
-//                        fragmentTransaction.replace(android.R.id.content, loginFragment);
-//                        fragmentTransaction.commit();
-                Logout();
-
+                signOut();
                 dialog.dismiss();
             });
 
             cancelButton.setOnClickListener(v9 -> dialog.dismiss());
-
-
             dialog.show();
         });
 
@@ -197,15 +193,17 @@ public class PersonalFragment extends Fragment {
         return v;
     }
 
-    private void Logout() {
+    private void signOut() {
         ApiService
                 .getAuthApi(requireContext())
-                .logout().enqueue(new Callback<>() {
+                .signOut()
+                .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                         if (response.isSuccessful()) {
-                            // Logout successfully
-                            Toast.makeText(requireContext(), "Log out successfully", Toast.LENGTH_SHORT).show();
+                            // signOut successfully
+                            authPrefsManager.removeAll();
+                            Toast.makeText(requireContext(), "Sign out successfully", Toast.LENGTH_SHORT).show();
 
                             // Navigate to login fragment
                             Fragment loginFragment = new LoginFragment();
@@ -214,15 +212,14 @@ public class PersonalFragment extends Fragment {
                             fragmentTransaction.commit();
                         } else {
                             // Log server error and notify the user
-                            Log.e("LogAccount", "Failed to log out. Response code: " + response.code());
-                            Toast.makeText(requireContext(), "Failed to log out: " + response.message(), Toast.LENGTH_LONG).show();
+                            Log.e("LogAccount", "Failed to sign out. Response code: " + response.code());
+                            Toast.makeText(requireContext(), "Failed to sign out: " + response.message(), Toast.LENGTH_LONG).show();
                         }
                     }
-
                     @Override
                     public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                        Log.e("Log out", "API call failed", t);
-                        Toast.makeText(requireContext(), "Failed to log out: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.e("Sign out", "API call failed", t);
+                        Toast.makeText(requireContext(), "Failed to sign out: " + t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }

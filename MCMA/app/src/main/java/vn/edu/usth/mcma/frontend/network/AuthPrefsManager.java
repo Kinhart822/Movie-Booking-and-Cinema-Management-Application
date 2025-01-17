@@ -2,24 +2,8 @@ package vn.edu.usth.mcma.frontend.network;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
-import java.io.IOException;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import vn.edu.usth.mcma.frontend.constant.IP;
 import vn.edu.usth.mcma.frontend.constant.SharedPreferencesKey;
-import vn.edu.usth.mcma.frontend.dto.Request.RefreshRequest;
-import vn.edu.usth.mcma.frontend.dto.response.JwtAuthenticationResponse;
-import vn.edu.usth.mcma.frontend.dto.response.RefreshResponse;
-import vn.edu.usth.mcma.frontend.network.apis.AuthApi;
 
 public class AuthPrefsManager {
     private final SharedPreferences authPrefs;
@@ -68,36 +52,13 @@ public class AuthPrefsManager {
         authPrefs.edit().putBoolean(SharedPreferencesKey.AUTH_IS_LOGGED_IN.name(), isLoggedIn).apply();
     }
 
-//    public void refreshAccessToken() {
-//        Retrofit retrofit = new Retrofit.Builder()
-//            .baseUrl(IP.MINOXD_LAPTOP.getIp())
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build();
-//        AuthApi authApi = retrofit.create(AuthApi.class);
-//        authApi
-//                .refresh(RefreshRequest.builder()
-//                        .email(getEmail())
-//                        .refreshToken(getRefreshToken())
-//                        .build())
-//                .enqueue(new Callback<>() {
-//                    @Override
-//                    public void onResponse(@NonNull Call<RefreshResponse> call, @NonNull Response<RefreshResponse> response) {
-//                        if (response.code() == 200) {
-//                            assert response.body() != null;
-//                            saveAccessToken(response.body().getAccessToken());
-//                            Log.d(TAG, "refreshAccessToken: onResponse: "+response.body().getAccessToken());
-//                        }
-//                        if (response.code() == 401) {
-//                            saveAccessToken(null);
-//                            saveRefreshToken(null);
-//                            saveIsLoggedIn(false);
-//                            Log.d(TAG, "refreshAccessToken: onResponse: "+response.body());
-//                        }
-//                    }
-//                    @Override
-//                    public void onFailure(@NonNull Call<RefreshResponse> call, @NonNull Throwable throwable) {
-//                        Toast.makeText(context, "Send request to refresh failed: ", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }
+    /**
+     * used when sign out
+     */
+    public void removeAll() {
+        removeEmail();
+        removeAccessToken();
+        removeRefreshToken();
+        saveIsLoggedIn(false);
+    }
 }

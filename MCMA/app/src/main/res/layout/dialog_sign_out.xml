@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:gravity="center"
-        android:text="Are you sure want to delete account?"
+        android:text="@string/are_you_sure_want_to_sign_out"
         android:textColor="@android:color/black"
         android:textSize="16sp" />
 
@@ -32,7 +32,7 @@
             android:gravity="center">
 
             <Button
-                android:id="@+id/btn_confirm_logout"
+                android:id="@+id/btn_confirm_sign_out"
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
                 android:padding="10dp"
@@ -53,7 +53,7 @@
             android:gravity="center">
 
             <Button
-                android:id="@+id/btn_cancel_logout"
+                android:id="@+id/btn_cancel_sign_out"
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
                 android:padding="10dp"
