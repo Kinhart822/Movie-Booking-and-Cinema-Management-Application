@@ -31,7 +31,7 @@
             android:id="@+id/coupon_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Coupon Details"
+            android:text="Exchange Voucher"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -107,7 +107,7 @@
                     android:layout_marginEnd="5dp" />
 
                 <TextView
-                    android:id="@+id/dateExpired"
+                    android:id="@+id/dateExpired12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -115,6 +115,7 @@
                     android:textColor="@color/black"
                     android:textSize="14sp" />
             </LinearLayout>
+
 
             <View
                 android:layout_width="match_parent"
@@ -147,36 +148,5 @@
 
         </LinearLayout>
     </ScrollView>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@color/light_gray" />
-
-    <!-- Bottom Button Section -->
-    <androidx.cardview.widget.CardView
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardBackgroundColor="#3373C4"
-        app:cardCornerRadius="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center"
-        app:cardElevation="6dp">
-
-        <Button
-            android:id="@+id/exchange_voucher_button"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:backgroundTint="#3373C4"
-            android:text="Exchange"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
-
-    </androidx.cardview.widget.CardView>
 
 </LinearLayout>

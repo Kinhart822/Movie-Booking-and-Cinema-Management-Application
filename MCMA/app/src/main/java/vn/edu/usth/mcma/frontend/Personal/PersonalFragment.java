@@ -24,16 +24,21 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.AuthenticationApi;
+import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.CouponAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.DeleteAccountAPI;
 import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
+import vn.edu.usth.mcma.frontend.Coupon.Coupon_Activity;
 
 public class PersonalFragment extends Fragment {
+    public static int userPoints;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_personal, container, false);
+
+        fetchUserPoints();
 
         LinearLayout to_edit_update = v.findViewById(R.id.account_information_edit_update);
         to_edit_update.setOnClickListener(new View.OnClickListener() {
@@ -66,7 +71,10 @@ public class PersonalFragment extends Fragment {
         to_coupon_page.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                fetchUserPoints();
+
                 Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Coupon.Coupon_Activity.class);
+                i.putExtra("USER_POINTS", userPoints);
                 startActivity(i);
             }
         });
@@ -125,11 +133,8 @@ public class PersonalFragment extends Fragment {
             }
         });
 
-
-
-
         LinearLayout logout_button = v.findViewById(R.id.account_information_log_out);
-        logout_button.setOnClickListener(new View.OnClickListener() {
+        logout_button.setOnClickListener(new View.OnClickListener()     {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
@@ -144,10 +149,6 @@ public class PersonalFragment extends Fragment {
                 confirmButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        Fragment loginFragment = new vn.edu.usth.mcma.frontend.Login.LoginFragment();
-//                        FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
-//                        fragmentTransaction.replace(android.R.id.content, loginFragment);
-//                        fragmentTransaction.commit();
                         Logout();
 
                         dialog.dismiss();
@@ -182,13 +183,7 @@ public class PersonalFragment extends Fragment {
                 confirmButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        Fragment loginFragment = new vn.edu.usth.mcma.frontend.Login.LoginFragment();
-//                        FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
-//                        fragmentTransaction.replace(android.R.id.content, loginFragment);
-//                        fragmentTransaction.commit();
-
                         deleteAccount();
-
                         dialog.dismiss();
                     }
                 });
@@ -258,6 +253,28 @@ public class PersonalFragment extends Fragment {
         });
 
         return v;
+    }
+
+    void fetchUserPoints() {
+        RetrofitService retrofitService = new RetrofitService(requireContext());
+        CouponAPI couponAPI = retrofitService.getRetrofit().create(CouponAPI.class);
+
+        Call<Integer> call = couponAPI.getUserPoints();
+        call.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    userPoints = response.body();
+                } else {
+                    Toast.makeText(requireContext(), "Failed to fetch user points", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void Logout() {
