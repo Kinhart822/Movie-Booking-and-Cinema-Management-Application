@@ -48,16 +48,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         try {
             String accessToken = authHeader.substring(7);
+            // check if token contain a subject
             String username = jwtUtil.extractUsername(accessToken);
             if (username == null || SecurityContextHolder.getContext().getAuthentication() != null) {
                 unauthorizedRequest(hsResponse);
                 return;
             }
+
             UserDetails userDetails = userService.loadUserByUsername(username);
-            if (!jwtUtil.isAccessTokenValid(accessToken, userDetails)) {
-                unauthorizedRequest(hsResponse);
-                return;
-            }
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,
@@ -68,6 +66,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(hsRequest, hsResponse);
         } catch (ExpiredJwtException e) {
+            // token is expired
             unauthorizedRequest(hsResponse);
         }
     }

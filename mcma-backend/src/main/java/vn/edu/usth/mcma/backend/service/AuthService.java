@@ -13,12 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.edu.usth.mcma.backend.dto.*;
 import vn.edu.usth.mcma.backend.entity.RefreshToken;
 import vn.edu.usth.mcma.backend.entity.User;
+import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.RefreshTokenRepository;
 import vn.edu.usth.mcma.backend.security.JwtUtil;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -56,13 +56,14 @@ public class AuthService {
             return response;
         }
         String refreshToken = jwtUtil.generateRefreshToken(userDetails);
-        refreshTokenRepository.save(RefreshToken.builder()
-                .refreshToken(refreshToken)
-                .status(CommonStatus.ACTIVE.getStatus())
-                .user(user)
-                .createdDate(jwtUtil.extractIssuedDate(refreshToken))
-                .expirationDate(jwtUtil.extractExpirationDate(refreshToken))
-                .build());
+        refreshTokenRepository
+                .save(RefreshToken.builder()
+                    .refreshToken(refreshToken)
+                    .status(CommonStatus.ACTIVE.getStatus())
+                    .user(user)
+                    .createdDate(jwtUtil.extractIssuedDate(refreshToken))
+                    .expirationDate(jwtUtil.extractExpirationDate(refreshToken))
+                    .build());
         response.put(REFRESH_TOKEN_KEY, refreshToken);
         return response;
     }
@@ -75,21 +76,35 @@ public class AuthService {
             if (!Objects.equals(jwtUtil.extractUsername(refreshToken), refreshRequest.getEmail())) {
                 throw new BusinessException(ApiResponseCode.INVALID_REFRESH_REQUEST_USERNAME);
             }
-        } catch (ExpiredJwtException e){
-            List<RefreshToken> refreshTokens = refreshTokenRepository
-                    .findAllByUserAndStatus((User) userDetails, CommonStatus.ACTIVE.getStatus())
-                    .stream()
-                    .map(r -> r.toBuilder()
-                            .status(CommonStatus.DELETED.getStatus())
-                            .build())
-                    .toList();
-            refreshTokens = refreshTokenRepository
-                    .saveAll(refreshTokens);
-            System.out.println(refreshTokens.get(0).getStatus());
+        } catch (ExpiredJwtException e) {
+            refreshTokenRepository
+                    .saveAll(refreshTokenRepository
+                            .findAllByUserAndStatus((User) userDetails, CommonStatus.ACTIVE.getStatus())
+                            .stream()
+                            .map(r -> r.toBuilder()
+                                    .status(CommonStatus.DELETED.getStatus())
+                                    .build())
+                            .toList());
             throw new BusinessException(ApiResponseCode.INVALID_REFRESH_REQUEST_EXPIRED);
         }
         Map<String, String> response = new HashMap<>();
         response.put(ACCESS_TOKEN_KEY, jwtUtil.generateAccessToken(userDetails));
         return response;
+    }
+
+    public ApiResponse signOut(String accessToken) {
+        refreshTokenRepository
+                .saveAll(refreshTokenRepository
+                        .findAllByUserAndStatus(
+                                (User) userService
+                                        .loadUserByUsername(jwtUtil
+                                                .extractUsername(accessToken)),
+                                CommonStatus.ACTIVE.getStatus())
+                        .stream()
+                        .map(r -> r.toBuilder()
+                                .status(CommonStatus.DELETED.getStatus())
+                                .build())
+                        .toList());
+        return ApiResponse.success();
     }
 }
