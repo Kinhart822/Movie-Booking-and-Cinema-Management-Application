@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.dto.Request;
+package vn.edu.usth.mcma.frontend.dto.request;
 
 public class ForgotPasswordRequest {
     private String token;

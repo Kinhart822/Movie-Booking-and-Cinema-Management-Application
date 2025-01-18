@@ -9,15 +9,32 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
-import vn.edu.usth.mcma.frontend.dto.Request.ChangePasswordRequest;
-import vn.edu.usth.mcma.frontend.dto.Request.UpdateAccountRequest;
+import retrofit2.http.Query;
+import vn.edu.usth.mcma.frontend.dto.request.ChangePasswordRequest;
+import vn.edu.usth.mcma.frontend.dto.request.UpdateAccountRequest;
+import vn.edu.usth.mcma.frontend.dto.request.account.SignUpFinish;
+import vn.edu.usth.mcma.frontend.dto.request.account.SignUpCheckOtp;
+import vn.edu.usth.mcma.frontend.dto.request.account.SignUpBegin;
+import vn.edu.usth.mcma.frontend.dto.response.ApiResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CouponResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingResponse;
+import vn.edu.usth.mcma.frontend.dto.response.account.EmailExistenceResponse;
 import vn.edu.usth.mcma.frontend.dto.response.MovieRespondResponse;
 import vn.edu.usth.mcma.frontend.dto.response.NotificationResponse;
 import vn.edu.usth.mcma.frontend.dto.response.UserDetailsResponse;
+import vn.edu.usth.mcma.frontend.dto.response.account.VerifyEmailDueDate;
+import vn.edu.usth.mcma.frontend.dto.response.account.VerifyEmailOtpCheckResult;
 
 public interface AccountApi {
+    @GET("/api/v1/account/user/sign-up/check-email-existence")
+    Call<EmailExistenceResponse> checkEmailExistence(@Query("query") String query);
+    @POST("/api/v1/account/user/sign-up/begin")
+    Call<VerifyEmailDueDate> signUpBegin(@Body SignUpBegin request);
+    @POST("/api/v1/account/user/sign-up/check-otp")
+    Call<VerifyEmailOtpCheckResult> signUpCheckOtp(@Body SignUpCheckOtp check);
+    @POST("/api/v1/account/user/sign-up/finish")
+    Call<ApiResponse> signUpFinish(@Body SignUpFinish signUpFinish);
+
     @PUT("/api/v1/auth/update-account/{userId}")
     Call<Void> updateAccount(@Path("userId") int userId, @Body UpdateAccountRequest updateAccountRequest);
     @DELETE("/api/v1/auth/delete-account/{userId}")

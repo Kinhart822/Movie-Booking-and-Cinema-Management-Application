@@ -40,7 +40,7 @@ public class Cancel_Booking_Activity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         fetchCompletedBookings();
 
-        ImageButton backButton = findViewById(R.id.back_button);
+        ImageButton backButton = findViewById(R.id.button_back);
 
         backButton.setOnClickListener(view -> onBackPressed());
     }

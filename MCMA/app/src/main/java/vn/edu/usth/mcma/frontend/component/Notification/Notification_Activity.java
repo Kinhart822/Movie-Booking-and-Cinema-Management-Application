@@ -32,7 +32,7 @@ public class Notification_Activity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
 
-        ImageButton backButton = findViewById(R.id.back_button);
+        ImageButton backButton = findViewById(R.id.button_back);
 
         backButton.setOnClickListener(view -> onBackPressed());
 

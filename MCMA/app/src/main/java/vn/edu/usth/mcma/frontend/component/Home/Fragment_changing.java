@@ -11,6 +11,7 @@ import vn.edu.usth.mcma.frontend.component.Personal.PersonalFragment;
 import vn.edu.usth.mcma.frontend.component.Showtimes.UI.LaunchtimeFragment;
 import vn.edu.usth.mcma.frontend.component.Store.UI.StoreFragment;
 
+// todo: rename to primary page adapter
 public class Fragment_changing extends FragmentStateAdapter {
     public Fragment_changing(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
         super(fragmentManager, lifecycle);

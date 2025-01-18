@@ -246,7 +246,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
         });
     }
     private void setupBackButton() {
-        ImageButton backButton = findViewById(R.id.back_button);
+        ImageButton backButton = findViewById(R.id.button_back);
         backButton.setOnClickListener(v -> onBackPressed());
     }
 }

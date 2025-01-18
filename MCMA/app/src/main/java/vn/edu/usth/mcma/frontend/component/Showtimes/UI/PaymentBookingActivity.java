@@ -68,7 +68,7 @@ public class PaymentBookingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_booking);
 
-        ImageButton backButton = findViewById(R.id.back_button);
+        ImageButton backButton = findViewById(R.id.button_back);
         backButton.setOnClickListener(view -> onBackPressed());
 
         movieId = getIntent().getIntExtra(IntentKey.MOVIE_ID.name(), -1);

@@ -45,7 +45,7 @@ public class Movie_Feedback_Activity extends AppCompatActivity {
 
         fetchNowShowingMovies();
 
-        ImageButton backButton = findViewById(R.id.back_button);
+        ImageButton backButton = findViewById(R.id.button_back);
         backButton.setOnClickListener(view -> onBackPressed());
     }
 

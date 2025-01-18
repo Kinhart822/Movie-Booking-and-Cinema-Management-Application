@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.dto.Request;
+package vn.edu.usth.mcma.frontend.dto.request.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignInRequest {
+public class SignUpFinish {
+    private String sessionId;
     private String email;
     private String password;
 }

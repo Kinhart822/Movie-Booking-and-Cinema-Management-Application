@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.telephony.SmsManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
@@ -27,10 +26,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Request.BookingRequest;
+import vn.edu.usth.mcma.frontend.dto.request.BookingRequest;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.SendBookingResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingResponse;
-import vn.edu.usth.mcma.frontend.component.auth.Register_Activity;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Adapters.PaymentMethodAdapter;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Booking.PaymentMethod;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
@@ -68,7 +66,7 @@ public class PayingMethodActivity extends AppCompatActivity {
         selectedMovieCouponId = getIntent().getIntExtra(IntentKey.SELECTED_MOVIE_COUPON_ID.name(), -1);
         selectedUserCouponId = getIntent().getIntExtra(IntentKey.SELECTED_USER_COUPON_ID.name(), -1);
 
-        ImageButton backButton = findViewById(R.id.back_button);
+        ImageButton backButton = findViewById(R.id.button_back);
         backButton.setOnClickListener(view -> onBackPressed());
 
         initializeViews();
@@ -301,13 +299,14 @@ public class PayingMethodActivity extends AppCompatActivity {
     }
 
     private void sendSMS(String message) {
-        if (Register_Activity.phoneNumber != 0){
-            SmsManager smsManager = SmsManager.getDefault();
-
-            smsManager.sendTextMessage(String.valueOf(Register_Activity.phoneNumber), null, message, null, null);
-            Toast.makeText(this, "SMS Sent Successfully!", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this,"Please try again!", Toast.LENGTH_SHORT).show();
-        }
+        //todo: comment out because of phoneNumber
+//        if (SignUpActivity.phoneNumber != 0){
+//            SmsManager smsManager = SmsManager.getDefault();
+//
+//            smsManager.sendTextMessage(String.valueOf(SignUpActivity.phoneNumber), null, message, null, null);
+//            Toast.makeText(this, "SMS Sent Successfully!", Toast.LENGTH_SHORT).show();
+//        } else {
+//            Toast.makeText(this,"Please try again!", Toast.LENGTH_SHORT).show();
+//        }
     }
 }

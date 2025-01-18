@@ -19,7 +19,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Request.MovieRespondRequest;
+import vn.edu.usth.mcma.frontend.dto.request.MovieRespondRequest;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 
@@ -38,7 +38,7 @@ public class RatingMovie_Activity extends AppCompatActivity {
         TextView movieName = findViewById(R.id.tvMovieName);
         TextView movieType = findViewById(R.id.tvMovieType);
         ImageView movieImage = findViewById(R.id.tvMovieImage);
-        ImageButton mImageView = findViewById(R.id.back_button);
+        ImageButton mImageView = findViewById(R.id.button_back);
         ratingBar = findViewById(R.id.ratingBar);
         ratingScale = findViewById(R.id.tvRatingScale);
         editFeedback = findViewById(R.id.etComment);

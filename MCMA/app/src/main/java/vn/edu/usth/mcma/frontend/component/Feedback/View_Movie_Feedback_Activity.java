@@ -30,7 +30,7 @@ public class View_Movie_Feedback_Activity extends AppCompatActivity {
         adapter = new View_Movie_Feedback_Adapter(feedbackItems);
         recyclerView.setAdapter(adapter);
 
-        ImageButton backButton = findViewById(R.id.back_button);
+        ImageButton backButton = findViewById(R.id.button_back);
 
         backButton.setOnClickListener(view -> {
             onBackPressed();

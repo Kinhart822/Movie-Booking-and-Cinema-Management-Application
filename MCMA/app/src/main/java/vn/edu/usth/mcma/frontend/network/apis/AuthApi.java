@@ -4,11 +4,10 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
-import vn.edu.usth.mcma.frontend.dto.Request.ForgotPasswordRequest;
-import vn.edu.usth.mcma.frontend.dto.Request.RefreshRequest;
-import vn.edu.usth.mcma.frontend.dto.Request.ResetPasswordRequest;
-import vn.edu.usth.mcma.frontend.dto.Request.SignInRequest;
-import vn.edu.usth.mcma.frontend.dto.Request.SignUpRequest;
+import vn.edu.usth.mcma.frontend.dto.request.ForgotPasswordRequest;
+import vn.edu.usth.mcma.frontend.dto.request.RefreshRequest;
+import vn.edu.usth.mcma.frontend.dto.request.ResetPasswordRequest;
+import vn.edu.usth.mcma.frontend.dto.request.account.SignInRequest;
 import vn.edu.usth.mcma.frontend.dto.response.JwtAuthenticationResponse;
 import vn.edu.usth.mcma.frontend.dto.response.RefreshResponse;
 import vn.edu.usth.mcma.frontend.dto.response.SignInResponse;
@@ -20,9 +19,6 @@ public interface AuthApi {
     Call<RefreshResponse> refresh(@Body RefreshRequest refreshRequest);
     @PUT("/api/v1/auth/sign-out")
     Call<Void> signOut();
-
-    @POST("/api/v1/auth/sign-up")
-    Call<Void> signUp(@Body SignUpRequest signUpRequest);
 
     @POST("/api/v1/auth/forgot-password")
     Call<JwtAuthenticationResponse> forgotPassword(@Body ForgotPasswordRequest forgotPasswordRequest);

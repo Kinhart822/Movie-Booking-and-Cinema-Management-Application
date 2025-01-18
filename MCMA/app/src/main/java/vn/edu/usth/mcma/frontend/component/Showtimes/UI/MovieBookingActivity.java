@@ -202,7 +202,7 @@ public class MovieBookingActivity extends AppCompatActivity {
         });
 
         // Setup back button
-        ImageButton backButton = findViewById(R.id.back_button);
+        ImageButton backButton = findViewById(R.id.button_back);
         backButton.setOnClickListener(v -> finish());
     }
 

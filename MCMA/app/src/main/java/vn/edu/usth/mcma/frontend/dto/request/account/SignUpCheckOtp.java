@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.dto.Request;
+package vn.edu.usth.mcma.frontend.dto.request.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RefreshRequest {
-    private String refreshToken;
-    private String email;
+public class SignUpCheckOtp {
+    private String sessionId;
+    private String otp;
 }

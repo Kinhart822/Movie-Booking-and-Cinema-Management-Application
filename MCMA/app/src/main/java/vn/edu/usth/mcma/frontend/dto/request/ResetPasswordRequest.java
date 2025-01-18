@@ -1,6 +1,7 @@
-package vn.edu.usth.mcma.frontend.dto.Request;
+package vn.edu.usth.mcma.frontend.dto.request;
 
-public class ChangePasswordRequest {
+public class ResetPasswordRequest {
+    private String token;
     private String newPassword;
     private String confirmPassword;
 
@@ -18,5 +19,13 @@ public class ChangePasswordRequest {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

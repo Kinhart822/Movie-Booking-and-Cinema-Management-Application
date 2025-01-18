@@ -1,6 +1,9 @@
 package vn.edu.usth.mcma.frontend.constant;
 
 public enum IntentKey {
+    SIGN_UP_EMAIL,
+    SIGN_UP_OTP_DUE_DATE,
+    SIGN_UP_SESSION_ID,
     MOVIE_ID,
     MOVIE_TITLE,
     MOVIE_NAME,

@@ -8,7 +8,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
-import vn.edu.usth.mcma.frontend.dto.Request.BookingRequest;
+import vn.edu.usth.mcma.frontend.dto.request.BookingRequest;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.SendBookingResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.TicketResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingResponse;

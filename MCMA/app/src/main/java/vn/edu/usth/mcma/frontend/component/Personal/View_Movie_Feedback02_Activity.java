@@ -49,7 +49,7 @@ public class View_Movie_Feedback02_Activity extends AppCompatActivity {
         // Fetch movie feedback data from API
         fetchMovieFeedbacks();
 
-        ImageButton backButton = findViewById(R.id.back_button);
+        ImageButton backButton = findViewById(R.id.button_back);
         backButton.setOnClickListener(view -> onBackPressed());
     }
 

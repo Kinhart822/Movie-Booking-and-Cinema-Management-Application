@@ -18,7 +18,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import vn.edu.usth.mcma.frontend.constant.IP;
-import vn.edu.usth.mcma.frontend.dto.Request.RefreshRequest;
+import vn.edu.usth.mcma.frontend.dto.request.RefreshRequest;
 import vn.edu.usth.mcma.frontend.dto.response.RefreshResponse;
 import vn.edu.usth.mcma.frontend.network.apis.AuthApi;
 

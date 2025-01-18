@@ -85,7 +85,7 @@ public class Search_Activity extends AppCompatActivity {
 
         });
 
-        ImageButton backButton = findViewById(R.id.back_button);
+        ImageButton backButton = findViewById(R.id.button_back);
         backButton.setOnClickListener(view -> onBackPressed());
     }
 

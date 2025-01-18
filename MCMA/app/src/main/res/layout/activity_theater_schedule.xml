@@ -17,7 +17,7 @@
         android:paddingBottom="8dp">
 
         <ImageButton
-            android:id="@+id/back_button"
+            android:id="@+id/button_back"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:background="@drawable/left"

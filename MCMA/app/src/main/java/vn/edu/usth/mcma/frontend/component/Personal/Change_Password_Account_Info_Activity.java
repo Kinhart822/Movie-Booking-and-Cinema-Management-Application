@@ -16,7 +16,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.Request.ChangePasswordRequest;
+import vn.edu.usth.mcma.frontend.dto.request.ChangePasswordRequest;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class Change_Password_Account_Info_Activity extends AppCompatActivity {

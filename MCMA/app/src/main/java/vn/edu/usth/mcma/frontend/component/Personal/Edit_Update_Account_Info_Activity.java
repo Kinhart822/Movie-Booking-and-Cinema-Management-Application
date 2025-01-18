@@ -23,7 +23,7 @@ import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.constant.Gender;
 import vn.edu.usth.mcma.frontend.constant.SharedPreferencesKey;
-import vn.edu.usth.mcma.frontend.dto.Request.UpdateAccountRequest;
+import vn.edu.usth.mcma.frontend.dto.request.UpdateAccountRequest;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class Edit_Update_Account_Info_Activity extends AppCompatActivity {

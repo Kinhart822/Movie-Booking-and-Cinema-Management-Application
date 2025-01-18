@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.auth;
+package vn.edu.usth.mcma.frontend.component.account;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +20,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.constant.SharedPreferencesKey;
-import vn.edu.usth.mcma.frontend.dto.Request.ForgotPasswordRequest;
+import vn.edu.usth.mcma.frontend.dto.request.ForgotPasswordRequest;
 import vn.edu.usth.mcma.frontend.dto.response.JwtAuthenticationResponse;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
@@ -98,7 +98,7 @@ public class ForgotPassword_Activity extends AppCompatActivity {
 //            }
         });
 
-        ImageButton back_button = findViewById(R.id.back_button);
+        ImageButton back_button = findViewById(R.id.button_back);
         back_button.setOnClickListener(view -> onBackPressed());
 
     }

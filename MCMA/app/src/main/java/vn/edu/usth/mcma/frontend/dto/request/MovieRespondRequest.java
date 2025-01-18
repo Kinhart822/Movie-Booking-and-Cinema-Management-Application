@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.dto.Request;
+package vn.edu.usth.mcma.frontend.dto.request;
 
 public class MovieRespondRequest {
     private Integer movieId;

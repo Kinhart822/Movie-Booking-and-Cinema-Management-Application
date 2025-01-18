@@ -22,7 +22,7 @@
             android:background="@color/LightBlue">
 
             <ImageButton
-                android:id="@+id/back_button"
+                android:id="@+id/button_back"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_gravity="center"
