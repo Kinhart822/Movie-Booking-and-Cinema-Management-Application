@@ -22,36 +22,33 @@ import vn.edu.usth.mcma.frontend.MainActivity;
 import vn.edu.usth.mcma.frontend.constant.IP;
 
 public class ApiClient {
-    private static final String BASE_URL = IP.MINOXD_LAPTOP.getIp();
-    private static Retrofit retrofit;
-    public static Retrofit getClient(Context context) {
-        if (retrofit == null) {
+    private static final String BASE_URL = IP.MINOXD_P2XL.getIp();
+    private static Retrofit authenticatedRetrofit;
+    private static Retrofit unauthenticatedRetrofit;
+    public static Retrofit getAuthenticatedClient(Context context) {
+        if (authenticatedRetrofit == null) {
             AuthPrefsManager authPrefsManager = new AuthPrefsManager(context);
-            CustomAuthenticator authenticator = getCustomAuthenticator(context, authPrefsManager);
-            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             OkHttpClient client = new OkHttpClient
                     .Builder()
-                    .authenticator(authenticator)
-                    .addInterceptor(loggingInterceptor)
+                    .authenticator(getCustomAuthenticator(context, authPrefsManager))
                     .addInterceptor(new AuthInterceptor(authPrefsManager))
+                    .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                     .connectTimeout(60, TimeUnit.SECONDS)
                     .readTimeout(60, TimeUnit.SECONDS)
                     .writeTimeout(60, TimeUnit.SECONDS)
                     .callTimeout(60, TimeUnit.SECONDS)
                     .retryOnConnectionFailure(true)
                     .build();
-            retrofit = new Retrofit
+            authenticatedRetrofit = new Retrofit
                     .Builder()
                     .baseUrl(BASE_URL)
                     .client(client)
-                    .addConverterFactory(GsonConverterFactory.create(new Gson()))
+                    .addConverterFactory(GsonConverterFactory.create())
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .build();
         }
-        return retrofit;
+        return authenticatedRetrofit;
     }
-
     @NonNull
     private static CustomAuthenticator getCustomAuthenticator(Context context, AuthPrefsManager authPrefsManager) {
         CustomAuthenticator authenticator = new CustomAuthenticator(authPrefsManager);
@@ -70,5 +67,19 @@ public class ApiClient {
 
         });
         return authenticator;
+    }
+
+    public static Retrofit getUnauthenticatedClient() {
+        if (unauthenticatedRetrofit == null) {
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                    .build();
+            unauthenticatedRetrofit = new Retrofit.Builder()
+                    .client(client)
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return unauthenticatedRetrofit;
     }
 }

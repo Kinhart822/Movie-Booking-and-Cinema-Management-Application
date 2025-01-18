@@ -44,15 +44,8 @@ public class CustomAuthenticator implements Authenticator {
                     callback.onRefreshFailed();
                     return null;
                 }
-                Retrofit retrofit = new Retrofit.Builder()
-                        .client(new OkHttpClient.Builder()
-                                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                                .build())
-                        .baseUrl(IP.MINOXD_LAPTOP.getIp())
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-                AuthApi authApi = retrofit.create(AuthApi.class);
-                retrofit2.Response<RefreshResponse> refreshResponse = authApi
+                retrofit2.Response<RefreshResponse> refreshResponse = ApiService
+                        .getUnauthAuthApi()
                         .refresh(RefreshRequest.builder()
                                 .email(authPrefsManager.getEmail())
                                 .refreshToken(authPrefsManager.getRefreshToken())
