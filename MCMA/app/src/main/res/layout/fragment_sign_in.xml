@@ -5,105 +5,93 @@
     android:id="@+id/sign_in_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingHorizontal="40dp"
+    android:paddingVertical="30dp"
     android:background="@drawable/loading_page_border"
     android:fitsSystemWindows="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
     tools:context=".frontend.component.auth.SignInFragment">
-
     <!-- Logo -->
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/logo"
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:layout_marginTop="50dp"
+        android:contentDescription="@string/logo"
         android:src="@drawable/cinemalogo3"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/edit_text_email"/>
     <!-- Email EditText -->
     <EditText
-        android:id="@+id/edit_text_sign_in_email"
-        android:layout_width="332dp"
-        android:layout_height="62dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="16dp"
+        android:id="@+id/edit_text_email"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginVertical="10dp"
         android:background="@drawable/edit_group_box"
-        android:hint="Email"
+        android:hint="@string/email"
+        android:autofillHints="emailAddress"
         android:inputType="textEmailAddress"
-        android:padding="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageView" />
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logo"
+        app:layout_constraintBottom_toTopOf="@id/edit_text_password"/>
     <!-- Password EditText -->
     <EditText
-        android:id="@+id/edit_text_sign_in_password"
-        android:layout_width="332dp"
-        android:layout_height="62dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
+        android:id="@+id/edit_text_password"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginVertical="10dp"
         android:background="@drawable/edit_group_box"
-        android:hint="Password"
+        android:hint="@string/password"
+        android:autofillHints="password"
         android:inputType="textPassword"
-        android:padding="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_text_sign_in_email" />
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_email" />
     <!-- Sign in Button -->
     <Button
         android:id="@+id/button_sign_in"
-        android:layout_width="259dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="40dp"
+        android:layout_width="221dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="50dp"
         android:backgroundTint="@color/gray_text"
-        android:padding="10dp"
-        android:text="Sign In"
+        android:text="@string/sign_in"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.482"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_text_sign_in_password" />
-
-    <!-- "Don't have an account?" Text -->
-    <TextView
-        android:id="@+id/text_view_sign_up"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:gravity="center"
-        android:layout_marginStart="25dp"
-        android:text="@string/don_t_have_an_account"
-        android:textColor="@color/black"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/text_view_reset_password"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_sign_in"
-        app:layout_constraintVertical_bias="0.004" />
-
-
-    <!-- "Forgot Password" Text -->
-    <TextView
-        android:id="@+id/text_view_reset_password"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:gravity="center"
-        android:text="@string/forgotpassword_underlined"
-        android:layout_marginEnd="25dp"
-        android:textColor="@color/black"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/text_view_sign_up"
-        app:layout_constraintTop_toBottomOf="@+id/button_sign_in"
-        app:layout_constraintVertical_bias="0.0" />
-
+        app:layout_constraintTop_toBottomOf="@id/edit_text_password" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_sign_in"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <!-- "Don't have an account?" Text -->
+        <TextView
+            android:id="@+id/text_view_sign_up"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/don_t_have_an_account_underlined"
+            android:textColor="@color/black"
+            android:textSize="15sp"/>
+        <!-- "Forgot Password" Text -->
+        <TextView
+            android:id="@+id/text_view_reset_password"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/forgot_password_underlined"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

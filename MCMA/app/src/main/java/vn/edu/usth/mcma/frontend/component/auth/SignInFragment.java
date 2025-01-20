@@ -40,8 +40,8 @@ public class SignInFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sign_in, container, false);
         authPrefsManager = new AuthPrefsManager(requireContext());
-        emailEditText = view.findViewById(R.id.edit_text_sign_in_email);
-        passwordEditText = view.findViewById(R.id.edit_text_sign_in_password);
+        emailEditText = view.findViewById(R.id.edit_text_email);
+        passwordEditText = view.findViewById(R.id.edit_text_password);
         Button signInButton = view.findViewById(R.id.button_sign_in);
         TextView signUpTextView = view.findViewById(R.id.text_view_sign_up);
         TextView resetPasswordTextView = view.findViewById(R.id.text_view_reset_password);
