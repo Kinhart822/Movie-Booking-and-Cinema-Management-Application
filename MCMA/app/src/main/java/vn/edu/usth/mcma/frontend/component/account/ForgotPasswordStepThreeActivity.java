@@ -6,8 +6,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -20,21 +24,20 @@ import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.component.auth.SignInFragment;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
+import vn.edu.usth.mcma.frontend.dto.account.NewPassword;
 import vn.edu.usth.mcma.frontend.dto.account.SignUpRequest;
 import vn.edu.usth.mcma.frontend.dto.response.ApiResponse;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
-
-public class SignUpStepThreeActivity extends AppCompatActivity {
-    private String email;
+public class ForgotPasswordStepThreeActivity extends AppCompatActivity {
     private String sessionId;
-    private EditText passwordEditText, confirmPasswordEditText;
+    private EditText passwordEditText;
+    private EditText confirmPasswordEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up_step_three);
-        email = getIntent().getStringExtra(IntentKey.SIGN_UP_EMAIL.name());
+        setContentView(R.layout.activity_forgot_password_step_three);
         sessionId = getIntent().getStringExtra(IntentKey.SIGN_UP_SESSION_ID.name());
         ImageButton backButton = findViewById(R.id.button_back);
         passwordEditText = findViewById(R.id.edit_text_password);
@@ -55,35 +58,34 @@ public class SignUpStepThreeActivity extends AppCompatActivity {
                 Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
                 return;
             }
-            signUpFinish(password);
+            forgotPasswordFinish(password);
         });
     }
-    private void signUpFinish(String password) {
+    private void forgotPasswordFinish(String password) {
         ApiService
                 .getAccountApi(this)
-                .signUpFinish(SignUpRequest.builder()
+                .forgotPasswordFinish(NewPassword.builder()
                         .sessionId(sessionId)
-                        .email(email)
                         .password(password)
                         .build())
                 .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
                         if (response.isSuccessful()) {
-                            Toast.makeText(SignUpStepThreeActivity.this, "Successfully registered!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ForgotPasswordStepThreeActivity.this, "Successfully changed password!", Toast.LENGTH_SHORT).show();
 
                             Fragment signInFragment = new SignInFragment();
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                             transaction.replace(android.R.id.content, signInFragment);
                             transaction.commit();
                         } else {
-                            Toast.makeText(SignUpStepThreeActivity.this, "Wrong Format!!!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ForgotPasswordStepThreeActivity.this, "Wrong Format!!!", Toast.LENGTH_SHORT).show();
                         }
                     }
                     @Override
                     public void onFailure(@NonNull Call<ApiResponse> call, @NonNull Throwable t) {
-                        Toast.makeText(SignUpStepThreeActivity.this, "Failed to sign up!!! " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                        Logger.getLogger(SignUpStepThreeActivity.class.getName()).log(Level.SEVERE, "Error occurred ", t);
+                        Toast.makeText(ForgotPasswordStepThreeActivity.this, "Failed to change password!!! " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        Logger.getLogger(ForgotPasswordStepThreeActivity.class.getName()).log(Level.SEVERE, "Error occurred ", t);
                     }
                 });
     }

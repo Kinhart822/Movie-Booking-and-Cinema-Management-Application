@@ -24,20 +24,18 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
-import vn.edu.usth.mcma.frontend.dto.request.account.SignUpBegin;
-import vn.edu.usth.mcma.frontend.dto.response.account.EmailExistenceResponse;
-import vn.edu.usth.mcma.frontend.dto.response.account.VerifyEmailDueDate;
+import vn.edu.usth.mcma.frontend.dto.account.SendOtpRequest;
+import vn.edu.usth.mcma.frontend.dto.account.EmailExistenceResponse;
+import vn.edu.usth.mcma.frontend.dto.account.OtpDueDate;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class SignUpStepOneActivity extends AppCompatActivity {
     private static final String TAG = SignUpStepOneActivity.class.getName();
-    ImageButton backButton;
     private boolean isEmailOk;
     private EditText emailEditText;
     private TextView statusIconTextView, statusDescriptionTextView;
     private Handler checkExistHandler, nextHandler;
-    private Runnable checkRunnable;
-    private String email;
+    private Runnable checkExistRunnable;
     private Instant otpDueDate;
     private String sessionId;
     private Button nextButton;
@@ -48,13 +46,13 @@ public class SignUpStepOneActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_step_one);
-        backButton = findViewById(R.id.button_back);
+        ImageButton backButton = findViewById(R.id.button_back);
         isEmailOk = false;
         checkExistHandler = new Handler();
         emailEditText = findViewById(R.id.edit_text_email);
         statusIconTextView = findViewById(R.id.text_view_email_status_icon);
         statusDescriptionTextView = findViewById(R.id.text_view_email_status_description);
-        nextButton = findViewById(R.id.button_finish);
+        nextButton = findViewById(R.id.button_next);
         waitForOtp = false;
         dotCount = 0;
         nextHandler = new Handler();
@@ -88,12 +86,12 @@ public class SignUpStepOneActivity extends AppCompatActivity {
                         statusDescriptionTextView.setText("Checking");
                         statusDescriptionTextView.setTextColor(getResources().getColor(R.color.not_too_bright_yellow));
                         // cancel previous api call if user types again
-                        if (checkRunnable != null) {
-                            checkExistHandler.removeCallbacks(checkRunnable);
+                        if (checkExistRunnable != null) {
+                            checkExistHandler.removeCallbacks(checkExistRunnable);
                         }
                         // schedule new api call
-                        checkRunnable = () -> checkEmailExistence(email);
-                        checkExistHandler.postDelayed(checkRunnable, 500);
+                        checkExistRunnable = () -> checkEmailExistence(email);
+                        checkExistHandler.postDelayed(checkExistRunnable, 500);
                     }
                     @Override
                     public void afterTextChanged(Editable editable) {
@@ -108,7 +106,10 @@ public class SignUpStepOneActivity extends AppCompatActivity {
                 .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<EmailExistenceResponse> call, @NonNull Response<EmailExistenceResponse> response) {
-                        assert response.body() != null;
+                        if (!response.isSuccessful() || response.body() == null) {
+                            Log.e(TAG, "checkEmailExistence onResponse: code not ok || body is null");
+                            return;
+                        }
                         boolean result = response.body().isEmailExisted();
                         isEmailOk = !result;
                         statusIconTextView.setText(result
@@ -134,9 +135,8 @@ public class SignUpStepOneActivity extends AppCompatActivity {
                         Toast.makeText(this, "Your email address needs to be checked", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    email = emailEditText.getText().toString();
                     stopNextButton();
-                    signUpBegin(email);
+                    signUpBegin();
                 });
     }
     @SuppressLint("SetTextI18n")
@@ -159,36 +159,37 @@ public class SignUpStepOneActivity extends AppCompatActivity {
     /*
      * this calls postSignUpBegin
      */
-    private void signUpBegin(String email) {
-        sessionId = UUID.randomUUID().toString() + "-" + email;
+    private void signUpBegin() {
+        sessionId = UUID.randomUUID().toString() + "-" + Instant.now().getEpochSecond();
         ApiService
                 .getAccountApi(this)
-                .signUpBegin(SignUpBegin
+                .signUpBegin(SendOtpRequest
                         .builder()
-                        .email(email)
+                        .email(emailEditText.getText().toString())
                         .sessionId(sessionId)
                         .build())
                 .enqueue(new Callback<>() {
                     @Override
-                    public void onResponse(@NonNull Call<VerifyEmailDueDate> call, @NonNull Response<VerifyEmailDueDate> response) {
+                    public void onResponse(@NonNull Call<OtpDueDate> call, @NonNull Response<OtpDueDate> response) {
                         if (response.code() == 200) {
-                            assert response.body() != null;
-                            otpDueDate = Instant.parse(response.body().getOtpDueDate());
+                            if (response.body() == null) {
+                                Log.e(TAG, "signUpBegin onResponse: response body is null");
+                                return;
+                            }
                             waitForOtp = false;
+                            otpDueDate = Instant.parse(response.body().getOtpDueDate());
                             postSignUpBegin();
                         }
                     }
                     @Override
-                    public void onFailure(@NonNull Call<VerifyEmailDueDate> call, @NonNull Throwable throwable) {
+                    public void onFailure(@NonNull Call<OtpDueDate> call, @NonNull Throwable throwable) {
                         Log.d(TAG, "signUpBegin onFailure: " + throwable);
                     }
                 });
     }
     private void postSignUpBegin() {
         Intent intent = new Intent(SignUpStepOneActivity.this, SignUpStepTwoActivity.class);
-        intent.putExtra(IntentKey.SIGN_UP_EMAIL.name(), email);
-        //todo
-        System.out.println(otpDueDate);
+        intent.putExtra(IntentKey.SIGN_UP_EMAIL.name(), emailEditText.getText().toString());
         intent.putExtra(IntentKey.SIGN_UP_OTP_DUE_DATE.name(), otpDueDate);
         intent.putExtra(IntentKey.SIGN_UP_SESSION_ID.name(), sessionId);
         startActivity(intent);

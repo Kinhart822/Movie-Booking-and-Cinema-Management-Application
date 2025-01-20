@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.dto.request.account;
+package vn.edu.usth.mcma.frontend.dto.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class SignUpCheckOtp {
+@AllArgsConstructor
+public class NewPassword {
     private String sessionId;
-    private String otp;
+    private String password;
 }

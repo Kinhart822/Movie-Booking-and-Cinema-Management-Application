@@ -7,7 +7,7 @@ import retrofit2.http.PUT;
 import vn.edu.usth.mcma.frontend.dto.request.ForgotPasswordRequest;
 import vn.edu.usth.mcma.frontend.dto.request.RefreshRequest;
 import vn.edu.usth.mcma.frontend.dto.request.ResetPasswordRequest;
-import vn.edu.usth.mcma.frontend.dto.request.account.SignInRequest;
+import vn.edu.usth.mcma.frontend.dto.account.SignInRequest;
 import vn.edu.usth.mcma.frontend.dto.response.JwtAuthenticationResponse;
 import vn.edu.usth.mcma.frontend.dto.response.RefreshResponse;
 import vn.edu.usth.mcma.frontend.dto.response.SignInResponse;

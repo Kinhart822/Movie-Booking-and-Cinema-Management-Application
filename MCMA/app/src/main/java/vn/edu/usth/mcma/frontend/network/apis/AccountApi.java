@@ -10,30 +10,38 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import vn.edu.usth.mcma.frontend.dto.account.NewPassword;
 import vn.edu.usth.mcma.frontend.dto.request.ChangePasswordRequest;
 import vn.edu.usth.mcma.frontend.dto.request.UpdateAccountRequest;
-import vn.edu.usth.mcma.frontend.dto.request.account.SignUpFinish;
-import vn.edu.usth.mcma.frontend.dto.request.account.SignUpCheckOtp;
-import vn.edu.usth.mcma.frontend.dto.request.account.SignUpBegin;
+import vn.edu.usth.mcma.frontend.dto.account.SignUpRequest;
+import vn.edu.usth.mcma.frontend.dto.account.CheckOtpRequest;
+import vn.edu.usth.mcma.frontend.dto.account.SendOtpRequest;
 import vn.edu.usth.mcma.frontend.dto.response.ApiResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CouponResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingResponse;
-import vn.edu.usth.mcma.frontend.dto.response.account.EmailExistenceResponse;
+import vn.edu.usth.mcma.frontend.dto.account.EmailExistenceResponse;
 import vn.edu.usth.mcma.frontend.dto.response.MovieRespondResponse;
 import vn.edu.usth.mcma.frontend.dto.response.NotificationResponse;
 import vn.edu.usth.mcma.frontend.dto.response.UserDetailsResponse;
-import vn.edu.usth.mcma.frontend.dto.response.account.VerifyEmailDueDate;
-import vn.edu.usth.mcma.frontend.dto.response.account.VerifyEmailOtpCheckResult;
+import vn.edu.usth.mcma.frontend.dto.account.OtpDueDate;
+import vn.edu.usth.mcma.frontend.dto.account.OtpCheckResult;
 
 public interface AccountApi {
     @GET("/api/v1/account/user/sign-up/check-email-existence")
     Call<EmailExistenceResponse> checkEmailExistence(@Query("query") String query);
     @POST("/api/v1/account/user/sign-up/begin")
-    Call<VerifyEmailDueDate> signUpBegin(@Body SignUpBegin request);
+    Call<OtpDueDate> signUpBegin(@Body SendOtpRequest request);
     @POST("/api/v1/account/user/sign-up/check-otp")
-    Call<VerifyEmailOtpCheckResult> signUpCheckOtp(@Body SignUpCheckOtp check);
+    Call<OtpCheckResult> signUpCheckOtp(@Body CheckOtpRequest request);
     @POST("/api/v1/account/user/sign-up/finish")
-    Call<ApiResponse> signUpFinish(@Body SignUpFinish signUpFinish);
+    Call<ApiResponse> signUpFinish(@Body SignUpRequest request);
+
+    @POST("/api/v1/account/user/forgot-password/begin")
+    Call<OtpDueDate> forgotPasswordBegin(@Body SendOtpRequest request);
+    @POST("/api/v1/account/user/forgot-password/check-otp")
+    Call<OtpCheckResult> forgotPasswordCheckOtp(@Body CheckOtpRequest request);
+    @POST("/api/v1/account/user/forgot-password/finish")
+    Call<ApiResponse> forgotPasswordFinish(@Body NewPassword request);
 
     @PUT("/api/v1/auth/update-account/{userId}")
     Call<Void> updateAccount(@Path("userId") int userId, @Body UpdateAccountRequest updateAccountRequest);

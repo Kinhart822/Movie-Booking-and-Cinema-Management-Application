@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.dto.response.account;
+package vn.edu.usth.mcma.frontend.dto.account;
 
 import lombok.Data;
 

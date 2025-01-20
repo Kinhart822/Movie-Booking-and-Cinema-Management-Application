@@ -24,7 +24,7 @@ import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.component.account.ForgotPassword_Activity;
 import vn.edu.usth.mcma.frontend.component.account.SignUpStepOneActivity;
 import vn.edu.usth.mcma.frontend.constant.SharedPreferencesKey;
-import vn.edu.usth.mcma.frontend.dto.request.account.SignInRequest;
+import vn.edu.usth.mcma.frontend.dto.account.SignInRequest;
 import vn.edu.usth.mcma.frontend.dto.response.SignInResponse;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.MainActivity;
@@ -79,7 +79,10 @@ public class SignInFragment extends Fragment {
                     public void onResponse(@NonNull Call<SignInResponse> call, @NonNull Response<SignInResponse> response) {
                         if (response.isSuccessful()) {
                             Toast.makeText(getActivity(), "Sign in successful!", Toast.LENGTH_SHORT).show();
-                            assert response.body() != null;
+                            if (response.body() == null) {
+                                Log.e(TAG, "signIn onResponse: response body is null");
+                                return;
+                            }
 
                             saveAuthPrefs(response.body(), emailEditText.getText().toString());
     //                                saveProfilePrefs(response.body().getUserId());

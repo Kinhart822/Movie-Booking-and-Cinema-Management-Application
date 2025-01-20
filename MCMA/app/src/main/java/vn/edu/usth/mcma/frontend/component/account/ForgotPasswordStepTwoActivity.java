@@ -26,40 +26,40 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
-import vn.edu.usth.mcma.frontend.dto.account.SendOtpRequest;
 import vn.edu.usth.mcma.frontend.dto.account.CheckOtpRequest;
-import vn.edu.usth.mcma.frontend.dto.account.OtpDueDate;
+import vn.edu.usth.mcma.frontend.dto.account.SendOtpRequest;
 import vn.edu.usth.mcma.frontend.dto.account.OtpCheckResult;
+import vn.edu.usth.mcma.frontend.dto.account.OtpDueDate;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
-public class SignUpStepTwoActivity extends AppCompatActivity {
-    private static final String TAG = SignUpStepTwoActivity.class.getName();
+public class ForgotPasswordStepTwoActivity extends AppCompatActivity {
+    private static final String TAG = ForgotPasswordStepTwoActivity.class.getName();
     private String email, sessionId;
     private Instant otpDueDate;
     private TextView infoTextView, resendOtpTextView, timeRemainingTextView;
     private EditText otpEditText;
-    private boolean isOtpOk, waitForResendOtp;
     private Button checkButton;
+    private boolean isOtpOk, waitForResendOtp;
     private Handler checkOtpHandler;
     private int dotCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up_step_two);
-        email = getIntent().getStringExtra(IntentKey.SIGN_UP_EMAIL.name());
-        otpDueDate = (Instant) getIntent().getSerializableExtra(IntentKey.SIGN_UP_OTP_DUE_DATE.name());
-        sessionId = getIntent().getStringExtra(IntentKey.SIGN_UP_SESSION_ID.name());
-        infoTextView = findViewById(R.id.info);
+        setContentView(R.layout.activity_forgot_password_step_two);
+        email = getIntent().getStringExtra(IntentKey.FORGOT_PASSWORD_EMAIL.name());
+        otpDueDate = (Instant) getIntent().getSerializableExtra(IntentKey.FORGOT_PASSWORD_OTP_DUE_DATE.name());
+        sessionId = getIntent().getStringExtra(IntentKey.FORGOT_PASSWORD_SESSION_ID.name());
         ImageButton backButton = findViewById(R.id.button_back);
+        infoTextView = findViewById(R.id.info);
         otpEditText = findViewById(R.id.edit_text_otp);
-        isOtpOk = false;
         resendOtpTextView = findViewById(R.id.text_view_resend_otp);
         timeRemainingTextView = findViewById(R.id.text_view_time_remaining);
         checkButton = findViewById(R.id.button_check);
         waitForResendOtp = false;
-        dotCount = 0;
         checkOtpHandler = new Handler();
+        dotCount = 0;
+        isOtpOk = false;
 
         backButton
                 .setOnClickListener(v -> onBackPressed());
@@ -106,44 +106,6 @@ public class SignUpStepTwoActivity extends AppCompatActivity {
         };
         timeRemainingHandler.post(timeRemainingRunnable);
     }
-    @SuppressLint("SetTextI18n")
-    private void prepareCheckButton() {
-        checkButton.setText("Check");
-        checkButton
-                .setOnClickListener(v -> signUpCheckOtp());
-    }
-    private void signUpCheckOtp() {
-        ApiService
-                .getAccountApi(this)
-                .signUpCheckOtp(CheckOtpRequest.builder()
-                        .sessionId(sessionId)
-                        .otp(otpEditText.getText().toString())
-                        .build())
-                .enqueue(new Callback<>() {
-                    @Override
-                    public void onResponse(@NonNull Call<OtpCheckResult> call, @NonNull Response<OtpCheckResult> response) {
-                        if (!response.isSuccessful() || response.body() == null) {
-                            Log.e(TAG, "signUpCheckOtp onResponse: code not 200 || body is null");
-                            return;
-                        }
-                        isOtpOk = response.body().isValid();
-                        postSignUpCheckOtp();
-                    }
-                    @Override
-                    public void onFailure(@NonNull Call<OtpCheckResult> call, @NonNull Throwable throwable) {
-                        Log.d(TAG, "signUpCheckOtp: onFailure: " + throwable);
-                    }
-                });
-    }
-    private void postSignUpCheckOtp() {
-        if (!isOtpOk) {
-            Toast.makeText(this, "Please recheck your OTP", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Intent intent = new Intent(SignUpStepTwoActivity.this, SignUpStepThreeActivity.class);
-        intent.putExtra(IntentKey.SIGN_UP_SESSION_ID.name(), sessionId);
-        startActivity(intent);
-    }
     /**
      * reset TextView: timeRemaining, resendOtp
      * prepare info not first time
@@ -156,7 +118,7 @@ public class SignUpStepTwoActivity extends AppCompatActivity {
         resendOtpTextView.setOnClickListener(null);
         prepareInfo(false);
         stopCheckButton();
-        signUpBegin(email);
+        forgotPasswordBegin();
     }
     @SuppressLint("SetTextI18n")
     private void stopCheckButton() {
@@ -176,13 +138,13 @@ public class SignUpStepTwoActivity extends AppCompatActivity {
         }, 500);
     }
     /*
-     * this calls postSignUpBegin
+     * this calls postForgotPasswordBegin
      */
-    private void signUpBegin(String email) {
+    private void forgotPasswordBegin() {
         sessionId = UUID.randomUUID().toString() + "-" + Instant.now().getEpochSecond();
         ApiService
                 .getAccountApi(this)
-                .signUpBegin(SendOtpRequest
+                .forgotPasswordBegin(SendOtpRequest
                         .builder()
                         .email(email)
                         .sessionId(sessionId)
@@ -191,27 +153,60 @@ public class SignUpStepTwoActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NonNull Call<OtpDueDate> call, @NonNull Response<OtpDueDate> response) {
                         if (!response.isSuccessful() || response.body() == null) {
-                            Log.e(TAG, "signUpBegin onResponse: code not 200 || body is null");
+                            Log.e(TAG, "forgotPasswordBegin onResponse: code not 200 || body is null");
                             return;
                         }
                         waitForResendOtp = false;
                         otpDueDate = Instant.parse(response.body().getOtpDueDate());
-                        postSignUpBegin();
+                        postForgotPasswordBegin();
                     }
                     @Override
                     public void onFailure(@NonNull Call<OtpDueDate> call, @NonNull Throwable throwable) {
-                        Log.d(TAG, "signUpBegin onFailure: " + throwable);
+                        Log.d(TAG, "forgotPasswordBegin onFailure: " + throwable);
                     }
                 });
+
     }
-    private void postSignUpBegin() {
+    private void postForgotPasswordBegin() {
         prepareCheckButton();
         prepareTimeRemaining();
     }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        waitForResendOtp = false;
-        checkOtpHandler.removeCallbacksAndMessages(null);
+    @SuppressLint("SetTextI18n")
+    private void prepareCheckButton() {
+        checkButton.setText("Check");
+        checkButton
+                .setOnClickListener(v -> forgotPasswordCheckOtp());
+    }
+    private void forgotPasswordCheckOtp() {
+        ApiService
+                .getAccountApi(this)
+                .forgotPasswordCheckOtp(CheckOtpRequest.builder()
+                        .sessionId(sessionId)
+                        .otp(otpEditText.getText().toString())
+                        .build())
+                .enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<OtpCheckResult> call, @NonNull Response<OtpCheckResult> response) {
+                        if (!response.isSuccessful() || response.body() == null) {
+                            Log.e(TAG, "forgotPasswordCheckOtp onResponse: code not 200 || body is null");
+                            return;
+                        }
+                        isOtpOk = response.body().isValid();
+                        postForgotPasswordCheckOtp();
+                    }
+                    @Override
+                    public void onFailure(@NonNull Call<OtpCheckResult> call, @NonNull Throwable throwable) {
+                        Log.d(TAG, "signUpCheckOtp: onFailure: " + throwable);
+                    }
+                });
+    }
+    private void postForgotPasswordCheckOtp() {
+        if (!isOtpOk) {
+            Toast.makeText(this, "Please recheck your OTP", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent intent = new Intent(ForgotPasswordStepTwoActivity.this, ForgotPasswordStepThreeActivity.class);
+        intent.putExtra(IntentKey.FORGOT_PASSWORD_SESSION_ID.name(), sessionId);
+        startActivity(intent);
     }
 }
