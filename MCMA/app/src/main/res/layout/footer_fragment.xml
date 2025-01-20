@@ -108,7 +108,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="Personal"
+                android:text="Account"
                 android:textSize="10sp"
                 android:textAlignment="center"
                 android:textColor="#000000"

@@ -5,6 +5,6 @@
     <item android:id="@+id/showtimes_page" android:title="Showtimes" android:icon="@drawable/calendar3"/>
     <item android:id="@+id/store_page" android:title="Store" android:icon="@drawable/food"/>
     <item android:id="@+id/feedback_page" android:title="Feedback" android:icon="@drawable/feedback"/>
-    <item android:id="@+id/personal_page" android:title="Personal" android:icon="@drawable/user"/>
+    <item android:id="@+id/personal_page" android:title="Account" android:icon="@drawable/user"/>
 
 </menu>
