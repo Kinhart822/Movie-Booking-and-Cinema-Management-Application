@@ -21,7 +21,7 @@ import static vn.edu.usth.mcma.backend.config.AppConfig.dotenv;
 @AllArgsConstructor
 public class UserService {
     private static final int resetKeyTimeout = Integer.parseInt(Objects.requireNonNull(dotenv().get("RESET_KEY_TIMEOUT")));
-    private final RandomStringGenerator numericGenerator = new RandomStringGenerator.Builder().withinRange('0', '9').get();
+    private static final RandomStringGenerator numericGenerator = new RandomStringGenerator.Builder().withinRange('0', '9').get();
     private final UserRepository userRepository;
     private final UserDetailsCustomService userDetailsCustomService;
 
@@ -33,10 +33,15 @@ public class UserService {
     }
 
     public Optional<User> resetPasswordRequest(String email) {
+        String resetKey = numericGenerator.generate(6);
+        while (userRepository.existsByResetKey(resetKey)) {
+            resetKey = numericGenerator.generate(6);
+        }
+        String finalResetKey = resetKey;
         return userRepository
                 .findByEmailIgnoreCaseAndStatus(email, CommonStatus.ACTIVE.getStatus())
                 .map(u -> u.toBuilder()
-                        .resetKey(numericGenerator.generate(6))
+                        .resetKey(finalResetKey)
                         .resetDueDate(Instant.now().plusSeconds(resetKeyTimeout))
                         .build());
     }
@@ -45,7 +50,7 @@ public class UserService {
                 .findByResetKeyAndStatusAndResetDueDateIsAfter(resetKey, CommonStatus.ACTIVE.getStatus(), Instant.now());
     }
     public Optional<User> resetPasswordFinish(String resetKey, String encodedPassword) {
-        return userRepository
+        return userRepository //todo: dont check for due
                 .findByResetKeyAndStatusAndResetDueDateIsAfter(resetKey, CommonStatus.ACTIVE.getStatus(), Instant.now())
                 .map (u -> u
                         .toBuilder()

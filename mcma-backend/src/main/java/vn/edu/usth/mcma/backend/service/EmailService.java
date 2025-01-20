@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import vn.edu.usth.mcma.backend.domain.Otp;
 import vn.edu.usth.mcma.backend.entity.User;
 
 @Transactional
@@ -21,10 +22,24 @@ public class EmailService {
         javaMailSender.send(message);
     }
 
+    public void sendEmailVerificationOtp(Otp otp) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(otp.getEmail());
+        message.setSubject("MBCM: Verify Your Email");
+        String date = otp.getDueDate().toString().substring(0, 10);
+        String time = otp.getDueDate().toString().substring(11, 16);
+        message.setText(String.format("""
+                Lmao!
+                OTP: %s
+                Please verify your email before %s %s
+                """, otp.getOtp(), date, time));
+        javaMailSender.send(message);
+    }
+
     public void sendResetPasswordMail(User user) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(user.getEmail());
-        message.setSubject("MCMA: Reset Password");
+        message.setSubject("MBCM: Reset Password");
         message.setText(String.format("""
                 Lmao!
                 OTP: %s

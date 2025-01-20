@@ -5,11 +5,12 @@ import constants.CommonStatus;
 import constants.UserType;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.apache.commons.text.RandomStringGenerator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import vn.edu.usth.mcma.backend.domain.Otp;
 import vn.edu.usth.mcma.backend.dto.*;
-import vn.edu.usth.mcma.backend.dto.account.AccountCreateRequest;
-import vn.edu.usth.mcma.backend.dto.account.AccountUpdateRequest;
+import vn.edu.usth.mcma.backend.dto.account.*;
 import vn.edu.usth.mcma.backend.entity.User;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
@@ -17,23 +18,24 @@ import vn.edu.usth.mcma.backend.repository.UserRepository;
 import vn.edu.usth.mcma.backend.security.JwtHelper;
 
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
 @AllArgsConstructor
 public class AccountService {
-
     private final UserRepository userRepository;
     private final JwtHelper jwtHelper;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final EmailService emailService;
+    private static final String EMAIL_EXISTENCE_KEY = "emailExisted";
+    private static final String OTP_DUE_DATE_KEY = "otpDueDate";
+    private static final String VALID_KEY = "isValid";
+    private static final RandomStringGenerator numericGenerator = new RandomStringGenerator.Builder().withinRange('0', '9').get();
+    private static final Map<String, Otp> sessionOtpMap = new HashMap<>();
 
-    public ApiResponse createAdmin(AccountCreateRequest request) {
+    public ApiResponse createAdmin(CreateAdmin request) {
         String email = request.getEmail();
         if (userRepository.existsByEmailIgnoreCase(email)) {
             throw new BusinessException(ApiResponseCode.USERNAME_EXISTED);
@@ -53,24 +55,81 @@ public class AccountService {
                         .build());
         return ApiResponse.success();
     }
-    public ApiResponse userSignUp(AccountCreateRequest request) {
-        String email = request.getEmail();
-        if (userRepository.existsByEmailIgnoreCase(email)) {
-            throw new BusinessException(ApiResponseCode.USERNAME_EXISTED);
+
+    public Map<String, Boolean> signUpCheckEmailExistence(String query) {
+        Map<String, Boolean> response = new HashMap<>();
+        response.put(EMAIL_EXISTENCE_KEY, userRepository.existsByEmailIgnoreCase(query));
+        return response;
+    }
+    public Map<String, Instant> signUpBegin(SendOtpRequest request) {
+        return sendOtpToEmail(request);
+    }
+    public Map<String, Boolean> signUpCheckOtp(CheckOtpRequest request) {
+        return checkOtp(request);
+    }
+    public ApiResponse signUpFinish(SignUp request) {
+        String sessionId = request.getSessionId();
+        if (!sessionOtpMap.containsKey(sessionId)) {
+            throw new BusinessException(ApiResponseCode.SESSION_ID_NOT_FOUND);
         }
-        Long userId = jwtHelper.getIdUserRequesting();
         Instant now = Instant.now();
         userRepository
                 .save(User.builder()
-                        .email(email)
+                        .email(sessionOtpMap.get(sessionId).getEmail())
                         .password(passwordEncoder.encode(request.getPassword()))
                         .roles(List.of(UserType.USER.name()))
                         .status(CommonStatus.ACTIVE.getStatus())
-                        .createdBy(userId)
                         .createdDate(now)
-                        .lastModifiedBy(userId)
                         .lastModifiedDate(now)
                         .build());
+        sessionOtpMap.remove(request.getSessionId());
+        return ApiResponse.success();
+    }
+
+    private Map<String, Instant> sendOtpToEmail(SendOtpRequest request) {
+        String email = request.getEmail();
+        String sessionId = request.getSessionId();
+        sessionOtpMap.computeIfAbsent(sessionId, o -> Otp.builder()
+                .email(email)
+                .otp(numericGenerator.generate(6))
+                .dueDate(Instant.now().plusSeconds(60))
+                .build());
+        Otp otp = sessionOtpMap.get(sessionId);
+        emailService.sendEmailVerificationOtp(otp);
+        Map<String, Instant> response = new HashMap<>();
+        response.put(OTP_DUE_DATE_KEY, otp.getDueDate());
+        return response;
+    }
+    private Map<String, Boolean> checkOtp(CheckOtpRequest request) {
+        String sessionId = request.getSessionId();
+        if (!sessionOtpMap.containsKey(sessionId)) {
+            throw new BusinessException(ApiResponseCode.SESSION_ID_NOT_FOUND);
+        }
+        Otp otp = sessionOtpMap.get(sessionId);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put(VALID_KEY, Objects.equals(otp.getOtp(), request.getOtp()) && otp.getDueDate().isAfter(Instant.now()));
+        return response;
+    }
+
+    public Map<String, Instant> forgotPasswordBegin(SendOtpRequest request) {
+        return sendOtpToEmail(request);
+    }
+    public Map<String, Boolean> forgotPasswordCheckOtp(CheckOtpRequest request) {
+        return checkOtp(request);
+    }
+    public ApiResponse forgotPasswordFinish(ForgotPassword request) {
+        String sessionId = request.getSessionId();
+        if (!sessionOtpMap.containsKey(sessionId)) {
+            throw new BusinessException(ApiResponseCode.SESSION_ID_NOT_FOUND);
+        }
+        userRepository
+                .save(((User) userService
+                        .loadUserByUsername(sessionOtpMap.get(sessionId).getEmail()))
+                        .toBuilder()
+                        .password(passwordEncoder.encode(request.getPassword()))
+                        .lastModifiedDate(Instant.now())
+                        .build());
+        sessionOtpMap.remove(sessionId);
         return ApiResponse.success();
     }
 
@@ -121,9 +180,11 @@ public class AccountService {
         return ApiResponse.success();
     }
     public Map<String, Boolean> resetPasswordCheck(ResetPasswordCheck check) {
-        Optional<User> user = userService.resetPasswordCheck(check.getResetKey());
+        String resetKey = check.getResetKey();
+
+        Optional<User> user = userService.resetPasswordCheck(resetKey);
         Map<String, Boolean> response = new HashMap<>();
-        response.put("isValid", user.isPresent());
+        response.put(VALID_KEY, user.isPresent());
         return response;
     }
     public ApiResponse resetPasswordFinish(ResetPasswordFinish finish) {

@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmailIgnoreCase(String email);
 
     Optional<User> findByResetKeyAndStatusAndResetDueDateIsAfter(String resetKey, Integer userType, Instant time);
+
+    boolean existsByResetKey(String resetKey);
 }

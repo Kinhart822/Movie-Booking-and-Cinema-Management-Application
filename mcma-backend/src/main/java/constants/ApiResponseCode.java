@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ApiResponseCode {
     SUCCESS("200", "SUCCESS"),
+    SESSION_ID_NOT_FOUND("404", "Unknown session ID!"),
     ENTITY_NOT_FOUND("404", "ENTITY_NOT_FOUND"),
     SEAT_TYPE_NOT_FOUND("404", "SEAT_TYPE_NOT_FOUND"),
     USERNAME_NOT_EXISTED_OR_DEACTIVATED("404", "Username not found or inactive"),

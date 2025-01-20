@@ -15,12 +15,12 @@ public class ApiResponse {
     private String message;
     private String description;
     private String stackTrace;
+    public ApiResponse(ApiResponseCode apiResponseCode) {
+        this.status = apiResponseCode.getStatus();
+        this.message = apiResponseCode.name();
+        this.description = apiResponseCode.getDescription();
+    }
     public static ApiResponse success() {
-        return ApiResponse
-                .builder()
-                .status(ApiResponseCode.SUCCESS.getStatus())
-                .message(ApiResponseCode.SUCCESS.name())
-                .description(ApiResponseCode.SUCCESS.getDescription())
-                .build();
+        return new ApiResponse(ApiResponseCode.SUCCESS);
     }
 }
