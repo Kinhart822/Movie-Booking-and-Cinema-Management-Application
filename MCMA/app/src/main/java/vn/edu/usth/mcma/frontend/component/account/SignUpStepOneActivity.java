@@ -128,7 +128,9 @@ public class SignUpStepOneActivity extends AppCompatActivity {
                     }
                 });
     }
+    @SuppressLint("SetTextI18n")
     private void prepareNextButton() {
+        nextButton.setText("Next");
         nextButton
                 .setOnClickListener(v -> {
                     if (!isEmailOk) {
@@ -200,5 +202,11 @@ public class SignUpStepOneActivity extends AppCompatActivity {
         super.onDestroy();
         waitForOtp = false;
         nextHandler.removeCallbacksAndMessages(null);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        prepareNextButton();
     }
 }

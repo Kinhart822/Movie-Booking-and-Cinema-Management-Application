@@ -21,6 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.component.account.ForgotPasswordStepOneActivity;
 import vn.edu.usth.mcma.frontend.component.account.ForgotPassword_Activity;
 import vn.edu.usth.mcma.frontend.component.account.SignUpStepOneActivity;
 import vn.edu.usth.mcma.frontend.constant.SharedPreferencesKey;
@@ -61,7 +62,7 @@ public class SignInFragment extends Fragment {
 
         resetPasswordTextView
                 .setOnClickListener(view2 -> {
-                    Intent intent = new Intent(requireContext(), ForgotPassword_Activity.class);
+                    Intent intent = new Intent(requireContext(), ForgotPasswordStepOneActivity.class);
                     startActivity(intent);
         });
 

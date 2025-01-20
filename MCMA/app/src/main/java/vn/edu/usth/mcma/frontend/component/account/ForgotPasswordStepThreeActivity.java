@@ -38,7 +38,7 @@ public class ForgotPasswordStepThreeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password_step_three);
-        sessionId = getIntent().getStringExtra(IntentKey.SIGN_UP_SESSION_ID.name());
+        sessionId = getIntent().getStringExtra(IntentKey.FORGOT_PASSWORD_SESSION_ID.name());
         ImageButton backButton = findViewById(R.id.button_back);
         passwordEditText = findViewById(R.id.edit_text_password);
         confirmPasswordEditText = findViewById(R.id.edit_text_confirm_password);

@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.frontend.component.account;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,7 +49,9 @@ public class ForgotPasswordStepOneActivity extends AppCompatActivity {
                 .setOnClickListener(v -> onBackPressed());
         prepareNextButton();
     }
+    @SuppressLint("SetTextI18n")
     private void prepareNextButton() {
+        nextButton.setText("Next");
         nextButton
                 .setOnClickListener(v -> {
                     stopNextButton();
@@ -114,5 +117,11 @@ public class ForgotPasswordStepOneActivity extends AppCompatActivity {
         super.onDestroy();
         waitForOtp = false;
         nextHandler.removeCallbacksAndMessages(null);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        prepareNextButton();
     }
 }

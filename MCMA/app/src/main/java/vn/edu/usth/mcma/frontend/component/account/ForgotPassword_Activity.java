@@ -24,6 +24,7 @@ import vn.edu.usth.mcma.frontend.dto.request.ForgotPasswordRequest;
 import vn.edu.usth.mcma.frontend.dto.response.JwtAuthenticationResponse;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
+@Deprecated
 public class ForgotPassword_Activity extends AppCompatActivity {
 
     private EditText editTextEmail;
