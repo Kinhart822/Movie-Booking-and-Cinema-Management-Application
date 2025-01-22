@@ -42,7 +42,7 @@
             android:name=".frontend.component.account.SignUpStepTwoActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.Showtimes.UI.PayingMethodActivity"
+            android:name=".frontend.component.ShowtimesOld.UI.PayingMethodActivity"
             android:exported="false" />
         <activity
             android:name=".frontend.component.Home.MovieDetailActivity"
@@ -70,22 +70,22 @@
             android:name=".frontend.component.Feedback.RatingMovie_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.Showtimes.UI.TicketSelectionActivity"
+            android:name=".frontend.component.ShowtimesOld.UI.TicketSelectionActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.Showtimes.UI.PaymentBookingActivity"
+            android:name=".frontend.component.ShowtimesOld.UI.PaymentBookingActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.Showtimes.UI.ComboSelectionActivity"
+            android:name=".frontend.component.ShowtimesOld.UI.ComboSelectionActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.Showtimes.UI.SeatSelectionActivity"
+            android:name=".frontend.component.ShowtimesOld.UI.SeatSelectionActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.Showtimes.UI.MovieBookingActivity"
+            android:name=".frontend.component.ShowtimesOld.UI.MovieBookingActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.Showtimes.UI.MovieDetailsActivity"
+            android:name=".frontend.component.ShowtimesOld.UI.MovieDetailsActivity"
             android:exported="false" />
         <activity
             android:name=".frontend.component.Personal.ViewFeedback_Activity"
@@ -115,7 +115,7 @@
             android:name=".frontend.component.account.SignUpStepThreeActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.Showtimes.UI.TheaterScheduleActivity"
+            android:name=".frontend.component.ShowtimesOld.UI.TheaterScheduleActivity"
             android:exported="false" />
         <activity
             android:name=".frontend.MainActivity"

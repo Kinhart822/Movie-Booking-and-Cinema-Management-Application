@@ -6,7 +6,7 @@
     xmlns:tool="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="@android:color/black"
-    tool:context=".frontend.component.Showtimes.UI.TheaterScheduleActivity">
+    tool:context=".frontend.component.ShowtimesOld.UI.TheaterScheduleActivity">
 
     <!-- Toolbar -->
     <androidx.appcompat.widget.Toolbar

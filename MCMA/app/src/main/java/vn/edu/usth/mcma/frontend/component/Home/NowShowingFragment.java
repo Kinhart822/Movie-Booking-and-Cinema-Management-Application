@@ -21,7 +21,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort;
-import vn.edu.usth.mcma.frontend.component.Showtimes.UI.MovieBookingActivity;
+import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.MovieBookingActivity;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 

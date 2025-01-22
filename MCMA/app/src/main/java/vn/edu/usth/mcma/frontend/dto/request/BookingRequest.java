@@ -3,7 +3,7 @@ package vn.edu.usth.mcma.frontend.dto.request;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Booking.PaymentMethod;
+import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Booking.PaymentMethod;
 
 public class BookingRequest {
     private Integer bookingId;
