@@ -35,7 +35,7 @@ import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Movie;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Theater;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.TicketItem;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
-
+//todo see commit 5675655 of branch AdditionalFunctionForUser
 public class SeatSelectionActivity extends AppCompatActivity {
     private double totalTicketPrice;
     private int totalTicketCount;
@@ -78,15 +78,10 @@ public class SeatSelectionActivity extends AppCompatActivity {
         desiredSeatCount = totalTicketCount;
 
         setupTheaterInfo();
-        setupRecyclerView();
         setupCheckoutButton();
         setupBackButton();
         fetchAllSeatTypes();
         fetchAllSeats();
-    }
-    private void setupRecyclerView() {
-        seatRecyclerView = findViewById(R.id.seatRecyclerView);
-        seatRecyclerView.setLayoutManager(new GridLayoutManager(this, 10));
     }
     private void fetchAllSeatTypes() {
         seatTypes = new HashMap<>();

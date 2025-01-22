@@ -13,6 +13,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
@@ -39,6 +42,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView toolbarTitle;
     private Toolbar toolbar;
     private AppBarLayout appBarLayout;
+    private ExoPlayer exoPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,13 +99,14 @@ public class MovieDetailActivity extends AppCompatActivity {
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
     private void populateMovieDetails(MovieDetail movieDetail) {
         ((TextView) findViewById(R.id.text_view_movie_name)).setText(movieDetail.getName());
-        ImageView bannerView = findViewById(R.id.tv_movie_banner);
-        Glide
-                .with(this)
-                .load(ImageDecoder
-                        .decode(movieDetail
-                                .getBackgroundImageBase64()))
-                .into(bannerView);
+        // Setup video playback for banner
+        PlayerView playerView = findViewById(R.id.tv_movie_banner);
+        exoPlayer = new ExoPlayer.Builder(this).build();
+        playerView.setPlayer(exoPlayer);
+        MediaItem mediaItem = MediaItem.fromUri(movieDetail.getTrailerUrl());
+        exoPlayer.setMediaItem(mediaItem);
+        exoPlayer.prepare();
+        exoPlayer.play();
         ((TextView) findViewById(R.id.tv_movie_genres)).setText(String.join(", ", movieDetail.getGenres()));
         ((TextView) findViewById(R.id.tv_duration)).setText(String.format("%d minutes", movieDetail.getLength()));
         ((TextView) findViewById(R.id.tv_synopsis)).setText(movieDetail.getOverview());
@@ -146,5 +151,13 @@ public class MovieDetailActivity extends AppCompatActivity {
                 toolbar.setVisibility(View.GONE);
             }
         });
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (exoPlayer != null) {
+            exoPlayer.release();
+            exoPlayer = null;
+        }
     }
 }

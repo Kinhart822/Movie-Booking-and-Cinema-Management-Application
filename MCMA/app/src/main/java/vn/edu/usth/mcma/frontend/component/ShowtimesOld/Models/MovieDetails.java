@@ -2,10 +2,14 @@ package vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models;
 
 import java.util.List;
 
+import lombok.Data;
+
+@Data
 public class MovieDetails {
     private String id;
     private String title;
     private int bannerImageResId; // Using int for drawable resource
+    private String movieTrailer;
     private List<String> genres;
     private int duration; // in minutes
     private String releaseDate;
@@ -32,93 +36,19 @@ public class MovieDetails {
         this.language = language;
     }
 
-    // Getters
-    public String getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public int getBannerImageResId() {
-        return bannerImageResId;
-    }
-
-    public List<String> getGenres() {
-        return genres;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public String getReleaseDate() {
-        return releaseDate;
-    }
-
-    public String getSynopsis() {
-        return synopsis;
-    }
-
-    public String getDirector() {
-        return director;
-    }
-
-    public List<String> getCast() {
-        return cast;
-    }
-
-    public String getClassification() {
-        return classification;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    // Setters
-    public void setId(String id) {
+    public MovieDetails(String id, String title, int bannerImageResId, String movieTrailer, List<String> genres, int duration, String releaseDate, String synopsis, String director, List<String> cast, String classification, String language) {
         this.id = id;
-    }
-
-    public void setTitle(String title) {
         this.title = title;
-    }
-
-    public void setBannerImageResId(int bannerImageResId) {
         this.bannerImageResId = bannerImageResId;
-    }
-
-    public void setGenres(List<String> genres) {
+        this.movieTrailer = movieTrailer;
         this.genres = genres;
-    }
-
-    public void setDuration(int duration) {
         this.duration = duration;
-    }
-
-    public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
-    }
-
-    public void setSynopsis(String synopsis) {
         this.synopsis = synopsis;
-    }
-
-    public void setDirector(String director) {
         this.director = director;
-    }
-
-    public void setCast(List<String> cast) {
         this.cast = cast;
-    }
-
-    public void setClassification(String classification) {
         this.classification = classification;
-    }
-
-    public void setLanguage(String language) {
         this.language = language;
     }
+
 }

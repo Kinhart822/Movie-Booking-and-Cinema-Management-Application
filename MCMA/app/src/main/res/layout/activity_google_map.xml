@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".frontend.Showtimes.UI.GoogleMapActivity">
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/id_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/LightBlue"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:orientation="vertical">
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:background="@drawable/left"
+            android:layout_gravity="start"
+            android:layout_marginStart="8dp"/>
+        <TextView
+            android:id="@+id/nav_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:text="Return to Theater Schedule"
+            android:textSize="18sp" />
+    </androidx.appcompat.widget.Toolbar>
+</RelativeLayout>

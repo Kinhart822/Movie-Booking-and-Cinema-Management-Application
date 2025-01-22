@@ -1,6 +1,7 @@
 package vn.edu.usth.mcma.frontend.component.Personal;
 
 import android.os.Bundle;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -20,15 +21,18 @@ import vn.edu.usth.mcma.frontend.dto.response.BookingResponse;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class Cancel_Booking_Activity extends AppCompatActivity {
+    private RecyclerView recyclerView;
     private Cancel_Booking_Adapter adapter;
     private List<Cancel_Booking_Item> items;
+    private FrameLayout noDataContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cancel_booking);
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerview_cancel_booking);
+        recyclerView = findViewById(R.id.recyclerview_cancel_booking);
+        noDataContainer = findViewById(R.id.cancel_booking_no_data_container);
 
         items = new ArrayList<>();
 //        items.add(new Cancel_Booking_Item("Wolverine", "Action", R.drawable.movie4));
@@ -38,12 +42,23 @@ public class Cancel_Booking_Activity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new Cancel_Booking_Adapter(this, items);
         recyclerView.setAdapter(adapter);
+        showNoDataView();
         fetchCompletedBookings();
 
         ImageButton backButton = findViewById(R.id.button_back);
 
         backButton.setOnClickListener(view -> onBackPressed());
     }
+
+    void showNoDataView() {
+        recyclerView.setVisibility(View.GONE);
+        noDataContainer.setVisibility(View.VISIBLE);
+    }
+    void hideNoDataView() {
+        recyclerView.setVisibility(View.VISIBLE);
+        noDataContainer.setVisibility(View.GONE);
+    }
+
 
     private void fetchCompletedBookings() {
         ApiService
@@ -52,27 +67,31 @@ public class Cancel_Booking_Activity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NonNull Call<List<BookingResponse>> call, @NonNull Response<List<BookingResponse>> response) {
                         if (response.isSuccessful() && response.body() != null) {
-                            // Clear current items
                             items.clear();
-                            // Map BookingResponse to Cancel_Booking_Item
-                            for (BookingResponse booking : response.body()) {
-                                items.add(new Cancel_Booking_Item(
-                                        booking.getBookingId(),
-                                        booking.getMovieName(),
-                                        "Booking No: " + booking.getBookingNo(),
-                                        booking.getImageUrlMovie(),
-                                        booking.getStartDateTime()
-                                ));
+                            if (response.body().isEmpty()) {
+                                showNoDataView();
+                            } else {
+                                for (BookingResponse booking : response.body()) {
+                                    items.add(new Cancel_Booking_Item(
+                                            booking.getBookingId(),
+                                            booking.getMovieName(),
+                                            "Booking No: " + booking.getBookingNo(),
+                                            booking.getImageUrlMovie(),
+                                            booking.getStartDateTime()
+                                    ));
+                                }
+                                // Notify adapter about data changes
+                                hideNoDataView();
+                                adapter.notifyDataSetChanged();
                             }
-                            // Notify adapter about data changes
-                            adapter.notifyDataSetChanged();
                         } else {
-                    Toast.makeText(Cancel_Booking_Activity.this, "Failed to fetch bookings", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Cancel_Booking_Activity.this, "Failed to fetch bookings", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<List<BookingResponse>> call, @NonNull Throwable t) {
+                        showNoDataView();
 //                Toast.makeText(Cancel_Booking_Activity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });

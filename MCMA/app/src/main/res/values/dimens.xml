@@ -12,4 +12,5 @@
 
     <dimen name="standard_seat_width">36dp</dimen>
     <dimen name="couple_seat_width">72dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

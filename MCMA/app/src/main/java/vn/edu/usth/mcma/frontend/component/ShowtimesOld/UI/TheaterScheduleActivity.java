@@ -2,6 +2,7 @@ package vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -42,8 +43,7 @@ import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Adapters.MovieScheduleAd
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
-public class TheaterScheduleActivity extends AppCompatActivity
-        implements MovieScheduleAdapter.OnShowtimeClickListener {
+public class TheaterScheduleActivity extends AppCompatActivity implements MovieScheduleAdapter.OnShowtimeClickListener {
     private MovieScheduleAdapter movieAdapter;
     private String selectedDate;
     private Button selectedDateButton;
@@ -61,6 +61,7 @@ public class TheaterScheduleActivity extends AppCompatActivity
         // Set theater details in toolbar
         TextView nameTextView = findViewById(R.id.theater_name);
         TextView addressTextView = findViewById(R.id.theater_address);
+        LinearLayout nav_container = findViewById(R.id.nav_container);
         nameTextView.setText(theaterName);
         addressTextView.setText(theaterAddress);
 
@@ -68,9 +69,32 @@ public class TheaterScheduleActivity extends AppCompatActivity
         ImageButton backButton = findViewById(R.id.button_back);
         backButton.setOnClickListener(v -> finish());
 
+        nav_container.setOnClickListener(v -> openMapWithAddress(theaterAddress));
+
         setupViews();
         setupDateButtons(theaterId);
     }
+    private void openMapWithAddress(String theaterAddress) {
+        if (theaterAddress != null && !theaterAddress.isEmpty()) {
+            // Trường hợp muốn design lại theo ý mình
+//            Intent intent = new Intent(TheaterScheduleActivity.this, GoogleMapActivity.class);
+//            intent.putExtra("THEATER_ADDRESS", theaterAddress);
+//            startActivity(intent);
+            // Mở app lên
+            try {
+                String geoUri = "geo:0,0?q=" + Uri.encode(theaterAddress);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                intent.setPackage("com.google.android.apps.maps");
+                startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Unable to open map.", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Address not available.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     private void setupViews() {
         RecyclerView movieRecyclerView = findViewById(R.id.movie_recycler_view);
@@ -246,6 +270,7 @@ public class TheaterScheduleActivity extends AppCompatActivity
                             Intent intent = new Intent(TheaterScheduleActivity.this, MovieDetailsActivity.class);
                             intent.putExtra(IntentKey.MOVIE_TITLE.name(), movieResponse.getName());
                             intent.putExtra(IntentKey.MOVIE_NAME.name(), movieResponse.getName());
+                            intent.putExtra("MOVIE_TRAILER_LINK", movieResponse.getTrailerUrl());
                             intent.putExtra(IntentKey.MOVIE_GENRES.name(), new ArrayList<>(movieResponse.getGenreResponses().stream().map(GenreResponse::getName).collect(Collectors.toList())));
                             intent.putExtra(IntentKey.MOVIE_LENGTH.name(), movieResponse.getLength());
                             intent.putExtra(IntentKey.MOVIE_DESCRIPTION.name(), movieResponse.getDescription());

@@ -165,6 +165,10 @@ public class Cancel_Booking_Adapter extends RecyclerView.Adapter<Cancel_Booking_
             // Remove the item and notify adapter
             items.remove(position);
             notifyItemRemoved(position);
+            if (items.isEmpty() && context instanceof Cancel_Booking_Activity) {
+                // Hiển thị NoDataView từ Activity
+                ((Cancel_Booking_Activity) context).showNoDataView();
+            }
         }
     }
 

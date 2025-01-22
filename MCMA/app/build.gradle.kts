@@ -34,6 +34,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -69,6 +72,8 @@ dependencies {
     // Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
 
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -79,6 +84,10 @@ dependencies {
 
     implementation(libs.swiperefreshlayout)
 
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+
+    implementation("com.google.android.exoplayer:exoplayer:2.18.1")
 }
 java {
     toolchain {

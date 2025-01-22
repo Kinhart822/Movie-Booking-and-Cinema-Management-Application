@@ -1,6 +1,8 @@
 package vn.edu.usth.mcma.frontend.component.Personal;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -21,17 +23,20 @@ import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class View_Movie_Feedback02_Activity extends AppCompatActivity {
-
+    private RecyclerView recyclerView;
     private View_Movie_Feedback02_Adapter adapter;
     private List<View_Movie_Feedback02_Item> feedbackItems;
     private int movieId;
+    private FrameLayout noDataContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_movie_feedback);
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerview_view_movie_feedback);
+        recyclerView = findViewById(R.id.recyclerview_view_movie_feedback);
+        noDataContainer = findViewById(R.id.movie_feedback_no_data_container);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 //        feedbackItems = getSampleFeedbacks();
@@ -46,12 +51,23 @@ public class View_Movie_Feedback02_Activity extends AppCompatActivity {
         }
 
         movieId = getIntent().getIntExtra(IntentKey.movie_feedback_id.name(), 0);
+        showNoDataView();
         // Fetch movie feedback data from API
         fetchMovieFeedbacks();
 
         ImageButton backButton = findViewById(R.id.button_back);
         backButton.setOnClickListener(view -> onBackPressed());
     }
+
+    void showNoDataView() {
+        recyclerView.setVisibility(View.GONE);
+        noDataContainer.setVisibility(View.VISIBLE);
+    }
+    void hideNoDataView() {
+        recyclerView.setVisibility(View.VISIBLE);
+        noDataContainer.setVisibility(View.GONE);
+    }
+
 
     private void fetchMovieFeedbacks() {
         ApiService
@@ -64,24 +80,29 @@ public class View_Movie_Feedback02_Activity extends AppCompatActivity {
                             feedbackItems.clear();
 
                             // Map the API response to your View_Movie_Feedback02_Item model
-                            for (MovieRespondResponse movieFeedback : response.body()) {
-                                feedbackItems.add(new View_Movie_Feedback02_Item(
-                                        movieFeedback.getMovieName(),
-                                        movieFeedback.getContent(),
-                                        movieFeedback.getRatingStar()
-                                ));
+                            if (response.body().isEmpty()) {
+                                showNoDataView();
+                            } else {
+                                for (MovieRespondResponse movieFeedback : response.body()) {
+                                    feedbackItems.add(new View_Movie_Feedback02_Item(
+                                            movieFeedback.getMovieName(),
+                                            movieFeedback.getContent(),
+                                            movieFeedback.getRatingStar()
+                                    ));
+                                }
+                                // Notify the adapter that the data has changed
+                                hideNoDataView();
+                                adapter.notifyDataSetChanged();
                             }
-
-                            // Notify the adapter that the data has changed
-                            adapter.notifyDataSetChanged();
                         } else {
-                    Toast.makeText(View_Movie_Feedback02_Activity.this, "Failed to fetch movie feedbacks", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(View_Movie_Feedback02_Activity.this, "Failed to fetch movie feedbacks", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<List<MovieRespondResponse>> call, @NonNull Throwable t) {
-                Toast.makeText(View_Movie_Feedback02_Activity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        showNoDataView();
+//                Toast.makeText(View_Movie_Feedback02_Activity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
