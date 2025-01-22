@@ -15,7 +15,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.component.Home.Fragment_changing;
+import vn.edu.usth.mcma.frontend.component.Home.PrimaryPageAdapter;
 import vn.edu.usth.mcma.frontend.component.auth.SignInFragment;
 import vn.edu.usth.mcma.frontend.component.Notification.Notification_Activity;
 import vn.edu.usth.mcma.frontend.network.AuthPrefsManager;
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = findViewById(R.id.view_pager);
         bottomNavigationView = findViewById(R.id.home_bottom_navigation);
 
-        Fragment_changing adapter = new Fragment_changing(getSupportFragmentManager(), getLifecycle());
+        PrimaryPageAdapter adapter = new PrimaryPageAdapter(getSupportFragmentManager(), getLifecycle());
         mViewPager.setAdapter(adapter);
         mViewPager.setUserInputEnabled(false);
         mViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
