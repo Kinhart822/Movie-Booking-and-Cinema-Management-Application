@@ -25,11 +25,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.Genre;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.GenreResponse;
 import vn.edu.usth.mcma.frontend.dto.response.MovieGenreResponse;
-import vn.edu.usth.mcma.frontend.dto.response.Performer;
+import vn.edu.usth.mcma.frontend.dto.response.PerformerResponse;
 import vn.edu.usth.mcma.frontend.dto.response.SearchMovieByNameResponse;
-import vn.edu.usth.mcma.frontend.component.Home.OnlyDetailsActivity;
+import vn.edu.usth.mcma.frontend.component.Home.MovieDetailActivity;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
@@ -91,19 +91,19 @@ public class Search_Activity extends AppCompatActivity {
 
     private void openMovieDetailsActivity(int position) {
         SearchMovieByNameResponse clickedItem = filteredItems.get(position);
-        Intent intent = new Intent(Search_Activity.this, OnlyDetailsActivity.class);
+        Intent intent = new Intent(Search_Activity.this, MovieDetailActivity.class);
 
         intent.putExtra(IntentKey.MOVIE_NAME.name(), clickedItem.getName());
-        intent.putExtra(IntentKey.MOVIE_GENRES.name(), new ArrayList<>(clickedItem.getGenres().stream().map(Genre::getName).collect(Collectors.toList())));
+        intent.putExtra(IntentKey.MOVIE_GENRES.name(), new ArrayList<>(clickedItem.getGenreResponses().stream().map(GenreResponse::getName).collect(Collectors.toList())));
         intent.putExtra(IntentKey.MOVIE_LENGTH.name(), clickedItem.getLength());
         intent.putExtra(IntentKey.MOVIE_DESCRIPTION.name(), clickedItem.getDescription());
         intent.putExtra(IntentKey.PUBLISHED_DATE.name(), clickedItem.getPublishDate());
         intent.putExtra(IntentKey.IMAGE_URL.name(), clickedItem.getImageUrl());
         intent.putExtra(IntentKey.BACKGROUND_IMAGE_URL.name(), clickedItem.getBackgroundImageUrl());
         intent.putExtra(IntentKey.TRAILER.name(), clickedItem.getTrailerUrl());
-        intent.putExtra(IntentKey.MOVIE_RATING.name(), clickedItem.getRating().getName());
-        intent.putExtra(IntentKey.MOVIE_PERFORMER_NAME.name(), new ArrayList<>(clickedItem.getPerformers().stream().map(Performer::getName).collect(Collectors.toList())));
-        intent.putStringArrayListExtra(IntentKey.MOVIE_PERFORMER_TYPE.name(), new ArrayList<>(clickedItem.getPerformers().stream().map(Performer::getType).collect(Collectors.toList())));
+        intent.putExtra(IntentKey.MOVIE_RATING.name(), clickedItem.getRatingResponse().getName());
+        intent.putExtra(IntentKey.MOVIE_PERFORMER_NAME.name(), new ArrayList<>(clickedItem.getPerformerResponses().stream().map(PerformerResponse::getName).collect(Collectors.toList())));
+        intent.putStringArrayListExtra(IntentKey.MOVIE_PERFORMER_TYPE.name(), new ArrayList<>(clickedItem.getPerformerResponses().stream().map(p->p.getTypeId().toString()).collect(Collectors.toList())));
 
         startActivity(intent);
     }
@@ -208,7 +208,7 @@ public class Search_Activity extends AppCompatActivity {
             filteredItems.addAll(items);
         } else {
             for (SearchMovieByNameResponse item : items) {
-                List<String> genres = item.getGenres().stream().map(Genre::getName).collect(Collectors.toList());
+                List<String> genres = item.getGenreResponses().stream().map(GenreResponse::getName).collect(Collectors.toList());
                 if (genres.contains(category)) {
                     filteredItems.add(item);
                 }
@@ -233,8 +233,8 @@ public class Search_Activity extends AppCompatActivity {
 
             // Check if any genre in the genreNameList matches
             boolean matchesGenre = false;
-            if (item.getGenres() != null) {
-                for (String genre : item.getGenres().stream().map(Genre::getName).collect(Collectors.toList())) {
+            if (item.getGenreResponses() != null) {
+                for (String genre : item.getGenreResponses().stream().map(GenreResponse::getName).collect(Collectors.toList())) {
                     if (genre.toLowerCase().contains(text.toLowerCase())) {
                         matchesGenre = true;
                         break;

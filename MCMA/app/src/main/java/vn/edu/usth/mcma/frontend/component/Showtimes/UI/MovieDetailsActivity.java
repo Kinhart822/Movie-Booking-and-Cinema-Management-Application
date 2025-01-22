@@ -30,7 +30,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movie_details);
+        setContentView(R.layout.activity_movie_detail);
         // Find views
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
@@ -67,7 +67,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void populateMovieDetails(MovieDetails movie) {
         // Populate all TextViews with movie details
-        ((TextView)findViewById(R.id.tv_movie_title)).setText(movie.getTitle());
+        ((TextView)findViewById(R.id.text_view_movie_name)).setText(movie.getTitle());
         ((ImageView)findViewById(R.id.tv_movie_banner)).setImageResource(movie.getBannerImageResId());
         ((TextView)findViewById(R.id.tv_movie_genres)).setText(String.join(", ", movie.getGenres()));
         ((TextView)findViewById(R.id.tv_duration)).setText(movie.getDuration() + " minutes");

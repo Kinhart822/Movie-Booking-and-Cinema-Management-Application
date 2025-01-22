@@ -23,7 +23,7 @@ public class Seat implements Parcelable {
     private String name;
     private Integer rootRow;
     private Integer rootCol;
-    private Integer availability;
+    private Integer availability;//todo
 
     @Override
     public boolean equals(Object o) {
@@ -57,7 +57,7 @@ public class Seat implements Parcelable {
         rootRow = in.readInt();
         rootCol = in.readInt();
     }
-    public static final Parcelable.Creator<Seat> CREATOR = new Parcelable.Creator<Seat>() {
+    public static final Parcelable.Creator<Seat> CREATOR = new Parcelable.Creator<>() {
         @Override
         public Seat createFromParcel(Parcel parcel) {
             return new Seat(parcel);

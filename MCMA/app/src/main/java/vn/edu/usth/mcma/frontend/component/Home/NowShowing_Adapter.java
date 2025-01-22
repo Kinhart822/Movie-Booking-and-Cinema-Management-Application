@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.frontend.component.Home;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,18 +12,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.Genre;
-import vn.edu.usth.mcma.frontend.dto.response.NowShowingResponse;
+import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort;
+import vn.edu.usth.mcma.frontend.helper.ImageDecoder;
 
 public class NowShowing_Adapter extends RecyclerView.Adapter<NowShowing_ViewHolder> {
     private final FilmViewInterface filmViewInterface;
     private final Context context;
-    private final List<NowShowingResponse> items;
+    private final List<MovieDetailShort> items;
 
-    public NowShowing_Adapter(Context context, List<NowShowingResponse> items, FilmViewInterface filmViewInterface) {
+    public NowShowing_Adapter(Context context, List<MovieDetailShort> items, FilmViewInterface filmViewInterface) {
         this.context = context;
         this.items = items;
         this.filmViewInterface = filmViewInterface;
@@ -37,23 +37,24 @@ public class NowShowing_Adapter extends RecyclerView.Adapter<NowShowing_ViewHold
         );
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull NowShowing_ViewHolder holder, int position) {
-        NowShowingResponse nowShowingItem = items.get(position);
+        MovieDetailShort nowShowing = items.get(position);
+        System.out.println(nowShowing);
 
-        holder.nameView.setText(nowShowingItem.getName());
-        holder.timeView.setText(String.format("%d min", nowShowingItem.getLength()));
+        holder.nameView.setText(nowShowing.getName());
+        holder.timeView.setText(String.format("%d min", nowShowing.getLength()));
+        holder.typeView.setText(String.join(", ", nowShowing.getGenres()));
 
-        List<String> genres = nowShowingItem.getGenres().stream().map(Genre::getName).collect(Collectors.toList());
-        if (!genres.isEmpty()) {
-            holder.typeView.setText(genres.get(0)); // Use first genre as default
-        } else {
-            holder.typeView.setText(R.string.unknown_genre);
-        }
+        holder.age_limitView.setText(nowShowing.getRating());
 
-        holder.age_limitView.setText(nowShowingItem.getRating().getName());
-
-        Glide.with(context).load(nowShowingItem.getImageUrl()).into(holder.filmView);
+        Glide
+                .with(context)
+                .load(ImageDecoder
+                        .decode(nowShowing
+                                .getImageBase64()))
+                .into(holder.filmView);
 
         holder.itemView.setOnClickListener(v -> {
             int currentPosition = holder.getAdapterPosition();

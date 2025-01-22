@@ -15,22 +15,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.Genre;
-import vn.edu.usth.mcma.frontend.dto.response.NowShowingResponse;
-import vn.edu.usth.mcma.frontend.dto.response.Performer;
-import vn.edu.usth.mcma.frontend.dto.response.Review;
+import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort;
 import vn.edu.usth.mcma.frontend.component.Showtimes.UI.MovieBookingActivity;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class NowShowingFragment extends Fragment {
-    private final List<NowShowingResponse> nowShowingResponseList = new ArrayList<>();
+    private final List<MovieDetailShort> nowShowingList = new ArrayList<>();
     private NowShowing_Adapter adapter;
 
     @Override
@@ -40,7 +36,7 @@ public class NowShowingFragment extends Fragment {
         RecyclerView recyclerView = v.findViewById(R.id.recyclerview_now_showing);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
 
-        adapter = new NowShowing_Adapter(requireContext(), nowShowingResponseList, new FilmViewInterface() {
+        adapter = new NowShowing_Adapter(requireContext(), nowShowingList, new FilmViewInterface() {
             @Override
             public void onFilmSelected(int position) {
                 openMovieDetailsActivity(position);
@@ -54,22 +50,21 @@ public class NowShowingFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
 
-        // Fetch movies from API
-        fetchNowShowingMovies();
+        findAllNowShowing();
 
         return v;
     }
 
-    private void fetchNowShowingMovies() {
+    private void findAllNowShowing() {
         ApiService
                 .getMovieApi(requireContext())
-                .getAvailableNowShowingMovies()
+                .findAllNowShowing()
                 .enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<List<NowShowingResponse>> call, @NonNull Response<List<NowShowingResponse>> response) {
+            public void onResponse(@NonNull Call<List<MovieDetailShort>> call, @NonNull Response<List<MovieDetailShort>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Log.d("NowShowingFragment", "Movies received: " + response.body().size());
-                    updateMovieList(response.body());
+                    updateNowShowingRecyclerView(response.body());
                 } else {
                     Log.e("NowShowingFragment", "Error: " + response.message());
                     Toast.makeText(requireActivity(), "No movies to show", Toast.LENGTH_SHORT).show();
@@ -77,45 +72,30 @@ public class NowShowingFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<NowShowingResponse>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<List<MovieDetailShort>> call, @NonNull Throwable t) {
                 Log.e("NowShowingFragment", "API Call Failed: " + t.getMessage(), t);
                 Toast.makeText(requireActivity(), "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    private void updateMovieList(List<NowShowingResponse> newMovies) {
-        nowShowingResponseList.clear();
-        nowShowingResponseList.addAll(newMovies);
+    private void updateNowShowingRecyclerView(List<MovieDetailShort> movies) {
+        nowShowingList.clear();
+        nowShowingList.addAll(movies);
         adapter.notifyDataSetChanged();
     }
 
     private void openMovieDetailsActivity(int position) {
-        NowShowingResponse selectedFilm = nowShowingResponseList.get(position);
-        Log.d("NowShowingFragment", "Launching OnlyDetailsActivity with film: " + selectedFilm.getName());
-        Intent intent = new Intent(requireContext(), OnlyDetailsActivity.class);
-
-        intent.putExtra(IntentKey.MOVIE_NAME.name(), selectedFilm.getName());
-        intent.putExtra(IntentKey.MOVIE_GENRES.name(), new ArrayList<>(selectedFilm.getGenres().stream().map(Genre::getName).collect(Collectors.toList())));
-        intent.putExtra(IntentKey.MOVIE_LENGTH.name(), selectedFilm.getLength());
-        intent.putExtra(IntentKey.MOVIE_DESCRIPTION.name(), selectedFilm.getDescription());
-        intent.putExtra(IntentKey.PUBLISHED_DATE.name(), selectedFilm.getPublishDate());
-        intent.putExtra(IntentKey.IMAGE_URL.name(), selectedFilm.getImageUrl());
-        intent.putExtra(IntentKey.BACKGROUND_IMAGE_URL.name(), selectedFilm.getBackgroundImageUrl());
-        intent.putExtra(IntentKey.TRAILER.name(), selectedFilm.getTrailerUrl());
-        intent.putExtra(IntentKey.MOVIE_RATING.name(), selectedFilm.getRating().getName());
-        intent.putExtra(IntentKey.MOVIE_PERFORMER_NAME.name(), new ArrayList<>(selectedFilm.getPerformers().stream().map(Performer::getName).collect(Collectors.toList())));
-        intent.putStringArrayListExtra(IntentKey.MOVIE_PERFORMER_TYPE.name(), new ArrayList<>(selectedFilm.getPerformers().stream().map(Performer::getType).collect(Collectors.toList())));
-
-        intent.putExtra(IntentKey.MOVIE_COMMENT.name(), new ArrayList<>(selectedFilm.getReviews().stream().map(Review::getUserComment).collect(Collectors.toList())));
-        intent.putExtra(IntentKey.AVERAGE_STAR.name(), selectedFilm.getReviews().stream().mapToInt(Review::getUserVote).average().orElse(0.0));
-
+        MovieDetailShort selectedFilm = nowShowingList.get(position);
+        Log.d("NowShowingFragment", "Launching MovieDetailsActivity with film: " + selectedFilm.getName());
+        Intent intent = new Intent(requireContext(), MovieDetailActivity.class);
+        intent.putExtra(IntentKey.MOVIE_ID.name(), selectedFilm.getId());
         startActivity(intent);
     }
 
     private void openMovieBookingActivity(int position) {
 
-        NowShowingResponse selectedFilm = nowShowingResponseList.get(position);
+        MovieDetailShort selectedFilm = nowShowingList.get(position);
         Intent intent = new Intent(requireContext(), MovieBookingActivity.class);
         intent.putExtra(IntentKey.MOVIE_TITLE.name(), selectedFilm.getName());
         intent.putExtra(IntentKey.MOVIE_ID.name(), selectedFilm.getId());

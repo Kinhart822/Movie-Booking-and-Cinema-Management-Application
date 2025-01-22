@@ -73,8 +73,7 @@ public class HomeFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     List<HighRatingMovieResponse> movies = response.body();
                     if (viewFlipper != null && viewFlipper.getChildCount() == 0) {
-                        ImageDecoder imageDecoder = new ImageDecoder();
-                        movies.forEach(m -> addFlipperChild(m, imageDecoder));
+                        movies.forEach(m -> addFlipperChild(m));
                         viewFlipper.setVisibility(View.VISIBLE); // Ensure visibility
                     }
                 } else {
@@ -87,7 +86,7 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-    private void addFlipperChild(HighRatingMovieResponse movie, ImageDecoder imageDecoder) {
+    private void addFlipperChild(HighRatingMovieResponse movie) {
         if (viewFlipper == null) return;
         ImageView poster = new ImageView(requireContext());
         poster.setLayoutParams(new LinearLayout.LayoutParams(
@@ -126,7 +125,7 @@ public class HomeFragment extends Fragment {
         child.addView(description);
 
         Glide.with(requireContext())
-                .load(imageDecoder.decode(movie.getImageBase64()))
+                .load(ImageDecoder.decode(movie.getImageBase64()))
                 .placeholder(R.drawable.placeholder1080x1920)
                 .into(poster);
         viewFlipper.addView(child);

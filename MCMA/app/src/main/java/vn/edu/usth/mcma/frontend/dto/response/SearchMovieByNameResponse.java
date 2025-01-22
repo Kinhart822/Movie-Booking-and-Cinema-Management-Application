@@ -4,7 +4,7 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.Genre;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.GenreResponse;
 
 @Data
 @AllArgsConstructor
@@ -17,7 +17,7 @@ public class SearchMovieByNameResponse {
     private Integer length;
     private String publishDate;
     private String trailerUrl;
-    private Rating rating;
-    private List<Genre> genres;
-    private List<Performer> performers;
+    private RatingResponse ratingResponse;
+    private List<GenreResponse> genreResponses;
+    private List<PerformerResponse> performerResponses;
 }

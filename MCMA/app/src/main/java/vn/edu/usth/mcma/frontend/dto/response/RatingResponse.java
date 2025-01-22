@@ -3,10 +3,8 @@ package vn.edu.usth.mcma.frontend.dto.response;
 import lombok.Data;
 
 @Data
-public class Performer {
+public class RatingResponse {
     private Long id;
     private String name;
-    private String type;
-    private String dob;
-    private String sex;
+    private String description;
 }

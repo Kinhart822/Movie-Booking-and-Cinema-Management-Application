@@ -3,7 +3,7 @@ package vn.edu.usth.mcma.frontend.dto.response;
 import java.util.List;
 
 import lombok.Data;
-import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.Genre;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.GenreResponse;
 
 @Data
 public class HighRatingMovieResponse {
@@ -13,6 +13,6 @@ public class HighRatingMovieResponse {
     private String publishDate;
     private String imageBase64;
     private String imageBackgroundBase64;
-    private List<Genre> genres;
+    private List<GenreResponse> genreResponses;
     private Double avgVote;
 }

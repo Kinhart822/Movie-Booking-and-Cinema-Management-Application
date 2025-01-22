@@ -70,12 +70,13 @@
                 android:id="@+id/tv_movie_banner"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
+                android:contentDescription="@string/background"
                 android:scaleType="centerCrop"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Movie Title -->
             <TextView
-                android:id="@+id/tv_movie_title"
+                android:id="@+id/text_view_movie_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -84,8 +85,7 @@
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/tv_movie_banner"
-                tools:text="GLADIATOR: VÕ SĨ GIÁC ĐẤU 2" />
+                app:layout_constraintTop_toBottomOf="@id/tv_movie_banner"/>
 
             <!-- Genre Tags -->
             <TextView
@@ -97,8 +97,7 @@
                 android:layout_marginEnd="16dp"
                 android:textColor="@color/black"
                 android:textSize="14sp"
-                app:layout_constraintTop_toBottomOf="@id/tv_movie_title"
-                tools:text="Action, Adventure, Drama" />
+                app:layout_constraintTop_toBottomOf="@id/text_view_movie_name"/>
 
             <!-- Duration -->
             <TextView
@@ -111,8 +110,7 @@
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_movie_genres"
-                tools:text="148 phút" />
+                app:layout_constraintTop_toBottomOf="@id/tv_movie_genres"/>
 
             <!-- Description Label -->
             <TextView
@@ -122,7 +120,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
-                android:text="Description:"
+                android:text="@string/overview"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -136,7 +134,6 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                android:text="Sau khi quê hương của anh bị chinh phục bởi các hoàng đế độc tài hiện đang lãnh đạo Rome, Lucius buộc phải vào Đấu trường La Mã và phải nhìn về quá khứ của mình để tìm sức mạnh trả lại vinh quang cho người dân Rome."
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -160,7 +157,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Rating:"
+                android:text="Voting"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -196,7 +193,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Release date:"
+                android:text="Release date"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -209,7 +206,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="15 tháng 11, 2024"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_release_date_label"
@@ -222,7 +218,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Rating:"
+                android:text="Rating"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -235,7 +231,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="Phim chỉ dành cho khán giả trên 18 tuổi"
                 android:textColor="#FF4444"
                 android:textSize="16sp"
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_classification_label"
@@ -258,7 +253,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Director:"
+                android:text="@string/director"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -271,7 +266,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="Ridley Scott"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_director_label"
@@ -285,7 +279,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Cast:"
+                android:text="@string/cast"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -301,7 +295,6 @@
                 android:layout_marginEnd="16dp"
                 android:breakStrategy="simple"
                 android:maxLines="4"
-                android:text="Paul Mescal, Joseph Quinn, Kennu Reaves , Taylor Swift"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"

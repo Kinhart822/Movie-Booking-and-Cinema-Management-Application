@@ -6,8 +6,8 @@ import android.util.Base64;
 import android.util.Log;
 
 public class ImageDecoder {
-    private final String TAG = ImageDecoder.class.getName();
-    public Bitmap decode(String base64) {
+    private static final String TAG = ImageDecoder.class.getName();
+    public static Bitmap decode(String base64) {
         try {
             if (base64.contains(",")) {
                 base64 = base64.split(",")[1];

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.Genre;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.GenreResponse;
 import vn.edu.usth.mcma.frontend.dto.response.ComingSoonResponse;
 
 public class ComingSoon_Adapter extends RecyclerView.Adapter<ComingSoon_ViewHolder> {
@@ -44,14 +44,14 @@ public class ComingSoon_Adapter extends RecyclerView.Adapter<ComingSoon_ViewHold
         holder.nameView.setText(comingSoonResponse.getName());
         holder.timeView.setText(String.format("%d min", comingSoonResponse.getLength()));
 
-        List<String> genres = comingSoonResponse.getGenres().stream().map(Genre::getName).collect(Collectors.toList());
+        List<String> genres = comingSoonResponse.getGenreResponses().stream().map(GenreResponse::getName).collect(Collectors.toList());
         if (genres != null && !genres.isEmpty()) {
             holder.typeView.setText(genres.get(0)); // Use a valid index, e.g., 0 or a relevant value
         } else {
             holder.typeView.setText(R.string.unknown_genre); // Fallback text
         }
 
-        holder.age_limitView.setText(comingSoonResponse.getRating().getName());
+        holder.age_limitView.setText(comingSoonResponse.getRatingResponse().getName());
 
         Glide.with(context)
                 .load(comingSoonResponse.getImageUrl())

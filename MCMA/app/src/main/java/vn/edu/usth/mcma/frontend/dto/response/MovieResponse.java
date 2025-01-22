@@ -3,7 +3,7 @@ package vn.edu.usth.mcma.frontend.dto.response;
 import java.util.List;
 
 import lombok.Data;
-import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.Genre;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.GenreResponse;
 
 @Data
 public class MovieResponse {
@@ -17,8 +17,8 @@ public class MovieResponse {
     private String backgroundImageUrl;
 
     private List<Schedule> schedules;
-    private List<Genre> genres;
-    private List<Performer> performers;
-    private Rating rating;
+    private List<GenreResponse> genreResponses;
+    private List<PerformerResponse> performerResponses;
+    private RatingResponse ratingResponse;
     private List<Review> reviews;
 }

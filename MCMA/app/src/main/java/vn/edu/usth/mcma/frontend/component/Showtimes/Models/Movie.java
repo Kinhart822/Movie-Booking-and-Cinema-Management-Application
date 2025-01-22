@@ -7,9 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.Genre;
-import vn.edu.usth.mcma.frontend.dto.response.Performer;
-import vn.edu.usth.mcma.frontend.dto.response.Rating;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.GenreResponse;
+import vn.edu.usth.mcma.frontend.dto.response.PerformerResponse;
+import vn.edu.usth.mcma.frontend.dto.response.RatingResponse;
 import vn.edu.usth.mcma.frontend.dto.response.Review;
 import vn.edu.usth.mcma.frontend.dto.response.Schedule;
 
@@ -32,9 +32,9 @@ public class Movie implements Serializable {
     private String backgroundImageUrl;
 
     private List<Schedule> schedules;
-    private List<Genre> genres;
-    private List<Performer> performers;
-    private Rating rating;
+    private List<GenreResponse> genreResponses;
+    private List<PerformerResponse> performerResponses;
+    private RatingResponse ratingResponse;
     private List<Review> reviews;
 
     public Movie(String id, String title, List<String> showtimes) {

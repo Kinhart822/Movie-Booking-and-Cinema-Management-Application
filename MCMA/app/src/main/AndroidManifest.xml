@@ -45,7 +45,7 @@
             android:name=".frontend.component.Showtimes.UI.PayingMethodActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.Home.OnlyDetailsActivity"
+            android:name=".frontend.component.Home.MovieDetailActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity

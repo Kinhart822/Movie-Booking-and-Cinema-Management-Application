@@ -32,9 +32,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.Genre;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.GenreResponse;
 import vn.edu.usth.mcma.frontend.dto.response.MovieResponse;
-import vn.edu.usth.mcma.frontend.dto.response.Performer;
+import vn.edu.usth.mcma.frontend.dto.response.PerformerResponse;
 import vn.edu.usth.mcma.frontend.dto.response.Review;
 import vn.edu.usth.mcma.frontend.dto.response.ScheduleSelectedByCinemaResponse;
 import vn.edu.usth.mcma.frontend.component.Showtimes.Models.Movie;
@@ -200,9 +200,9 @@ public class TheaterScheduleActivity extends AppCompatActivity
                                             .imageUrl(m.getImageUrl())
                                             .backgroundImageUrl(m.getBackgroundImageUrl())
                                             .schedules(m.getSchedules())
-                                            .genres(m.getGenres())
-                                            .performers(m.getPerformers())
-                                            .rating(m.getRating())
+                                            .genreResponses(m.getGenreResponses())
+                                            .performerResponses(m.getPerformerResponses())
+                                            .ratingResponse(m.getRatingResponse())
                                             .reviews(m.getReviews())
                                             .build())
                                     .collect(Collectors.toList());
@@ -246,16 +246,16 @@ public class TheaterScheduleActivity extends AppCompatActivity
                             Intent intent = new Intent(TheaterScheduleActivity.this, MovieDetailsActivity.class);
                             intent.putExtra(IntentKey.MOVIE_TITLE.name(), movieResponse.getName());
                             intent.putExtra(IntentKey.MOVIE_NAME.name(), movieResponse.getName());
-                            intent.putExtra(IntentKey.MOVIE_GENRES.name(), new ArrayList<>(movieResponse.getGenres().stream().map(Genre::getName).collect(Collectors.toList())));
+                            intent.putExtra(IntentKey.MOVIE_GENRES.name(), new ArrayList<>(movieResponse.getGenreResponses().stream().map(GenreResponse::getName).collect(Collectors.toList())));
                             intent.putExtra(IntentKey.MOVIE_LENGTH.name(), movieResponse.getLength());
                             intent.putExtra(IntentKey.MOVIE_DESCRIPTION.name(), movieResponse.getDescription());
                             intent.putExtra(IntentKey.PUBLISHED_DATE.name(), movieResponse.getPublishDate());
                             intent.putExtra(IntentKey.IMAGE_URL.name(), movieResponse.getImageUrl());
                             intent.putExtra(IntentKey.BACKGROUND_IMAGE_URL.name(), movieResponse.getBackgroundImageUrl());
                             intent.putExtra(IntentKey.TRAILER.name(), movieResponse.getTrailerUrl());
-                            intent.putExtra(IntentKey.MOVIE_RATING.name(), movieResponse.getRating().getName());
-                            intent.putExtra(IntentKey.MOVIE_PERFORMER_NAME.name(), new ArrayList<>(movieResponse.getPerformers().stream().map(Performer::getName).collect(Collectors.toList())));
-                            intent.putStringArrayListExtra(IntentKey.MOVIE_PERFORMER_TYPE.name(), new ArrayList<>(movieResponse.getPerformers().stream().map(Performer::getType).collect(Collectors.toList())));
+                            intent.putExtra(IntentKey.MOVIE_RATING.name(), movieResponse.getRatingResponse().getName());
+                            intent.putExtra(IntentKey.MOVIE_PERFORMER_NAME.name(), new ArrayList<>(movieResponse.getPerformerResponses().stream().map(PerformerResponse::getName).collect(Collectors.toList())));
+                            intent.putStringArrayListExtra(IntentKey.MOVIE_PERFORMER_TYPE.name(), new ArrayList<>(movieResponse.getPerformerResponses().stream().map(p->p.getTypeId().toString()).collect(Collectors.toList())));
                             intent.putExtra(IntentKey.MOVIE_COMMENT.name(), new ArrayList<>(movieResponse.getReviews().stream().map(Review::getUserComment).collect(Collectors.toList())));
                             intent.putExtra(IntentKey.AVERAGE_STAR.name(), movieResponse.getReviews().stream().mapToInt(Review::getUserVote).average().orElse(0.0));
                         }

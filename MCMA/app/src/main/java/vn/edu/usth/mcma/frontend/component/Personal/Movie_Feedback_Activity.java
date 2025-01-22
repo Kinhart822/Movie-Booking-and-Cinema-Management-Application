@@ -18,7 +18,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.Genre;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.GenreResponse;
 import vn.edu.usth.mcma.frontend.dto.response.NowShowingResponse;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
@@ -61,13 +61,13 @@ public class Movie_Feedback_Activity extends AppCompatActivity {
                             items.clear();
                             // Map NowShowingResponse
                             for (NowShowingResponse movie : response.body()) {
-                                String genres = TextUtils.join(", ", movie.getGenres().stream().map(Genre::getName).collect(Collectors.toList()));
+                                String genres = TextUtils.join(", ", movie.getGenres().stream().map(GenreResponse::getName).collect(Collectors.toList()));
 
                                 items.add(new Movie_Feedback_Item(
                                         movie.getId(),
                                         movie.getName(),
                                         genres,
-                                        movie.getImageUrl()
+                                        movie.getImageBase64()
                                 ));
                             }
                             // Notify adapter about data changes
