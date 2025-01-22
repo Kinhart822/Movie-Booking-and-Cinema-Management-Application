@@ -2,23 +2,20 @@ package vn.edu.usth.mcma.backend.service;
 
 import constants.ApiResponseCode;
 import constants.CommonStatus;
+import constants.PerformerType;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.*;
-import vn.edu.usth.mcma.backend.entity.Movie;
-import vn.edu.usth.mcma.backend.entity.Rating;
-import vn.edu.usth.mcma.backend.entity.Schedule;
+import vn.edu.usth.mcma.backend.entity.*;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
-import vn.edu.usth.mcma.backend.repository.MovieRepository;
-import vn.edu.usth.mcma.backend.repository.RatingRepository;
-import vn.edu.usth.mcma.backend.repository.ScheduleRepository;
-import vn.edu.usth.mcma.backend.repository.ScreenRepository;
+import vn.edu.usth.mcma.backend.repository.*;
 import vn.edu.usth.mcma.backend.security.JwtHelper;
 
 import java.time.Instant;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -29,6 +26,7 @@ public class MovieService {
     private final ScheduleRepository scheduleRepository;
     private final JwtHelper jwtHelper;
     private final RatingRepository ratingRepository;
+    private final ReviewRepository reviewRepository;
 
     /*
      * ========
@@ -48,7 +46,7 @@ public class MovieService {
                 .save(movie
                         .toBuilder()
                         .name(movieRequest.getName())
-                        .description(movieRequest.getDescription())
+                        .overview(movieRequest.getOverview())
                         .imageBase64(movieRequest.getImageBase64())
                         .backgroundImageBase64(movieRequest.getBackgroundImageBase64())
                         .length(movieRequest.getLength())
@@ -104,7 +102,7 @@ public class MovieService {
                         .builder()
                         .id(m.getId())
                         .name(m.getName())
-                        .description(m.getDescription())
+                        .description(m.getOverview())
                         .imageUrl(m.getImageBase64())
                         .backgroundImageUrl(m.getBackgroundImageBase64())
                         .length(m.getLength()/60)
@@ -132,10 +130,71 @@ public class MovieService {
                                         .builder()
                                         .id(p.getId())
                                         .name(p.getName())
-                                        .type(p.getTypeId().toString())
+                                        .typeId(p.getTypeId())
                                         .build())
                                 .toList()).build())
                 .toList();
+    }
+
+    public List<MovieDetailShort> findAllNowShowing() {
+        List<MovieDetailShortProjection> movieProjections = movieRepository.findAllMovieDetailShort(List.of(CommonStatus.ACTIVE.getStatus()), Instant.now());
+        Map<Long, Movie> movieMap = new HashMap<>();
+        movieRepository
+                .findAllById(movieProjections
+                        .stream()
+                        .map(MovieDetailShortProjection::getId)
+                        .toList())
+                .forEach(m -> movieMap.put(m.getId(), m));
+        return movieProjections
+                .stream()
+                .map(p -> MovieDetailShort.builder()
+                        .id(p.getId())
+                        .name(p.getName())
+                        .length(p.getLength())
+                        .imageBase64(p.getImageBase64())
+                        .rating(movieMap
+                                .get(p.getId())
+                                .getRating()
+                                .getName())
+                        .build())
+                .toList();
+    }
+
+    public MovieDetail findMovieDetail(Long id) {
+        Movie movie = movieRepository
+                .findById(id)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+        List<String> directors = movie
+                .getPerformerSet()
+                .stream()
+                .filter(p -> p.getTypeId() == PerformerType.Director.getId())
+                .map(Performer::getName)
+                .toList();
+        List<String> actors = movie
+                .getPerformerSet()
+                .stream()
+                .filter(p -> p.getTypeId() == PerformerType.Actor.getId())
+                .map(Performer::getName)
+                .toList();
+        return MovieDetail.builder()
+                .id(movie.getId())
+                .name(movie.getName())
+                .length(movie.getLength())
+                .overview(movie.getOverview())
+                .publishDate(movie.getPublishDate())
+                .trailerUrl(movie.getTrailerUrl())
+                .imageBase64(movie.getImageBase64())
+                .backgroundImageBase64(movie.getBackgroundImageBase64())
+                .genres(movie
+                        .getGenreSet()
+                        .stream()
+                        .map(Genre::getName)
+                        .toList())
+                .directors(directors)
+                .actors(actors)
+                .rating(movie.getRating().getName())
+                .avgVotes(reviewRepository.findAvgVoteByMovieIdAndStatus(id, CommonStatus.ACTIVE.getStatus()))
+                .build();
     }
 
 //    public List<SearchMovieByGenreResponse> getAllMoviesByMovieGenreSet(Integer movieGenreId) {

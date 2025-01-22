@@ -229,14 +229,10 @@ public class UserController {
 //        ViewCouponsResponse viewCouponsResponse = viewService.getAvailableCouponsByMovieId(movieId);
 //        return ResponseEntity.ok(viewCouponsResponse);
 //    }
-    @GetMapping("/view/nowShowingMovies")
-    public ResponseEntity<List<HomePageMovie>> getAvailableNowShowingMovies() {
-        return ResponseEntity.ok(viewService.getAvailableNowShowingMovies());
-    }
-    @GetMapping("/view/comingSoonMovies")
-    public ResponseEntity<List<HomePageMovie>> getAvailableComingSoonMovies() {
-        return ResponseEntity.ok(viewService.getAvailableComingSoonMovies());
-    }
+//    @GetMapping("/view/comingSoonMovies")
+//    public ResponseEntity<List<MovieDetail>> getAvailableComingSoonMovies() {
+//        return ResponseEntity.ok(viewService.getAvailableComingSoonMovies());
+//    }
     @GetMapping("/view/highRatingMovies")
     public ResponseEntity<List<HighRatingMovie>> getHighRatingMovies() {
         return ResponseEntity.ok(viewService.getHighRatingMovies());

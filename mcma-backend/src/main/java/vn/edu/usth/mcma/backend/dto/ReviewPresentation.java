@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ReviewPresentation {
     private Long id;
+    private Long userId;
     private String userComment;
     private Integer userVote;
 }

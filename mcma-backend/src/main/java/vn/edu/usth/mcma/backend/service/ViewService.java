@@ -1,8 +1,6 @@
 package vn.edu.usth.mcma.backend.service;
 
 import constants.CommonStatus;
-import constants.PerformerType;
-import constants.Sex;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -475,64 +473,6 @@ public class ViewService {
 //        return mapCouponsToResponse(coupons);
 //    }
 
-    public List<HomePageMovie> getAvailableNowShowingMovies() {
-        return scheduleRepository
-                .findAllByStartTimeIsAfterAndStatusIs(Instant.now(), CommonStatus.ACTIVE.getStatus())
-                .stream()
-                .map(Schedule::getMovie)
-                .map(m -> HomePageMovie
-                        .builder()
-                        .id(m.getId())
-                        .name(m.getName())
-                        .length(m.getLength())
-                        .description(m.getDescription())
-                        .publishDate(m.getPublishDate().toString().substring(0,10))
-                        .trailerUrl(m.getTrailerUrl())
-                        .imageUrl(m.getImageBase64())
-                        .backgroundImageUrl(m.getBackgroundImageBase64())
-                        .genres(m
-                                .getGenreSet()
-                                .stream()
-                                .map(g -> GenrePresentation
-                                        .builder()
-                                        .id(g.getId())
-                                        .name(g.getName())
-                                        .description(g.getDescription())
-                                        .imageUrl(g.getImageBase64())
-                                        .build())
-                                .toList())
-                        .performers(m
-                                .getPerformerSet()
-                                .stream()
-                                .map(p -> PerformerPresentation
-                                        .builder()
-                                        .id(p.getId())
-                                        .name(p.getName())
-                                        .type(PerformerType.getById(p.getTypeId()).name())
-                                        .dob(p.getDateOfBirth().toString().substring(0,10))
-                                        .sex(Sex.getById(p.getSex()).name())
-                                        .build())
-                                .toList())
-                        .rating(RatingPresentation
-                                .builder()
-                                .id(m.getRating().getId())
-                                .name(m.getRating().getName())
-                                .description(m.getRating().getDescription())
-                                .build())
-                        .reviews(reviewRepository
-                                .findAllByMovieAndStatusIs(m, CommonStatus.ACTIVE.getStatus())
-                                .stream()
-                                .map(r -> ReviewPresentation
-                                        .builder()
-                                        .id(r.getId())
-                                        .userComment(r.getUserComment())
-                                        .userVote(r.getUserVote())
-                                        .build())
-                                .toList())
-                        .build())
-                .toList();
-    }
-
     public List<HighRatingMovie> getHighRatingMovies() {
         List<HighRatingMovieProjection> projections = reviewRepository.findHighestRatingMovies(CommonStatus.ACTIVE.getStatus(), Instant.now());
         Map<Long, Double> avgVotes = new HashMap<>();
@@ -584,52 +524,52 @@ public class ViewService {
 //                .toList();
 //    }
 
-    public List<HomePageMovie> getAvailableComingSoonMovies() {
-        return movieRepository
-                .findAllByPublishDateAfterAndStatusIs(Instant.now(), CommonStatus.ACTIVE.getStatus())
-                .stream()
-                .map(m -> HomePageMovie
-                        .builder()
-                        .id(m.getId())
-                        .name(m.getName())
-                        .length(m.getLength())
-                        .description(m.getDescription())
-                        .publishDate(m.getPublishDate().toString().substring(0,10))
-                        .trailerUrl(m.getTrailerUrl())
-                        .imageUrl(m.getImageBase64())
-                        .backgroundImageUrl(m.getBackgroundImageBase64())
-                        .genres(m
-                                .getGenreSet()
-                                .stream()
-                                .map(g -> GenrePresentation
-                                        .builder()
-                                        .id(g.getId())
-                                        .name(g.getName())
-                                        .description(g.getDescription())
-                                        .imageUrl(g.getImageBase64())
-                                        .build())
-                                .toList())
-                        .performers(m
-                                .getPerformerSet()
-                                .stream()
-                                .map(p -> PerformerPresentation
-                                        .builder()
-                                        .id(p.getId())
-                                        .name(p.getName())
-                                        .type(PerformerType.getById(p.getTypeId()).name())
-                                        .dob(p.getDateOfBirth().toString().substring(0,10))
-                                        .sex(Sex.getById(p.getSex()).name())
-                                        .build())
-                                .toList())
-                        .rating(RatingPresentation
-                                .builder()
-                                .id(m.getRating().getId())
-                                .name(m.getRating().getName())
-                                .description(m.getRating().getDescription())
-                                .build())
-                        .build())
-                .toList();
-    }
+//    public List<MovieDetail> getAvailableComingSoonMovies() {
+//        return movieRepository
+//                .findAllByPublishDateAfterAndStatusIs(Instant.now(), CommonStatus.ACTIVE.getStatus())
+//                .stream()
+//                .map(m -> MovieDetail
+//                        .builder()
+//                        .id(m.getId())
+//                        .name(m.getName())
+//                        .length(m.getLength())
+//                        .description(m.getDescription())
+//                        .publishDate(m.getPublishDate())
+//                        .trailerUrl(m.getTrailerUrl())
+//                        .imageBase64(m.getImageBase64())
+//                        .backgroundImageBase64(m.getBackgroundImageBase64())
+//                        .genres(m
+//                                .getGenreSet()
+//                                .stream()
+//                                .map(g -> GenrePresentation
+//                                        .builder()
+//                                        .id(g.getId())
+//                                        .name(g.getName())
+//                                        .description(g.getDescription())
+//                                        .imageUrl(g.getImageBase64())
+//                                        .build())
+//                                .toList())
+//                        .performers(m
+//                                .getPerformerSet()
+//                                .stream()
+//                                .map(p -> PerformerPresentation
+//                                        .builder()
+//                                        .id(p.getId())
+//                                        .name(p.getName())
+//                                        .typeId(p.getTypeId())
+//                                        .dob(p.getDateOfBirth())
+//                                        .sex(p.getSex())
+//                                        .build())
+//                                .toList())
+//                        .rating(RatingPresentation
+//                                .builder()
+//                                .id(m.getRating().getId())
+//                                .name(m.getRating().getName())
+//                                .description(m.getRating().getDescription())
+//                                .build())
+//                        .build())
+//                .toList();
+//    }
 
 //    public List<BookingResponse> getAllBookings() {
 //        List<Booking> bookings = bookingRepository.findAllOrderByDateUpdatedDesc();

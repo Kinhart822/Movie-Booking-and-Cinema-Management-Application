@@ -22,7 +22,7 @@ public class AccountController {
     private final AccountService accountService;
 
     /*
-     * Reset Password
+     * Reset Password todo
      */
     @Operation(summary = "Reset password: request", description = "Initiate reset password process")
     @PostMapping("/reset-password/request")
@@ -100,6 +100,8 @@ public class AccountController {
     public ResponseEntity<ApiResponse> forgotPasswordFinish(@RequestBody ForgotPassword request) {
         return ResponseEntity.ok(accountService.forgotPasswordFinish(request));
     }
+
+    //todo change password
 
     @Operation(summary = "Get profile of the current logged in user")
     @GetMapping("/user/profile")

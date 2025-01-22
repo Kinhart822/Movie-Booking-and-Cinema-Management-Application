@@ -48,9 +48,9 @@ public class BookingService {
                         .builder()
                         .id(p.getId())
                         .name(p.getName())
-                        .type(PerformerType.getById(p.getTypeId()).name())
-                        .dob(p.getDateOfBirth().toString())
-                        .sex(Sex.getById(p.getSex()).name())
+                        .typeId(p.getTypeId())
+                        .dob(p.getDateOfBirth())
+                        .sex(p.getSex())
                         .build())
                 .toList();
         // rating
@@ -68,6 +68,7 @@ public class BookingService {
                 .map(review -> ReviewPresentation
                         .builder()
                         .id(review.getId())
+                        .userId(review.getUser().getId())
                         .userComment(review.getUserComment())
                         .userVote(review.getUserVote())
                         .build())
@@ -90,7 +91,7 @@ public class BookingService {
                 .id(movie.getId())
                 .name(movie.getName())
                 .length(movie.getLength())
-                .description(movie.getDescription())
+                .description(movie.getOverview())
                 .publishDate(movie.getPublishDate().toString().substring(0,10))
                 .trailerUrl(movie.getTrailerUrl())
                 .imageUrl(movie.getImageBase64())

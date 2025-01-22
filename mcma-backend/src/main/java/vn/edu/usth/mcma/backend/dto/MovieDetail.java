@@ -1,0 +1,30 @@
+package vn.edu.usth.mcma.backend.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.Instant;
+import java.util.List;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class MovieDetail {
+    private Long id;
+    private String name;
+    private Integer length;
+    private String overview;
+    private Instant publishDate;
+    private String trailerUrl;
+    private String imageBase64;
+    private String backgroundImageBase64;
+
+    private List<String> genres;
+    private List<String> directors;
+    private List<String> actors;
+    private String rating;
+    private Double avgVotes;
+}

@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import vn.edu.usth.mcma.backend.dto.GenreProjection;
+import vn.edu.usth.mcma.backend.dto.MovieDetailShortProjection;
 import vn.edu.usth.mcma.backend.entity.Movie;
 
 import java.time.Instant;
@@ -17,6 +19,19 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
      * User
      * ====
      */
+    @Query(nativeQuery = true, value = """
+            select m.id as id, m.name as name, m.length as length, m.image_base64 as imageBase64
+            from schedule s
+                     left join movie m on s.movie_id = m.id
+            where s.status in :statuses
+              and s.start_time >= :now
+            group by m.id""")
+    List<MovieDetailShortProjection> findAllMovieDetailShort(@Param("statuses") List<Integer> statuses, @Param("now") Instant now);
+    @Query(nativeQuery = true, value = """
+            select *
+            from map_movie_genre mg
+            where mg.movie_id in :ids""")
+    List<GenreProjection> findAllGenreByMovieIdIn(@Param("ids") List<Long> ids);
     List<Movie> findAllByNameContainingAndStatusIs(String title, Integer status);
 
     List<Movie> findAllByStatusIs(Integer status);

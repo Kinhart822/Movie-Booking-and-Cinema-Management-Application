@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -12,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class PerformerPresentation {
     private Long id;
     private String name;
-    private String type;
-    private String dob;
-    private String sex;
+    private Integer typeId;
+    private Instant dob;
+    private Integer sex;
 }

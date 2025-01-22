@@ -9,14 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MovieRequest {
+public class MovieDetailShort {
+    private Long id;
     private String name;
-    private String overview;
     private Integer length;
     private String imageBase64;
-    private String backgroundImageBase64;
-    private String publishDate;
-    private String trailerUrl;
-    private Long ratingId;
-    private Integer status;
+    private String rating;
 }

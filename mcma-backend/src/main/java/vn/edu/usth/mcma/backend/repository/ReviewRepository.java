@@ -26,4 +26,11 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             group by (s.movie_id)
             order by avgVote desc""")
     List<HighRatingMovieProjection> findHighestRatingMovies(@Param(value = "status") Integer status, @Param(value = "now") Instant now);
+    @Query(nativeQuery = true, value = """
+            select avg(r.user_vote) as avgVotes
+            from review r
+            where r.movie_id = :movieId
+              and r.status = :status
+            group by movie_id""")
+    Double findAvgVoteByMovieIdAndStatus(Long movieId, Integer status);
 }
