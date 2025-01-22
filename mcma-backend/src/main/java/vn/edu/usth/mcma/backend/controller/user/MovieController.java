@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user")
-public class HomeController {
+public class MovieController {
     private final MovieService movieService;
 
     @GetMapping("/movie/now-showing")
