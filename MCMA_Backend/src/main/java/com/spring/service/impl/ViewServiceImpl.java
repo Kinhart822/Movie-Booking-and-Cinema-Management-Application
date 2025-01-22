@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ViewServiceImpl implements ViewService {
@@ -65,6 +66,9 @@ public class ViewServiceImpl implements ViewService {
 
     @Autowired
     private RatingRepository ratingRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public ViewCityResponse getAvailableCities() {
@@ -486,33 +490,123 @@ public class ViewServiceImpl implements ViewService {
     @Override
     public List<CouponResponse> getAllCoupons() {
         List<Coupon> coupons = couponRepository.findAll();
+        coupons.removeIf(coupon -> coupon.getDateExpired().before(new Date()));
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
         List<Integer> couponIds = new ArrayList<>();
         List<String> couponNameList = new ArrayList<>();
+        List<String> couponImageUrlList = new ArrayList<>();
+        List<String> couponBackgrounImageUrlList = new ArrayList<>();
         List<String> couponDescriptionList = new ArrayList<>();
+        List<String> dateAvailableList = new ArrayList<>();
+        List<String> expirationDates = new ArrayList<>();
         List<BigDecimal> discountRateList = new ArrayList<>();
         List<Integer> minSpendReqList = new ArrayList<>();
         List<Integer> discountLimitList = new ArrayList<>();
+        List<Integer> pointToExchangeList = new ArrayList<>();
 
         for (Coupon coupon : coupons) {
             couponIds.add(coupon.getId());
             couponNameList.add(coupon.getName());
+            couponImageUrlList.add(coupon.getImageUrl());
+            couponBackgrounImageUrlList.add(coupon.getBackgroundImageUrl());
             couponDescriptionList.add(coupon.getDescription());
             discountRateList.add(coupon.getDiscount());
             minSpendReqList.add(coupon.getMinSpendReq());
             discountLimitList.add(coupon.getDiscountLimit());
+            pointToExchangeList.add(coupon.getPointToExchange());
+            dateAvailableList.add(dateFormat.format(coupon.getDateAvailable()));
+            expirationDates.add(dateFormat.format(coupon.getDateExpired()));
         }
 
         CouponResponse couponResponse = new CouponResponse(
                 couponIds,
                 couponNameList,
+                couponImageUrlList,
+                couponBackgrounImageUrlList,
                 couponDescriptionList,
+                dateAvailableList,
+                expirationDates,
                 discountRateList,
                 minSpendReqList,
-                discountLimitList
+                discountLimitList,
+                pointToExchangeList
         );
 
         return List.of(couponResponse);
+    }
+
+    @Override
+    public CouponResponse viewCouponDetails(Integer couponId) {
+        Coupon coupon = couponRepository.findById(couponId)
+                .orElseThrow(() -> new IllegalArgumentException("Coupon not found with ID: %d".formatted(couponId)));
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+        return new CouponResponse(
+                List.of(coupon.getId()),
+                List.of(coupon.getName()),
+                Collections.singletonList(coupon.getImageUrl() != null ? coupon.getImageUrl() : ""),
+                Collections.singletonList(coupon.getBackgroundImageUrl() != null ? coupon.getBackgroundImageUrl() : ""),
+                List.of(coupon.getDescription()),
+                List.of(dateFormat.format(coupon.getDateAvailable())),
+                List.of(dateFormat.format(coupon.getDateExpired())),
+                List.of(coupon.getDiscount()),
+                List.of(coupon.getMinSpendReq()),
+                List.of(coupon.getDiscountLimit()),
+                List.of(coupon.getPointToExchange())
+        );
+    }
+
+    @Override
+    public Integer viewUserPoints(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: %d".formatted(userId)));
+
+        return user.getUserPoint();
+    }
+
+    @Override
+    public CouponResponse exchangeCoupon(Integer userId, Integer couponId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: %d".formatted(userId)));
+        Coupon coupon = couponRepository.findById(couponId)
+                .orElseThrow(() -> new IllegalArgumentException("Coupon not found with ID: %d".formatted(couponId)));
+
+        if (user.getUserCoupons() != null && user.getUserCoupons().contains(coupon)) {
+            throw new IllegalStateException("You already own this coupon.");
+        }
+
+        if (user.getUserPoint() == null || user.getUserPoint() < coupon.getPointToExchange()) {
+            throw new IllegalArgumentException("Insufficient points to exchange for this coupon.");
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+        int updatedPoints = user.getUserPoint() - coupon.getPointToExchange();
+        user.setUserPoint(updatedPoints);
+
+        if (user.getUserCoupons() == null) {
+            user.setUserCoupons(new HashSet<>());
+        }
+        user.getUserCoupons().add(coupon);
+
+        userRepository.save(user);
+
+        return new CouponResponse(
+                List.of(coupon.getId()),
+                List.of(coupon.getName()),
+                Collections.singletonList(coupon.getImageUrl() != null ? coupon.getImageUrl() : ""),
+                Collections.singletonList(coupon.getBackgroundImageUrl() != null ? coupon.getBackgroundImageUrl() : ""),
+                List.of(coupon.getDescription()),
+                List.of(dateFormat.format(coupon.getDateAvailable())),
+                List.of(dateFormat.format(coupon.getDateExpired())),
+                List.of(coupon.getDiscount()),
+                List.of(coupon.getMinSpendReq()),
+                List.of(coupon.getDiscountLimit()),
+                List.of(coupon.getPointToExchange())
+        );
     }
 
     @Override
@@ -834,27 +928,58 @@ public class ViewServiceImpl implements ViewService {
 
     private ViewCouponsResponse mapCouponsToResponse(List<Coupon> coupons) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date currentDate = new Date();
+
+        coupons.removeIf(coupon -> coupon.getDateExpired().before(new Date()));
+
+        List<Integer> couponIds = coupons.stream()
+                .map(Coupon::getId)
+                .toList();
 
         List<String> nameCoupons = coupons.stream()
                 .map(Coupon::getName)
+                .toList();
+
+        List<String> couponImageUrls = coupons.stream()
+                .map(Coupon::getImageUrl)
+                .toList();
+
+        List<String> backgroundImageUrlList = coupons.stream()
+                .map(Coupon::getImageUrl)
                 .toList();
 
         List<String> descriptionCoupons = coupons.stream()
                 .map(Coupon::getDescription)
                 .toList();
 
+        List<String> dateAvailableList = coupons.stream()
+                .map(coupon -> dateFormat.format(coupon.getDateAvailable()))
+                .toList();
+
+//        List<String> expirationDates = coupons.stream()
+//                .map(coupon -> dateFormat.format(coupon.getDateExpired()))
+//                .toList();
+
         List<String> expirationDates = coupons.stream()
                 .map(coupon -> dateFormat.format(coupon.getDateExpired()))
-                .toList();
+                .collect(Collectors.toList());
 
         List<BigDecimal> discounts = coupons.stream()
                 .map(Coupon::getDiscount)
+                .toList();
+
+        List<Integer> minSpendReqList = coupons.stream()
+                .map(Coupon::getMinSpendReq)
                 .toList();
 
         List<String> discountLimits = coupons.stream()
                 .map(coupon -> coupon.getDiscountLimit() != null ? coupon.getDiscountLimit().toString() : "N/A")
                 .toList();
 
-        return new ViewCouponsResponse(nameCoupons, descriptionCoupons, expirationDates, discounts, discountLimits);
+        List<Integer> pointToExchange = coupons.stream()
+                .map(Coupon::getPointToExchange)
+                .toList();
+
+        return new ViewCouponsResponse(couponIds, nameCoupons, couponImageUrls, backgroundImageUrlList, descriptionCoupons, dateAvailableList, expirationDates, discounts, minSpendReqList, discountLimits, pointToExchange);
     }
 }

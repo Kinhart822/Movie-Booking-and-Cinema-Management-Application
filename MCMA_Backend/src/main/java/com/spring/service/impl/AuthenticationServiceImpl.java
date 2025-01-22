@@ -103,6 +103,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setAddress(signUpRequest.getAddress());
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+        user.setUserPoint(0);
         try {
             Type userType = Type.valueOf(signUpRequest.getType());
             user.setUserType(userType);

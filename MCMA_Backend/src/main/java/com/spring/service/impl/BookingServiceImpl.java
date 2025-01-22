@@ -766,31 +766,47 @@ public class BookingServiceImpl implements BookingService {
             throw new IllegalArgumentException("No available coupons found for given user.");
         }
 
-        availableUserCouponIds.removeIf(coupon -> coupon.getDateAvailable().after(new Date()) || coupon.getDateExpired().before(new Date()));
+        availableUserCouponIds.removeIf(coupon -> coupon.getDateExpired().before(new Date()));
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         List<Integer> couponIds = new ArrayList<>();
         List<String> couponNameList = new ArrayList<>();
+        List<String> imageUrlList = new ArrayList<>();
+        List<String> couponBackgroundImageUrlList = new ArrayList<>();
         List<String> couponDescriptionList = new ArrayList<>();
+        List<String> dateAvailableList = new ArrayList<>();
+        List<String> expirationDates = new ArrayList<>();
         List<BigDecimal> discountRateList = new ArrayList<>();
         List<Integer> minSpendReqList = new ArrayList<>();
         List<Integer> discountLimitList = new ArrayList<>();
+        List<Integer> pointToExchange = new ArrayList<>();
 
         for (Coupon coupon : availableUserCouponIds) {
             couponIds.add(coupon.getId());
             couponNameList.add(coupon.getName());
+            imageUrlList.add(coupon.getImageUrl());
+            couponBackgroundImageUrlList.add(coupon.getBackgroundImageUrl());
             couponDescriptionList.add(coupon.getDescription());
+            dateAvailableList.add(dateFormat.format(coupon.getDateAvailable()));
+            expirationDates.add(dateFormat.format(coupon.getDateExpired()));
             discountRateList.add(coupon.getDiscount());
             minSpendReqList.add(coupon.getMinSpendReq());
             discountLimitList.add(coupon.getDiscountLimit());
+            pointToExchange.add(coupon.getPointToExchange());
         }
 
         CouponResponse couponResponse = new CouponResponse(
                 couponIds,
                 couponNameList,
+                imageUrlList,
+                couponBackgroundImageUrlList,
                 couponDescriptionList,
+                dateAvailableList,
+                expirationDates,
                 discountRateList,
                 minSpendReqList,
-                discountLimitList
+                discountLimitList,
+                pointToExchange
         );
 
         return List.of(couponResponse);
@@ -803,31 +819,47 @@ public class BookingServiceImpl implements BookingService {
             throw new IllegalArgumentException("No available coupons found for given movie.");
         }
 
-        availableMovieCouponIds.removeIf(coupon -> coupon.getDateAvailable().after(new Date()) || coupon.getDateExpired().before(new Date()));
+        availableMovieCouponIds.removeIf(coupon -> coupon.getDateExpired().before(new Date()));
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         List<Integer> couponIds = new ArrayList<>();
         List<String> couponNameList = new ArrayList<>();
+        List<String> imageUrlCouponList = new ArrayList<>();
+        List<String> couponBackgroundImageUrlList = new ArrayList<>();
         List<String> couponDescriptionList = new ArrayList<>();
+        List<String> dateAvailableList = new ArrayList<>();
+        List<String> expirationDates = new ArrayList<>();
         List<BigDecimal> discountRateList = new ArrayList<>();
         List<Integer> minSpendReqList = new ArrayList<>();
         List<Integer> discountLimitList = new ArrayList<>();
+        List<Integer> pointToExchange = new ArrayList<>();
 
         for (Coupon coupon : availableMovieCouponIds) {
             couponIds.add(coupon.getId());
             couponNameList.add(coupon.getName());
+            imageUrlCouponList.add(coupon.getImageUrl());
+            couponBackgroundImageUrlList.add(coupon.getBackgroundImageUrl());
             couponDescriptionList.add(coupon.getDescription());
+            dateAvailableList.add(dateFormat.format(coupon.getDateAvailable()));
+            expirationDates.add(dateFormat.format(coupon.getDateExpired()));
             discountRateList.add(coupon.getDiscount());
             minSpendReqList.add(coupon.getMinSpendReq());
             discountLimitList.add(coupon.getDiscountLimit());
+            pointToExchange.add(coupon.getPointToExchange());
         }
 
         CouponResponse couponResponse = new CouponResponse(
                 couponIds,
                 couponNameList,
+                imageUrlCouponList,
+                couponBackgroundImageUrlList,
                 couponDescriptionList,
+                dateAvailableList,
+                expirationDates,
                 discountRateList,
                 minSpendReqList,
-                discountLimitList
+                discountLimitList,
+                pointToExchange
         );
 
         return List.of(couponResponse);
@@ -1280,15 +1312,36 @@ public class BookingServiceImpl implements BookingService {
             String formattedStartDateTime = booking.getStartDateTime().format(formatter);
             String formattedEndDateTime = booking.getEndDateTime().format(formatter);
             String subject = "Your Movie Booking Confirmation";
-            String body = "Dear %s %s,\n\nYour booking for the movie \"%s\" is confirmed!\nBooking Number: %s\nDate & Time: %s - %s\nCinema: %s, %s\nScreen: %s\nTickets: %s\nSeats: %s\nFood: %s\nDrinks: %s\nTotal Price: $%s\n\nThank you for booking with us!\n\nBest regards,\nYour Movie Booking Team".formatted(user.getFirstName(), user.getLastName(), booking.getMovie().getName(), booking.getBookingNo(), formattedStartDateTime, formattedEndDateTime, booking.getCinema().getName(), booking.getCity().getName(), booking.getScreen().getName(), booking.getTickets().stream()
-                    .map(ticket -> ticket.getTicket().getTicketType().getName())
-                    .collect(Collectors.joining(", ")), booking.getSeatList().stream()
-                    .map(seat -> "%s (%s)".formatted(seat.getSeat().getName(), seat.getSeatType().getName()))
-                    .collect(Collectors.joining(", ")), booking.getFoodList().stream()
-                    .map(food -> "%s (%s)".formatted(food.getFood().getName(), food.getSizeFood()))
-                    .collect(Collectors.joining(", ")), booking.getDrinks().stream()
-                    .map(drink -> "%s (%s)".formatted(drink.getDrink().getName(), drink.getSizeDrink()))
-                    .collect(Collectors.joining(", ")), booking.getTotalPrice());
+            String body = "Dear %s %s,\n\nYour booking for the movie \"%s\" is confirmed!\nBooking Number: %s\nDate & Time: %s - %s\nCinema: %s, %s\nScreen: %s\nTickets: %s\nSeats: %s\nFood: %s\nDrinks: %s\nTotal Price: $%s\n\nThank you for booking with us!\n\nBest regards,\nYour Movie Booking Team"
+                    .formatted(
+                            user.getFirstName(),
+                            user.getLastName(),
+                            booking.getMovie().getName(),
+                            booking.getBookingNo(),
+                            formattedStartDateTime,
+                            formattedEndDateTime,
+                            booking.getCinema().getName(),
+                            booking.getCity().getName(),
+                            booking.getScreen().getName(),
+                            booking.getTickets().stream()
+                                    .map(ticket -> ticket.getTicket().getTicketType().getName())
+                                    .collect(Collectors.joining(", ")),
+                            booking.getSeatList().stream()
+                                    .map(seat -> "%s (%s)".formatted(seat.getSeat().getName(), seat.getSeatType().getName()))
+                                    .collect(Collectors.joining(", ")),
+                            booking.getFoodList() == null || booking.getFoodList().isEmpty()
+                                    ? "None"
+                                    : booking.getFoodList().stream()
+                                    .map(food -> "%s x %s".formatted(food.getFood().getName(), food.getQuantity()))
+                                    .collect(Collectors.joining(", ")),
+                            booking.getDrinks() == null || booking.getDrinks().isEmpty()
+                                    ? "None"
+                                    : booking.getDrinks().stream()
+                                    .map(drink -> "%s x %s".formatted(drink.getDrink().getName(), drink.getQuantity()))
+                                    .collect(Collectors.joining(", ")),
+                            booking.getTotalPrice()
+                    );
+
             emailService.sendSimpleMailMessage(user.getEmail(), subject, body);
         } catch (Exception e) {
             System.out.println("Failed to send email notification. Please try again later.");
@@ -1521,7 +1574,7 @@ public class BookingServiceImpl implements BookingService {
                 }
             }
         } else {
-            System.out.println("Can't cancel this booking! Please try again later.");
+            System.out.println("Can't delete this booking! Please try again later.");
         }
     }
 

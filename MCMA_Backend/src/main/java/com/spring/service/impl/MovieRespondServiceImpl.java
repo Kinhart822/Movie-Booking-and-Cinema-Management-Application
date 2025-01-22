@@ -87,6 +87,10 @@ public class MovieRespondServiceImpl implements MovieRespondService {
 
         movieRespondRepository.save(movieRespond);
 
+        int pointsToAdd = 50;
+        user.setUserPoint((user.getUserPoint() != null ? user.getUserPoint() : 0) + pointsToAdd);
+        userRepository.save(user);
+
         Notification notification = new Notification();
         notification.setUser(user);
         notification.setMessage("Your respond for %s is confirmed!".formatted(movie.getName()));
@@ -101,17 +105,19 @@ public class MovieRespondServiceImpl implements MovieRespondService {
     }
 
     @Override
-    public MovieRespondResponse updateMovieRespond(Integer userId, MovieRespondRequest movieRespondRequest) {
+    public MovieRespondResponse updateMovieRespond(Integer userId, Integer movieRespondId, MovieRespondRequest movieRespondRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        Movie movie = movieRepository.findById(movieRespondRequest.getMovieId())
-                .orElseThrow(() -> new IllegalArgumentException("Movie not found"));
-
-        MovieRespond existingMovieRespond = movieRespondRepository.findByUserIdAndMovieId(userId, movieRespondRequest.getMovieId());
+        MovieRespond existingMovieRespond = movieRespondRepository.findById(movieRespondId)
+                .orElseThrow(() -> new IllegalArgumentException("MovieRespond not found"));
 
         if (existingMovieRespond == null) {
             throw new IllegalArgumentException("MovieRespond not found");
+        }
+
+        if (existingMovieRespond.getUser().getId() != user.getId()) {
+            throw new IllegalStateException("You are not allowed to update this respond.");
         }
 
         existingMovieRespond.setDateUpdated(new Date());
@@ -137,36 +143,38 @@ public class MovieRespondServiceImpl implements MovieRespondService {
 
         Notification notification = new Notification();
         notification.setUser(user);
-        notification.setMessage("Your respond for %s is updated!".formatted(movie.getName()));
+        notification.setMessage("Your respond for %s is updated!".formatted(existingMovieRespond.getMovie().getName()));
         notification.setDateCreated(LocalDateTime.now());
         notificationRepository.save(notification);
 
         return MovieRespondResponse.builder()
-                .movieName(movie.getName())
+                .movieName(existingMovieRespond.getMovie().getName())
                 .content(existingMovieRespond.getComment() != null ? existingMovieRespond.getComment().getContent() : null)
                 .ratingStar(existingMovieRespond.getRating() != null ? existingMovieRespond.getRating().getRatingStar() : null)
                 .build();
     }
 
     @Override
-    public void deleteMovieRespond(Integer userId, Integer movieId) {
+    public void deleteMovieRespond(Integer userId, Integer movieRespondId) {
+        MovieRespond existingMovieRespond = movieRespondRepository.findById(movieRespondId)
+                .orElseThrow(() -> new IllegalArgumentException("MovieRespond not found"));
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        Movie movie = movieRepository.findById(movieId)
-                .orElseThrow(() -> new IllegalArgumentException("Movie not found"));
-
-        MovieRespond existingMovieRespond = movieRespondRepository.findByUserIdAndMovieId(userId, movieId);
-
         if (existingMovieRespond == null) {
             throw new IllegalArgumentException("MovieRespond not found");
+        }
+
+        if (existingMovieRespond.getUser().getId()!= user.getId()) {
+            throw new IllegalStateException("You are not allowed to delete this respond.");
         }
 
         movieRespondRepository.delete(existingMovieRespond);
 
         Notification notification = new Notification();
         notification.setUser(user);
-        notification.setMessage("Your respond for %s is deleted!".formatted(movie.getName()));
+        notification.setMessage("Your respond for %s is deleted!".formatted(existingMovieRespond.getMovie().getName()));
         notification.setDateCreated(LocalDateTime.now());
         notificationRepository.save(notification);
     }

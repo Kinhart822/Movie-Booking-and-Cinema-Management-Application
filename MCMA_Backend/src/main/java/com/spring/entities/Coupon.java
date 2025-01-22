@@ -33,6 +33,7 @@ public class Coupon {
     @Column(name = "Discount", precision = 10, scale = 2)
     private BigDecimal discount;
 
+    // Chưa có logic
     @Column(name = "MIN_SPEND_REQ")
     private Integer minSpendReq;
 
@@ -62,6 +63,15 @@ public class Coupon {
     @Column(name = "Date_Updated")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateUpdated;
+
+    @Column(name = "Point")
+    private Integer pointToExchange;
+
+    @Column(name = "Image", length = 1000)
+    private String imageUrl;
+
+    @Column(name = "Background_Image", length = 1000)
+    private String backgroundImageUrl;
 
     @ManyToMany(mappedBy = "userCoupons")
     private Set<User> userSet;

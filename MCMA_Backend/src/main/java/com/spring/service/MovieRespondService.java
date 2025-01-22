@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface MovieRespondService {
     MovieRespondResponse createMovieRespond(Integer userId, MovieRespondRequest movieRespondRequest);
-    MovieRespondResponse updateMovieRespond(Integer userId, MovieRespondRequest movieRespondRequest);
-    void deleteMovieRespond(Integer userId, Integer movieId);
+    MovieRespondResponse updateMovieRespond(Integer userId, Integer movieRespondId, MovieRespondRequest movieRespondRequest);
+    void deleteMovieRespond(Integer userId, Integer movieRespondId);
 
     CommentResponse getMovieCommentByUserIdAndMovieId(Integer userId, Integer movieId);
     RatingResponse getMovieRatingByUserIdAndMovieId(Integer userId, Integer movieId);
