@@ -27,6 +27,15 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".frontend.Coupon.My_Voucher_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Coupon.Coupon_Details_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".frontend.Coupon.Coupon_Activity"
+            android:exported="false" />
+        <activity
             android:name=".frontend.component.account.ForgotPasswordStepThreeActivity"
             android:exported="false" />
         <activity

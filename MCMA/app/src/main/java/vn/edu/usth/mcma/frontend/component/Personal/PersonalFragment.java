@@ -56,6 +56,18 @@ public class PersonalFragment extends Fragment {
             startActivity(i);
         });
 
+        LinearLayout to_coupon_page = v.findViewById(R.id.coupon_page);
+        to_coupon_page.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                fetchUserPoints();
+
+                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Coupon.Coupon_Activity.class);
+//                i.putExtra("USER_POINTS", userPoints);
+                startActivity(i);
+            }
+        });
+
         LinearLayout to_booking_history = v.findViewById(R.id.account_information_booking_history);
         to_booking_history.setOnClickListener(view -> {
             Intent i = new Intent(requireContext(), Booking_History_Activity.class);
