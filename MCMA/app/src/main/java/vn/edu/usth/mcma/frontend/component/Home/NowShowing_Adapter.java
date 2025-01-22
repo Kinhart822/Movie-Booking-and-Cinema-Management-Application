@@ -45,7 +45,6 @@ public class NowShowing_Adapter extends RecyclerView.Adapter<NowShowing_ViewHold
 
         holder.nameView.setText(nowShowing.getName());
         holder.timeView.setText(String.format("%d min", nowShowing.getLength()));
-        holder.typeView.setText(String.join(", ", nowShowing.getGenres()));
 
         holder.age_limitView.setText(nowShowing.getRating());
 

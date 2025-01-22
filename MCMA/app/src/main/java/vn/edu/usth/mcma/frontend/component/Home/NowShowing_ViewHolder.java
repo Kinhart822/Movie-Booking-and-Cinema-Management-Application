@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import vn.edu.usth.mcma.R;
 
 public class NowShowing_ViewHolder extends RecyclerView.ViewHolder {
-    TextView nameView, typeView, timeView, age_limitView;
+    TextView nameView, timeView, age_limitView;
     ImageView filmView;
     Button bookingButton;
 
@@ -20,7 +20,6 @@ public class NowShowing_ViewHolder extends RecyclerView.ViewHolder {
         nameView = itemView.findViewById(R.id.film_name);
         timeView = itemView.findViewById(R.id.film_time);
         age_limitView = itemView.findViewById(R.id.age_limit);
-        typeView = itemView.findViewById(R.id.category_name);
         bookingButton = itemView.findViewById(R.id.btn_booking_film);
 
         // Sự kiện click cho toàn bộ itemView

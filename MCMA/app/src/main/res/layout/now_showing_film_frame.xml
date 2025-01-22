@@ -50,16 +50,6 @@
                 android:textStyle="bold"
                 tools:text="Movie name" />
 
-            <TextView
-                android:layout_margin="4dp"
-                android:id="@+id/category_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                tools:text="(Category)" />
-
             <LinearLayout
                 android:layout_margin="4dp"
                 android:layout_width="match_parent"
