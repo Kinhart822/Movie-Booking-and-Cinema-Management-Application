@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.util.Log;
+import android.util.Pair;
 import android.util.SparseBooleanArray;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -23,10 +24,16 @@ import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayout;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;
@@ -47,7 +54,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
     private final Long movieId;
 
     public interface OnShowtimeClickListener {
-        void onShowtimeClick(Theater theater,String date, String showtime, Long screenId, String screenRoom, Long scheduleId);
+        void onShowtimeClick(Theater theater, String date, String showtime, Long screenId, String screenRoom, Long scheduleId);
     }
 
     public TheaterShowtimesAdapter(OnShowtimeClickListener listener, Long movieId) {
@@ -79,7 +86,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
         return theaters.size();
     }
 
-    class TheaterViewHolder extends RecyclerView.ViewHolder {
+    public class TheaterViewHolder extends RecyclerView.ViewHolder {
         private final TextView theaterName;
         private final TextView theaterAddress;
         private final FlexboxLayout showtimesContainer;
@@ -224,11 +231,6 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                             if (response.isSuccessful() && response.body() != null) {
                                 List<Schedule> schedules = response.body();
 
-//                                // Group schedules by date
-//                                Map<String, List<String>> schedulesByDate = new LinkedHashMap<>();
-//                                List<String> dates = scheduleResponse.getDate();
-//                                List<String> times = scheduleResponse.getTime();
-                                Map<String, Map<String, Long>> schedulesByDateAndTime = new LinkedHashMap<>();
                                 List<String> dates = schedules
                                         .stream()
                                         .map(s -> s.getStartTime().substring(0, 10))
@@ -242,22 +244,40 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                         .map(Schedule::getId)
                                         .collect(Collectors.toList());
 
+                                //todo dd/MM/yyyy
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                                Date today;
+                                try {
+                                    today = sdf.parse(sdf.format(new Date()));
+                                } catch (ParseException e) {
+                                    throw new RuntimeException(e);
+                                }
 
-//                                // Assuming dates and times are aligned, map them together
-//                                for (int i = 0; i < dates.size(); i++) {
-//                                    String date = dates.get(i);
-//                                    String time = times.get(i);
-//
-//                                    schedulesByDate.computeIfAbsent(date, k -> new ArrayList<>()).add(time);
-//                                }
+                                Map<String, List<Pair<String, Long>>> schedulesByDateAndTime = new TreeMap<>((d1, d2) -> {
+                                    try {
+                                        return Objects.requireNonNull(sdf.parse(d1)).compareTo(sdf.parse(d2));
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                        return 0;
+                                    }
+                                });
 
                                 for (int i = 0; i < dates.size(); i++) {
-                                    String date = dates.get(i);
-                                    String time = times.get(i);
-                                    Long scheduleId = scheduleIds.get(i);
+                                    try {
+                                        Date scheduleDate = sdf.parse(dates.get(i));
 
-                                    schedulesByDateAndTime.computeIfAbsent(date, k -> new LinkedHashMap<>())
-                                            .put(time, scheduleId);
+                                        if (scheduleDate != null && (scheduleDate.equals(today) || scheduleDate.after(today))) {
+                                            String date = dates.get(i);
+                                            String time = times.get(i);
+                                            Long scheduleId = scheduleIds.get(i);
+
+                                            schedulesByDateAndTime.computeIfAbsent(date, k -> new ArrayList<>())
+                                                    .add(new Pair<>(time, scheduleId));
+                                        }
+                                    } catch (ParseException e) {
+                                        Toast.makeText(context, "Error parsing date: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
                                 }
 
                                 // Create layout for date buttons
@@ -276,9 +296,10 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                 ));
                                 timeLayout.setFlexWrap(FlexWrap.WRAP);
 
-                                // Add date and time buttons
-//                                for (String date : schedulesByDate.keySet()) {
-                                for (String date : schedulesByDateAndTime.keySet()) {
+                                for (Map.Entry<String, List<Pair<String, Long>>> entry : schedulesByDateAndTime.entrySet()) {
+                                    String date = entry.getKey();
+                                    List<Pair<String, Long>> timesForDate = entry.getValue();
+
                                     Button dateButton = new Button(context);
                                     dateButton.setText(date);
                                     dateButton.setTextColor(textColorStateList);
@@ -286,7 +307,6 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                     dateButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                                     dateButton.setBackground(ContextCompat.getDrawable(context, R.drawable.date_button_selector));
 
-                                    // Set layout params
                                     FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
                                             FlexboxLayout.LayoutParams.WRAP_CONTENT,
                                             FlexboxLayout.LayoutParams.WRAP_CONTENT
@@ -294,26 +314,17 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                     params.setMargins(8, 8, 8, 8);
                                     dateButton.setLayoutParams(params);
 
-                                    // Handle date button click
                                     dateButton.setOnClickListener(v -> {
-                                        // Reset previous date button states
                                         for (int j = 0; j < dateLayout.getChildCount(); j++) {
                                             dateLayout.getChildAt(j).setSelected(false);
                                         }
-                                        // Set the clicked button as selected
                                         dateButton.setSelected(true);
 
-                                        // Clear the time layout
                                         timeLayout.removeAllViews();
 
-                                        // Populate time buttons for the selected date
-//                                        for (String time : schedulesByDate.get(date)) {
-
-                                        Map<String, Long> timesForDate = schedulesByDateAndTime.get(date);
-                                        assert timesForDate != null;
-                                        for (Map.Entry<String, Long> entry : timesForDate.entrySet()) {
-                                            String time = entry.getKey();
-                                            Long scheduleId = entry.getValue();
+                                        for (Pair<String, Long> timePair : timesForDate) {
+                                            String time = timePair.first;
+                                            Long scheduleId = timePair.second;
 
                                             Button timeButton = new Button(context);
                                             timeButton.setText(time);

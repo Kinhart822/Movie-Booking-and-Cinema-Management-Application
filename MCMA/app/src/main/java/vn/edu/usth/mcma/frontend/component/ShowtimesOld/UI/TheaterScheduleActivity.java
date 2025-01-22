@@ -54,7 +54,7 @@ public class TheaterScheduleActivity extends AppCompatActivity
         setContentView(R.layout.activity_theater_schedule);
 
         // Get theater details from intent
-        int theaterId = getIntent().getIntExtra(IntentKey.CINEMA_ID.name(), -1);
+        Long theaterId = getIntent().getLongExtra(IntentKey.CINEMA_ID.name(), -1L);
         String theaterName = getIntent().getStringExtra(IntentKey.THEATER_NAME.name());
         String theaterAddress = getIntent().getStringExtra(IntentKey.THEATER_ADDRESS.name());
 
@@ -79,7 +79,7 @@ public class TheaterScheduleActivity extends AppCompatActivity
         movieRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void setupDateButtons(int theaterId) {
+    private void setupDateButtons(Long theaterId) {
         LinearLayout daysContainer = findViewById(R.id.days_container);
         daysContainer.removeAllViews();
         ApiService

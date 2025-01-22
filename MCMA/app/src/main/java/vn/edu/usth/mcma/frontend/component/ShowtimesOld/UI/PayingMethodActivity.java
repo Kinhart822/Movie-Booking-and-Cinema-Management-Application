@@ -1,9 +1,11 @@
 package vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
@@ -51,7 +53,8 @@ public class PayingMethodActivity extends AppCompatActivity {
     private List<Integer> selectedDrinkIds = new ArrayList<>();
     private int selectedMovieCouponId;
     private int selectedUserCouponId;
-    private static String bookingMessageSuccessFully;
+    private TextView countdownTimer;
+    private CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +72,40 @@ public class PayingMethodActivity extends AppCompatActivity {
         ImageButton backButton = findViewById(R.id.button_back);
         backButton.setOnClickListener(view -> onBackPressed());
 
+        countdownTimer = findViewById(R.id.countdown_timer);
+        startCountdownTimer();
         initializeViews();
         setupPaymentMethodsRecyclerView();
         handlePaymentCompletion();
+    }
+
+    private void startCountdownTimer() {
+        countDownTimer = new CountDownTimer(5 * 60 * 1000, 1000) { // 5 phút
+            @SuppressLint("DefaultLocale")
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long minutes = millisUntilFinished / 1000 / 60;
+                long seconds = (millisUntilFinished / 1000) % 60;
+
+                countdownTimer.setText(String.format("%02d:%02d", minutes, seconds));
+            }
+
+            @Override
+            public void onFinish() {
+                Toast.makeText(PayingMethodActivity.this, "Time's up!!", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        };
+
+        countDownTimer.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
     }
 
     private void initializeViews() {
@@ -158,15 +192,19 @@ public class PayingMethodActivity extends AppCompatActivity {
     private void handlePaymentCompletion() {
         completePaymentButton.setOnClickListener(v -> {
             if (selectedPaymentMethod == null) {
-                Toast.makeText(this, "Please select payment method\n", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please select payment method!", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (!termsCheckbox.isChecked()) {
-                Toast.makeText(this, "Please agree to the terms\n", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please agree to the terms!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             sendBookingRequest();
+
+            if (countDownTimer != null) {
+                countDownTimer.cancel();
+            }
 
             Intent intent = new Intent(this, vn.edu.usth.mcma.frontend.MainActivity.class);
             intent.putExtra(IntentKey.navigate_to.name(), "HomeFragment");
@@ -237,42 +275,10 @@ public class PayingMethodActivity extends AppCompatActivity {
                             if (bookingResponse != null) {
                                 if (paymentMethod.equals(PaymentMethod.Bank_Transfer)) {
                                     Toast.makeText(getApplicationContext(), "Complete Booking successfully!", Toast.LENGTH_SHORT).show();
-                                    if (ContextCompat.checkSelfPermission(PayingMethodActivity.this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
-                                        bookingMessageSuccessFully = String.format(
-                                                """
-                                                        Your booking for the movie "%s" is confirmed!
-                                                        Booking Number: %s
-                                                        Date & Time: %s - %s
-                                                        Cinema: %s, %s
-                                                        Screen: %s
-                                                        Tickets: %s
-                                                        Seats: %s
-                                                        Please confirm your booking by calling our hotline: 1234567890 or visiting our website.
-                                                        Thank you for booking with us!""",
-                                                """
-                                                        Enjoy your movie!
-                                                        Best Regards,
-                                                        SpotCinema+""",
-                                                bookingResponse.getMovieName(),
-                                                bookingResponse.getBookingNo(),
-                                                bookingResponse.getStartDateTime(),
-                                                bookingResponse.getEndDateTime(),
-                                                bookingResponse.getCinemaName(),
-                                                bookingResponse.getCityName(),
-                                                bookingResponse.getScreenName(),
-                                                String.join(", ", bookingResponse.getTicketTypeName()),
-                                                String.join(", ", bookingResponse.getSeatName())
-                                        );
-                                        sendSMS(bookingMessageSuccessFully);
-                                    } else {
-                                        ActivityCompat.requestPermissions(PayingMethodActivity.this,
-                                                new String[]{Manifest.permission.SEND_SMS},
-                                                100);
-                                    }
                                 } else if (paymentMethod.equals(PaymentMethod.Cash)) {
-                                    Toast.makeText(getApplicationContext(), "Your Booking Status will be Pending, and your seat(s) will be held.", Toast.LENGTH_LONG).show();
-                                    Toast.makeText(getApplicationContext(), "Please go to your selected cinema to pay  for your booking before the start date of the movie!", Toast.LENGTH_LONG).show();
-                                    Toast.makeText(getApplicationContext(), "Or else your booking will be canceled!!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), "Your Booking Status will be Pending, and your seat(s) will be held.\n" +
+                                            "Please go to your selected cinema to pay  for your booking before the start date of the movie!\n" +
+                                            "Or else your booking will be canceled!!\"", Toast.LENGTH_LONG).show();
                                 }
                             }
                         } else {
@@ -287,26 +293,4 @@ public class PayingMethodActivity extends AppCompatActivity {
                 });
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == 100 && grantResults. length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            sendSMS(bookingMessageSuccessFully);
-        } else {
-            Toast.makeText(this, "Permission Denied !! ", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void sendSMS(String message) {
-        //todo: comment out because of phoneNumber
-//        if (SignUpActivity.phoneNumber != 0){
-//            SmsManager smsManager = SmsManager.getDefault();
-//
-//            smsManager.sendTextMessage(String.valueOf(SignUpActivity.phoneNumber), null, message, null, null);
-//            Toast.makeText(this, "SMS Sent Successfully!", Toast.LENGTH_SHORT).show();
-//        } else {
-//            Toast.makeText(this,"Please try again!", Toast.LENGTH_SHORT).show();
-//        }
-    }
 }

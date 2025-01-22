@@ -8,7 +8,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import vn.edu.usth.mcma.frontend.component.Feedback.FeedbackFragment;
 import vn.edu.usth.mcma.frontend.component.Personal.PersonalFragment;
-import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.LaunchtimeFragment;
+import vn.edu.usth.mcma.frontend.component.showtimes.ShowtimesFragment;
 import vn.edu.usth.mcma.frontend.component.Store.UI.StoreFragment;
 
 public class PrimaryPageAdapter extends FragmentStateAdapter {
@@ -20,7 +20,7 @@ public class PrimaryPageAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         return switch (position) {
-            case 1 -> new LaunchtimeFragment();
+            case 1 -> new ShowtimesFragment();
             case 2 -> new StoreFragment();
             case 3 -> new FeedbackFragment();
             case 4 -> new PersonalFragment();

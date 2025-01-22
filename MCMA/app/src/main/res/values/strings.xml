@@ -63,5 +63,7 @@
     <string name="overview">Overview</string>
     <string name="cast">Cast</string>
     <string name="director">Director</string>
+    <string name="name">SpotCinema+</string>
+    <string name="book_tickets_by_theater">Book Tickets by Theater</string>
 </resources>
 

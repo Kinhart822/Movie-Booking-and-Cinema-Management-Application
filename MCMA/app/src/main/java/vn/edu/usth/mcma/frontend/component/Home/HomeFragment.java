@@ -38,29 +38,27 @@ public class HomeFragment extends Fragment {
     private ViewPager2 viewPager2;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View v = inflater.inflate(R.layout.fragment_home, container, false);
-        tabLayout = v.findViewById(R.id.type_tablayout);
-        viewPager2 = v.findViewById(R.id.type_viewPager2);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        tabLayout = view.findViewById(R.id.type_tablayout);
+        viewPager2 = view.findViewById(R.id.type_viewPager2);
 
         // Setup TabLayout and ViewPager2
         setupViewPagerAndTabs();
-        LinearLayout to_search_activity = v.findViewById(R.id.search_bar);
-        to_search_activity.setOnClickListener(view -> {
+        LinearLayout to_search_activity = view.findViewById(R.id.search_bar);
+        to_search_activity.setOnClickListener(v -> {
             Intent i = new Intent(requireContext(), Search_Activity.class );
             startActivity(i);
         });
 
-        viewFlipper = v.findViewById(R.id.view_flipper);
+        viewFlipper = view.findViewById(R.id.view_flipper);
         viewFlipper.setFlipInterval(3000);
         viewFlipper.setAutoStart(true);
         viewFlipper.setInAnimation(requireContext(), android.R.anim.slide_in_left);
         viewFlipper.setOutAnimation(requireContext(), android.R.anim.slide_out_right);
 
         fetchHighRatingMovies();
-        return v;
+        return view;
     }
 
     private void fetchHighRatingMovies() {
@@ -68,23 +66,23 @@ public class HomeFragment extends Fragment {
                 .getMovieApi(requireContext())
                 .getHighRatingMovies()
                 .enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<List<HighRatingMovieResponse>> call, @NonNull Response<List<HighRatingMovieResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<HighRatingMovieResponse> movies = response.body();
-                    if (viewFlipper != null && viewFlipper.getChildCount() == 0) {
-                        movies.forEach(m -> addFlipperChild(m));
-                        viewFlipper.setVisibility(View.VISIBLE); // Ensure visibility
+                    @Override
+                    public void onResponse(@NonNull Call<List<HighRatingMovieResponse>> call, @NonNull Response<List<HighRatingMovieResponse>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            List<HighRatingMovieResponse> movies = response.body();
+                            if (viewFlipper != null && viewFlipper.getChildCount() == 0) {
+                                movies.forEach(m -> addFlipperChild(m));
+                                viewFlipper.setVisibility(View.VISIBLE); // Ensure visibility
+                            }
+                        } else {
+                            Log.e("HighRatingMovies", "Failed to fetch data: " + response.message());
+                        }
                     }
-                } else {
-                    Log.e("HighRatingMovies", "Failed to fetch data: " + response.message());
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Call<List<HighRatingMovieResponse>> call, @NonNull Throwable t) {
-                Log.e("HighRatingMovies", "API call failed: " + t.getMessage());
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<List<HighRatingMovieResponse>> call, @NonNull Throwable t) {
+                        Log.e("HighRatingMovies", "API call failed: " + t.getMessage());
+                    }
+                });
     }
     private void addFlipperChild(HighRatingMovieResponse movie) {
         if (viewFlipper == null) return;

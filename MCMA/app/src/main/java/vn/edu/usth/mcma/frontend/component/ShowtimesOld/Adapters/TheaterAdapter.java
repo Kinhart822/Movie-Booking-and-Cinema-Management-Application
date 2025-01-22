@@ -17,7 +17,7 @@ import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Theater;
 
 public class TheaterAdapter extends RecyclerView.Adapter<TheaterAdapter.TheaterViewHolder> {
     private List<Theater> theaters;
-    private OnTheaterClickListener listener;
+    private final OnTheaterClickListener listener;
 
     public TheaterAdapter(OnTheaterClickListener listener) {
         this.theaters = new ArrayList<>();
@@ -48,10 +48,10 @@ public class TheaterAdapter extends RecyclerView.Adapter<TheaterAdapter.TheaterV
         notifyDataSetChanged();
     }
 
-    class TheaterViewHolder extends RecyclerView.ViewHolder {
-        private ImageView theaterImage;
-        private TextView theaterName;
-        private TextView theaterAddress;
+    public class TheaterViewHolder extends RecyclerView.ViewHolder {
+        private final ImageView theaterImage;
+        private final TextView theaterName;
+        private final TextView theaterAddress;
 
         TheaterViewHolder(@NonNull View itemView) {
             super(itemView);

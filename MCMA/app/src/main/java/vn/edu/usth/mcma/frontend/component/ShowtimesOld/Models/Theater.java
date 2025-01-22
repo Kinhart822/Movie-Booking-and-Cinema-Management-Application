@@ -15,6 +15,6 @@ public class Theater implements Serializable {
     private Long id;
     private String name;
     private String address;
-    private String city;
-    private int imageResId;
+    private String cityName;//todo
+    private int imageResId;//todo
 }
