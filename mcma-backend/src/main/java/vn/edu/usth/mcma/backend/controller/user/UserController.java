@@ -180,11 +180,6 @@ public class UserController {
 //        ViewCinemaResponse viewCinemaResponse = viewService.getAvailableCinemaList();
 //        return ResponseEntity.ok(viewCinemaResponse);
 //    }
-//    @GetMapping("/view/cinemaListByCity/{cityId}")
-//    public ResponseEntity<ViewCinemaResponse> getCinemasByCity(@PathVariable Integer cityId) {
-//        ViewCinemaResponse viewCinemaResponse = viewService.getCinemasByCity(cityId);
-//        return ResponseEntity.ok(viewCinemaResponse);
-//    }
 //    @GetMapping("/view/allScreen")
 //    public ResponseEntity<List<ScreenResponse>> getAllScreen() {
 //        List<ScreenResponse> screenResponses = viewService.getAllScreens();

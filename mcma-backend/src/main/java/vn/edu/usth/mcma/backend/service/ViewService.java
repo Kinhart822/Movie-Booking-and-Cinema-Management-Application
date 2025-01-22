@@ -71,26 +71,6 @@ public class ViewService {
 //        return screenResponses;
 //    }
 
-//    public ViewCinemaResponse getCinemasByCity(Integer cityId) {
-//        List<Cinema> cinemaList = cinemaRepository.findByCityId(cityId);
-//        if (cinemaList == null || cinemaList.isEmpty()) {
-//            throw new IllegalArgumentException("No cinemas found for given city.");
-//        }
-//        List<Integer> cinemaIdList = cinemaList.stream()
-//                .map(Cinema::getId)
-//                .toList();
-//        List<String> cinemaNameList = cinemaList.stream()
-//                .map(Cinema::getName)
-//                .toList();
-//        List<String> cityNameList = cinemaList.stream()
-//                .map(cinema -> cinema.getCity().getName())
-//                .toList();
-//        List<String> cinemaAddressList = cinemaList.stream()
-//                .map(Cinema::getAddress)
-//                .toList();
-//
-//        return new ViewCinemaResponse(cinemaIdList, cinemaNameList, cityNameList, cinemaAddressList);
-//    }
 
 //    public ScheduleSelectedByCinemaResponse getAllSchedulesBySelectedCinema(Integer cinemaId) {
 //        Cinema cinema = cinemaRepository.findById(cinemaId)

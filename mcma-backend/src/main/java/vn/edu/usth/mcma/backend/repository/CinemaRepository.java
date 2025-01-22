@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vn.edu.usth.mcma.backend.dto.CinemaProjection;
 import vn.edu.usth.mcma.backend.entity.Cinema;
+import vn.edu.usth.mcma.backend.entity.City;
 
 import java.util.List;
 
@@ -28,4 +29,6 @@ public interface CinemaRepository extends JpaRepository<Cinema, Long> {
             where :query is null or cine.name like concat('%', :query, '%')
             group by cine.id""")
     List<CinemaProjection> findAllProjectionByQuery(@Param(value = "query") String query);
+
+    List<Cinema> findAllByCity(City city);
 }

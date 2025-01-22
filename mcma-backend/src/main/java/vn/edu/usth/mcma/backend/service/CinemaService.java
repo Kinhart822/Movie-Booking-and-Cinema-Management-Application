@@ -5,6 +5,7 @@ import constants.CommonStatus;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import vn.edu.usth.mcma.backend.dto.CinemaDetailShort;
 import vn.edu.usth.mcma.backend.dto.CinemaProjection;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
@@ -25,6 +26,9 @@ public class CinemaService {
     private final CityRepository cityRepository;
     private final JwtHelper jwtHelper;
 
+    /*
+     * ADMIN
+     */
     public ApiResponse createCinema(CinemaRequest request) {
         Long userId = jwtHelper.getIdUserRequesting();
         Instant now = Instant.now();
@@ -89,5 +93,22 @@ public class CinemaService {
                                 .build())
                         .toList());
         return ApiResponse.success();
+    }
+
+    /*
+     * USER
+     */
+    public List<CinemaDetailShort> findAllCinemaByCity(Long cityId) {
+        return cinemaRepository
+                .findAllByCity(cityRepository
+                        .findById(cityId)
+                        .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND)))
+                .stream()
+                .map(c -> CinemaDetailShort.builder()
+                        .id(c.getId())
+                        .name(c.getName())
+                        .address(c.getAddress())
+                        .build())
+                .toList();
     }
 }

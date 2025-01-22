@@ -26,6 +26,8 @@ public class Cinema extends AbstractAuditing implements Serializable {
     private String name;
     @Column
     private String address;
+    @Column(columnDefinition = "LONGTEXT")
+    private String imageBase64;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
 }

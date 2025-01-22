@@ -11,7 +11,7 @@ import vn.edu.usth.mcma.backend.service.MovieService;
 @RestController
 @RequestMapping("/api/v1/admin")
 @RequiredArgsConstructor
-public class MovieController {
+public class MovieAdminController {
     private final MovieService movieService;
 
     /*
