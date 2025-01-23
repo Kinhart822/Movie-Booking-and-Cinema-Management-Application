@@ -20,7 +20,7 @@ import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.GenreResponse;
 import vn.edu.usth.mcma.frontend.dto.response.PerformerResponse;
 import vn.edu.usth.mcma.frontend.dto.response.Review;
-import vn.edu.usth.mcma.frontend.component.Home.MovieDetailActivity;
+import vn.edu.usth.mcma.frontend.component.HomeOld.MovieDetailActivity;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Movie;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 

@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white">
-
-    <!-- Search Facebook Section -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -41,7 +39,6 @@
                 android:layout_margin="8dp"/>
         </LinearLayout>
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,9 +52,8 @@
             android:textSize="25sp"
             android:textColor="@color/red"
             android:textStyle="bold"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginStart="10dp"/>
     </LinearLayout>
-
     <!-- Scroll Type -->
     <HorizontalScrollView
         android:layout_width="match_parent"
@@ -65,15 +61,12 @@
         android:layout_marginTop="12dp"
         android:scrollbars="none"
         android:fillViewport="true">
-
         <LinearLayout
             android:id="@+id/genre_button_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#ffffff"
             android:orientation="horizontal">
-
-
         </LinearLayout>
     </HorizontalScrollView>
 

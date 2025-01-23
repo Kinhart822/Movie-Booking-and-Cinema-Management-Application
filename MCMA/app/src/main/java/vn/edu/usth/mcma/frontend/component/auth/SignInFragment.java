@@ -22,7 +22,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.component.account.ForgotPasswordStepOneActivity;
-import vn.edu.usth.mcma.frontend.component.account.ForgotPassword_Activity;
 import vn.edu.usth.mcma.frontend.component.account.SignUpStepOneActivity;
 import vn.edu.usth.mcma.frontend.constant.SharedPreferencesKey;
 import vn.edu.usth.mcma.frontend.dto.account.SignInRequest;

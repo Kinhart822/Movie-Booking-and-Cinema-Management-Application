@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.Home;
+package vn.edu.usth.mcma.frontend.component.HomeOld;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -8,6 +8,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import vn.edu.usth.mcma.frontend.component.Feedback.FeedbackFragment;
 import vn.edu.usth.mcma.frontend.component.Personal.PersonalFragment;
+import vn.edu.usth.mcma.frontend.component.home.HomeFragment;
 import vn.edu.usth.mcma.frontend.component.showtimes.ShowtimesFragment;
 import vn.edu.usth.mcma.frontend.component.Store.UI.StoreFragment;
 

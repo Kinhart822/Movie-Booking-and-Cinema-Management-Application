@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.Search;
+package vn.edu.usth.mcma.frontend.component.home;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -25,15 +25,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.component.Search.Search_Adapter;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.GenreResponse;
 import vn.edu.usth.mcma.frontend.dto.response.MovieGenreResponse;
 import vn.edu.usth.mcma.frontend.dto.response.PerformerResponse;
 import vn.edu.usth.mcma.frontend.dto.response.SearchMovieByNameResponse;
-import vn.edu.usth.mcma.frontend.component.Home.MovieDetailActivity;
+import vn.edu.usth.mcma.frontend.component.HomeOld.MovieDetailActivity;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
-public class Search_Activity extends AppCompatActivity {
+public class SearchMovieActivity extends AppCompatActivity {
     private SearchView searchView;
     private Search_Adapter adapter;
     private final List<SearchMovieByNameResponse> items = new ArrayList<>();
@@ -44,7 +45,7 @@ public class Search_Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_search_movie);
 
         searchView = findViewById(R.id.searchView);
         searchView.clearFocus();
@@ -91,7 +92,7 @@ public class Search_Activity extends AppCompatActivity {
 
     private void openMovieDetailsActivity(int position) {
         SearchMovieByNameResponse clickedItem = filteredItems.get(position);
-        Intent intent = new Intent(Search_Activity.this, MovieDetailActivity.class);
+        Intent intent = new Intent(SearchMovieActivity.this, MovieDetailActivity.class);
 
         intent.putExtra(IntentKey.MOVIE_NAME.name(), clickedItem.getName());
         intent.putExtra(IntentKey.MOVIE_GENRES.name(), new ArrayList<>(clickedItem.getGenreResponses().stream().map(GenreResponse::getName).collect(Collectors.toList())));
@@ -125,13 +126,13 @@ public class Search_Activity extends AppCompatActivity {
                                 addGenreButton(genre.getGenreName());
                             }
                         } else {
-                            Toast.makeText(Search_Activity.this, "Failed to fetch genres", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchMovieActivity.this, "Failed to fetch genres", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<List<MovieGenreResponse>> call, @NonNull Throwable t) {
-                        Toast.makeText(Search_Activity.this, "Failed to fetch genres", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchMovieActivity.this, "Failed to fetch genres", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -183,13 +184,13 @@ public class Search_Activity extends AppCompatActivity {
                             filteredItems.addAll(items); // Initially show all movies
                             adapter.notifyDataSetChanged();
                         } else {
-                            Toast.makeText(Search_Activity.this, "Failed to fetch movies", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchMovieActivity.this, "Failed to fetch movies", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<List<SearchMovieByNameResponse>> call, @NonNull Throwable t) {
-                        Toast.makeText(Search_Activity.this, "Failed to fetch movies", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchMovieActivity.this, "Failed to fetch movies", Toast.LENGTH_SHORT).show();
                     }
                 });
 

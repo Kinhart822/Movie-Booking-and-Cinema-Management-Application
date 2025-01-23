@@ -8,5 +8,5 @@
     android:layout_marginTop="16dp"
     android:orientation="horizontal"
     android:scrollbars="none"
-    tools:context=".frontend.component.Home.NowShowingFragment">
+    tools:context=".frontend.component.HomeOld.NowShowingFragment">
 </androidx.recyclerview.widget.RecyclerView>

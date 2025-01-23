@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.Home;
+package vn.edu.usth.mcma.frontend.component.HomeOld;
 
 public interface FilmViewInterface {
     void onFilmSelected(int position);

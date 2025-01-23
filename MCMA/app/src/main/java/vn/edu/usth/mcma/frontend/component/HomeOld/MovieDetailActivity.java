@@ -1,18 +1,16 @@
-package vn.edu.usth.mcma.frontend.component.Home;
+package vn.edu.usth.mcma.frontend.component.HomeOld;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 import android.view.View;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.ui.PlayerView;
@@ -29,7 +27,6 @@ import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetail;
-import vn.edu.usth.mcma.frontend.helper.ImageDecoder;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class MovieDetailActivity extends AppCompatActivity {

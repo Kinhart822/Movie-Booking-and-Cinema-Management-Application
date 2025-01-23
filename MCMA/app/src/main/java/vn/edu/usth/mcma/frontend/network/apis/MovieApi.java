@@ -8,12 +8,13 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import vn.edu.usth.mcma.frontend.dto.home.Advertisement;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetail;
 import vn.edu.usth.mcma.frontend.dto.request.MovieRespondRequest;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CityResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CouponResponse;
 import vn.edu.usth.mcma.frontend.dto.response.ComingSoonResponse;
-import vn.edu.usth.mcma.frontend.dto.response.HighRatingMovieResponse;
+import vn.edu.usth.mcma.frontend.dto.response.HighRatingMovie;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort;
 import vn.edu.usth.mcma.frontend.dto.response.MovieGenreResponse;
 import vn.edu.usth.mcma.frontend.dto.response.MovieRespondResponse;
@@ -23,9 +24,13 @@ import vn.edu.usth.mcma.frontend.dto.response.Schedule;
 import vn.edu.usth.mcma.frontend.dto.response.SearchMovieByNameResponse;
 
 public interface MovieApi {
-    @GET("/api/v1/user/movie/now-showing")
+    @GET("/api/v1/user/view/movie/advertisement")
+    Call<List<Advertisement>> findAllAdvertisement();
+    @GET("/api/v1/user/view/movie/now-showing")
     Call<List<MovieDetailShort>> findAllNowShowing();
-    @GET("/api/v1/user/movie/{id}")
+    @GET("/api/v1/user/view/movie/coming-soon")
+    Call<List<MovieDetailShort>> findAllComingSoon();
+    @GET("/api/v1/user/view/movie/{id}")
     Call<MovieDetail> findMovieDetail(@Path("id") Long id);
 
     @POST("/api/v1/user/movieRespond/add")
@@ -41,8 +46,6 @@ public interface MovieApi {
     Call<List<MovieResponse>> getAllMovieBySelectedDate(@Query("date") String date);
     @GET("/api/v1/user/view/allMovieGenres")
     Call<List<MovieGenreResponse>> getAllMovieGenres();
-    @GET("/api/v1/user/view/highRatingMovies")
-    Call<List<HighRatingMovieResponse>> getHighRatingMovies();
     @GET("/api/v1/user/view/nowShowingMovies")
     Call<List<NowShowingResponse>> getAvailableNowShowingMovies();
 

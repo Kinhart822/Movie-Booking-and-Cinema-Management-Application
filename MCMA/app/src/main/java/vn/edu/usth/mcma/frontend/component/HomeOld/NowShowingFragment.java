@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.Home;
+package vn.edu.usth.mcma.frontend.component.HomeOld;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,11 +45,10 @@ public class NowShowingFragment extends Fragment {
             @Override
             public void onBookingClicked(int position) {
                 openMovieBookingActivity(position);
-
             }
         });
-        recyclerView.setAdapter(adapter);
 
+        recyclerView.setAdapter(adapter);
         findAllNowShowing();
 
         return v;
@@ -70,7 +69,6 @@ public class NowShowingFragment extends Fragment {
                     Toast.makeText(requireActivity(), "No movies to show", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onFailure(@NonNull Call<List<MovieDetailShort>> call, @NonNull Throwable t) {
                 Log.e("NowShowingFragment", "API Call Failed: " + t.getMessage(), t);
@@ -94,7 +92,6 @@ public class NowShowingFragment extends Fragment {
     }
 
     private void openMovieBookingActivity(int position) {
-
         MovieDetailShort selectedFilm = nowShowingList.get(position);
         Intent intent = new Intent(requireContext(), MovieBookingActivity.class);
         intent.putExtra(IntentKey.MOVIE_TITLE.name(), selectedFilm.getName());

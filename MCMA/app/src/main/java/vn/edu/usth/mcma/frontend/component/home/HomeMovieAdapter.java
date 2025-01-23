@@ -1,15 +1,17 @@
-package vn.edu.usth.mcma.frontend.component.Home;
+package vn.edu.usth.mcma.frontend.component.home;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-public class FilmPagerAdapter extends FragmentStateAdapter {
+import vn.edu.usth.mcma.frontend.component.HomeOld.ComingSoonFragment;
+import vn.edu.usth.mcma.frontend.component.HomeOld.NowShowingFragment;
 
-    public FilmPagerAdapter(Fragment fragment) {
+public class HomeMovieAdapter extends FragmentStateAdapter {
+
+    public HomeMovieAdapter(Fragment fragment) {
         super(fragment);
     }
-
     @NonNull
     @Override
     public Fragment createFragment(int position) {
@@ -18,7 +20,6 @@ public class FilmPagerAdapter extends FragmentStateAdapter {
             default -> new NowShowingFragment();
         };
     }
-
     @Override
     public int getItemCount() {
         return 2;
