@@ -228,10 +228,6 @@ public class UserController {
 //    public ResponseEntity<List<MovieDetail>> getAvailableComingSoonMovies() {
 //        return ResponseEntity.ok(viewService.getAvailableComingSoonMovies());
 //    }
-    @GetMapping("/view/highRatingMovies")
-    public ResponseEntity<List<HighRatingMovie>> getHighRatingMovies() {
-        return ResponseEntity.ok(viewService.getHighRatingMovies());
-    }
 //    @GetMapping("/view/allMovieGenres")
 //    public ResponseEntity<List<MovieGenreResponse>> getAllMovieGenres() {
 //        List<MovieGenreResponse> movieGenreResponses = viewService.getAllMovieGenres();

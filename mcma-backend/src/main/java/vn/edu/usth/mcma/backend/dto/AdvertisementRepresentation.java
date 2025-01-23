@@ -6,12 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class HighRatingMovie {
+public class AdvertisementRepresentation {
     private Long id;
-    private String name;
-    private String poster;
-    private Double avgVote;
+    private String banner;
 }

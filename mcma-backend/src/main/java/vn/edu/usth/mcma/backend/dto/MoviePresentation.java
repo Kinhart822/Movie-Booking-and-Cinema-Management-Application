@@ -18,8 +18,8 @@ public class MoviePresentation {
     private String description;
     private String publishDate;
     private String trailerUrl;
-    private String imageUrl;
-    private String backgroundImageUrl;
+    private String poster;
+    private String banner;
 
     private List<SchedulePresentation> schedules;
     private List<GenrePresentation> genres;

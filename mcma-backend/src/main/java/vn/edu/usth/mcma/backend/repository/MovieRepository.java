@@ -9,7 +9,6 @@ import vn.edu.usth.mcma.backend.dto.MovieDetailShortProjection;
 import vn.edu.usth.mcma.backend.entity.Movie;
 
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -20,13 +19,21 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
      * ====
      */
     @Query(nativeQuery = true, value = """
-            select m.id as id, m.name as name, m.length as length, m.image_base64 as imageBase64
+            select m.id as id, m.name as name, m.length as length, m.poster as poster
             from schedule s
                      left join movie m on s.movie_id = m.id
             where s.status in :statuses
               and s.start_time >= :now
             group by m.id""")
-    List<MovieDetailShortProjection> findAllMovieDetailShort(@Param("statuses") List<Integer> statuses, @Param("now") Instant now);
+    List<MovieDetailShortProjection> findAllNowShowing(@Param("statuses") List<Integer> statuses, @Param("now") Instant now);
+    @Query(nativeQuery = true, value = """
+            select m.id as id, m.name as name, m.length as length, m.poster as poster
+            from movie m
+            where m.status in :statuses
+              and m.publish_date >= :now
+            group by m.id""")
+    List<MovieDetailShortProjection> findAllComingSoon(@Param("statuses") List<Integer> statuses, @Param("now") Instant now);
+
     @Query(nativeQuery = true, value = """
             select *
             from map_movie_genre mg

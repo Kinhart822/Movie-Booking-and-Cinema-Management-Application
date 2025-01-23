@@ -19,8 +19,8 @@ public class MovieDetail {
     private String overview;
     private Instant publishDate;
     private String trailerUrl;
-    private String imageBase64;
-    private String backgroundImageBase64;
+    private String poster;
+    private String banner;
 
     private List<String> genres;
     private List<String> directors;

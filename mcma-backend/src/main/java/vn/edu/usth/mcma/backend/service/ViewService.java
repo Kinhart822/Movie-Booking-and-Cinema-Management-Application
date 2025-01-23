@@ -1,15 +1,18 @@
 package vn.edu.usth.mcma.backend.service;
 
+import constants.ApiResponseCode;
 import constants.CommonStatus;
+import constants.PerformerType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.*;
-import vn.edu.usth.mcma.backend.entity.Schedule;
-import vn.edu.usth.mcma.backend.repository.GenreRepository;
-import vn.edu.usth.mcma.backend.repository.MovieRepository;
-import vn.edu.usth.mcma.backend.repository.ReviewRepository;
-import vn.edu.usth.mcma.backend.repository.ScheduleRepository;
+import vn.edu.usth.mcma.backend.entity.Genre;
+import vn.edu.usth.mcma.backend.entity.Movie;
+import vn.edu.usth.mcma.backend.entity.Performer;
+import vn.edu.usth.mcma.backend.exception.BusinessException;
+import vn.edu.usth.mcma.backend.repository.*;
 
 import java.time.Instant;
 import java.util.*;
@@ -22,6 +25,115 @@ public class ViewService {
     private final ScheduleRepository scheduleRepository;
     private final ReviewRepository reviewRepository;
     private final GenreRepository genreRepository;
+    private final AdvertisementRepository advertisementRepository;
+
+    @Deprecated
+    public List<HighRatingMovie> findAllHighRating() {
+        List<HighRatingMovieProjection> projections = reviewRepository.findHighestRatingMovies(CommonStatus.ACTIVE.getStatus(), Instant.now());
+        Map<Long, Double> avgVotes = new HashMap<>();
+        projections.forEach(p -> avgVotes.put(p.getId(), p.getAvgVote()));
+        return movieRepository
+                .findAllById(projections
+                        .stream()
+                        .map(HighRatingMovieProjection::getId)
+                        .toList())
+                .stream()
+                .map(m-> HighRatingMovie
+                        .builder()
+                        .id(m.getId())
+                        .name(m.getName())
+                        .poster(m.getPoster())
+                        .avgVote(avgVotes.get(m.getId()))
+                        .build())
+                .toList();
+    }
+    public List<MovieDetailShort> findAllNowShowing() {
+        return getMovieDetailShorts(movieRepository.findAllNowShowing(List.of(CommonStatus.ACTIVE.getStatus()), Instant.now()));
+    }
+
+    public List<MovieDetailShort> findAllComingSoon() {
+        return getMovieDetailShorts(movieRepository.findAllComingSoon(List.of(CommonStatus.ACTIVE.getStatus()), Instant.now()));
+    }
+
+    @NotNull
+    private List<MovieDetailShort> getMovieDetailShorts(List<MovieDetailShortProjection> movieProjections) {
+        Map<Long, Movie> movieMap = new HashMap<>();
+        movieRepository
+                .findAllById(movieProjections
+                        .stream()
+                        .map(MovieDetailShortProjection::getId)
+                        .toList())
+                .forEach(m -> movieMap.put(m.getId(), m));
+        return movieProjections
+                .stream()
+                .map(p -> MovieDetailShort.builder()
+                        .id(p.getId())
+                        .name(p.getName())
+                        .length(p.getLength())
+                        .poster(p.getPoster())
+                        .rating(movieMap
+                                .get(p.getId())
+                                .getRating()
+                                .getName())
+                        .build())
+                .toList();
+    }
+
+    public MovieDetail findMovieDetail(Long id) {
+        Movie movie = movieRepository
+                .findById(id)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+        List<String> directors = movie
+                .getPerformerSet()
+                .stream()
+                .filter(p -> p.getTypeId() == PerformerType.Director.getId())
+                .map(Performer::getName)
+                .toList();
+        List<String> actors = movie
+                .getPerformerSet()
+                .stream()
+                .filter(p -> p.getTypeId() == PerformerType.Actor.getId())
+                .map(Performer::getName)
+                .toList();
+        return MovieDetail.builder()
+                .id(movie.getId())
+                .name(movie.getName())
+                .length(movie.getLength())
+                .overview(movie.getOverview())
+                .publishDate(movie.getPublishDate())
+                .trailerUrl(movie.getTrailerUrl())
+                .poster(movie.getPoster())
+                .banner(movie.getBanner())
+                .genres(movie
+                        .getGenreSet()
+                        .stream()
+                        .map(Genre::getName)
+                        .toList())
+                .directors(directors)
+                .actors(actors)
+                .rating(movie.getRating().getName())
+                .avgVotes(reviewRepository.findAvgVoteByMovieIdAndStatus(id, CommonStatus.ACTIVE.getStatus()))
+                .build();
+    }
+
+    public List<AdvertisementRepresentation> findAllAdvertisement() {
+        Instant now = Instant.now();
+        return advertisementRepository
+                .findAllByStartDateBeforeAndEndDateAfter(now, now)
+                .stream()
+                .map(a -> {
+                    AdvertisementRepresentation ad = AdvertisementRepresentation.builder()
+                            .id(a.getId())
+                            .build();
+                    if (a.getMovie() != null) {
+                        ad = ad.toBuilder()
+                                .banner(a.getMovie().getBanner())
+                                .build();
+                    }//todo else combo
+                    return ad;
+                })
+                .toList();
+    }
 
 //    public ViewCityResponse getAvailableCities() {
 //        List<City> cities = cityRepository.findAll();
@@ -453,44 +565,6 @@ public class ViewService {
 //        return mapCouponsToResponse(coupons);
 //    }
 
-    public List<HighRatingMovie> getHighRatingMovies() {
-        List<HighRatingMovieProjection> projections = reviewRepository.findHighestRatingMovies(CommonStatus.ACTIVE.getStatus(), Instant.now());
-        Map<Long, Double> avgVotes = new HashMap<>();
-        projections.forEach(p -> {
-            avgVotes.put(p.getId(), p.getAvgVote());
-        });
-        return movieRepository
-                .findAllById(projections
-                        .stream()
-                        .map(HighRatingMovieProjection::getId)
-                        .toList())
-                .stream()
-                .map(m-> HighRatingMovie
-                        .builder()
-                        .id(m.getId())
-                        .name(m.getName())
-                        .length(m.getLength())
-                        .publishDate(m
-                                .getPublishDate()
-                                .toString()
-                                .substring(0,10))
-                        .imageBase64(m.getImageBase64())
-                        .imageBackgroundBase64(m.getBackgroundImageBase64())
-                        .genres(m
-                                .getGenreSet()
-                                .stream()
-                                .map(g -> GenrePresentation
-                                        .builder()
-                                        .id(g.getId())
-                                        .name(g.getName())
-                                        .description(g.getDescription())
-                                        .imageUrl(g.getImageBase64())
-                                        .build())
-                                .toList())
-                        .avgVote(avgVotes.get(m.getId()))
-                        .build())
-                .toList();
-    }
 //
 //    public List<MovieGenreResponse> getAllMovieGenres() {
 //        List<MovieGenre> genres = movieGenreRepository.findAll();

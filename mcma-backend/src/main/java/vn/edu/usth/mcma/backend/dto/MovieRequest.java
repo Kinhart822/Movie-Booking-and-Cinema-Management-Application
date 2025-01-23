@@ -13,8 +13,8 @@ public class MovieRequest {
     private String name;
     private String overview;
     private Integer length;
-    private String imageBase64;
-    private String backgroundImageBase64;
+    private String poster;
+    private String banner;
     private String publishDate;
     private String trailerUrl;
     private Long ratingId;

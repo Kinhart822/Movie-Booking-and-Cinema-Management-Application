@@ -13,6 +13,6 @@ public class MovieDetailShort {
     private Long id;
     private String name;
     private Integer length;
-    private String imageBase64;
+    private String poster;
     private String rating;
 }
