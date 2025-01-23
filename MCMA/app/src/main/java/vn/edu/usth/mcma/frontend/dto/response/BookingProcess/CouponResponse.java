@@ -3,10 +3,17 @@ package vn.edu.usth.mcma.frontend.dto.response.BookingProcess;
 import java.math.BigDecimal;
 import java.util.List;
 
+import lombok.Data;
+
+@Data
 public class CouponResponse {
     private List<Integer> couponIds;
     private List<String> couponNameList;
+    private List<String> imageUrlList;
+    private List<String> backgroundImageUrlList;
     private List<String> couponDescriptionList;
+    private List<String> dateAvailableList;
+    private List<String> expirationDates;
     private List<BigDecimal> discountRateList;
     private List<Integer> minSpendReqList;
     private List<Integer> discountLimitList;
@@ -28,60 +35,5 @@ public class CouponResponse {
         this.minSpendReqList = minSpendReqList;
         this.discountLimitList = discountLimitList;
         this.pointToExchangeList = pointToExchangeList;
-    }
-    public List<Integer> getPointToExchangeList() {
-        return pointToExchangeList;
-    }
-    public void setPointToExchangeList(List<Integer> pointToExchangeList) {
-        this.pointToExchangeList = pointToExchangeList;
-    }
-
-
-    public List<Integer> getCouponIds() {
-        return couponIds;
-    }
-
-    public void setCouponIds(List<Integer> couponIds) {
-        this.couponIds = couponIds;
-    }
-
-    public List<String> getCouponNameList() {
-        return couponNameList;
-    }
-
-    public void setCouponNameList(List<String> couponNameList) {
-        this.couponNameList = couponNameList;
-    }
-
-    public List<String> getCouponDescriptionList() {
-        return couponDescriptionList;
-    }
-
-    public void setCouponDescriptionList(List<String> couponDescriptionList) {
-        this.couponDescriptionList = couponDescriptionList;
-    }
-
-    public List<BigDecimal> getDiscountRateList() {
-        return discountRateList;
-    }
-
-    public void setDiscountRateList(List<BigDecimal> discountRateList) {
-        this.discountRateList = discountRateList;
-    }
-
-    public List<Integer> getMinSpendReqList() {
-        return minSpendReqList;
-    }
-
-    public void setMinSpendReqList(List<Integer> minSpendReqList) {
-        this.minSpendReqList = minSpendReqList;
-    }
-
-    public List<Integer> getDiscountLimitList() {
-        return discountLimitList;
-    }
-
-    public void setDiscountLimitList(List<Integer> discountLimitList) {
-        this.discountLimitList = discountLimitList;
     }
 }

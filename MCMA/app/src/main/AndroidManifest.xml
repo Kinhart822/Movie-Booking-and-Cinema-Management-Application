@@ -35,10 +35,9 @@
             android:name=".frontend.Showtimes.UI.GoogleMapActivity"
             android:exported="true"
             android:theme="@style/Theme.MCMA"></activity>
-        <activity
-            android:name=".frontend.Showtimes.UI.RowSeatLetterActivity"
-            android:exported="false"
-            android:theme="@style/Theme.MCMA" />
+        <activity android:name=".frontend.Coupon.User_Coupon_Details_Activity"
+            android:exported="false" />
+
         <activity
             android:name=".frontend.Coupon.My_Voucher_Activity"
             android:exported="false" />

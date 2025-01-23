@@ -7,6 +7,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,17 +19,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.CouponResponse;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.ViewCouponResponse;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.CouponAPI;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
+import vn.edu.usth.mcma.frontend.dto.response.ViewCouponResponse;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class My_Voucher_Activity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private My_Voucher_Adapter adapter;
-    private List<My_Voucher_Item> voucherList = new ArrayList<>();
+    private final List<My_Voucher_Item> voucherList = new ArrayList<>();
     private FrameLayout noDataContainer;
-    private CouponAPI couponAPI;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -39,16 +37,9 @@ public class My_Voucher_Activity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerview_my_voucher_list);
         noDataContainer = findViewById(R.id.my_coupon_no_data_container);
 
-//        voucherList.add(new My_Voucher_Item("Voucher 1", "100 Points", R.drawable.movie1));
-//        voucherList.add(new My_Voucher_Item("Voucher 2", "200 Points", R.drawable.movie1));
-//        voucherList.add(new My_Voucher_Item("Voucher 3", "300 Points", R.drawable.movie1));
-
         adapter = new My_Voucher_Adapter(this, voucherList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-
-        RetrofitService retrofitService = new RetrofitService(this);
-        couponAPI = retrofitService.getRetrofit().create(CouponAPI.class);
 
         showNoDataView();
         fetchUserVouchers();
@@ -68,10 +59,12 @@ public class My_Voucher_Activity extends AppCompatActivity {
     }
 
     private void fetchUserVouchers() {
-        Call<ViewCouponResponse> call = couponAPI.getAllCouponByUser();
-        call.enqueue(new Callback<ViewCouponResponse>() {
+        ApiService
+                .getBookingApi(this)
+                .getAllCouponByUser()
+                .enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<ViewCouponResponse> call, Response<ViewCouponResponse> response) {
+            public void onResponse(@NonNull Call<ViewCouponResponse> call, @NonNull Response<ViewCouponResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     voucherList.clear();
                     ViewCouponResponse viewCouponResponse = response.body();
@@ -100,7 +93,7 @@ public class My_Voucher_Activity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ViewCouponResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<ViewCouponResponse> call, @NonNull Throwable t) {
                 showNoDataView();
                 Toast.makeText(My_Voucher_Activity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }

@@ -91,7 +91,6 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="back_button">Back button</string>
-    <string name="next">Next</string>
     <string name="otp">OTP</string>
     <string name="check">Check</string>
     <string name="enter_your_email">Enter your email</string>
@@ -106,5 +105,8 @@
     <string name="director">Director</string>
     <string name="name">SpotCinema+</string>
     <string name="book_tickets_by_theater">Book Tickets by Theater</string>
+    <string name="book_tickets">Book Tickets</string>
+    <string name="dash">-</string>
+    <string name="movie_name">movie name</string>
 </resources>
 

@@ -21,14 +21,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.CouponResponse;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.CouponAPI;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CouponResponse;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponViewHolder> {
 
-    private Context context;
-    private List<CouponItem> couponList;
+    private final Context context;
+    private final List<CouponItem> couponList;
 
     public CouponAdapter(Context context, List<CouponItem> couponList) {
         this.context = context;
@@ -70,13 +69,12 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
     }
 
     private void fetchCouponDetails(int couponId) {
-        RetrofitService retrofitService = new RetrofitService(context);
-        CouponAPI couponAPI = retrofitService.getRetrofit().create(CouponAPI.class);
-
-        Call<CouponResponse> call = couponAPI.getCouponDetails(couponId);
-        call.enqueue(new Callback<CouponResponse>() {
+        ApiService
+                .getBookingApi(context)
+                .getCouponDetails(couponId)
+                .enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<CouponResponse> call, Response<CouponResponse> response) {
+            public void onResponse(@NonNull Call<CouponResponse> call, @NonNull Response<CouponResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     CouponResponse couponDetails = response.body();
 
@@ -96,7 +94,7 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
             }
 
             @Override
-            public void onFailure(Call<CouponResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<CouponResponse> call, @NonNull Throwable t) {
                 Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

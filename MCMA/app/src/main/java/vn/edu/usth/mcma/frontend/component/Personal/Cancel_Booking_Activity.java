@@ -1,9 +1,9 @@
 package vn.edu.usth.mcma.frontend.component.Personal;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,9 +35,6 @@ public class Cancel_Booking_Activity extends AppCompatActivity {
         noDataContainer = findViewById(R.id.cancel_booking_no_data_container);
 
         items = new ArrayList<>();
-//        items.add(new Cancel_Booking_Item("Wolverine", "Action", R.drawable.movie4));
-//        items.add(new Cancel_Booking_Item("IronMan", "Drama", R.drawable.movie13));
-//        items.add(new Cancel_Booking_Item("Wicked", "Comedy", R.drawable.movie12));
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new Cancel_Booking_Adapter(this, items);
@@ -54,6 +51,7 @@ public class Cancel_Booking_Activity extends AppCompatActivity {
         recyclerView.setVisibility(View.GONE);
         noDataContainer.setVisibility(View.VISIBLE);
     }
+
     void hideNoDataView() {
         recyclerView.setVisibility(View.VISIBLE);
         noDataContainer.setVisibility(View.GONE);
@@ -84,8 +82,6 @@ public class Cancel_Booking_Activity extends AppCompatActivity {
                                 hideNoDataView();
                                 adapter.notifyDataSetChanged();
                             }
-                        } else {
-//                    Toast.makeText(Cancel_Booking_Activity.this, "Failed to fetch bookings", Toast.LENGTH_SHORT).show();
                         }
                     }
 

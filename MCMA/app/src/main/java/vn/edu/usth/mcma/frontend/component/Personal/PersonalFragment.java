@@ -29,6 +29,7 @@ import vn.edu.usth.mcma.frontend.component.auth.SignInFragment;
 import vn.edu.usth.mcma.frontend.network.AuthPrefsManager;
 
 public class PersonalFragment extends Fragment {
+    public static int userPoints;
     AuthPrefsManager authPrefsManager;
 
     @Override
@@ -37,6 +38,8 @@ public class PersonalFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_personal, container, false);
         authPrefsManager = new AuthPrefsManager(requireContext());
+
+        fetchUserPoints();
 
         LinearLayout to_edit_update = v.findViewById(R.id.account_information_edit_update);
         to_edit_update.setOnClickListener(view -> {
@@ -57,15 +60,12 @@ public class PersonalFragment extends Fragment {
         });
 
         LinearLayout to_coupon_page = v.findViewById(R.id.coupon_page);
-        to_coupon_page.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                fetchUserPoints();
+        to_coupon_page.setOnClickListener(view -> {
+            fetchUserPoints();
 
-                Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Coupon.Coupon_Activity.class);
-//                i.putExtra("USER_POINTS", userPoints);
-                startActivity(i);
-            }
+            Intent i = new Intent(requireContext(), vn.edu.usth.mcma.frontend.Coupon.Coupon_Activity.class);
+            i.putExtra("USER_POINTS", userPoints);
+            startActivity(i);
         });
 
         LinearLayout to_booking_history = v.findViewById(R.id.account_information_booking_history);
@@ -115,10 +115,6 @@ public class PersonalFragment extends Fragment {
             // Show the dialog
             dialog.show();
         });
-
-
-
-
         LinearLayout signOutButton = v.findViewById(R.id.account_information_sign_out);
         signOutButton.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
@@ -151,13 +147,8 @@ public class PersonalFragment extends Fragment {
             AlertDialog dialog = builder.create();
 
             confirmButton.setOnClickListener(v6 -> {
-//                        Fragment signInFragment = new vn.edu.usth.mcma.frontend.auth.SignInFragment();
-//                        FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
-//                        fragmentTransaction.replace(android.R.id.content, signInFragment);
-//                        fragmentTransaction.commit();
 
                 deleteAccount();
-
                 dialog.dismiss();
             });
 
@@ -205,6 +196,28 @@ public class PersonalFragment extends Fragment {
         return v;
     }
 
+    void fetchUserPoints() {
+        ApiService
+                .getBookingApi(requireContext())
+                .getUserPoints()
+                .enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            userPoints = response.body();
+                        } else {
+                            Toast.makeText(requireContext(), "Failed to fetch user points", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<Integer> call, @NonNull Throwable t) {
+                        Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+
     private void signOut() {
         ApiService
                 .getAuthApi(requireContext())
@@ -228,6 +241,7 @@ public class PersonalFragment extends Fragment {
                             Toast.makeText(requireContext(), "Failed to sign out: " + response.message(), Toast.LENGTH_LONG).show();
                         }
                     }
+
                     @Override
                     public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                         Log.e("Sign out", "API call failed", t);
@@ -242,30 +256,30 @@ public class PersonalFragment extends Fragment {
         ApiService
                 .getAccountApi(requireContext())
                 .deleteAccount(userId).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                if (response.isSuccessful()) {
-                    // Account deleted successfully
-                    Toast.makeText(requireContext(), "Account deleted successfully", Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            // Account deleted successfully
+                            Toast.makeText(requireContext(), "Account deleted successfully", Toast.LENGTH_SHORT).show();
 
-                    // Navigate to sign in fragment
-                    Fragment signInFragment = new SignInFragment();
-                    FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(android.R.id.content, signInFragment);
-                    fragmentTransaction.commit();
-                } else {
-                    // Log server error and notify the user
-                    Log.e("DeleteAccount", "Failed to delete account. Response code: " + response.code());
-                    Toast.makeText(requireContext(), "Failed to delete account: " + response.message(), Toast.LENGTH_LONG).show();
-                }
-            }
+                            // Navigate to sign in fragment
+                            Fragment signInFragment = new SignInFragment();
+                            FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                            fragmentTransaction.replace(android.R.id.content, signInFragment);
+                            fragmentTransaction.commit();
+                        } else {
+                            // Log server error and notify the user
+                            Log.e("DeleteAccount", "Failed to delete account. Response code: " + response.code());
+                            Toast.makeText(requireContext(), "Failed to delete account: " + response.message(), Toast.LENGTH_LONG).show();
+                        }
+                    }
 
-            @Override
-            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                Log.e("DeleteAccount", "API call failed", t);
-                Toast.makeText(requireContext(), "Failed to delete account: " + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                        Log.e("DeleteAccount", "API call failed", t);
+                        Toast.makeText(requireContext(), "Failed to delete account: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
 
     }
 

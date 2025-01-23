@@ -19,9 +19,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Model.Response.BookingProcess.CouponResponse;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.APIs.CouponAPI;
-import vn.edu.usth.mcma.frontend.ConnectAPI.Retrofit.RetrofitService;
+import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CouponResponse;
+import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class My_Voucher_Adapter extends RecyclerView.Adapter<My_Voucher_ViewHolder> {
     private final List<My_Voucher_Item> voucherList;
@@ -58,44 +57,41 @@ public class My_Voucher_Adapter extends RecyclerView.Adapter<My_Voucher_ViewHold
         }
 
         holder.itemView.setOnClickListener(v -> {
-//            Intent intent = new Intent(context, Coupon_Details_Activity.class);
-//            context.startActivity(intent);
             int couponId = item.getId();
             fetchCouponDetails(couponId);
         });
     }
 
     private void fetchCouponDetails(int couponId) {
-        RetrofitService retrofitService = new RetrofitService(context);
-        CouponAPI couponAPI = retrofitService.getRetrofit().create(CouponAPI.class);
+        ApiService
+                .getBookingApi(context)
+                .getCouponDetails(couponId)
+                .enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<CouponResponse> call, @NonNull Response<CouponResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            CouponResponse couponDetails = response.body();
 
-        Call<CouponResponse> call = couponAPI.getCouponDetails(couponId);
-        call.enqueue(new Callback<CouponResponse>() {
-            @Override
-            public void onResponse(Call<CouponResponse> call, Response<CouponResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    CouponResponse couponDetails = response.body();
+                            Intent intent = new Intent(context, User_Coupon_Details_Activity.class);
+                            intent.putExtra("couponId", couponDetails.getCouponIds().get(0));
+                            intent.putExtra("couponName", couponDetails.getCouponNameList().get(0));
+                            intent.putExtra("imageUrl", couponDetails.getImageUrlList().get(0));
+                            intent.putExtra("backgroundImageUrl", couponDetails.getBackgroundImageUrlList().get(0));
+                            intent.putExtra("description", couponDetails.getCouponDescriptionList().get(0));
+                            intent.putExtra("dateAvailable", couponDetails.getDateAvailableList().get(0));
+                            intent.putExtra("dateExpired", couponDetails.getExpirationDates().get(0));
+                            intent.putExtra("points", couponDetails.getPointToExchangeList().get(0));
+                            context.startActivity(intent);
+                        } else {
+                            Toast.makeText(context, "Failed to fetch coupon details", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
-                    Intent intent = new Intent(context, User_Coupon_Details_Activity.class);
-                    intent.putExtra("couponId", couponDetails.getCouponIds().get(0));
-                    intent.putExtra("couponName", couponDetails.getCouponNameList().get(0));
-                    intent.putExtra("imageUrl", couponDetails.getImageUrlList().get(0));
-                    intent.putExtra("backgroundImageUrl", couponDetails.getBackgroundImageUrlList().get(0));
-                    intent.putExtra("description", couponDetails.getCouponDescriptionList().get(0));
-                    intent.putExtra("dateAvailable", couponDetails.getDateAvailableList().get(0));
-                    intent.putExtra("dateExpired", couponDetails.getExpirationDates().get(0));
-                    intent.putExtra("points", couponDetails.getPointToExchangeList().get(0));
-                    context.startActivity(intent);
-                } else {
-                    Toast.makeText(context, "Failed to fetch coupon details", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CouponResponse> call, Throwable t) {
-                Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<CouponResponse> call, @NonNull Throwable t) {
+                        Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override
