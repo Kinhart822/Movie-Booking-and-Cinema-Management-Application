@@ -21,6 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.component.home.IMovieItemView;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.GenreResponse;
 import vn.edu.usth.mcma.frontend.dto.response.ComingSoonResponse;
 import vn.edu.usth.mcma.frontend.dto.response.PerformerResponse;
@@ -38,14 +39,10 @@ public class ComingSoonFragment extends Fragment {
         RecyclerView recyclerView = v.findViewById(R.id.recyclerview_coming_soon);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
 
-        adapter = new ComingSoon_Adapter(requireContext(), comingSoonResponseList, new FilmViewInterface() {
+        adapter = new ComingSoon_Adapter(requireContext(), comingSoonResponseList, new IMovieItemView() {
             @Override
-            public void onFilmSelected(int position) {
+            public void onPosterClicked(int position) {
                 openMovieDetailsActivity(position);
-            }
-
-            @Override
-            public void onBookingClicked(int position) {
             }
         });
         recyclerView.setAdapter(adapter);

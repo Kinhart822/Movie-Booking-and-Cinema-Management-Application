@@ -7,12 +7,13 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.component.home.IMovieItemView;
 
 public class ComingSoon_ViewHolder extends RecyclerView.ViewHolder {
     TextView nameView, typeView, timeView, age_limitView;
     ImageView filmView;
 
-    public ComingSoon_ViewHolder(View itemView, final FilmViewInterface filmViewInterface) {
+    public ComingSoon_ViewHolder(View itemView, final IMovieItemView iMovieItemView) {
         super(itemView);
         filmView = itemView.findViewById(R.id.film_image);
         nameView = itemView.findViewById(R.id.film_name);
@@ -24,10 +25,10 @@ public class ComingSoon_ViewHolder extends RecyclerView.ViewHolder {
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (filmViewInterface != null) {
+                if (iMovieItemView != null) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        filmViewInterface.onFilmSelected(position);
+                        iMovieItemView.onPosterClicked(position);
                     }
                 }
             }
@@ -37,10 +38,10 @@ public class ComingSoon_ViewHolder extends RecyclerView.ViewHolder {
         filmView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (filmViewInterface != null) {
+                if (iMovieItemView != null) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        filmViewInterface.onFilmSelected(position);
+                        iMovieItemView.onPosterClicked(position);
                     }
                 }
             }

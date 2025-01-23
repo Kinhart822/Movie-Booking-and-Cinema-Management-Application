@@ -116,9 +116,9 @@ public class SeatSelectionActivity extends AppCompatActivity {
                         if (response.isSuccessful() && response.body() != null) {
                             SeatMapHelper seatMapHelper = new SeatMapHelper(response.body());
                             seatAdapter = new SeatAdapter(
+                                    SeatSelectionActivity.this,
                                     seatMapHelper,
                                     seatTypes,
-                                    SeatSelectionActivity.this,
                                     seat -> updateSelectedSeatsDisplay(),
                                     desiredSeatCount);
                             seatRecyclerView = findViewById(R.id.seatRecyclerView);

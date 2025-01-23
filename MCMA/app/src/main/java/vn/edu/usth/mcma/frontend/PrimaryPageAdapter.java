@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.HomeOld;
+package vn.edu.usth.mcma.frontend;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

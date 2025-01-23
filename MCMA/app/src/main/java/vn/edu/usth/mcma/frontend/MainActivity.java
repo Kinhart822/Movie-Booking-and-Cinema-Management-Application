@@ -15,7 +15,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.component.HomeOld.PrimaryPageAdapter;
 import vn.edu.usth.mcma.frontend.component.auth.SignInFragment;
 import vn.edu.usth.mcma.frontend.component.Notification.Notification_Activity;
 import vn.edu.usth.mcma.frontend.component.home.SearchMovieActivity;

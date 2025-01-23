@@ -14,18 +14,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.component.home.IMovieItemView;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.GenreResponse;
 import vn.edu.usth.mcma.frontend.dto.response.ComingSoonResponse;
 
 public class ComingSoon_Adapter extends RecyclerView.Adapter<ComingSoon_ViewHolder> {
-    private final FilmViewInterface filmViewInterface;
+    private final IMovieItemView iMovieItemView;
     private final Context context;
     private final List<ComingSoonResponse> items;
 
-    public ComingSoon_Adapter(Context context, List<ComingSoonResponse> items, FilmViewInterface filmViewInterface) {
+    public ComingSoon_Adapter(Context context, List<ComingSoonResponse> items, IMovieItemView iMovieItemView) {
         this.context = context;
         this.items = items;
-        this.filmViewInterface = filmViewInterface;
+        this.iMovieItemView = iMovieItemView;
     }
 
     @NonNull
@@ -33,7 +34,7 @@ public class ComingSoon_Adapter extends RecyclerView.Adapter<ComingSoon_ViewHold
     public ComingSoon_ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ComingSoon_ViewHolder(
                 LayoutInflater.from(context).inflate(R.layout.coming_soon_film_frame, parent, false),
-                filmViewInterface
+                iMovieItemView
         );
     }
 
@@ -60,7 +61,7 @@ public class ComingSoon_Adapter extends RecyclerView.Adapter<ComingSoon_ViewHold
         holder.itemView.setOnClickListener(v -> {
             int currentPosition = holder.getAdapterPosition();
             Log.d("ComingSoon_Adapter", "Item clicked at position: " + currentPosition);
-            filmViewInterface.onFilmSelected(currentPosition);
+            iMovieItemView.onPosterClicked(currentPosition);
         });
     }
 

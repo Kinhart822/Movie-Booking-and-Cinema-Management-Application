@@ -221,8 +221,8 @@ public class TheaterScheduleActivity extends AppCompatActivity implements MovieS
                                             .description(m.getDescription())
                                             .publishDate(m.getPublishDate())
                                             .trailerUrl(m.getTrailerUrl())
-                                            .imageUrl(m.getImageUrl())
-                                            .backgroundImageUrl(m.getBackgroundImageUrl())
+                                            .imageUrl(m.getPoster())
+                                            .backgroundImageUrl(m.getBanner())
                                             .schedules(m.getSchedules())
                                             .genreResponses(m.getGenreResponses())
                                             .performerResponses(m.getPerformerResponses())
@@ -275,8 +275,8 @@ public class TheaterScheduleActivity extends AppCompatActivity implements MovieS
                             intent.putExtra(IntentKey.MOVIE_LENGTH.name(), movieResponse.getLength());
                             intent.putExtra(IntentKey.MOVIE_DESCRIPTION.name(), movieResponse.getDescription());
                             intent.putExtra(IntentKey.PUBLISHED_DATE.name(), movieResponse.getPublishDate());
-                            intent.putExtra(IntentKey.IMAGE_URL.name(), movieResponse.getImageUrl());
-                            intent.putExtra(IntentKey.BACKGROUND_IMAGE_URL.name(), movieResponse.getBackgroundImageUrl());
+                            intent.putExtra(IntentKey.IMAGE_URL.name(), movieResponse.getPoster());
+                            intent.putExtra(IntentKey.BACKGROUND_IMAGE_URL.name(), movieResponse.getBanner());
                             intent.putExtra(IntentKey.TRAILER.name(), movieResponse.getTrailerUrl());
                             intent.putExtra(IntentKey.MOVIE_RATING.name(), movieResponse.getRatingResponse().getName());
                             intent.putExtra(IntentKey.MOVIE_PERFORMER_NAME.name(), new ArrayList<>(movieResponse.getPerformerResponses().stream().map(PerformerResponse::getName).collect(Collectors.toList())));

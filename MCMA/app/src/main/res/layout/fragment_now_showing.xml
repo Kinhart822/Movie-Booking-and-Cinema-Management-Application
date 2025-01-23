@@ -1,12 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.recyclerview.widget.RecyclerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/recyclerview_now_showing"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginTop="16dp"
-    android:orientation="horizontal"
-    android:scrollbars="none"
-    tools:context=".frontend.component.HomeOld.NowShowingFragment">
-</androidx.recyclerview.widget.RecyclerView>
+    tools:context=".frontend.component.home.NowShowingFragment">
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager_2_now_showing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/text_view_name"/>
+    <TextView
+        android:id="@+id/text_view_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_pager_2_now_showing"
+        app:layout_constraintBottom_toTopOf="@id/linear_layout_length_rating" />
+    <LinearLayout
+        android:id="@+id/linear_layout_length_rating"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/text_view_name"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_view_name"
+        app:layout_constraintBottom_toTopOf="@id/card_view_book_tickets">
+        <TextView
+            android:id="@+id/text_view_length"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            tools:text="min" />
+        <TextView
+            android:id="@+id/text_view_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tab_rect"
+            android:padding="5dp"
+            android:textColor="@color/red"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view_book_tickets"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:layout_margin="16dp"
+        android:layout_centerHorizontal="true"
+        app:cardBackgroundColor="#3373C4"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="6dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linear_layout_length_rating">
+        <Button
+            android:id="@+id/button_book_tickets"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="#3373C4"
+            android:drawablePadding="8dp"
+            android:drawableTint="@color/white"
+            android:padding="10dp"
+            android:text="@string/book_tickets"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

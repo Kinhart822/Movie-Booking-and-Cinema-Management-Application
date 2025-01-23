@@ -12,8 +12,8 @@ public class SearchMovieByNameResponse {
     private Long id;
     private String name;
     private String description;
-    private String imageUrl;
-    private String backgroundImageUrl;
+    private String poster;
+    private String banner;
     private Integer length;
     private String publishDate;
     private String trailerUrl;

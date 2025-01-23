@@ -13,8 +13,8 @@ public class MovieResponse {
     private String description;
     private String publishDate;
     private String trailerUrl;
-    private String imageUrl;
-    private String backgroundImageUrl;
+    private String poster;
+    private String banner;
 
     private List<Schedule> schedules;
     private List<GenreResponse> genreResponses;

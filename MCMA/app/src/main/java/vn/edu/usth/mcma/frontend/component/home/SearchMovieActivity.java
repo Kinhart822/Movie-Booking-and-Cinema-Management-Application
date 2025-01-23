@@ -99,8 +99,8 @@ public class SearchMovieActivity extends AppCompatActivity {
         intent.putExtra(IntentKey.MOVIE_LENGTH.name(), clickedItem.getLength());
         intent.putExtra(IntentKey.MOVIE_DESCRIPTION.name(), clickedItem.getDescription());
         intent.putExtra(IntentKey.PUBLISHED_DATE.name(), clickedItem.getPublishDate());
-        intent.putExtra(IntentKey.IMAGE_URL.name(), clickedItem.getImageUrl());
-        intent.putExtra(IntentKey.BACKGROUND_IMAGE_URL.name(), clickedItem.getBackgroundImageUrl());
+        intent.putExtra(IntentKey.IMAGE_URL.name(), clickedItem.getPoster());
+        intent.putExtra(IntentKey.BACKGROUND_IMAGE_URL.name(), clickedItem.getBanner());
         intent.putExtra(IntentKey.TRAILER.name(), clickedItem.getTrailerUrl());
         intent.putExtra(IntentKey.MOVIE_RATING.name(), clickedItem.getRatingResponse().getName());
         intent.putExtra(IntentKey.MOVIE_PERFORMER_NAME.name(), new ArrayList<>(clickedItem.getPerformerResponses().stream().map(PerformerResponse::getName).collect(Collectors.toList())));

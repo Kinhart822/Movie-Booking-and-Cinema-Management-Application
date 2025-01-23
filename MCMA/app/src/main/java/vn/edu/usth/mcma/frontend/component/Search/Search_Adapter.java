@@ -54,7 +54,7 @@ public class Search_Adapter extends RecyclerView.Adapter<Search_ViewHolder> {
             holder.age_limitView.setText(R.string.unknown_rating); // Fallback text
         }
         Glide.with(context)
-                .load(item.getImageUrl())
+                .load(item.getPoster())
                 .into(holder.filmView);
 
         holder.itemView.setOnClickListener(v -> {

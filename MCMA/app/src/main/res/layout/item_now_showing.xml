@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!--this relative layout is used to temporally solve the white wings problem-->
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        app:cardElevation="5dp">
+        <FrameLayout
+            android:layout_width="200dp"
+            android:layout_height="300dp"
+            android:background="@drawable/film_image_border"
+            android:padding="4dp">
+            <ImageView
+                android:id="@+id/image_view_poster"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/movie_name"
+                android:scaleType="centerCrop" />
+        </FrameLayout>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

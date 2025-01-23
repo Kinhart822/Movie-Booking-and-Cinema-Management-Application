@@ -33,7 +33,7 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
     private final Map<Integer, Map<Integer, List<Seat>>> rootSeatMatrix;
     private final Map<Integer, SeatTypeResponse> seatTypes;
     private final Context context;
-    private final OnSeatSelectedListener listener;
+    private final ISeatItemView iSeatItemView;
     private int numberOfTicketCounts = 0;
     @Deprecated
     private int desiredNumberOfTickets;
@@ -43,14 +43,14 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
     private final List<Seat> selectedRootSeats;
     private final String TAG = SeatAdapter.class.getName();
 
-    public interface OnSeatSelectedListener {
-        void onSeatSelected(Seat seat);
+    public interface ISeatItemView {
+        void onSeatClicked(Seat seat);
     }
     public SeatAdapter(
+            Context context,
             SeatMapHelper seatMapHelper,
             Map<Integer, SeatTypeResponse> seatTypes,
-            Context context,
-            OnSeatSelectedListener listener,
+            ISeatItemView iSeatItemView,
             int desiredNumberOfTickets) {
         this.seatMatrix = seatMapHelper.getSeatMatrix();
         this.rootSeatMatrix = seatMapHelper.getRootSeatMatrix();
@@ -58,7 +58,7 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
         System.out.println(seatMapHelper.getMaxSeatPerRow());
         this.seatTypes = seatTypes;
         this.context = context;
-        this.listener = listener;
+        this.iSeatItemView = iSeatItemView;
         this.desiredNumberOfTickets = desiredNumberOfTickets;
         this.selectedSeats = new ArrayList<>();
         this.selectedRootSeats  = new ArrayList<>();
@@ -169,8 +169,8 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
         if (context instanceof SeatSelectionActivity) {
             ((SeatSelectionActivity) context).updateSelectedSeatsDisplay();
         }
-        if (listener != null) {
-            listener.onSeatSelected(seat);
+        if (iSeatItemView != null) {
+            iSeatItemView.onSeatClicked(seat);
         }
     }
     private boolean isNumberOfTicketsExceeded(Seat seat) {

@@ -14,7 +14,6 @@ import vn.edu.usth.mcma.frontend.dto.request.MovieRespondRequest;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CityResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CouponResponse;
 import vn.edu.usth.mcma.frontend.dto.response.ComingSoonResponse;
-import vn.edu.usth.mcma.frontend.dto.response.HighRatingMovie;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort;
 import vn.edu.usth.mcma.frontend.dto.response.MovieGenreResponse;
 import vn.edu.usth.mcma.frontend.dto.response.MovieRespondResponse;
