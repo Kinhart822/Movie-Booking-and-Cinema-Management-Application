@@ -27,6 +27,7 @@ import com.google.android.flexbox.FlexboxLayout;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -343,15 +344,30 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
 
                                             // Handle time button click
                                             timeButton.setOnClickListener(v1 -> {
-                                                // Reset previous time button states
-                                                for (int k = 0; k < timeLayout.getChildCount(); k++) {
-                                                    timeLayout.getChildAt(k).setSelected(false);
+                                                String dateTimeStr = dateButton.getText() + " " + time;
+                                                SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+                                                Date selectedDateTime = null;
+                                                try {
+                                                    selectedDateTime = dateTimeFormat.parse(dateTimeStr);
+                                                } catch (ParseException e) {
+                                                    Toast.makeText(context, "Error parsing date and time: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    return;
                                                 }
-                                                // Set the clicked button as selected
-                                                timeButton.setSelected(true);
-
-                                                // Pass selected scheduleId to the listener
-                                                listener.onShowtimeClick(theater, date, time, selectedScreenId, selectedScreenRoom, scheduleId);
+                                                Calendar calendar = Calendar.getInstance();
+                                                calendar.setTime(selectedDateTime);
+                                                calendar.add(Calendar.MINUTE, 10);
+                                                Date selectedDateTimePlus10Minutes = calendar.getTime();
+                                                Date currentTime = new Date();
+                                                if (selectedDateTimePlus10Minutes.before(currentTime)) {
+                                                    Toast.makeText(context, "The schedule is over", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    // Proceed with the listener action if the time is in the future
+                                                    for (int k = 0; k < timeLayout.getChildCount(); k++) {
+                                                        timeLayout.getChildAt(k).setSelected(false);
+                                                    }
+                                                    timeButton.setSelected(true);
+                                                    listener.onShowtimeClick(theater, date, time, selectedScreenId, selectedScreenRoom, scheduleId);
+                                                }
                                             });
 
                                             timeLayout.addView(timeButton);
