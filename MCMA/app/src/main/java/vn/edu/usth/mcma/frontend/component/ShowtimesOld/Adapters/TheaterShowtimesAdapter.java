@@ -345,8 +345,8 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                             // Handle time button click
                                             timeButton.setOnClickListener(v1 -> {
                                                 String dateTimeStr = dateButton.getText() + " " + time;
-                                                SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
-                                                Date selectedDateTime = null;
+                                                SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+                                                Date selectedDateTime;
                                                 try {
                                                     selectedDateTime = dateTimeFormat.parse(dateTimeStr);
                                                 } catch (ParseException e) {

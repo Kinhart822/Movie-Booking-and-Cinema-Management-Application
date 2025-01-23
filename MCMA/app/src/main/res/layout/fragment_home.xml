@@ -36,17 +36,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:paddingBottom="40dp">
 
                 <!-- Search View -->
                 <LinearLayout
                     android:id="@+id/search_bar"
                     android:layout_width="match_parent"
                     android:layout_height="43dp"
-                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginVertical="10dp"
                     android:background="@drawable/edit_group_box"
-                    android:orientation="horizontal"
-                    android:padding="2dp">
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/search_icon"
@@ -63,20 +63,19 @@
                     android:id="@+id/view_flipper"
                     android:layout_width="match_parent"
                     android:layout_height="275dp"
-                    android:layout_margin="8dp" />
+                    android:layout_marginVertical="10dp" />
 
                 <!-- Tab Layout and ViewPager -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="10dp">
+                    android:orientation="vertical">
 
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/type_tablayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="12dp"
+                        android:layout_margin="20dp"
                         android:background="@drawable/tab_rect"
                         android:elevation="3dp"
                         app:tabBackground="@drawable/tab_background"
@@ -94,12 +93,6 @@
                         android:layout_height="wrap_content"
                         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
                 </LinearLayout>
-
-                <!-- Additional Spacer -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:orientation="vertical" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

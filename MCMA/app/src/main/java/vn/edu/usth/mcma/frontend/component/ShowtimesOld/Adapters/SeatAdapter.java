@@ -26,6 +26,7 @@ import vn.edu.usth.mcma.frontend.constant.SeatAvailables;
 import vn.edu.usth.mcma.frontend.dto.response.SeatTypeResponse;
 import vn.edu.usth.mcma.frontend.dto.response.Seat;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.SeatSelectionActivity;
+import vn.edu.usth.mcma.frontend.helper.SeatMapHelper;
 
 public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder> {
     private final Map<Integer, Map<Integer, Seat>> seatMatrix;
@@ -34,8 +35,9 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
     private final Context context;
     private final OnSeatSelectedListener listener;
     private int numberOfTicketCounts = 0;
+    @Deprecated
     private int desiredNumberOfTickets;
-    private int numberOfColumnsPerRow;
+    private final int maxSeatPerRow;
     private final List<Seat> selectedSeats;
     @Getter // this contains list of root seats
     private final List<Seat> selectedRootSeats;
@@ -45,56 +47,62 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
         void onSeatSelected(Seat seat);
     }
     public SeatAdapter(
-            Map<Integer, Map<Integer, Seat>> seatMatrix,
-            Map<Integer, Map<Integer, List<Seat>>> rootSeatMatrix,
+            SeatMapHelper seatMapHelper,
             Map<Integer, SeatTypeResponse> seatTypes,
             Context context,
             OnSeatSelectedListener listener,
             int desiredNumberOfTickets) {
-        this.seatMatrix = seatMatrix;
-        this.rootSeatMatrix = rootSeatMatrix;
+        this.seatMatrix = seatMapHelper.getSeatMatrix();
+        this.rootSeatMatrix = seatMapHelper.getRootSeatMatrix();
+        this.maxSeatPerRow = seatMapHelper.getMaxSeatPerRow();
+        System.out.println(seatMapHelper.getMaxSeatPerRow());
         this.seatTypes = seatTypes;
         this.context = context;
         this.listener = listener;
         this.desiredNumberOfTickets = desiredNumberOfTickets;
         this.selectedSeats = new ArrayList<>();
         this.selectedRootSeats  = new ArrayList<>();
-        this.numberOfColumnsPerRow = Objects
-                .requireNonNull(seatMatrix.get(1))
-                .size();
     }
 
-    //todo
+    /*
+     * recycler view is divided into two parts: the first column (type 0) and the rest (type 1)
+     * - the first column presents individual letters (e.g. A, B, ...) suggesting index of the rows
+     * - the rest is the actual seat map
+     */
     @Override
     public int getItemViewType(int position) {
-        int totalCols = numberOfColumnsPerRow + 1; // Thêm cột cho chữ cái hàng
-        int col = position % totalCols;
-        // Loại item: chữ cái hàng (cột đầu tiên)
+        int col = position % (maxSeatPerRow + 1);
         return (col == 0) ? 0 : 1;
     }
 
     @NonNull
     @Override
     public SeatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d("SeatAdapter", seatMatrix.toString());
-        if (viewType == 0) { // Chữ cái hàng
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_row_seat_letter, parent, false);
-            return new SeatViewHolder(view, true);
-        } else { // Ghế
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.seat_selection_item, parent, false);
-            return new SeatViewHolder(view, false);
+        SeatViewHolder holder = null;
+        int holderSide = context.getResources().getDisplayMetrics().widthPixels / (maxSeatPerRow + 1);
+        if (viewType == 0) {
+            View itemView = LayoutInflater
+                    .from(parent.getContext())
+                    .inflate(R.layout.item_seat_index, parent, false);
+            holder = new SeatViewHolder(itemView);
+            holder.seatIndexTextView = itemView.findViewById(R.id.text_view_seat_index);
+            holder.seatIndexTextView.setTextSize((float) holderSide * 0.2f);
+        } else if (viewType == 1) {
+            holder = new SeatViewHolder(LayoutInflater
+                    .from(parent.getContext())
+                    .inflate(R.layout.item_seat, parent, false));
         }
+        assert holder != null;
+        holder.itemView.setLayoutParams(new ViewGroup.LayoutParams(holderSide, holderSide));
+        return holder;
     }
     @Override
     public void onBindViewHolder(@NonNull SeatViewHolder holder, int position) {
-        int totalCols = numberOfColumnsPerRow + 1;
-        int row = position / totalCols;
-        int col = position % totalCols;
+        int row = position / (maxSeatPerRow + 1);
+        int col = position % (maxSeatPerRow + 1);
         if (col == 0) {
             char rowLetter = (char) ('A' + row);
-            holder.rowLetterTextView.setText(String.valueOf(rowLetter));
+            holder.seatIndexTextView.setText(String.valueOf(rowLetter));
             return;
         }
         Seat seat = Objects
@@ -105,7 +113,7 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
         int seatTypeId = seat.getTypeId();
         int availabilityId = seat.getAvailability();
         if (name != null) {
-            holder.seatTextView.setText(name);
+//            holder.seatTextView.setText(name);
             holder.itemView.setBackground(ContextCompat
                     .getDrawable(context, SeatAvailability
                             .getById(availabilityId)
@@ -116,20 +124,20 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
                         .getDrawable(context, SeatAvailables
                                 .getById(seatTypeId)
                                 .getBackgroundId()));
-                holder.itemView.setOnClickListener(v -> toggleSeat(seat, holder));
+                holder.itemView.setOnClickListener(v -> toggleSeat(seat));
             }
             if (selectedSeats.contains(seat)) {
                 holder.itemView.setBackground(ContextCompat
                         .getDrawable(context, SeatAvailables.SELECTED.getBackgroundId()));
             }
         } else {
-            holder.seatTextView.setText("");
+//            holder.seatTextView.setText("");
             holder.itemView.setBackground(ContextCompat
                     .getDrawable(context, R.drawable.ic_seat_empty));
             holder.itemView.setOnClickListener(null);
         }
     }
-    private void toggleSeat(Seat seat, SeatViewHolder holder) {
+    private void toggleSeat(Seat seat) {
         int rootRow = seat.getRootRow();
         int rootCol = seat.getRootCol();
         List<Seat> rectangle = Objects
@@ -157,7 +165,7 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
             selectedSeats.addAll(rectangle);
             selectedRootSeats.add(rootSeat);
         }
-        rectangle.forEach(s -> notifyItemChanged(s.getRow() * (numberOfColumnsPerRow + 1) + s.getCol() + 1));
+        rectangle.forEach(s -> notifyItemChanged(s.getRow() * (maxSeatPerRow + 1) + s.getCol() + 1));
         if (context instanceof SeatSelectionActivity) {
             ((SeatSelectionActivity) context).updateSelectedSeatsDisplay();
         }
@@ -186,20 +194,17 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
                 ? 2
                 : 1;
     }
-    // Rows * Columns
     @Override
     public int getItemCount() {
-        return seatMatrix.size() * (Objects.requireNonNull(seatMatrix.get(1)).size() + 1);
+        return seatMatrix.size() * (maxSeatPerRow + 1);
     }
     public static class SeatViewHolder extends RecyclerView.ViewHolder {
-        TextView seatTextView;
-        TextView rowLetterTextView;
-        SeatViewHolder(@NonNull View itemView, boolean isRowLetter) {
+//        TextView seatTextView;
+        View seatView;
+        TextView seatIndexTextView;
+        SeatViewHolder(@NonNull View itemView) {
             super(itemView);
-            if (isRowLetter) {
-                rowLetterTextView = itemView.findViewById(R.id.rowSeatLetterTextView);
-            }
-            seatTextView = itemView.findViewById(R.id.seatTextView);//todo monospace font
+//            seatTextView = itemView.findViewById(R.id.seatTextView);//todo monospace font
         }
     }
 }

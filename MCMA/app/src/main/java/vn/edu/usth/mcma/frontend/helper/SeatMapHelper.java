@@ -14,9 +14,12 @@ public class SeatMapHelper {
     private Map<Integer, Map<Integer, Seat>> seatMatrix;
     @Getter
     private Map<Integer, Map<Integer, List<Seat>>> rootSeatMatrix;
+    @Getter
+    private int maxSeatPerRow;
     public SeatMapHelper(List<Seat> seats) {
         this.seats = seats;
         this.generateSeatMatrix();
+        this.calculateMaxSeatPerRow();
     }
     private void generateSeatMatrix() {
         seatMatrix = new TreeMap<>();
@@ -30,5 +33,13 @@ public class SeatMapHelper {
                     .computeIfAbsent(seat.getRootCol(), c -> new ArrayList<>())
                     .add(seat);
         }
+    }
+    private void calculateMaxSeatPerRow() {
+        maxSeatPerRow = -1;
+        seatMatrix.forEach((row, map) -> {
+            if (map.size() >= maxSeatPerRow) {
+                maxSeatPerRow = map.size();
+            }
+        });
     }
 }

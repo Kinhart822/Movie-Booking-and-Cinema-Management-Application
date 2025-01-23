@@ -116,12 +116,13 @@ public class SeatSelectionActivity extends AppCompatActivity {
                         if (response.isSuccessful() && response.body() != null) {
                             SeatMapHelper seatMapHelper = new SeatMapHelper(response.body());
                             seatAdapter = new SeatAdapter(
-                                    seatMapHelper.getSeatMatrix(),
-                                    seatMapHelper.getRootSeatMatrix(),
+                                    seatMapHelper,
                                     seatTypes,
                                     SeatSelectionActivity.this,
                                     seat -> updateSelectedSeatsDisplay(),
                                     desiredSeatCount);
+                            seatRecyclerView = findViewById(R.id.seatRecyclerView);
+                            seatRecyclerView.setLayoutManager(new GridLayoutManager(SeatSelectionActivity.this, seatMapHelper.getMaxSeatPerRow() + 1));
                             seatRecyclerView.setAdapter(seatAdapter);
                             seatAdapter.notifyDataSetChanged();
                         } else {
