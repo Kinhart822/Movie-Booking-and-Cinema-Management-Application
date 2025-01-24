@@ -2,20 +2,25 @@ package vn.edu.usth.mcma.frontend.component.home;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,14 +58,12 @@ public class NowShowingFragment extends Fragment {
         bookTicketsButton = v.findViewById(R.id.button_book_tickets);
 
         nowShowingViewPager2.setAdapter(adapter);
-        nowShowingViewPager2.setClipToPadding(false);
-        nowShowingViewPager2.setClipChildren(false);
-        nowShowingViewPager2.setOffscreenPageLimit(5);
+        nowShowingViewPager2.setOffscreenPageLimit(2);
         nowShowingViewPager2.setPageTransformer((page, position) -> {
             float scaleFactor = Math.max(0.85f, 1 - Math.abs(position));
             page.setScaleX(scaleFactor);
             page.setScaleY(scaleFactor);
-            page.setTranslationX(-position * page.getWidth() * 0.5f);
+            page.setTranslationX(-position * page.getWidth() * 1f);
         });
         nowShowingViewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @SuppressLint("DefaultLocale")
