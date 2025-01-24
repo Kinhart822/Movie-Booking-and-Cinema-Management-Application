@@ -7,8 +7,10 @@
     <!--
     params of viewpager2's children must match its parent
     if use centerInParent or centerHorizontal, children will collapse
-    -> use layout_marginHorizontal to make child be in the middle without overlapping other children
-    Why relative layout? after use layout_marginHorizontal, child of relative layout can be centerHorizontal
+    -> use layout_marginHorizontal to make child (in our case, CardView) be in the middle without overlapping other children
+    Why RelativeLayout?
+        CardView has white background, RelativeLayout don't.
+        And after use layout_marginHorizontal, child (in our case, CardView) of RelativeLayout can be centerHorizontal
     -->
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"

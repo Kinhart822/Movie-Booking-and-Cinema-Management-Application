@@ -2,25 +2,20 @@ package vn.edu.usth.mcma.frontend.component.home;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,12 +41,7 @@ public class NowShowingFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_now_showing, container, false);
         nowShowingViewPager2 = v.findViewById(R.id.view_pager_2_now_showing);
         items = new ArrayList<>();
-        adapter = new NowShowingAdapter(requireContext(), inf, items, new IMovieItemView() {
-            @Override
-            public void onPosterClicked(int position) {
-                navigateToMovieDetailActivity(position);
-            }
-        });
+        adapter = new NowShowingAdapter(requireContext(), inf, items, this::navigateToMovieDetailActivity);
         nameTextView = v.findViewById(R.id.text_view_name);
         lengthTextView = v.findViewById(R.id.text_view_length);
         ratingTextView = v.findViewById(R.id.text_view_rating);
