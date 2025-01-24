@@ -4,9 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-public class HomeMovieAdapter extends FragmentStateAdapter {
+public class HomeAdapter extends FragmentStateAdapter {
 
-    public HomeMovieAdapter(Fragment fragment) {
+    public HomeAdapter(Fragment fragment) {
         super(fragment);
     }
     @NonNull

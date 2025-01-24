@@ -45,12 +45,18 @@ public class HomeFragment extends Fragment {
 
         scrollView.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
             System.out.println(scrollY);
-            if (scrollY >= 400) {
-                viewFlipper.setAlpha((float) -scrollY / 100 + 5);
+            if (scrollY >= 350) {
+                viewFlipper.setAlpha((float) -scrollY / 100 + 4.5f);
+                if (viewFlipper.isFlipping()) {
+                    viewFlipper.stopFlipping();
+                }
                 return;
             }
             if (viewFlipper.getAlpha() != 1) {
                 viewFlipper.setAlpha(1);
+                if (!viewFlipper.isFlipping()) {
+                    viewFlipper.startFlipping();
+                }
             }
         });
         prepareViewFlipper();
@@ -103,7 +109,7 @@ public class HomeFragment extends Fragment {
         viewFlipper.addView(banner);
     }
     private void prepareTabLayoutAndViewPager2() {
-        viewPager2.setAdapter(new HomeMovieAdapter(this));
+        viewPager2.setAdapter(new HomeAdapter(this));
         viewPager2.setUserInputEnabled(false);
 
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
