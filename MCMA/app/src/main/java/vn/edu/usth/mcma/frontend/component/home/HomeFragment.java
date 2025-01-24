@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.ViewFlipper;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,7 @@ import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class HomeFragment extends Fragment {
     private static final String TAG = HomeFragment.class.getName();
+    private ScrollView scrollView;
     private ViewFlipper viewFlipper;
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
@@ -36,10 +38,21 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        scrollView = view.findViewById(R.id.main);
         viewFlipper = view.findViewById(R.id.view_flipper);
         tabLayout = view.findViewById(R.id.tab_layout);
         viewPager2 = view.findViewById(R.id.view_pager_2);
 
+        scrollView.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            System.out.println(scrollY);
+            if (scrollY >= 400) {
+                viewFlipper.setAlpha((float) -scrollY / 100 + 5);
+                return;
+            }
+            if (viewFlipper.getAlpha() != 1) {
+                viewFlipper.setAlpha(1);
+            }
+        });
         prepareViewFlipper();
         findAllAdvertisement();
         prepareTabLayoutAndViewPager2();
@@ -75,14 +88,18 @@ public class HomeFragment extends Fragment {
                 });
     }
     @SuppressLint("DefaultLocale")
-    private void addFlipperChild(Advertisement ads) {
+    private void addFlipperChild(Advertisement ad) {
         if (viewFlipper == null) return;
         ImageView banner = new ImageView(requireContext());
         banner.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        Glide.with(requireContext())
-                .load(ImageDecoder.decode(ads.getBanner()))
-                .placeholder(R.drawable.placeholder1920x1080)
-                .into(banner);
+        if (ad.getBanner() != null) {
+            Glide
+                    .with(requireContext())
+                    .load(ImageDecoder.decode(ad.getBanner()))
+                    .placeholder(R.drawable.placeholder1920x1080)
+                    .error(R.drawable.placeholder1920x1080)
+                    .into(banner);
+        }
         viewFlipper.addView(banner);
     }
     private void prepareTabLayoutAndViewPager2() {

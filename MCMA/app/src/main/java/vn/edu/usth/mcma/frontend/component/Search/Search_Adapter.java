@@ -53,9 +53,14 @@ public class Search_Adapter extends RecyclerView.Adapter<Search_ViewHolder> {
         } else {
             holder.age_limitView.setText(R.string.unknown_rating); // Fallback text
         }
-        Glide.with(context)
-                .load(item.getPoster())
-                .into(holder.filmView);
+        if (item.getPoster() != null) {
+            Glide
+                    .with(context)
+                    .load(item.getPoster())
+                    .placeholder(R.drawable.placeholder1080x1920)
+                    .error(R.drawable.placeholder1080x1920)
+                    .into(holder.filmView);
+        }
 
         holder.itemView.setOnClickListener(v -> {
             int currentPosition = holder.getAdapterPosition();

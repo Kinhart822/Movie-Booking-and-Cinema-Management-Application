@@ -4,8 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import vn.edu.usth.mcma.frontend.component.HomeOld.ComingSoonFragment;
-
 public class HomeMovieAdapter extends FragmentStateAdapter {
 
     public HomeMovieAdapter(Fragment fragment) {

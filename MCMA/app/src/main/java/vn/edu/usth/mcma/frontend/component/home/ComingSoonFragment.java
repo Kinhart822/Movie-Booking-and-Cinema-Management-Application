@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,32 +22,29 @@ import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.component.HomeOld.MovieDetailActivity;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort;
-import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.MovieBookingActivity;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
-public class NowShowingFragment extends Fragment {
-    private static final String TAG = NowShowingFragment.class.getName();
+public class ComingSoonFragment extends Fragment {
+    private static final String TAG = ComingSoonFragment.class.getName();
     private static final int inf = Integer.MAX_VALUE;
     private ViewPager2 nowShowingViewPager2;
     private List<MovieDetailShort> items;
-    private NowShowingAdapter adapter;
+    private ComingSoonAdapter adapter;
     TextView nameTextView, lengthTextView, ratingTextView;
-    Button bookTicketsButton;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_now_showing, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_coming_soon, container, false);
         nowShowingViewPager2 = v.findViewById(R.id.view_pager_2_now_showing);
         items = new ArrayList<>();
-        adapter = new NowShowingAdapter(requireContext(), inf, items, this::navigateToMovieDetailActivity);
+        adapter = new ComingSoonAdapter(requireContext(), inf, items, this::navigateToMovieDetailActivity);
         nameTextView = v.findViewById(R.id.text_view_name);
         lengthTextView = v.findViewById(R.id.text_view_length);
         ratingTextView = v.findViewById(R.id.text_view_rating);
-        bookTicketsButton = v.findViewById(R.id.button_book_tickets);
 
         prepareNowShowingViewPager2();
-        findAllNowShowing();
+        findAllComingSoon();
         return v;
     }
     private void prepareNowShowingViewPager2() {
@@ -72,30 +68,29 @@ public class NowShowingFragment extends Fragment {
                 nameTextView.setText(movie.getName());
                 lengthTextView.setText(String.format("%d min", movie.getLength()));
                 ratingTextView.setText(movie.getRating());
-                bookTicketsButton.setOnClickListener(v -> openMovieBookingActivity(movie));
             }
         });
     }
-    private void findAllNowShowing() {
+    private void findAllComingSoon() {
         ApiService
                 .getMovieApi(requireContext())
-                .findAllNowShowing()
+                .findAllComingSoon()
                 .enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<List<MovieDetailShort>> call, @NonNull Response<List<MovieDetailShort>> response) {
-                if (!response.isSuccessful() || response.body() == null) {
-                    Log.e(TAG, "findAllNowShowing onResponse: code not 200 || body is null");
-                    return;
-                }
-                postFindAllNowShowing(response.body());
-            }
-            @Override
-            public void onFailure(@NonNull Call<List<MovieDetailShort>> call, @NonNull Throwable t) {
-                Log.e(TAG, "findAllNowShowing onFailure: " + t);
-            }
-        });
+                    @Override
+                    public void onResponse(@NonNull Call<List<MovieDetailShort>> call, @NonNull Response<List<MovieDetailShort>> response) {
+                        if (!response.isSuccessful() || response.body() == null) {
+                            Log.e(TAG, "findAllComingSoon onResponse: code not 200 || body is null");
+                            return;
+                        }
+                        postFindAllComingSoon(response.body());
+                    }
+                    @Override
+                    public void onFailure(@NonNull Call<List<MovieDetailShort>> call, @NonNull Throwable t) {
+                        Log.e(TAG, "findAllComingSoon onFailure: " + t);
+                    }
+                });
     }
-    private void postFindAllNowShowing(List<MovieDetailShort> items) {
+    private void postFindAllComingSoon(List<MovieDetailShort> items) {
         this.items.clear();
         this.items.addAll(items);
         adapter.notifyDataSetChanged();
@@ -105,12 +100,6 @@ public class NowShowingFragment extends Fragment {
         MovieDetailShort selectedFilm = items.get(position % items.size());
         Intent intent = new Intent(requireContext(), MovieDetailActivity.class);
         intent.putExtra(IntentKey.MOVIE_ID.name(), selectedFilm.getId());
-        startActivity(intent);
-    }
-    private void openMovieBookingActivity(MovieDetailShort movie) {
-        Intent intent = new Intent(requireContext(), MovieBookingActivity.class);
-        intent.putExtra(IntentKey.MOVIE_TITLE.name(), movie.getName());
-        intent.putExtra(IntentKey.MOVIE_ID.name(), movie.getId());
         startActivity(intent);
     }
 }
