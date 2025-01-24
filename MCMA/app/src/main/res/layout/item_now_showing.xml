@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginHorizontal="100dp" >
+    android:layout_marginHorizontal="105dp" >
     <!--
     params of viewpager2's children must match its parent
     if use centerInParent or centerHorizontal, children will collapse
@@ -11,6 +11,9 @@
     Why RelativeLayout?
         CardView has white background, RelativeLayout don't.
         And after use layout_marginHorizontal, child (in our case, CardView) of RelativeLayout can be centerHorizontal
+    Why 105dp?
+        the devices used to test are pixel 2xl and pixel 6a, both has width of 411dp
+        the child (CardView) width is 200dp, so we should have 105dp each side
     -->
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
