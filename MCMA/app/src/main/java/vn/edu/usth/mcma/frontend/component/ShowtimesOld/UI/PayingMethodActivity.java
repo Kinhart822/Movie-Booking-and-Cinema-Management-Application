@@ -1,9 +1,7 @@
 package vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.widget.Button;
@@ -14,8 +12,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,6 +24,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.component.main.MainActivity;
 import vn.edu.usth.mcma.frontend.dto.request.BookingRequest;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.SendBookingResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingResponse;
@@ -206,7 +203,7 @@ public class PayingMethodActivity extends AppCompatActivity {
                 countDownTimer.cancel();
             }
 
-            Intent intent = new Intent(this, vn.edu.usth.mcma.frontend.MainActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(IntentKey.navigate_to.name(), "HomeFragment");
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);

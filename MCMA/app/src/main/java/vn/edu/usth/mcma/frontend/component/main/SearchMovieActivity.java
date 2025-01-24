@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.home;
+package vn.edu.usth.mcma.frontend.component.main;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -25,7 +25,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.component.Search.Search_Adapter;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.GenreResponse;
 import vn.edu.usth.mcma.frontend.dto.response.MovieGenreResponse;
 import vn.edu.usth.mcma.frontend.dto.response.PerformerResponse;

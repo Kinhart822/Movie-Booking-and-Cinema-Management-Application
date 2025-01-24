@@ -32,10 +32,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
         // Find views
-        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
-        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        TextView toolbarTitle = findViewById(R.id.toolbar_title);
+//        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
+//        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//        TextView toolbarTitle = findViewById(R.id.toolbar_title);
         synopsisTextView = findViewById(R.id.tv_synopsis);
         expandCollapseTextView = findViewById(R.id.tv_concise);
         setSupportActionBar(toolbar);
@@ -45,14 +45,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
         MovieDetails movieDetails = MovieDataProvider.getMovieDetails(movieTitle);
 
         // Set toolbar and collapsing toolbar title
-        toolbarTitle.setText(movieTitle);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
+//        toolbarTitle.setText(movieTitle);
+//        if (getSupportActionBar() != null) {
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        }
 
         // Back button on banner
-        findViewById(R.id.btn_back_banner).setOnClickListener(v -> finish());
+//        findViewById(R.id.btn_back_banner).setOnClickListener(v -> finish());
         // Back button in toolbar
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 

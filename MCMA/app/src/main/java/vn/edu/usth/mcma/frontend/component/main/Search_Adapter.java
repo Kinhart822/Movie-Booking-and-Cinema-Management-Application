@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.Search;
+package vn.edu.usth.mcma.frontend.component.main;
 
 import android.content.Context;
 import android.util.Log;
@@ -18,7 +18,7 @@ import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.GenreResponse;
 import vn.edu.usth.mcma.frontend.dto.response.SearchMovieByNameResponse;
 
 public class Search_Adapter extends RecyclerView.Adapter<Search_ViewHolder> {
-    private SearchViewInterface searchViewInterface;
+    private final SearchViewInterface searchViewInterface;
     private final Context context;
     private final List<SearchMovieByNameResponse> items;
 
@@ -46,8 +46,6 @@ public class Search_Adapter extends RecyclerView.Adapter<Search_ViewHolder> {
             holder.typeView.setText(R.string.unknown_genre); // Fallback text
         }
         holder.timeView.setText(item.getLength() != null ? item.getLength() + " min" : "Unknown");
-
-        String rating = item.getRatingResponse().getName();
         if (!genres.isEmpty()) {
             holder.age_limitView.setText(genres.get(0)); // Use a valid index, e.g., 0 or a relevant value
         } else {

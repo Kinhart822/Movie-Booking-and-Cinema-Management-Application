@@ -7,7 +7,7 @@ import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.MainActivity;
+import vn.edu.usth.mcma.frontend.component.main.MainActivity;
 
 public class LoadingPageActivity extends AppCompatActivity {
     Handler handler;

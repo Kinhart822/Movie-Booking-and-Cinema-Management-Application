@@ -27,7 +27,7 @@ import vn.edu.usth.mcma.frontend.constant.SharedPreferencesKey;
 import vn.edu.usth.mcma.frontend.dto.account.SignInRequest;
 import vn.edu.usth.mcma.frontend.dto.response.SignInResponse;
 import vn.edu.usth.mcma.frontend.network.ApiService;
-import vn.edu.usth.mcma.frontend.MainActivity;
+import vn.edu.usth.mcma.frontend.component.main.MainActivity;
 import vn.edu.usth.mcma.frontend.network.AuthPrefsManager;
 
 public class SignInFragment extends Fragment {

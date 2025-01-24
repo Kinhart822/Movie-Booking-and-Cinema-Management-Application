@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -27,17 +27,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MCMA"
         android:usesCleartextTraffic="true"
-        tools:targetApi="tiramisu">
+        tools:targetApi="tiramisu" >
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAF271l6ZPCQ65cI_T4nvNI5Ezv-M0ufKE" />
+
         <activity
             android:name=".frontend.Showtimes.UI.GoogleMapActivity"
             android:exported="true"
-            android:theme="@style/Theme.MCMA"></activity>
-        <activity android:name=".frontend.Coupon.User_Coupon_Details_Activity"
+            android:theme="@style/Theme.MCMA" />
+        <activity
+            android:name=".frontend.Coupon.User_Coupon_Details_Activity"
             android:exported="false" />
-
         <activity
             android:name=".frontend.Coupon.My_Voucher_Activity"
             android:exported="false" />
@@ -136,15 +137,15 @@
             android:name=".frontend.component.ShowtimesOld.UI.TheaterScheduleActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.MainActivity"
+            android:name=".frontend.component.main.MainActivity"
             android:exported="false"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".frontend.component.home.SearchMovieActivity"
+            android:name=".frontend.component.main.SearchMovieActivity"
             android:exported="false" />
         <activity
             android:name=".frontend.component.More.LoadingPageActivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

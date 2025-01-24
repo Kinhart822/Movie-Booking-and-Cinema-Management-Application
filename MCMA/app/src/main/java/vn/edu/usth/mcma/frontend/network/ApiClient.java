@@ -8,8 +8,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.google.gson.Gson;
-
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,7 +16,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
-import vn.edu.usth.mcma.frontend.MainActivity;
+import vn.edu.usth.mcma.frontend.component.main.MainActivity;
 import vn.edu.usth.mcma.frontend.constant.IP;
 
 public class ApiClient {

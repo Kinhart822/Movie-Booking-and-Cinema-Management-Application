@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend;
+package vn.edu.usth.mcma.frontend.component.main;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +17,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.component.auth.SignInFragment;
 import vn.edu.usth.mcma.frontend.component.Notification.Notification_Activity;
-import vn.edu.usth.mcma.frontend.component.home.SearchMovieActivity;
 import vn.edu.usth.mcma.frontend.network.AuthPrefsManager;
 
 public class MainActivity extends AppCompatActivity {

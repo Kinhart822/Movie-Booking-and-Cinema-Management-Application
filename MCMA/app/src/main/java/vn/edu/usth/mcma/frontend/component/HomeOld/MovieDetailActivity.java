@@ -6,10 +6,14 @@ import android.util.Log;
 import android.widget.TextView;
 import android.view.View;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
@@ -44,12 +48,17 @@ public class MovieDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_movie_detail);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
         id = getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L);
-        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
-        appBarLayout = findViewById(R.id.app_bar_layout);
-        toolbar = findViewById(R.id.toolbar);
-        toolbarTitle = findViewById(R.id.toolbar_title);
+//        appBarLayout = findViewById(R.id.app_bar_layout);
+//        toolbar = findViewById(R.id.toolbar);
+//        toolbarTitle = findViewById(R.id.toolbar_title);
         synopsisTextView = findViewById(R.id.tv_synopsis);
         expandCollapseTextView = findViewById(R.id.tv_concise);
         setSupportActionBar(toolbar);
@@ -79,7 +88,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                         }
 
                         // Back button on banner
-                        findViewById(R.id.btn_back_banner).setOnClickListener(v -> finish());
+//                        findViewById(R.id.btn_back_banner).setOnClickListener(v -> finish());
 
                         // Back button in toolbar
                         toolbar.setNavigationOnClickListener(v -> onBackPressed());

@@ -7,10 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.ViewFlipper;
 
 import androidx.annotation.NonNull;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -30,7 +30,6 @@ import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class HomeFragment extends Fragment {
     private static final String TAG = HomeFragment.class.getName();
-    private ScrollView scrollView;
     private ViewFlipper viewFlipper;
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
@@ -38,12 +37,12 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        scrollView = view.findViewById(R.id.main);
+        NestedScrollView scrollView = view.findViewById(R.id.main);
         viewFlipper = view.findViewById(R.id.view_flipper);
         tabLayout = view.findViewById(R.id.tab_layout);
         viewPager2 = view.findViewById(R.id.view_pager_2);
 
-        scrollView.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+        scrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
             System.out.println(scrollY);
             if (scrollY >= 350) {
                 viewFlipper.setAlpha((float) -scrollY / 100 + 4.5f);
