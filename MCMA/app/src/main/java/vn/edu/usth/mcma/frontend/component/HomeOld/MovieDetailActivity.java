@@ -15,11 +15,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.MediaItem;
-import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -43,7 +42,6 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView toolbarTitle;
     private Toolbar toolbar;
     private AppBarLayout appBarLayout;
-    private ExoPlayer exoPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +57,8 @@ public class MovieDetailActivity extends AppCompatActivity {
 //        appBarLayout = findViewById(R.id.app_bar_layout);
 //        toolbar = findViewById(R.id.toolbar);
 //        toolbarTitle = findViewById(R.id.toolbar_title);
-        synopsisTextView = findViewById(R.id.tv_synopsis);
-        expandCollapseTextView = findViewById(R.id.tv_concise);
+        synopsisTextView = findViewById(R.id.text_view_overview);
+        expandCollapseTextView = findViewById(R.id.text_view_see_more_less);
         setSupportActionBar(toolbar);
 
         findMovieDetail();
@@ -79,21 +77,6 @@ public class MovieDetailActivity extends AppCompatActivity {
                         }
                         movieDetail = response.body();
                         populateMovieDetails(movieDetail);
-
-                        // Set toolbar and collapsing toolbar title
-                        toolbarTitle.setText(movieDetail.getName());
-                        if (getSupportActionBar() != null) {
-                            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                            getSupportActionBar().setDisplayShowHomeEnabled(true);
-                        }
-
-                        // Back button on banner
-//                        findViewById(R.id.btn_back_banner).setOnClickListener(v -> finish());
-
-                        // Back button in toolbar
-                        toolbar.setNavigationOnClickListener(v -> onBackPressed());
-                        setupSynopsisExpansion();
-                        setupToolbarBehavior(appBarLayout, toolbar);
                     }
                     @Override
                     public void onFailure(@NonNull Call<MovieDetail> call, @NonNull Throwable throwable) {
@@ -101,26 +84,41 @@ public class MovieDetailActivity extends AppCompatActivity {
                     }
                 });
     }
-
-    @SuppressLint({"DefaultLocale", "SetTextI18n"})
     private void populateMovieDetails(MovieDetail movieDetail) {
         ((TextView) findViewById(R.id.text_view_movie_name)).setText(movieDetail.getName());
-        // Setup video playback for banner
-        PlayerView playerView = findViewById(R.id.tv_movie_banner);
-        exoPlayer = new ExoPlayer.Builder(this).build();
-        playerView.setPlayer(exoPlayer);
-        MediaItem mediaItem = MediaItem.fromUri(movieDetail.getTrailerUrl());
-        exoPlayer.setMediaItem(mediaItem);
-        exoPlayer.prepare();
-        exoPlayer.play();
-        ((TextView) findViewById(R.id.tv_movie_genres)).setText(String.join(", ", movieDetail.getGenres()));
-        ((TextView) findViewById(R.id.tv_duration)).setText(String.format("%d minutes", movieDetail.getLength()));
-        ((TextView) findViewById(R.id.tv_synopsis)).setText(movieDetail.getOverview());
-        ((TextView) findViewById(R.id.tv_release_date)).setText(Instant.parse(movieDetail.getPublishDate()).atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern("MMM dd, yyy")));
-        ((TextView) findViewById(R.id.tv_classification)).setText(movieDetail.getRating());
-        ((TextView) findViewById(R.id.tv_director)).setText(String.join(", ", movieDetail.getDirectors()));
-        ((TextView) findViewById(R.id.tv_cast)).setText(String.join(", ", movieDetail.getActors()));
-        ((TextView) findViewById(R.id.tv_star)).setText((movieDetail.getAvgVotes() == null ? "N/A" : movieDetail.getAvgVotes().toString()) + " ⭐");
+
+        YouTubePlayerView youTubePlayerView = findViewById(R.id.youtube_player_view_movie_trailer);
+        getLifecycle().addObserver(youTubePlayerView);
+        youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
+            @Override
+            public void onReady(@NonNull YouTubePlayer youTubePlayer) {
+                super.onReady(youTubePlayer);
+                youTubePlayer.cueVideo(movieDetail.getTrailerUrl(), 0);
+            }
+        });
+
+        ((TextView) findViewById(R.id.text_view_movie_genres)).setText(String.join(", ", movieDetail.getGenres()));
+        ((TextView) findViewById(R.id.text_view_length)).setText(String.format("%d minutes", movieDetail.getLength()));
+        ((TextView) findViewById(R.id.text_view_overview)).setText(movieDetail.getOverview());
+        ((TextView) findViewById(R.id.text_view_publish_date)).setText(Instant.parse(movieDetail.getPublishDate()).atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern("MMM dd, yyy")));
+        ((TextView) findViewById(R.id.text_view_rating)).setText(movieDetail.getRating());
+        ((TextView) findViewById(R.id.text_view_director)).setText(String.join(", ", movieDetail.getDirectors()));
+        ((TextView) findViewById(R.id.text_view_cast)).setText(String.join(", ", movieDetail.getActors()));
+        ((TextView) findViewById(R.id.text_view_review)).setText((movieDetail.getAvgVotes() == null ? "N/A" : movieDetail.getAvgVotes().toString()) + " ⭐");
+
+//        toolbarTitle.setText(movieDetail.getName());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
+        // Back button on banner
+//                        findViewById(R.id.btn_back_banner).setOnClickListener(v -> finish());
+
+        // Back button in toolbar
+//        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        setupSynopsisExpansion();
+//        setupToolbarBehavior(appBarLayout, toolbar);
     }
 
     @SuppressLint("SetTextI18n")
@@ -133,11 +131,11 @@ public class MovieDetailActivity extends AppCompatActivity {
                 expandCollapseTextView.setOnClickListener(v -> {
                     if (!isSynopsisExpanded) {
                         synopsisTextView.setMaxLines(Integer.MAX_VALUE);
-                        expandCollapseTextView.setText("Reduce");
+                        expandCollapseTextView.setText("See less");
                         isSynopsisExpanded = true;
                     } else {
                         synopsisTextView.setMaxLines(maxLines);
-                        expandCollapseTextView.setText("Expand");
+                        expandCollapseTextView.setText("See more");
                         isSynopsisExpanded = false;
                     }
                 });
@@ -161,9 +159,5 @@ public class MovieDetailActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (exoPlayer != null) {
-            exoPlayer.release();
-            exoPlayer = null;
-        }
     }
 }

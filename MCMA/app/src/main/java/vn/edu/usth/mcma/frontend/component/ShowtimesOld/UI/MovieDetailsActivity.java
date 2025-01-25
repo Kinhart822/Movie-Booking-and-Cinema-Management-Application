@@ -36,8 +36,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
 //        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
 //        Toolbar toolbar = findViewById(R.id.toolbar);
 //        TextView toolbarTitle = findViewById(R.id.toolbar_title);
-        synopsisTextView = findViewById(R.id.tv_synopsis);
-        expandCollapseTextView = findViewById(R.id.tv_concise);
+        synopsisTextView = findViewById(R.id.text_view_overview);
+        expandCollapseTextView = findViewById(R.id.text_view_see_more_less);
         setSupportActionBar(toolbar);
 
         // Get movie title from intent
@@ -68,14 +68,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private void populateMovieDetails(MovieDetails movie) {
         // Populate all TextViews with movie details
         ((TextView)findViewById(R.id.text_view_movie_name)).setText(movie.getTitle());
-        ((ImageView)findViewById(R.id.tv_movie_banner)).setImageResource(movie.getBannerImageResId());
-        ((TextView)findViewById(R.id.tv_movie_genres)).setText(String.join(", ", movie.getGenres()));
-        ((TextView)findViewById(R.id.tv_duration)).setText(movie.getDuration() + " minutes");
-        ((TextView)findViewById(R.id.tv_release_date)).setText(movie.getReleaseDate());
-        ((TextView)findViewById(R.id.tv_synopsis)).setText(movie.getSynopsis());
-        ((TextView)findViewById(R.id.tv_director)).setText(movie.getDirector());
-        ((TextView)findViewById(R.id.tv_cast)).setText(String.join(", ", movie.getCast()));
-        ((TextView)findViewById(R.id.tv_classification)).setText(movie.getClassification());
+//        ((ImageView)findViewById(R.id.tv_movie_banner)).setImageResource(movie.getBannerImageResId());
+//        ((TextView)findViewById(R.id.tv_movie_genres)).setText(String.join(", ", movie.getGenres()));
+//        ((TextView)findViewById(R.id.tv_duration)).setText(movie.getDuration() + " minutes");
+//        ((TextView)findViewById(R.id.tv_release_date)).setText(movie.getReleaseDate());
+//        ((TextView)findViewById(R.id.tv_synopsis)).setText(movie.getSynopsis());
+//        ((TextView)findViewById(R.id.tv_director)).setText(movie.getDirector());
+//        ((TextView)findViewById(R.id.tv_cast)).setText(String.join(", ", movie.getCast()));
+//        ((TextView)findViewById(R.id.tv_classification)).setText(movie.getClassification());
     }
 
     private void setupSynopsisExpansion() {

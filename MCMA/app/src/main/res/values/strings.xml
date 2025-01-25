@@ -113,5 +113,9 @@
     <string name="search_icon">search icon</string>
     <string name="menu_icon">menu icon</string>
     <string name="notification_icon">notification icon</string>
+    <string name="movie_trailer">movie trailer</string>
+    <string name="release_date">Release date</string>
+    <string name="rating">Rating</string>
+    <string name="voting">Voting</string>
 </resources>
 

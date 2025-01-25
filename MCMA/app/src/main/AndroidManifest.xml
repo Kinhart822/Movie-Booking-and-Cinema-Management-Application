@@ -27,6 +27,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MCMA"
         android:usesCleartextTraffic="true"
+        tools:replace="android:label"
         tools:targetApi="tiramisu" >
         <meta-data
             android:name="com.google.android.geo.API_KEY"
