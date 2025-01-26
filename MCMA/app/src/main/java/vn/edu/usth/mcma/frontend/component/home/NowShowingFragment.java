@@ -21,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.component.HomeOld.MovieDetailActivity;
+import vn.edu.usth.mcma.frontend.component.common.MovieDetailActivity;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.MovieBookingActivity;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
@@ -33,8 +33,8 @@ public class NowShowingFragment extends Fragment {
     private ViewPager2 nowShowingViewPager2;
     private List<MovieDetailShort> items;
     private NowShowingAdapter adapter;
-    TextView nameTextView, lengthTextView, ratingTextView;
-    Button bookTicketsButton;
+    private TextView nameTextView, lengthTextView, ratingTextView;
+    private Button bookTicketsButton;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -109,7 +109,7 @@ public class NowShowingFragment extends Fragment {
     }
     private void openMovieBookingActivity(MovieDetailShort movie) {
         Intent intent = new Intent(requireContext(), MovieBookingActivity.class);
-        intent.putExtra(IntentKey.MOVIE_TITLE.name(), movie.getName());
+        intent.putExtra(IntentKey.MOVIE_TITLE.name(), movie.getName());//todo
         intent.putExtra(IntentKey.MOVIE_ID.name(), movie.getId());
         startActivity(intent);
     }

@@ -33,6 +33,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.component.common.MovieDetailActivity;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.GenreResponse;
 import vn.edu.usth.mcma.frontend.dto.response.MovieResponse;
 import vn.edu.usth.mcma.frontend.dto.response.PerformerResponse;
@@ -267,7 +268,8 @@ public class TheaterScheduleActivity extends AppCompatActivity implements MovieS
                         if (response.isSuccessful() && response.body() != null) {
                             MovieResponse movieResponse = response.body();
                             // Handle movie details (e.g., display in a new activity)
-                            Intent intent = new Intent(TheaterScheduleActivity.this, MovieDetailsActivity.class);
+                            Intent intent = new Intent(TheaterScheduleActivity.this, MovieDetailActivity.class);
+                            //todo
                             intent.putExtra(IntentKey.MOVIE_TITLE.name(), movieResponse.getName());
                             intent.putExtra(IntentKey.MOVIE_NAME.name(), movieResponse.getName());
                             intent.putExtra("MOVIE_TRAILER_LINK", movieResponse.getTrailerUrl());

@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.home;
+package vn.edu.usth.mcma.frontend.component.common;
 
 public interface IMovieItemView {
     void onPosterClicked(int position);

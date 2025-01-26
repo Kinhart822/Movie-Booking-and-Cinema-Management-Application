@@ -68,7 +68,7 @@
             android:name=".frontend.component.ShowtimesOld.UI.PayingMethodActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.HomeOld.MovieDetailActivity"
+            android:name=".frontend.component.common.MovieDetailActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
@@ -106,9 +106,6 @@
             android:exported="false" />
         <activity
             android:name=".frontend.component.ShowtimesOld.UI.MovieBookingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".frontend.component.ShowtimesOld.UI.MovieDetailsActivity"
             android:exported="false" />
         <activity
             android:name=".frontend.component.Personal.ViewFeedback_Activity"

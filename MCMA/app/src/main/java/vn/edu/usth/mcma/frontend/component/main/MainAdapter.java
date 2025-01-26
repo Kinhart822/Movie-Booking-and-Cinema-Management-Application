@@ -12,8 +12,8 @@ import vn.edu.usth.mcma.frontend.component.home.HomeFragment;
 import vn.edu.usth.mcma.frontend.component.showtimes.ShowtimesFragment;
 import vn.edu.usth.mcma.frontend.component.Store.UI.StoreFragment;
 
-public class PrimaryPageAdapter extends FragmentStateAdapter {
-    public PrimaryPageAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+public class MainAdapter extends FragmentStateAdapter {
+    public MainAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
         super(fragmentManager, lifecycle);
     }
 

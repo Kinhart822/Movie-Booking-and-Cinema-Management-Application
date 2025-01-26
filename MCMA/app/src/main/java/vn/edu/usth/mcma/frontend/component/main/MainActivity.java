@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     private void prepareViewPage2AndBottomNavigationView() {
-        viewPager2.setAdapter(new PrimaryPageAdapter(getSupportFragmentManager(), getLifecycle()));
+        viewPager2.setAdapter(new MainAdapter(getSupportFragmentManager(), getLifecycle()));
         viewPager2.setUserInputEnabled(false);
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override

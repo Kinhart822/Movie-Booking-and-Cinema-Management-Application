@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.component.common.IMovieItemView;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort;
 import vn.edu.usth.mcma.frontend.helper.ImageDecoder;
 

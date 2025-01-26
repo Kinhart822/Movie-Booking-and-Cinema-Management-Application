@@ -33,7 +33,7 @@
                     android:layout_height="24dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginStart="8dp"
-                    android:background="@drawable/left"
+                    android:background="@drawable/icon_left_black"
                     android:contentDescription="@string/back_button" />
 
                 <TextView

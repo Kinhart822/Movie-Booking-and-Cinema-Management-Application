@@ -29,7 +29,7 @@ import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.GenreResponse;
 import vn.edu.usth.mcma.frontend.dto.response.MovieGenreResponse;
 import vn.edu.usth.mcma.frontend.dto.response.PerformerResponse;
 import vn.edu.usth.mcma.frontend.dto.response.SearchMovieByNameResponse;
-import vn.edu.usth.mcma.frontend.component.HomeOld.MovieDetailActivity;
+import vn.edu.usth.mcma.frontend.component.common.MovieDetailActivity;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
