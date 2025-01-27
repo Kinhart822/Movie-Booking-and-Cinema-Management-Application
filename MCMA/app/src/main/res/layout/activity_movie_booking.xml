@@ -105,25 +105,24 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dates"
-                app:layout_constraintBottom_toTopOf="@id/linear_layout_cinema_buttons">
+                app:layout_constraintBottom_toTopOf="@id/recycler_view_cinema_buttons">
                 <LinearLayout
-                    android:id="@+id/linear_layout_city_buttons"
+                    android:id="@+id/linear_layout_showtime_city_buttons"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingHorizontal="30dp">
                 </LinearLayout>
             </HorizontalScrollView>
-            <LinearLayout
-                android:id="@+id/linear_layout_cinema_buttons"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_cinema_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cities"
                 app:layout_constraintBottom_toBottomOf="parent">
-            </LinearLayout>
+            </androidx.recyclerview.widget.RecyclerView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

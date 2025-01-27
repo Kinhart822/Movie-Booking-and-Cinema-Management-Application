@@ -120,5 +120,6 @@
     <string name="genre">Genre</string>
     <string name="movie_poster">movie poster</string>
     <string name="banner">banner</string>
+    <string name="expand_collapse">expand collapse</string>
 </resources>
 

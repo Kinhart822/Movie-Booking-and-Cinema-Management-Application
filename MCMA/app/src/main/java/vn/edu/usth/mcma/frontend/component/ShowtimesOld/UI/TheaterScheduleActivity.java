@@ -162,7 +162,7 @@ public class TheaterScheduleActivity extends AppCompatActivity implements MovieS
                                 );
                                 dayButton.setPadding(paddingInPx, paddingInPx, paddingInPx, paddingInPx);
                                 dayButton.setLayoutParams(params);
-                                dayButton.setBackground(getDrawable(R.drawable.button_selector_showtime_date));
+                                dayButton.setBackground(getDrawable(R.drawable.button_selector_showtime));
                                 dayButton.setTextColor(Color.BLACK);
 
                                 // Đặt ngày đầu tiên được chọn mặc định

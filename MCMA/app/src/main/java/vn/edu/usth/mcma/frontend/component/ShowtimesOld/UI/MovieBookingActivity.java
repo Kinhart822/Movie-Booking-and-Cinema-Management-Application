@@ -17,11 +17,17 @@ import androidx.annotation.NonNull;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,12 +56,13 @@ public class MovieBookingActivity extends AppCompatActivity {
     private TextView lengthTextView;
     private TextView ratingTextView;
     private LinearLayout showtimeDateButtonsLinearLayout;
-    private List<String> showtimeDates;
+    private LinearLayout showtimeCityButtonsLinearLayout;
+    private Map<LocalDate, Map<Long, ShowtimeOfMovieByCity>> dateCityMap;
+    private Button selectedDate;
+    private Button selectedCity;
+    private RecyclerView cinemaButtonsRecyclerView;
 
     private TheaterShowtimesAdapter theaterAdapter;
-    private Button selectedCityButton;
-    private String selectedCity;
-    private LinearLayout citiesContainer;
     private String movieTitle;
     private long selectedCityId;
     private Long selectedCinemaId;
@@ -73,7 +80,9 @@ public class MovieBookingActivity extends AppCompatActivity {
         lengthTextView = findViewById(R.id.text_view_length);
         ratingTextView = findViewById(R.id.text_view_rating);
         showtimeDateButtonsLinearLayout = findViewById(R.id.linear_layout_showtime_date_buttons);
-        showtimeDates = new ArrayList<>();
+        showtimeCityButtonsLinearLayout = findViewById(R.id.linear_layout_showtime_city_buttons);
+        dateCityMap = new HashMap<>();
+        cinemaButtonsRecyclerView = findViewById(R.id.recycler_view_cinema_buttons);
 
         backButton
                 .setOnClickListener(v -> onBackPressed());
@@ -81,16 +90,8 @@ public class MovieBookingActivity extends AppCompatActivity {
         findMovieDetailShort2();
         findAllShowtimeByMovie();
 
-//        View citiesSection = findViewById(R.id.cities_section);
-//        View theatersSection = findViewById(R.id.theaters_section);
-//        citiesContainer = findViewById(R.id.cities_container);
-        selectedCity = TheaterDataProvider.getCities().get(0);
-        setupToolbarAndBanner();
-//        setupMovieInfo();
-        fetchCitiesByMovie(id);
+
         setupTheatersList();
-//        citiesSection.setVisibility(View.VISIBLE);
-//        theatersSection.setVisibility(View.VISIBLE);
     }
     private void findMovieDetailShort2() {
         ApiService
@@ -146,147 +147,83 @@ public class MovieBookingActivity extends AppCompatActivity {
                 });
     }
     private void postFindAllShowtimeByMovie(List<ShowtimeOfMovieByCity> showtimeOfMovieByCity) {
+        showtimeOfMovieByCity
+                .forEach(city -> city
+                        .getShowtimeOfMovieByCinemas()
+                        .forEach(cinema -> cinema
+                                .getShowtimeOfMovieByScreen()
+                                .forEach(screen -> screen
+                                        .getShowtimeOfMovieBySchedule()
+                                        .forEach(showtime -> dateCityMap
+                                                .computeIfAbsent(
+                                                        Instant
+                                                                .parse(showtime.getStartTime())
+                                                                .atZone(ZoneId.systemDefault())
+                                                                .toLocalDate(),
+                                                        showtimeDate -> new HashMap<>())
+                                                .computeIfAbsent(city.getCityId(), cityId -> city)))));
+        List<LocalDate> showtimes = new ArrayList<>();
+        dateCityMap
+                .forEach((showtime, cityMap) -> showtimes.add(showtime));
 
+        addDateButtons(showtimes);
+        addCityButtons(showtimeOfMovieByCity);
+        selectedDate = (Button) showtimeDateButtonsLinearLayout.getChildAt(0);
+        selectedCity = (Button) showtimeCityButtonsLinearLayout.getChildAt(0);
+        prepareCinemaButtonsRecyclerView();
     }
-
-    private void addShowtimeDateButton(String showtimeDate) {
-        Button showtimeDateButton = new Button(this);
-        showtimeDateButton.setText(showtimeDate);
-        showtimeDateButton.setTransformationMethod(null);
-        showtimeDateButton.setBackgroundResource(R.drawable.button_selector_showtime_date);
-        showtimeDateButton.setTextColor(ContextCompat.getColor(this, R.color.black));
-        showtimeDateButton.setPadding(20, 10, 20, 10);
-        showtimeDateButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17.5f);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        params.setMargins(8, 0, 8, 0);
-        showtimeDateButton.setLayoutParams(params);
-        showtimeDateButton.setOnClickListener(v -> {
-            if (showtimeDateButton.isSelected()) {
-                return;
-            }
-        });
-    }
-
-
-    private void fetchCitiesByMovie(Long movieId) {
-        ApiService
-                .getMovieApi(this)
-                .getCitiesByMovieId(movieId).enqueue(new Callback<>() {
-                    @Override
-                    public void onResponse(@NonNull Call<List<CityResponse>> call, @NonNull Response<List<CityResponse>> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            List<CityResponse> cities = response.body();
-
-                            if (!cities.isEmpty()) {
-                                // Chọn thành phố đầu tiên làm mặc định
-                                CityResponse defaultCity = cities.get(0);
-                                selectedCity = defaultCity.getCityName();
-                                long defaultCityId = defaultCity.getCityId();
-
-                                fetchCinemasByCity(movieId, defaultCityId);
-                            }
-
-                            setupCityButtons(movieId, cities);
-
-                        } else {
-                            Toast.makeText(MovieBookingActivity.this, "Failed to fetch cities", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<List<CityResponse>> call, @NonNull Throwable t) {
-                        Toast.makeText(MovieBookingActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+    private void addDateButtons(List<LocalDate> showtimes) {
+        showtimes
+                .forEach(showtime -> {
+                    Button showtimeDateButton = new Button(this);
+                    showtimeDateButton.setText(showtime.toString());
+                    showtimeDateButton.setTransformationMethod(null);
+                    showtimeDateButton.setBackgroundResource(R.drawable.button_selector_showtime);
+                    showtimeDateButton.setTextColor(ContextCompat.getColor(this, R.color.black));
+                    showtimeDateButton.setPadding(20, 10, 20, 10);
+                    showtimeDateButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17.5f);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+                    params.setMargins(8, 0, 8, 0);
+                    showtimeDateButton.setLayoutParams(params);
+                    showtimeDateButton.setOnClickListener(v -> {
+                        selectedDate.setSelected(false);
+                        selectedDate = showtimeDateButton;
+                    });
+                    showtimeDateButtonsLinearLayout.addView(showtimeDateButton);
                 });
     }
-    private void fetchCinemasByCity(Long movieId, Long cityId) {
-        ApiService
-                .getCinemaApi(this)
-                .getCinemasByMovieIdAndCityId(movieId, cityId).enqueue(new Callback<>() {
-                    @Override
-                    public void onResponse(@NonNull Call<List<CinemaResponse>> call, @NonNull Response<List<CinemaResponse>> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            List<CinemaResponse> cinemas = response.body();
-                            updateTheatersList(cinemas); // Populate theaters dynamically
-                        } else {
-                            Toast.makeText(MovieBookingActivity.this, "Failed to fetch cinemas", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<List<CinemaResponse>> call, @NonNull Throwable t) {
-                        Toast.makeText(MovieBookingActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+    private void addCityButtons(List<ShowtimeOfMovieByCity> cities) {
+        cities
+                .forEach(city -> {
+                    Button showtimeCityButton = new Button(this);
+                    showtimeCityButton.setText(city.getCityName());
+                    showtimeCityButton.setTransformationMethod(null);
+                    showtimeCityButton.setBackgroundResource(R.drawable.button_selector_showtime);
+                    showtimeCityButton.setTextColor(ContextCompat.getColor(this, R.color.black));
+                    showtimeCityButton.setPadding(20, 10, 20, 10);
+                    showtimeCityButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17.5f);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+                    params.setMargins(8, 0, 8, 0);
+                    showtimeCityButton.setLayoutParams(params);
+                    showtimeCityButton.setOnClickListener(v -> {
+                        selectedCity.setSelected(false);
+                        selectedCity = showtimeCityButton;
+                    });
+                    showtimeCityButtonsLinearLayout.addView(showtimeCityButton);
                 });
     }
-    private void setupCityButtons(Long movieId, List<CityResponse> cityResponses) {
-        citiesContainer.removeAllViews();
+    private void prepareCinemaButtonsRecyclerView() {
 
-        ColorStateList textColorStateList = ContextCompat.getColorStateList(this, R.color.button_text_selector);
-
-        for (CityResponse cityResponse : cityResponses) {
-            Long cityId = cityResponse.getCityId();
-            String city = cityResponse.getCityName();
-
-            Button cityButton = new Button(this);
-            cityButton.setText(city);
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            params.setMargins(8, 0, 8, 0);
-            cityButton.setLayoutParams(params);
-            cityButton.setBackground(getDrawable(R.drawable.button_selector_showtime_date));
-            cityButton.setTextColor(textColorStateList);
-            cityButton.setAllCaps(false);
-            cityButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-
-            // Đặt trạng thái `selected` cho nút mặc định
-            if (selectedCity == null || city.equals(selectedCity)) {
-                cityButton.setSelected(true);
-                selectedCityButton = cityButton;
-                selectedCity = city;
-                selectedCityId = cityId;
-            }
-
-            cityButton.setOnClickListener(v -> {
-                if (selectedCityButton != null) {
-                    selectedCityButton.setSelected(false); // Bỏ chọn nút trước đó
-                }
-                cityButton.setSelected(true); // Chọn nút hiện tại
-                selectedCityButton = cityButton;
-                selectedCity = city;
-
-                if (cityId != -1) {
-                    fetchCinemasByCity(movieId, cityId);
-                    selectedCityId = cityId;
-                }
-            });
-
-            citiesContainer.addView(cityButton);
-        }
     }
-    private void setupToolbarAndBanner() {
-        ImageButton backButton = findViewById(R.id.button_back);
-        backButton.setOnClickListener(v -> finish());
-    }
-    private void updateTheatersList(List<CinemaResponse> cinemas) {
-        List<Theater> cityTheaters = new ArrayList<>();
 
-        for (CinemaResponse cinema : cinemas) {
-            cityTheaters.add(Theater
-                    .builder()
-                    .id(cinema.getId())
-                    .name(cinema.getName())
-                    .address(cinema.getAddress()).build());
-        }
 
-        theaterAdapter.setTheaters(cityTheaters);
-    }
+
     private void setupTheatersList() {
 //        RecyclerView theatersRecyclerView = findViewById(R.id.theaters_recycler_view);
         theaterAdapter = new TheaterShowtimesAdapter((theater, date, showtime, screenId, screenRoom, scheduleId) -> {

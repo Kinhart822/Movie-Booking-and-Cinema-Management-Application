@@ -8,5 +8,5 @@ import lombok.Data;
 public class ShowtimeOfMovieByScreen {
     private Long screenId;
     private String screenType;
-    private List<String> showtime;
+    private List<ShowtimeOfMovieBySchedule> showtimeOfMovieBySchedule;
 }
