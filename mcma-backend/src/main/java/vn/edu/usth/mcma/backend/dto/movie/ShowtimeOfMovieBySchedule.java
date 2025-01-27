@@ -5,14 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.time.Instant;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ShowtimeOfMovieByScreen {
-    private Long screenId;
-    private String screenType;
-    private List<ShowtimeOfMovieBySchedule> showtimeOfMovieBySchedule;
+public class ShowtimeOfMovieBySchedule {
+    private Long scheduleId;
+    private Instant startTime;
 }

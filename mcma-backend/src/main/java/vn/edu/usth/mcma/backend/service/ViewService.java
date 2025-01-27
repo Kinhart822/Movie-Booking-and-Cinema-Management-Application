@@ -207,10 +207,13 @@ public class ViewService {
                                                 .map(screen -> ShowtimeOfMovieByScreen.builder()
                                                         .screenId(screen.getId())
                                                         .screenType(screen.getScreenType().getName())
-                                                        .showtime(screenScheduleMap
+                                                        .showtimeOfMovieBySchedule(screenScheduleMap
                                                                 .getOrDefault(screen, new HashSet<>())
                                                                 .stream()
-                                                                .map(Schedule::getStartTime)
+                                                                .map(schedule -> ShowtimeOfMovieBySchedule.builder()
+                                                                        .scheduleId(schedule.getId())
+                                                                        .startTime(schedule.getStartTime())
+                                                                        .build())
                                                                 .toList())
                                                         .build())
                                                 .toList())
