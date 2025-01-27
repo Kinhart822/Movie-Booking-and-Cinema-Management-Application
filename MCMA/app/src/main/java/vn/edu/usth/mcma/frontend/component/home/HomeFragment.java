@@ -43,7 +43,6 @@ public class HomeFragment extends Fragment {
         viewPager2 = view.findViewById(R.id.view_pager_2);
 
         scrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-            System.out.println(scrollY);
             if (scrollY >= 350) {
                 viewFlipper.setAlpha((float) -scrollY / 100 + 4.5f);
                 if (viewFlipper.isFlipping()) {

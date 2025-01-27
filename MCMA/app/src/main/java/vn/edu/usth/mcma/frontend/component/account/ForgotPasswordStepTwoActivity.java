@@ -84,8 +84,6 @@ public class ForgotPasswordStepTwoActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Instant now = Instant.now();
-                System.out.println(now);
-                System.out.println(otpDueDate);
                 Log.d(TAG, "prepareTimeRemaining run: "+now.toString()+" "+otpDueDate.toString());
                 Duration timeRemaining = Duration.between(now, otpDueDate);
                 if (timeRemaining.isNegative() || timeRemaining.isZero()) {

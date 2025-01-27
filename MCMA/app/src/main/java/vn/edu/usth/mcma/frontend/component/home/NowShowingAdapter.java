@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.component.common.IMovieItemView;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort;
 import vn.edu.usth.mcma.frontend.helper.ImageDecoder;
 
@@ -36,7 +35,7 @@ public class NowShowingAdapter extends RecyclerView.Adapter<NowShowingAdapter.Vi
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater
                 .from(context)
-                .inflate(R.layout.item_now_showing, parent, false)
+                .inflate(R.layout.item_home_movie, parent, false)
         );
     }
     @Override
@@ -44,16 +43,16 @@ public class NowShowingAdapter extends RecyclerView.Adapter<NowShowingAdapter.Vi
         if (items.isEmpty()) {
             return;
         }
-        MovieDetailShort nowShowing = items.get(position % items.size());
-        if (nowShowing.getPoster() != null) {
+        MovieDetailShort movie = items.get(position % items.size());
+        if (movie.getPoster() != null) {
             Glide
                     .with(context)
-                    .load(ImageDecoder.decode(nowShowing.getPoster()))
+                    .load(ImageDecoder.decode(movie.getPoster()))
                     .placeholder(R.drawable.placeholder1080x1920)
                     .error(R.drawable.placeholder1080x1920)
                     .into(holder.posterImageView);
         }
-        holder.itemView.setOnClickListener(v -> iMovieItemView.onPosterClicked(position));
+        holder.itemView.setOnClickListener(v -> iMovieItemView.onPosterClickListener(position));
         holder.posterImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
     }
 

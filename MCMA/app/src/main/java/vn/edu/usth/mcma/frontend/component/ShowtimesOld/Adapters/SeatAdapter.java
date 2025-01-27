@@ -55,7 +55,6 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
         this.seatMatrix = seatMapHelper.getSeatMatrix();
         this.rootSeatMatrix = seatMapHelper.getRootSeatMatrix();
         this.maxSeatPerRow = seatMapHelper.getMaxSeatPerRow();
-        System.out.println(seatMapHelper.getMaxSeatPerRow());
         this.seatTypes = seatTypes;
         this.context = context;
         this.iSeatItemView = iSeatItemView;

@@ -1,6 +1,7 @@
 package vn.edu.usth.mcma.frontend.network.apis;
 
 import java.util.List;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -9,13 +10,13 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import vn.edu.usth.mcma.frontend.dto.home.Advertisement;
+import vn.edu.usth.mcma.frontend.dto.movie.GenreShort;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetail;
 import vn.edu.usth.mcma.frontend.dto.request.MovieRespondRequest;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CityResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CouponResponse;
 import vn.edu.usth.mcma.frontend.dto.response.ComingSoonResponse;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort;
-import vn.edu.usth.mcma.frontend.dto.response.MovieGenreResponse;
 import vn.edu.usth.mcma.frontend.dto.response.MovieRespondResponse;
 import vn.edu.usth.mcma.frontend.dto.response.MovieResponse;
 import vn.edu.usth.mcma.frontend.dto.response.NowShowingResponse;
@@ -32,6 +33,11 @@ public interface MovieApi {
     @GET("/api/v1/user/view/movie/{id}")
     Call<MovieDetail> findMovieDetail(@Path("id") Long id);
 
+    @GET("/api/v1/user/view/genre")
+    Call<List<GenreShort>> findAllGenre();
+    @POST("/api/v1/user/view/movie/genre")// GET will not allow @Body
+    Call<List<MovieDetailShort>> findAllMovieByGenre(@Query("name") String name, @Body Set<Long> ids);
+
     @POST("/api/v1/user/movieRespond/add")
     Call<MovieRespondRequest> addRespond(@Body MovieRespondRequest movieRespondRequest);
     @GET("/api/v1/user/view/comingSoonMovies")
@@ -43,13 +49,9 @@ public interface MovieApi {
 
     @GET("/api/v1/user/view/getAllMovieInformationBySelectedDateSchedule")
     Call<List<MovieResponse>> getAllMovieBySelectedDate(@Query("date") String date);
-    @GET("/api/v1/user/view/allMovieGenres")
-    Call<List<MovieGenreResponse>> getAllMovieGenres();
     @GET("/api/v1/user/view/nowShowingMovies")
     Call<List<NowShowingResponse>> getAvailableNowShowingMovies();
 
-    @GET("/api/v1/user/search-movie-by-name")
-    Call<List<SearchMovieByNameResponse>> searchMovies(@Query("title") String title);
     @GET("/api/v1/user/booking/allCitiesByMovie/{movieId}")
     Call<List<CityResponse>> getCitiesByMovieId(@Path("movieId") Long movieId);
     @GET("/api/v1/user/booking/allCouponsByMovie/{movieId}")

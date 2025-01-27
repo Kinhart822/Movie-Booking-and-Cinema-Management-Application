@@ -33,7 +33,7 @@
                 android:id="@+id/button_menu"
                 android:layout_width="34dp"
                 android:layout_height="34dp"
-                android:background="@drawable/icon_menu"
+                android:background="@drawable/icon_menu_gray"
                 android:contentDescription="@string/menu_icon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -43,7 +43,7 @@
                 android:layout_height="24dp"
                 android:layout_marginVertical="5dp"
                 android:layout_marginHorizontal="15dp"
-                android:background="@drawable/icon_search"
+                android:background="@drawable/icon_search_gray"
                 android:contentDescription="@string/search_icon"
                 app:layout_constraintEnd_toStartOf="@id/button_notification"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -52,7 +52,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_margin="5dp"
-                android:background="@drawable/icon_notification"
+                android:background="@drawable/icon_notification_gray"
                 android:contentDescription="@string/notification_icon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

@@ -25,7 +25,7 @@ public class RatingMovie_Adapter extends RecyclerView.Adapter<RatingMovie_ViewHo
     private List<BookingResponse> items;
 
 //    public interface OnItemClickListener {
-//        void onItemClick(String movieName, String movieType, int movieImage);
+//        void onPosterClickListener(String movieName, String movieType, int movieImage);
 //    }
 
     public interface OnItemClickListener {

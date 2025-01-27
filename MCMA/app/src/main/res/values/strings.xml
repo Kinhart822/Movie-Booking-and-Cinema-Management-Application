@@ -117,5 +117,7 @@
     <string name="release_date">Release date</string>
     <string name="rating">Rating</string>
     <string name="voting">Voting</string>
+    <string name="genre">Genre</string>
+    <string name="movie_poster">movie poster</string>
 </resources>
 
