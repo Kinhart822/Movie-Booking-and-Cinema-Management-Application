@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.backend.dto;
+package vn.edu.usth.mcma.backend.dto.movie;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MovieDetailShort {
+public class MovieDetailShort2 {
     private Long id;
     private String name;
     private Integer length;
-    private String poster;
+    private String banner;
     private String rating;
 }

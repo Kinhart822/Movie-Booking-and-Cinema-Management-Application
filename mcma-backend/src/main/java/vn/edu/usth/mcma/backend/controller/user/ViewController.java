@@ -4,9 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.dto.*;
+import vn.edu.usth.mcma.backend.dto.movie.MovieDetailShort;
+import vn.edu.usth.mcma.backend.dto.movie.MovieDetailShort2;
+import vn.edu.usth.mcma.backend.dto.movie.ShowtimeOfMovieByCity;
 import vn.edu.usth.mcma.backend.service.MovieService;
 import vn.edu.usth.mcma.backend.service.ViewService;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 
@@ -29,7 +33,7 @@ public class ViewController {
     public ResponseEntity<List<MovieDetailShort>> findAllComingSoon() {
         return ResponseEntity.ok(viewService.findAllComingSoon());
     }
-    @GetMapping("/movie/{id}")
+    @GetMapping("/movie/{id}/detail")
     public ResponseEntity<MovieDetail> findMovieDetail(@PathVariable Long id) {
         return ResponseEntity.ok(viewService.findMovieDetail(id));
     }
@@ -44,5 +48,13 @@ public class ViewController {
             @RequestParam(required = false, name = "name") String name,
             @RequestBody Set<Long> ids) {
         return ResponseEntity.ok(viewService.findAllMovieByGenre(name, ids));
+    }
+    @GetMapping("/movie/{id}/short-detail")
+    public ResponseEntity<MovieDetailShort2> findMovieDetailShort(@PathVariable Long id) {
+        return ResponseEntity.ok(viewService.findMovieDetailShort(id));
+    }
+    @GetMapping("/movie/{id}/showtime")
+    public ResponseEntity<List<ShowtimeOfMovieByCity>> findAllShowtimeByMovie(@PathVariable Long id) {
+        return ResponseEntity.ok(viewService.findAllShowtimeByMovie(id));
     }
 }

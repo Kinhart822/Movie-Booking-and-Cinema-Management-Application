@@ -8,9 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.*;
-import vn.edu.usth.mcma.backend.entity.Genre;
-import vn.edu.usth.mcma.backend.entity.Movie;
-import vn.edu.usth.mcma.backend.entity.Performer;
+import vn.edu.usth.mcma.backend.dto.movie.*;
+import vn.edu.usth.mcma.backend.entity.*;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.*;
 
@@ -26,6 +25,8 @@ public class ViewService {
     private final ReviewRepository reviewRepository;
     private final GenreRepository genreRepository;
     private final AdvertisementRepository advertisementRepository;
+    private final CityRepository cityRepository;
+    private final ScreenTypeRepository screenTypeRepository;
 
     @Deprecated
     public List<HighRatingMovie> findAllHighRating() {
@@ -151,6 +152,72 @@ public class ViewService {
             return getMovieDetailShorts(movieRepository.findAllMovieByName(name));
         }
         return getMovieDetailShorts(movieRepository.findAllMovieByNameAndGenre(name, ids));
+    }
+
+    public MovieDetailShort2 findMovieDetailShort(Long id) {
+        Movie movie = movieRepository
+                .findById(id)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+        return MovieDetailShort2.builder()
+                .id(movie.getId())
+                .name(movie.getName())
+                .length(movie.getLength())
+                .banner(movie.getBanner())
+                .rating(movie.getRating().getName()).build();
+    }
+    public List<ShowtimeOfMovieByCity> findAllShowtimeByMovie(Long id) {
+        Movie movie =
+                movieRepository
+                        .findById(id)
+                        .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+        List<Schedule> schedules = scheduleRepository
+                .findAllByMovieAndStartTimeIsAfterAndStatusIs(
+                        movie,
+                        Instant.now(),
+                        CommonStatus.ACTIVE.getStatus());
+        Map<City, Set<Cinema>> cityCinemaMap = new HashMap<>();
+        Map<Cinema, Set<Screen>> cinemaScreenMap = new HashMap<>();
+        Map<Screen, Set<Schedule>> screenScheduleMap = new HashMap<>();
+        schedules.forEach(s -> {
+            cityCinemaMap
+                    .computeIfAbsent(s.getScreen().getCinema().getCity(), city -> new HashSet<>())
+                    .add(s.getScreen().getCinema());
+            cinemaScreenMap
+                    .computeIfAbsent(s.getScreen().getCinema(), cinema -> new HashSet<>())
+                    .add(s.getScreen());
+            screenScheduleMap
+                    .computeIfAbsent(s.getScreen(), screen -> new HashSet<>())
+                    .add(s);
+        });
+        return cityRepository
+                .findAllByStatus(CommonStatus.ACTIVE.getStatus())
+                .stream()
+                .map(city -> ShowtimeOfMovieByCity.builder()
+                        .cityId(city.getId())
+                        .cityName(city.getName())
+                        .showtimeOfMovieByCinemas(cityCinemaMap
+                                .getOrDefault(city, new HashSet<>())
+                                .stream()
+                                .map(cinema -> ShowtimeOfMovieByCinema.builder()
+                                        .cinemaId(cinema.getId())
+                                        .cinemaName(cinema.getName())
+                                        .showtimeOfMovieByScreen(cinemaScreenMap
+                                                .getOrDefault(cinema, new HashSet<>())
+                                                .stream()
+                                                .map(screen -> ShowtimeOfMovieByScreen.builder()
+                                                        .screenId(screen.getId())
+                                                        .screenType(screen.getScreenType().getName())
+                                                        .showtime(screenScheduleMap
+                                                                .getOrDefault(screen, new HashSet<>())
+                                                                .stream()
+                                                                .map(Schedule::getStartTime)
+                                                                .toList())
+                                                        .build())
+                                                .toList())
+                                        .build())
+                                .toList())
+                        .build())
+                .toList();
     }
 
 //    public ViewCityResponse getAvailableCities() {
