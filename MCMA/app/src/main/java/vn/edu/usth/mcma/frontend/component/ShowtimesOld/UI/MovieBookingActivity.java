@@ -4,23 +4,21 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.appbar.AppBarLayout;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +27,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort2;
+import vn.edu.usth.mcma.frontend.dto.movie.ShowtimeOfMovieByCity;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CinemaResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CityResponse;
+import vn.edu.usth.mcma.frontend.helper.ImageDecoder;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Adapters.TheaterShowtimesAdapter;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Movie;
@@ -40,12 +41,22 @@ import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Utils.TheaterDataProvide
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 
 public class MovieBookingActivity extends AppCompatActivity {
+    private static final String TAG = MovieBookingActivity.class.getName();
+    private Long id;
+    private ImageButton backButton;
+    private MovieDetailShort2 movie;
+    private ImageView bannerImageView;
+    private TextView nameTextView;
+    private TextView lengthTextView;
+    private TextView ratingTextView;
+    private LinearLayout showtimeDateButtonsLinearLayout;
+    private List<String> showtimeDates;
+
     private TheaterShowtimesAdapter theaterAdapter;
     private Button selectedCityButton;
     private String selectedCity;
     private LinearLayout citiesContainer;
     private String movieTitle;
-    private Long movieId;
     private long selectedCityId;
     private Long selectedCinemaId;
     private Long selectedScreenId;
@@ -55,25 +66,110 @@ public class MovieBookingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_booking);
+        id = getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L);
+        backButton = findViewById(R.id.button_back);
+        bannerImageView = findViewById(R.id.image_view_banner);
+        nameTextView = findViewById(R.id.text_view_name);
+        lengthTextView = findViewById(R.id.text_view_length);
+        ratingTextView = findViewById(R.id.text_view_rating);
+        showtimeDateButtonsLinearLayout = findViewById(R.id.linear_layout_showtime_date_buttons);
+        showtimeDates = new ArrayList<>();
 
-        movieTitle = getIntent().getStringExtra(IntentKey.MOVIE_TITLE.name());
-        movieId = getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L);
-        View citiesSection = findViewById(R.id.cities_section);
-        View theatersSection = findViewById(R.id.theaters_section);
-        citiesContainer = findViewById(R.id.cities_container);
+        backButton
+                .setOnClickListener(v -> onBackPressed());
 
-        movieTitle = getIntent().getStringExtra(IntentKey.MOVIE_TITLE.name());
+        findMovieDetailShort2();
+        findAllShowtimeByMovie();
 
+//        View citiesSection = findViewById(R.id.cities_section);
+//        View theatersSection = findViewById(R.id.theaters_section);
+//        citiesContainer = findViewById(R.id.cities_container);
         selectedCity = TheaterDataProvider.getCities().get(0);
-
         setupToolbarAndBanner();
-        setupMovieInfo();
-        fetchCitiesByMovie(movieId);
+//        setupMovieInfo();
+        fetchCitiesByMovie(id);
         setupTheatersList();
-
-        citiesSection.setVisibility(View.VISIBLE);
-        theatersSection.setVisibility(View.VISIBLE);
+//        citiesSection.setVisibility(View.VISIBLE);
+//        theatersSection.setVisibility(View.VISIBLE);
     }
+    private void findMovieDetailShort2() {
+        ApiService
+                .getMovieApi(this)
+                .findMovieDetailShort2(id)
+                .enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<MovieDetailShort2> call, @NonNull Response<MovieDetailShort2> response) {
+                        if (!response.isSuccessful() || response.body() == null) {
+                            Log.e(TAG, "findMovieDetailShort2 onResponse: code not 200 || body is null");
+                            return;
+                        }
+                        movie = response.body();
+                        postFindMovieDetailShort2();
+                    }
+                    @Override
+                    public void onFailure(@NonNull Call<MovieDetailShort2> call, @NonNull Throwable throwable) {
+                        Log.e(TAG, "findMovieDetailShort2 onFailure: " + throwable);
+                    }
+                });
+    }
+    @SuppressLint("DefaultLocale")
+    private void postFindMovieDetailShort2() {
+        if (movie.getBanner() != null) {
+            Glide
+                    .with(this)
+                    .load(ImageDecoder.decode(movie.getBanner()))
+                    .placeholder(R.drawable.placeholder1080x1920)
+                    .error(R.drawable.placeholder1080x1920)
+                    .into(bannerImageView);
+        }
+        nameTextView.setText(movie.getName());
+        lengthTextView.setText(String.format("%d min", movie.getLength()));
+        ratingTextView.setText(movie.getRating());
+    }
+    private void findAllShowtimeByMovie() {
+        ApiService
+                .getMovieApi(this)
+                .findAllShowtimeByMovie(id)
+                .enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<ShowtimeOfMovieByCity>> call, @NonNull Response<List<ShowtimeOfMovieByCity>> response) {
+                        if (!response.isSuccessful() || response.body() == null) {
+                            Log.e(TAG, "findAllShowtimeByMovie onResponse: code not 200 || body is null");
+                            return;
+                        }
+                        postFindAllShowtimeByMovie(response.body());
+                    }
+                    @Override
+                    public void onFailure(@NonNull Call<List<ShowtimeOfMovieByCity>> call, @NonNull Throwable throwable) {
+                        Log.e(TAG, "findAllShowtimeByMovie onFailure: " + throwable);
+                    }
+                });
+    }
+    private void postFindAllShowtimeByMovie(List<ShowtimeOfMovieByCity> showtimeOfMovieByCity) {
+
+    }
+
+    private void addShowtimeDateButton(String showtimeDate) {
+        Button showtimeDateButton = new Button(this);
+        showtimeDateButton.setText(showtimeDate);
+        showtimeDateButton.setTransformationMethod(null);
+        showtimeDateButton.setBackgroundResource(R.drawable.button_selector_showtime_date);
+        showtimeDateButton.setTextColor(ContextCompat.getColor(this, R.color.black));
+        showtimeDateButton.setPadding(20, 10, 20, 10);
+        showtimeDateButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17.5f);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(8, 0, 8, 0);
+        showtimeDateButton.setLayoutParams(params);
+        showtimeDateButton.setOnClickListener(v -> {
+            if (showtimeDateButton.isSelected()) {
+                return;
+            }
+        });
+    }
+
 
     private void fetchCitiesByMovie(Long movieId) {
         ApiService
@@ -106,7 +202,6 @@ public class MovieBookingActivity extends AppCompatActivity {
                     }
                 });
     }
-
     private void fetchCinemasByCity(Long movieId, Long cityId) {
         ApiService
                 .getCinemaApi(this)
@@ -127,9 +222,6 @@ public class MovieBookingActivity extends AppCompatActivity {
                     }
                 });
     }
-
-
-    @SuppressLint("UseCompatLoadingForDrawables")
     private void setupCityButtons(Long movieId, List<CityResponse> cityResponses) {
         citiesContainer.removeAllViews();
 
@@ -148,7 +240,7 @@ public class MovieBookingActivity extends AppCompatActivity {
             );
             params.setMargins(8, 0, 8, 0);
             cityButton.setLayoutParams(params);
-            cityButton.setBackground(getDrawable(R.drawable.date_button_selector));
+            cityButton.setBackground(getDrawable(R.drawable.button_selector_showtime_date));
             cityButton.setTextColor(textColorStateList);
             cityButton.setAllCaps(false);
             cityButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
@@ -178,40 +270,10 @@ public class MovieBookingActivity extends AppCompatActivity {
             citiesContainer.addView(cityButton);
         }
     }
-
-
     private void setupToolbarAndBanner() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        TextView toolbarTitle = findViewById(R.id.toolbar_title);
-        toolbarTitle.setText(movieTitle);
-
-        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
-
-        // Get movie details
-
-        // Setup collapsing toolbar behavior
-        appBarLayout.addOnOffsetChangedListener((appBarLayout1, verticalOffset) -> {
-            if (Math.abs(verticalOffset) >= appBarLayout1.getTotalScrollRange()) {
-                // Fully collapsed
-                toolbar.setVisibility(View.VISIBLE);
-            } else {
-                // Expanded or partially expanded
-                toolbar.setVisibility(View.GONE);
-            }
-        });
-
-        // Setup back button
         ImageButton backButton = findViewById(R.id.button_back);
         backButton.setOnClickListener(v -> finish());
     }
-
-    @SuppressLint("SetTextI18n")
-    private void setupMovieInfo() {
-        TextView titleTextView = findViewById(R.id.movie_title);
-        titleTextView.setText(movieTitle);
-    }
-
     private void updateTheatersList(List<CinemaResponse> cinemas) {
         List<Theater> cityTheaters = new ArrayList<>();
 
@@ -225,21 +287,19 @@ public class MovieBookingActivity extends AppCompatActivity {
 
         theaterAdapter.setTheaters(cityTheaters);
     }
-
     private void setupTheatersList() {
-        RecyclerView theatersRecyclerView = findViewById(R.id.theaters_recycler_view);
+//        RecyclerView theatersRecyclerView = findViewById(R.id.theaters_recycler_view);
         theaterAdapter = new TheaterShowtimesAdapter((theater, date, showtime, screenId, screenRoom, scheduleId) -> {
             selectedCinemaId = theater.getId(); // Lấy theaterId
             selectedScreenId = screenId;
             selectedScheduleId = scheduleId;
             showQuantityTicketDialog(theater,date, showtime, screenId, screenRoom);
-        },movieId);
-        theatersRecyclerView.setAdapter(theaterAdapter);
-        theatersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        }, id);
+//        theatersRecyclerView.setAdapter(theaterAdapter);
+//        theatersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
-
-
     // Add new method to MovieBookingActivity.java
+    @Deprecated
     private void showQuantityTicketDialog(Theater theater,String date, String showtime, Long screenId, String screenRoom) {
         QuantityTicketDialog dialog = new QuantityTicketDialog(this, new QuantityTicketDialog.OnDialogActionListener() {
             @Override
@@ -263,7 +323,7 @@ public class MovieBookingActivity extends AppCompatActivity {
                 intent.putExtra(IntentKey.MOVIE_BANNER.name(), movieBannerResId);
 
                 // Booking
-                intent.putExtra(IntentKey.MOVIE_ID.name(), movieId);
+                intent.putExtra(IntentKey.MOVIE_ID.name(), id);
                 intent.putExtra(IntentKey.SELECTED_CITY_ID.name(), selectedCityId);
                 intent.putExtra(IntentKey.SELECTED_CINEMA_ID.name(), selectedCinemaId);
                 intent.putExtra(IntentKey.SELECTED_SCREEN_ID.name(), selectedScreenId);

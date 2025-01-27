@@ -12,6 +12,8 @@ import retrofit2.http.Query;
 import vn.edu.usth.mcma.frontend.dto.home.Advertisement;
 import vn.edu.usth.mcma.frontend.dto.movie.GenreShort;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetail;
+import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort2;
+import vn.edu.usth.mcma.frontend.dto.movie.ShowtimeOfMovieByCity;
 import vn.edu.usth.mcma.frontend.dto.request.MovieRespondRequest;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CityResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CouponResponse;
@@ -21,7 +23,6 @@ import vn.edu.usth.mcma.frontend.dto.response.MovieRespondResponse;
 import vn.edu.usth.mcma.frontend.dto.response.MovieResponse;
 import vn.edu.usth.mcma.frontend.dto.response.NowShowingResponse;
 import vn.edu.usth.mcma.frontend.dto.response.Schedule;
-import vn.edu.usth.mcma.frontend.dto.response.SearchMovieByNameResponse;
 
 public interface MovieApi {
     @GET("/api/v1/user/view/movie/advertisement")
@@ -30,13 +31,18 @@ public interface MovieApi {
     Call<List<MovieDetailShort>> findAllNowShowing();
     @GET("/api/v1/user/view/movie/coming-soon")
     Call<List<MovieDetailShort>> findAllComingSoon();
-    @GET("/api/v1/user/view/movie/{id}")
+    @GET("/api/v1/user/view/movie/{id}/detail")
     Call<MovieDetail> findMovieDetail(@Path("id") Long id);
 
     @GET("/api/v1/user/view/genre")
     Call<List<GenreShort>> findAllGenre();
     @POST("/api/v1/user/view/movie/genre")// GET will not allow @Body
     Call<List<MovieDetailShort>> findAllMovieByGenre(@Query("name") String name, @Body Set<Long> ids);
+
+    @GET("/api/v1/user/view/movie/{id}/short-detail")
+    Call<MovieDetailShort2> findMovieDetailShort2(@Path("id") Long id);
+    @GET("/api/v1/user/view/movie/{id}/showtime")
+    Call<List<ShowtimeOfMovieByCity>> findAllShowtimeByMovie(@Path("id") Long id);
 
     @POST("/api/v1/user/movieRespond/add")
     Call<MovieRespondRequest> addRespond(@Body MovieRespondRequest movieRespondRequest);

@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,7 +69,7 @@ public class ShowtimesFragment extends Fragment implements TheaterAdapter.OnThea
                                                 .name(c.getName())
                                                 .address(c.getAddress())
                                                 .cityName(cityName)//todo
-                                                .imageResId(R.drawable.date_button_selector) //todo
+                                                .imageResId(R.drawable.button_selector_showtime_date) //todo
                                                 .build())
                                         .collect(Collectors.toList()));
                     }

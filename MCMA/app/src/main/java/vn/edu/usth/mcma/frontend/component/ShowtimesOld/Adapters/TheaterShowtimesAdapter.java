@@ -29,7 +29,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -173,7 +172,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                     );
                                     params.setMargins(8, 8, 8, 8);
                                     screenRoomButton.setLayoutParams(params);
-                                    screenRoomButton.setBackground(ContextCompat.getDrawable(context, R.drawable.date_button_selector));
+                                    screenRoomButton.setBackground(ContextCompat.getDrawable(context, R.drawable.button_selector_showtime_date));
                                     screenRoomButton.setTextColor(textColorStateList);
                                     screenRoomButton.setAllCaps(false);
                                     screenRoomButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
@@ -306,7 +305,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                     dateButton.setTextColor(textColorStateList);
                                     dateButton.setAllCaps(false);
                                     dateButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                                    dateButton.setBackground(ContextCompat.getDrawable(context, R.drawable.date_button_selector));
+                                    dateButton.setBackground(ContextCompat.getDrawable(context, R.drawable.button_selector_showtime_date));
 
                                     FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
                                             FlexboxLayout.LayoutParams.WRAP_CONTENT,
@@ -329,7 +328,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
 
                                             Button timeButton = new Button(context);
                                             timeButton.setText(time);
-                                            timeButton.setBackground(ContextCompat.getDrawable(context, R.drawable.date_button_selector));
+                                            timeButton.setBackground(ContextCompat.getDrawable(context, R.drawable.button_selector_showtime_date));
                                             timeButton.setTextColor(textColorStateList);
                                             timeButton.setAllCaps(false);
                                             timeButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);

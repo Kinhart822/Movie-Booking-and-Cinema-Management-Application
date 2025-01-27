@@ -103,7 +103,6 @@ public class SearchMovieActivity extends AppCompatActivity {
     private void openMovieBookingActivity(int position) {
         MovieDetailShort movie = items.get(position);
         Intent intent = new Intent(SearchMovieActivity.this, MovieBookingActivity.class);
-        intent.putExtra(IntentKey.MOVIE_TITLE.name(), movie.getName());//todo
         intent.putExtra(IntentKey.MOVIE_ID.name(), movie.getId());
         startActivity(intent);
     }
@@ -132,6 +131,7 @@ public class SearchMovieActivity extends AppCompatActivity {
         genreButton.setGenreId(genre.getId());
         genreButton.setText(genre.getName());
         genreButton.setTransformationMethod(null);
+        //use selector xml
         genreButton.setBackgroundColor(0xFFD0D0D0);
         genreButton.setTextColor(ContextCompat.getColor(this, R.color.black));
         genreButton.setPadding(20, 10, 20, 10);

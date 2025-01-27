@@ -119,5 +119,6 @@
     <string name="voting">Voting</string>
     <string name="genre">Genre</string>
     <string name="movie_poster">movie poster</string>
+    <string name="banner">banner</string>
 </resources>
 

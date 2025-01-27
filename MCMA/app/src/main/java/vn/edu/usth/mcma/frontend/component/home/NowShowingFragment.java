@@ -109,7 +109,6 @@ public class NowShowingFragment extends Fragment {
     }
     private void openMovieBookingActivity(MovieDetailShort movie) {
         Intent intent = new Intent(requireContext(), MovieBookingActivity.class);
-        intent.putExtra(IntentKey.MOVIE_TITLE.name(), movie.getName());//todo
         intent.putExtra(IntentKey.MOVIE_ID.name(), movie.getId());
         startActivity(intent);
     }

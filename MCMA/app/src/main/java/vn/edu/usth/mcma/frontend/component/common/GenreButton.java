@@ -12,7 +12,6 @@ import lombok.Setter;
 @Setter
 public class GenreButton extends AppCompatButton {
     private Long genreId;
-    private boolean isSelected = false;
     public GenreButton(@NonNull Context context) {
         super(context);
     }
