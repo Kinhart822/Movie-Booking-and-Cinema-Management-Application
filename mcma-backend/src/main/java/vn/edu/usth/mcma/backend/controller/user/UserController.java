@@ -27,12 +27,6 @@ public class UserController {
         Long userId = jwtUtil.getIdUserRequesting();
         return ResponseEntity.ok("Hello, User! Your ID is: %d".formatted(userId));
     }
-    // TODO: Search Movies
-    @GetMapping("/search-movie-by-name")
-    public ResponseEntity<List<SearchMovieByNameResponse>> getAllMovies(
-            @RequestParam(required = false, name = "title") String title) {
-        return ResponseEntity.ok(movieService.getAllMovies(title));
-    }
 //    @GetMapping("/search-movie-by-genre")
 //    public ResponseEntity<List<SearchMovieByGenreResponse>> getAllMoviesByMovieGenreSet(
 //            @RequestParam(required = false, name = "movieGenreId") Integer movieGenreId) {
@@ -227,11 +221,6 @@ public class UserController {
 //    @GetMapping("/view/comingSoonMovies")
 //    public ResponseEntity<List<MovieDetail>> getAvailableComingSoonMovies() {
 //        return ResponseEntity.ok(viewService.getAvailableComingSoonMovies());
-//    }
-//    @GetMapping("/view/allMovieGenres")
-//    public ResponseEntity<List<MovieGenreResponse>> getAllMovieGenres() {
-//        List<MovieGenreResponse> movieGenreResponses = viewService.getAllMovieGenres();
-//        return ResponseEntity.ok(movieGenreResponses);
 //    }
 //    @GetMapping("/view/notifications")
 //    public ResponseEntity<NotificationResponse> getNotifications(HttpServletRequest request) {

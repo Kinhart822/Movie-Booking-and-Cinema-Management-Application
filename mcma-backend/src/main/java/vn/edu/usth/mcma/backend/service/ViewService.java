@@ -135,6 +135,24 @@ public class ViewService {
                 .toList();
     }
 
+    public List<GenreShort> findAllGenre() {
+        return genreRepository
+                .findAllByStatus(CommonStatus.ACTIVE.getStatus())
+                .stream()
+                .map(g -> GenreShort.builder()
+                        .id(g.getId())
+                        .name(g.getName())
+                        .build())
+                .toList();
+    }
+
+    public List<MovieDetailShort> findAllMovieByGenre(String name, Set<Long> ids) {
+        if (ids.isEmpty()) {
+            return getMovieDetailShorts(movieRepository.findAllMovieByName(name));
+        }
+        return getMovieDetailShorts(movieRepository.findAllMovieByNameAndGenre(name, ids));
+    }
+
 //    public ViewCityResponse getAvailableCities() {
 //        List<City> cities = cityRepository.findAll();
 //        List<Integer> cityIds = cities.stream()

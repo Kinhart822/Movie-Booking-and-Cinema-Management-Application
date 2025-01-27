@@ -92,49 +92,6 @@ public class MovieService {
     /*
      * TODO:USER
      */
-    public List<SearchMovieByNameResponse> getAllMovies(String title) {
-        return movieRepository
-                .findAllByNameContainingAndStatusIs(title, CommonStatus.ACTIVE.getStatus())
-                .stream()
-                .map(m -> SearchMovieByNameResponse
-                        .builder()
-                        .id(m.getId())
-                        .name(m.getName())
-                        .description(m.getOverview())
-                        .poster(m.getPoster())
-                        .banner(m.getBanner())
-                        .length(m.getLength()/60)
-                        .publishDate(m.getPublishDate().toString().substring(0,10))
-                        .trailerUrl(m.getTrailerUrl())
-                        .rating(RatingPresentation
-                                .builder()
-                                .id(m.getRating().getId())
-                                .name(m.getRating().getName())
-                                .description(m.getRating().getDescription())
-                                .build())
-                        .genres(m
-                                .getGenreSet()
-                                .stream()
-                                .map(g -> GenrePresentation
-                                        .builder()
-                                        .id(g.getId())
-                                        .name(g.getName())
-                                        .build())
-                                .toList())
-                        .performers(m
-                                .getPerformerSet()
-                                .stream()
-                                .map(p -> PerformerPresentation
-                                        .builder()
-                                        .id(p.getId())
-                                        .name(p.getName())
-                                        .typeId(p.getTypeId())
-                                        .build())
-                                .toList()).build())
-                .toList();
-    }
-
-
 //    public List<SearchMovieByGenreResponse> getAllMoviesByMovieGenreSet(Integer movieGenreId) {
 //        List<Object[]> results = movieRepository.getAllMoviesByMovieGenreSet(movieGenreId);
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");

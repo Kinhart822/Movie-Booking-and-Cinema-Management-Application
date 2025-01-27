@@ -10,6 +10,7 @@ import vn.edu.usth.mcma.backend.entity.Movie;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> {
@@ -39,7 +40,29 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             from map_movie_genre mg
             where mg.movie_id in :ids""")
     List<GenreProjection> findAllGenreByMovieIdIn(@Param("ids") List<Long> ids);
-    List<Movie> findAllByNameContainingAndStatusIs(String title, Integer status);
+
+    @Query(nativeQuery = true, value = """
+            select m.id as id, m.name as name, m.length as length, m.poster as poster
+            from map_movie_genre mg
+                     left join movie m on mg.movie_id = m.id
+            where mg.genre_id in :ids
+              and if(:name is null, true, m.name like concat('%', :name, '%'))
+            group by mg.movie_id
+            having count(distinct mg.genre_id) = (select count(distinct mg2.genre_id)
+                                                  from map_movie_genre mg2
+                                                  where mg2.movie_id = mg.movie_id
+                                                    and mg2.genre_id in :ids)
+               and count(distinct mg.genre_id) = (select count(*)
+                                                  from (select distinct genre_id
+                                                        from map_movie_genre
+                                                        where genre_id in :ids) as distinct_genres)""")
+    List<MovieDetailShortProjection> findAllMovieByNameAndGenre(@Param(value = "name") String name, @Param(value = "ids") Set<Long> ids);
+    @Query(nativeQuery = true, value = """
+            select m.id as id, m.name as name, m.length as length, m.poster as poster
+            from movie m
+            where if(:name is null, true, m.name like concat('%', :name, '%'))
+""")
+    List<MovieDetailShortProjection> findAllMovieByName(@Param(value = "name") String name);
 
     List<Movie> findAllByStatusIs(Integer status);
 

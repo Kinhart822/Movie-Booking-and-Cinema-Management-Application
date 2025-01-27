@@ -12,7 +12,6 @@ public enum ApiEndpoints {
             "/api/v1/account/admin/create",
             "/api/v1/account/user/sign-up/**",
             "/api/v1/account/user/forgot-password/**",
-            "/api/v1/user/search-movie-by-name",
             "/api/v1/user/search-movie-by-genre",
             "/api/v1/user/search-movie-by-movie-genre-name",
             "/api/v1/user/booking/**"
