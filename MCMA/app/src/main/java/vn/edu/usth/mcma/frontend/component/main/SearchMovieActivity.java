@@ -24,7 +24,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.MovieBookingActivity;
+import vn.edu.usth.mcma.frontend.component.common.MovieBookingActivity;
 import vn.edu.usth.mcma.frontend.component.common.GenreButton;
 import vn.edu.usth.mcma.frontend.dto.movie.GenreShort;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort;

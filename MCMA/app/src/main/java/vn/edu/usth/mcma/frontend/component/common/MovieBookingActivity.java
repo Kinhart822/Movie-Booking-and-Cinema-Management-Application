@@ -1,8 +1,7 @@
-package vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI;
+package vn.edu.usth.mcma.frontend.component.common;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -11,7 +10,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -33,11 +31,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.QuantityTicketDialog;
+import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.TicketSelectionActivity;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort2;
-import vn.edu.usth.mcma.frontend.dto.movie.ShowtimeOfMovieByCity;
-import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CinemaResponse;
-import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CityResponse;
+import vn.edu.usth.mcma.frontend.dto.movie.ShowtimeOfMovieByCityResponse;
 import vn.edu.usth.mcma.frontend.helper.ImageDecoder;
+import vn.edu.usth.mcma.frontend.model.ShowtimeOfMovieBySchedule;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Adapters.TheaterShowtimesAdapter;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Movie;
@@ -57,7 +56,7 @@ public class MovieBookingActivity extends AppCompatActivity {
     private TextView ratingTextView;
     private LinearLayout showtimeDateButtonsLinearLayout;
     private LinearLayout showtimeCityButtonsLinearLayout;
-    private Map<LocalDate, Map<Long, ShowtimeOfMovieByCity>> dateCityMap;
+    private Map<LocalDate, Map<Long, Map<Long, Map<String, List<ShowtimeOfMovieBySchedule>>>>> dateCityCinemaScreenTypeScheduleMap;
     private Button selectedDate;
     private Button selectedCity;
     private RecyclerView cinemaButtonsRecyclerView;
@@ -81,7 +80,7 @@ public class MovieBookingActivity extends AppCompatActivity {
         ratingTextView = findViewById(R.id.text_view_rating);
         showtimeDateButtonsLinearLayout = findViewById(R.id.linear_layout_showtime_date_buttons);
         showtimeCityButtonsLinearLayout = findViewById(R.id.linear_layout_showtime_city_buttons);
-        dateCityMap = new HashMap<>();
+        dateCityCinemaScreenTypeScheduleMap = new HashMap<>();
         cinemaButtonsRecyclerView = findViewById(R.id.recycler_view_cinema_buttons);
 
         backButton
@@ -133,7 +132,7 @@ public class MovieBookingActivity extends AppCompatActivity {
                 .findAllShowtimeByMovie(id)
                 .enqueue(new Callback<>() {
                     @Override
-                    public void onResponse(@NonNull Call<List<ShowtimeOfMovieByCity>> call, @NonNull Response<List<ShowtimeOfMovieByCity>> response) {
+                    public void onResponse(@NonNull Call<List<ShowtimeOfMovieByCityResponse>> call, @NonNull Response<List<ShowtimeOfMovieByCityResponse>> response) {
                         if (!response.isSuccessful() || response.body() == null) {
                             Log.e(TAG, "findAllShowtimeByMovie onResponse: code not 200 || body is null");
                             return;
@@ -141,33 +140,46 @@ public class MovieBookingActivity extends AppCompatActivity {
                         postFindAllShowtimeByMovie(response.body());
                     }
                     @Override
-                    public void onFailure(@NonNull Call<List<ShowtimeOfMovieByCity>> call, @NonNull Throwable throwable) {
+                    public void onFailure(@NonNull Call<List<ShowtimeOfMovieByCityResponse>> call, @NonNull Throwable throwable) {
                         Log.e(TAG, "findAllShowtimeByMovie onFailure: " + throwable);
                     }
                 });
     }
-    private void postFindAllShowtimeByMovie(List<ShowtimeOfMovieByCity> showtimeOfMovieByCity) {
-        showtimeOfMovieByCity
+    private void postFindAllShowtimeByMovie(List<ShowtimeOfMovieByCityResponse> response) {
+        response
                 .forEach(city -> city
-                        .getShowtimeOfMovieByCinemas()
+                        .getShowtimeOfMovieByCinemaResponse()
                         .forEach(cinema -> cinema
-                                .getShowtimeOfMovieByScreen()
+                                .getShowtimeOfMovieByScreenResponse()
                                 .forEach(screen -> screen
-                                        .getShowtimeOfMovieBySchedule()
-                                        .forEach(showtime -> dateCityMap
+                                        .getShowtimeOfMovieByScheduleResponse()
+                                        .forEach(showtime -> dateCityCinemaScreenTypeScheduleMap
                                                 .computeIfAbsent(
                                                         Instant
                                                                 .parse(showtime.getStartTime())
                                                                 .atZone(ZoneId.systemDefault())
                                                                 .toLocalDate(),
                                                         showtimeDate -> new HashMap<>())
-                                                .computeIfAbsent(city.getCityId(), cityId -> city)))));
+                                                .computeIfAbsent(
+                                                        city.getCityId(),
+                                                        cityId -> new HashMap<>())
+                                                .computeIfAbsent(
+                                                        cinema.getCinemaId(),
+                                                        cinemaId -> new HashMap<>())
+                                                .computeIfAbsent(
+                                                        screen.getScreenType(),
+                                                        screenType -> new ArrayList<>())
+                                                .add(ShowtimeOfMovieBySchedule.builder()
+                                                        .scheduleId(showtime.getScheduleId())
+                                                        .time(Instant
+                                                                .parse(showtime.getStartTime())
+                                                                .atZone(ZoneId.systemDefault())
+                                                                .toLocalTime()).build())))));
         List<LocalDate> showtimes = new ArrayList<>();
-        dateCityMap
+        dateCityCinemaScreenTypeScheduleMap
                 .forEach((showtime, cityMap) -> showtimes.add(showtime));
-
         addDateButtons(showtimes);
-        addCityButtons(showtimeOfMovieByCity);
+        addCityButtons(response);
         selectedDate = (Button) showtimeDateButtonsLinearLayout.getChildAt(0);
         selectedCity = (Button) showtimeCityButtonsLinearLayout.getChildAt(0);
         prepareCinemaButtonsRecyclerView();
@@ -195,7 +207,7 @@ public class MovieBookingActivity extends AppCompatActivity {
                     showtimeDateButtonsLinearLayout.addView(showtimeDateButton);
                 });
     }
-    private void addCityButtons(List<ShowtimeOfMovieByCity> cities) {
+    private void addCityButtons(List<ShowtimeOfMovieByCityResponse> cities) {
         cities
                 .forEach(city -> {
                     Button showtimeCityButton = new Button(this);

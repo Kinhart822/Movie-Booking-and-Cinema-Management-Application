@@ -5,8 +5,8 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class ShowtimeOfMovieByCity {
+public class ShowtimeOfMovieByCityResponse {
     private Long cityId;
     private String cityName;
-    private List<ShowtimeOfMovieByCinema> showtimeOfMovieByCinemas;
+    private List<ShowtimeOfMovieByCinemaResponse> showtimeOfMovieByCinemaResponse;
 }

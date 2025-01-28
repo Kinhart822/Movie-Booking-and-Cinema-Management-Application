@@ -13,7 +13,7 @@ import vn.edu.usth.mcma.frontend.dto.home.Advertisement;
 import vn.edu.usth.mcma.frontend.dto.movie.GenreShort;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetail;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort2;
-import vn.edu.usth.mcma.frontend.dto.movie.ShowtimeOfMovieByCity;
+import vn.edu.usth.mcma.frontend.dto.movie.ShowtimeOfMovieByCityResponse;
 import vn.edu.usth.mcma.frontend.dto.request.MovieRespondRequest;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CityResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CouponResponse;
@@ -42,7 +42,7 @@ public interface MovieApi {
     @GET("/api/v1/user/view/movie/{id}/short-detail")
     Call<MovieDetailShort2> findMovieDetailShort2(@Path("id") Long id);
     @GET("/api/v1/user/view/movie/{id}/showtime")
-    Call<List<ShowtimeOfMovieByCity>> findAllShowtimeByMovie(@Path("id") Long id);
+    Call<List<ShowtimeOfMovieByCityResponse>> findAllShowtimeByMovie(@Path("id") Long id);
 
     @POST("/api/v1/user/movieRespond/add")
     Call<MovieRespondRequest> addRespond(@Body MovieRespondRequest movieRespondRequest);
