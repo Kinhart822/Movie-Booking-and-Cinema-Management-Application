@@ -195,7 +195,7 @@ public class ViewService {
                 .map(city -> ShowtimeOfMovieByCity.builder()
                         .cityId(city.getId())
                         .cityName(city.getName())
-                        .showtimeOfMovieByCinemas(cityCinemaMap
+                        .showtimeOfMovieByCinema(cityCinemaMap
                                 .getOrDefault(city, new HashSet<>())
                                 .stream()
                                 .map(cinema -> ShowtimeOfMovieByCinema.builder()

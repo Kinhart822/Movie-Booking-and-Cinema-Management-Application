@@ -14,5 +14,5 @@ import java.util.List;
 public class ShowtimeOfMovieByCity {
     private Long cityId;
     private String cityName;
-    private List<ShowtimeOfMovieByCinema> showtimeOfMovieByCinemas;
+    private List<ShowtimeOfMovieByCinema> showtimeOfMovieByCinema;
 }
