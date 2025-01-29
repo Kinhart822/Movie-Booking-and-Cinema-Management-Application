@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".frontend.component.common.MovieDetailActivity">
+    tools:context=".frontend.component.bookingprocess.MovieDetailActivity">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -29,7 +29,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="5dp"
             android:layout_marginTop="12.5dp"
-            android:background="@drawable/icon_left_gray"
+            android:background="@drawable/ic_left_gray"
             android:contentDescription="@string/back_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

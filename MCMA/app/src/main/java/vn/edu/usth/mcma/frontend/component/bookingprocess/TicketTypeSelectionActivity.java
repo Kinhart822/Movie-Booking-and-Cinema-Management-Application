@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI;
+package vn.edu.usth.mcma.frontend.component.bookingprocess;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -23,6 +23,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.SeatSelectionActivity;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.TicketResponse;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Adapters.TicketAdapter;
@@ -32,7 +33,7 @@ import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.TicketItem;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.TicketType;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 
-public class TicketSelectionActivity extends AppCompatActivity {
+public class TicketTypeSelectionActivity extends AppCompatActivity {
     public static final String EXTRA_GUEST_QUANTITY = "extra_guest_quantity";
     public static final String EXTRA_THEATER = "extra_theater";
     public static final String EXTRA_MOVIE = "extra_movie";

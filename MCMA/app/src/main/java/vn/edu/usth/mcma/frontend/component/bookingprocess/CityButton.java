@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.common;
+package vn.edu.usth.mcma.frontend.component.bookingprocess;
 
 import android.content.Context;
 
@@ -10,9 +10,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class GenreButton extends AppCompatButton {
-    private Long genreId;
-    public GenreButton(@NonNull Context context) {
+public class CityButton extends AppCompatButton {
+    private Long cityId;
+    public CityButton(@NonNull Context context) {
         super(context);
     }
 }

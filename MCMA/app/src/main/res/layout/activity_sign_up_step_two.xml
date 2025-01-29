@@ -22,7 +22,7 @@
             android:layout_height="25dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="5dp"
-            android:background="@drawable/icon_left_black"
+            android:background="@drawable/ic_left_black"
             android:contentDescription="@string/back_button"
             tools:ignore="TouchTargetSizeCheck" />
         <TextView

@@ -1,11 +1,10 @@
-package vn.edu.usth.mcma.frontend.component.common;
+package vn.edu.usth.mcma.frontend.component.bookingprocess;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
-import android.widget.Button;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,6 +14,7 @@ import androidx.annotation.NonNull;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -23,26 +23,20 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.QuantityTicketDialog;
-import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.TicketSelectionActivity;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort2;
 import vn.edu.usth.mcma.frontend.dto.movie.ShowtimeOfMovieByCityResponse;
 import vn.edu.usth.mcma.frontend.helper.ImageDecoder;
 import vn.edu.usth.mcma.frontend.model.ShowtimeOfMovieBySchedule;
 import vn.edu.usth.mcma.frontend.network.ApiService;
-import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Adapters.TheaterShowtimesAdapter;
-import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Movie;
-import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Theater;
 
-import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Utils.TheaterDataProvider;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 
 public class MovieBookingActivity extends AppCompatActivity {
@@ -56,18 +50,14 @@ public class MovieBookingActivity extends AppCompatActivity {
     private TextView ratingTextView;
     private LinearLayout showtimeDateButtonsLinearLayout;
     private LinearLayout showtimeCityButtonsLinearLayout;
-    private Map<LocalDate, Map<Long, Map<Long, Map<String, List<ShowtimeOfMovieBySchedule>>>>> dateCityCinemaScreenTypeScheduleMap;
-    private Button selectedDate;
-    private Button selectedCity;
+    private Map<LocalDate, Map<Long, Map<String, Map<String, List<ShowtimeOfMovieBySchedule>>>>> dateCityCinemaNameScreenTypeScheduleMap;
+    private DateButton selectedDate;
+    private CityButton selectedCity;
+    private TextView noScheduleTextView;
     private RecyclerView cinemaButtonsRecyclerView;
+    private MovieBookingCinemaAdapter movieBookingCinemaAdapter;
 
-    private TheaterShowtimesAdapter theaterAdapter;
-    private String movieTitle;
-    private long selectedCityId;
-    private Long selectedCinemaId;
-    private Long selectedScreenId;
-    private Long selectedScheduleId;
-
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,17 +70,17 @@ public class MovieBookingActivity extends AppCompatActivity {
         ratingTextView = findViewById(R.id.text_view_rating);
         showtimeDateButtonsLinearLayout = findViewById(R.id.linear_layout_showtime_date_buttons);
         showtimeCityButtonsLinearLayout = findViewById(R.id.linear_layout_showtime_city_buttons);
-        dateCityCinemaScreenTypeScheduleMap = new HashMap<>();
+        dateCityCinemaNameScreenTypeScheduleMap = new TreeMap<>();
+        noScheduleTextView = findViewById(R.id.text_view_no_schedule);
         cinemaButtonsRecyclerView = findViewById(R.id.recycler_view_cinema_buttons);
 
         backButton
                 .setOnClickListener(v -> onBackPressed());
+        noScheduleTextView.setText("There are no movie sessions available");
+//        noScheduleTextView.setTextColor(ContextCompat.getColor(this, R.color.black));
 
         findMovieDetailShort2();
         findAllShowtimeByMovie();
-
-
-        setupTheatersList();
     }
     private void findMovieDetailShort2() {
         ApiService
@@ -148,24 +138,24 @@ public class MovieBookingActivity extends AppCompatActivity {
     private void postFindAllShowtimeByMovie(List<ShowtimeOfMovieByCityResponse> response) {
         response
                 .forEach(city -> city
-                        .getShowtimeOfMovieByCinemaResponse()
+                        .getShowtimeOfMovieByCinema()
                         .forEach(cinema -> cinema
-                                .getShowtimeOfMovieByScreenResponse()
+                                .getShowtimeOfMovieByScreen()
                                 .forEach(screen -> screen
-                                        .getShowtimeOfMovieByScheduleResponse()
-                                        .forEach(showtime -> dateCityCinemaScreenTypeScheduleMap
+                                        .getShowtimeOfMovieBySchedule()
+                                        .forEach(showtime -> dateCityCinemaNameScreenTypeScheduleMap
                                                 .computeIfAbsent(
                                                         Instant
                                                                 .parse(showtime.getStartTime())
                                                                 .atZone(ZoneId.systemDefault())
                                                                 .toLocalDate(),
-                                                        showtimeDate -> new HashMap<>())
+                                                        showtimeDate -> new TreeMap<>())
                                                 .computeIfAbsent(
                                                         city.getCityId(),
-                                                        cityId -> new HashMap<>())
+                                                        cityId -> new TreeMap<>())
                                                 .computeIfAbsent(
-                                                        cinema.getCinemaId(),
-                                                        cinemaId -> new HashMap<>())
+                                                        cinema.getCinemaName(),
+                                                        cinemaId -> new TreeMap<>())
                                                 .computeIfAbsent(
                                                         screen.getScreenType(),
                                                         screenType -> new ArrayList<>())
@@ -176,18 +166,21 @@ public class MovieBookingActivity extends AppCompatActivity {
                                                                 .atZone(ZoneId.systemDefault())
                                                                 .toLocalTime()).build())))));
         List<LocalDate> showtimes = new ArrayList<>();
-        dateCityCinemaScreenTypeScheduleMap
+        dateCityCinemaNameScreenTypeScheduleMap
                 .forEach((showtime, cityMap) -> showtimes.add(showtime));
         addDateButtons(showtimes);
         addCityButtons(response);
-        selectedDate = (Button) showtimeDateButtonsLinearLayout.getChildAt(0);
-        selectedCity = (Button) showtimeCityButtonsLinearLayout.getChildAt(0);
+        selectedDate = (DateButton) showtimeDateButtonsLinearLayout.getChildAt(0);
+        selectedDate.setSelected(true);
+        selectedCity = (CityButton) showtimeCityButtonsLinearLayout.getChildAt(0);
+        selectedCity.setSelected(true);
         prepareCinemaButtonsRecyclerView();
     }
     private void addDateButtons(List<LocalDate> showtimes) {
         showtimes
                 .forEach(showtime -> {
-                    Button showtimeDateButton = new Button(this);
+                    DateButton showtimeDateButton = new DateButton(this);
+                    showtimeDateButton.setDate(showtime);
                     showtimeDateButton.setText(showtime.toString());
                     showtimeDateButton.setTransformationMethod(null);
                     showtimeDateButton.setBackgroundResource(R.drawable.button_selector_showtime);
@@ -202,7 +195,10 @@ public class MovieBookingActivity extends AppCompatActivity {
                     showtimeDateButton.setLayoutParams(params);
                     showtimeDateButton.setOnClickListener(v -> {
                         selectedDate.setSelected(false);
+                        selectedDate.invalidate();
                         selectedDate = showtimeDateButton;
+                        selectedDate.setSelected(true);
+                        feedAdapter();
                     });
                     showtimeDateButtonsLinearLayout.addView(showtimeDateButton);
                 });
@@ -210,7 +206,8 @@ public class MovieBookingActivity extends AppCompatActivity {
     private void addCityButtons(List<ShowtimeOfMovieByCityResponse> cities) {
         cities
                 .forEach(city -> {
-                    Button showtimeCityButton = new Button(this);
+                    CityButton showtimeCityButton = new CityButton(this);
+                    showtimeCityButton.setCityId(city.getCityId());
                     showtimeCityButton.setText(city.getCityName());
                     showtimeCityButton.setTransformationMethod(null);
                     showtimeCityButton.setBackgroundResource(R.drawable.button_selector_showtime);
@@ -225,65 +222,36 @@ public class MovieBookingActivity extends AppCompatActivity {
                     showtimeCityButton.setLayoutParams(params);
                     showtimeCityButton.setOnClickListener(v -> {
                         selectedCity.setSelected(false);
+                        selectedCity.invalidate();
                         selectedCity = showtimeCityButton;
+                        selectedCity.setSelected(true);
+                        feedAdapter();
                     });
                     showtimeCityButtonsLinearLayout.addView(showtimeCityButton);
                 });
     }
     private void prepareCinemaButtonsRecyclerView() {
-
+        cinemaButtonsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        movieBookingCinemaAdapter = new MovieBookingCinemaAdapter(this);
+        feedAdapter();
+        cinemaButtonsRecyclerView.setAdapter(movieBookingCinemaAdapter);
     }
-
-
-
-    private void setupTheatersList() {
-//        RecyclerView theatersRecyclerView = findViewById(R.id.theaters_recycler_view);
-        theaterAdapter = new TheaterShowtimesAdapter((theater, date, showtime, screenId, screenRoom, scheduleId) -> {
-            selectedCinemaId = theater.getId(); // Lấy theaterId
-            selectedScreenId = screenId;
-            selectedScheduleId = scheduleId;
-            showQuantityTicketDialog(theater,date, showtime, screenId, screenRoom);
-        }, id);
-//        theatersRecyclerView.setAdapter(theaterAdapter);
-//        theatersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-    }
-    // Add new method to MovieBookingActivity.java
-    @Deprecated
-    private void showQuantityTicketDialog(Theater theater,String date, String showtime, Long screenId, String screenRoom) {
-        QuantityTicketDialog dialog = new QuantityTicketDialog(this, new QuantityTicketDialog.OnDialogActionListener() {
-            @Override
-            public void onContinueClicked(int guestQuantity) {
-                List<String> showtimes = TheaterDataProvider.generateShowtimes();
-                Movie selectedMovie = new Movie(
-                        "movie_" + movieTitle.toLowerCase().replace(" ", "_"),
-                        movieTitle,
-                        showtimes // You might want to populate this with actual showtimes
-                );
-
-                Intent intent = new Intent(MovieBookingActivity.this, TicketSelectionActivity.class);
-                intent.putExtra(TicketSelectionActivity.EXTRA_GUEST_QUANTITY, guestQuantity);
-                intent.putExtra(TicketSelectionActivity.EXTRA_THEATER, theater);
-                intent.putExtra(TicketSelectionActivity.EXTRA_MOVIE, selectedMovie);
-                intent.putExtra(IntentKey.SELECTED_SHOWTIME.name(), showtime);
-                intent.putExtra(IntentKey.SELECTED_DATE.name(), date);
-                intent.putExtra(IntentKey.SELECTED_SCREEN.name(), screenId);
-                intent.putExtra(IntentKey.SELECTED_SCREEN_ROOM.name(), screenRoom);
-                int movieBannerResId = getIntent().getIntExtra(IntentKey.MOVIE_BANNER.name(), 0);
-                intent.putExtra(IntentKey.MOVIE_BANNER.name(), movieBannerResId);
-
-                // Booking
-                intent.putExtra(IntentKey.MOVIE_ID.name(), id);
-                intent.putExtra(IntentKey.SELECTED_CITY_ID.name(), selectedCityId);
-                intent.putExtra(IntentKey.SELECTED_CINEMA_ID.name(), selectedCinemaId);
-                intent.putExtra(IntentKey.SELECTED_SCREEN_ID.name(), selectedScreenId);
-                intent.putExtra(IntentKey.SELECTED_SCHEDULE_ID.name(), selectedScheduleId);
-                startActivity(intent);
-            }
-
-            @Override
-            public void onCloseClicked() {
-            }
-        });
-        dialog.show();
+    /*
+     * used after initialize adapter or want to update data
+     */
+    private void feedAdapter() {
+        Map<String, Map<String, List<ShowtimeOfMovieBySchedule>>> food;
+        food = dateCityCinemaNameScreenTypeScheduleMap
+                .get(selectedDate.getDate())
+                .get(selectedCity.getCityId());
+        movieBookingCinemaAdapter.updateData(food);
+        System.out.println(noScheduleTextView.getText());
+        if (food == null) {
+            cinemaButtonsRecyclerView.setVisibility(View.GONE);
+            noScheduleTextView.setVisibility(View.VISIBLE);
+            return;
+        }
+        cinemaButtonsRecyclerView.setVisibility(View.VISIBLE);
+        noScheduleTextView.setVisibility(View.GONE);
     }
 }

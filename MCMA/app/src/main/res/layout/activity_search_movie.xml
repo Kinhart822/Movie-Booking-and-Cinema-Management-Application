@@ -16,7 +16,7 @@
             android:layout_height="25dp"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="5dp"
-            android:background="@drawable/icon_left_black"
+            android:background="@drawable/ic_left_black"
             android:contentDescription="@string/back_button"
             tools:ignore="TouchTargetSizeCheck" />
         <SearchView
@@ -26,7 +26,7 @@
             android:layout_margin="8dp"
             android:iconifiedByDefault="false"
             android:background="@drawable/edit_group_box"
-            app:searchIcon="@drawable/icon_search_black"/>
+            app:searchIcon="@drawable/ic_search_black"/>
     </LinearLayout>
     <TextView
         android:layout_width="match_parent"

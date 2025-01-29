@@ -27,7 +27,7 @@
                 android:layout_gravity="center"
                 android:layout_marginRight="10dp"
                 android:layout_marginLeft="10dp"
-                android:background="@drawable/icon_left_black" />
+                android:background="@drawable/ic_left_black" />
 
             <TextView
                 android:layout_width="match_parent"

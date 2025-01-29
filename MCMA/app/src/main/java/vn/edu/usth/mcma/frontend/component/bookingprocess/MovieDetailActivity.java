@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.common;
+package vn.edu.usth.mcma.frontend.component.bookingprocess;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;

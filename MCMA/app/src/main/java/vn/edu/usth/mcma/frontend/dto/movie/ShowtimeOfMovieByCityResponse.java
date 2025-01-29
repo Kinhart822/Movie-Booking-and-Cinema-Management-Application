@@ -8,5 +8,5 @@ import lombok.Data;
 public class ShowtimeOfMovieByCityResponse {
     private Long cityId;
     private String cityName;
-    private List<ShowtimeOfMovieByCinemaResponse> showtimeOfMovieByCinemaResponse;
+    private List<ShowtimeOfMovieByCinemaResponse> showtimeOfMovieByCinema;
 }
