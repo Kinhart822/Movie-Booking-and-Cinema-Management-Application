@@ -77,7 +77,6 @@ public class MovieBookingActivity extends AppCompatActivity {
         backButton
                 .setOnClickListener(v -> onBackPressed());
         noScheduleTextView.setText("There are no movie sessions available");
-//        noScheduleTextView.setTextColor(ContextCompat.getColor(this, R.color.black));
 
         findMovieDetailShort2();
         findAllShowtimeByMovie();

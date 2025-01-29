@@ -34,6 +34,7 @@ import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.TicketType;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 
 public class TicketTypeSelectionActivity extends AppCompatActivity {
+
     public static final String EXTRA_GUEST_QUANTITY = "extra_guest_quantity";
     public static final String EXTRA_THEATER = "extra_theater";
     public static final String EXTRA_MOVIE = "extra_movie";
@@ -60,7 +61,7 @@ public class TicketTypeSelectionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ticket_selection);
+        setContentView(R.layout.activity_ticket_type_selection);
 
         movieId = getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L);
         selectedCityId = getIntent().getLongExtra(IntentKey.SELECTED_CITY_ID.name(), -1L);

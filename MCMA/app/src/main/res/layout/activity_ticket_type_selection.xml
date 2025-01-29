@@ -196,11 +196,6 @@
             android:textColor="@color/black"
             android:layout_marginStart="8dp"/>
     </LinearLayout>
-
-
-
-
-
     <!-- Checkout Button -->
     <Button
         android:id="@+id/checkout_button"
@@ -208,7 +203,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:background="@drawable/rounded_dark_background"
-        android:text="Complete Selection"
+        android:text="@string/next"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
