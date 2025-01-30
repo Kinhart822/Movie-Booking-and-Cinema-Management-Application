@@ -54,7 +54,7 @@
                 android:inputType="textEmailAddress"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
-                android:background="@drawable/edit_group_box"
+                android:background="@drawable/shape_box"
                 android:padding="12dp"
                 android:layout_marginTop="20dp" />
 
@@ -74,7 +74,7 @@
                     android:hint="Last Name"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
-                    android:background="@drawable/edit_group_box"
+                    android:background="@drawable/shape_box"
                     android:padding="12dp" />
 
                 <View
@@ -89,7 +89,7 @@
                     android:hint="First Name"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
-                    android:background="@drawable/edit_group_box"
+                    android:background="@drawable/shape_box"
                     android:padding="12dp" />
             </LinearLayout>
 
@@ -102,7 +102,7 @@
                 android:inputType="phone"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
-                android:background="@drawable/edit_group_box"
+                android:background="@drawable/shape_box"
                 android:padding="12dp"
                 android:layout_marginTop="12dp" />
 
@@ -115,7 +115,7 @@
                 android:inputType="date"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
-                android:background="@drawable/edit_group_box"
+                android:background="@drawable/shape_box"
                 android:padding="12dp"
                 android:layout_marginTop="12dp" />
 
@@ -127,14 +127,14 @@
                 android:hint="Address"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
-                android:background="@drawable/edit_group_box"
+                android:background="@drawable/shape_box"
                 android:padding="12dp"
                 android:layout_marginTop="12dp" />
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/edit_group_box"
+                android:background="@drawable/shape_box"
                 android:layout_marginTop="12dp">
 
                 <!-- Gender Selection -->

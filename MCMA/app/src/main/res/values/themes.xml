@@ -1,9 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Base.Theme.MCMA" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/gray_text</item>
+    <style name="Theme.MCMA" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorOnPrimary">@color/color_on_primary</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
-
-    <style name="Theme.MCMA" parent="Base.Theme.MCMA" />
+<!--    <style name="Theme.MCMA" parent="Base.Theme.MCMA" />-->
 
     <!-- FullScreenDialog style -->
     <style name="FullScreenDialog" parent="Theme.AppCompat.Light.Dialog">

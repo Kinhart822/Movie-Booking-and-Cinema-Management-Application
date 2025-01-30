@@ -3,7 +3,6 @@ package vn.edu.usth.mcma.frontend.component.bookingprocess;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +23,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 
 import retrofit2.Call;
@@ -181,17 +180,6 @@ public class MovieBookingActivity extends AppCompatActivity {
                     DateButton showtimeDateButton = new DateButton(this);
                     showtimeDateButton.setDate(showtime);
                     showtimeDateButton.setText(showtime.toString());
-                    showtimeDateButton.setTransformationMethod(null);
-                    showtimeDateButton.setBackgroundResource(R.drawable.button_selector_showtime);
-                    showtimeDateButton.setTextColor(ContextCompat.getColor(this, R.color.black));
-                    showtimeDateButton.setPadding(20, 10, 20, 10);
-                    showtimeDateButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17.5f);
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT
-                    );
-                    params.setMargins(8, 0, 8, 0);
-                    showtimeDateButton.setLayoutParams(params);
                     showtimeDateButton.setOnClickListener(v -> {
                         selectedDate.setSelected(false);
                         selectedDate.invalidate();
@@ -208,17 +196,6 @@ public class MovieBookingActivity extends AppCompatActivity {
                     CityButton showtimeCityButton = new CityButton(this);
                     showtimeCityButton.setCityId(city.getCityId());
                     showtimeCityButton.setText(city.getCityName());
-                    showtimeCityButton.setTransformationMethod(null);
-                    showtimeCityButton.setBackgroundResource(R.drawable.button_selector_showtime);
-                    showtimeCityButton.setTextColor(ContextCompat.getColor(this, R.color.black));
-                    showtimeCityButton.setPadding(20, 10, 20, 10);
-                    showtimeCityButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17.5f);
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT
-                    );
-                    params.setMargins(8, 0, 8, 0);
-                    showtimeCityButton.setLayoutParams(params);
                     showtimeCityButton.setOnClickListener(v -> {
                         selectedCity.setSelected(false);
                         selectedCity.invalidate();
@@ -239,13 +216,11 @@ public class MovieBookingActivity extends AppCompatActivity {
      * used after initialize adapter or want to update data
      */
     private void feedAdapter() {
-        Map<String, Map<String, List<ShowtimeOfMovieBySchedule>>> food;
-        food = dateCityCinemaNameScreenTypeScheduleMap
-                .get(selectedDate.getDate())
-                .get(selectedCity.getCityId());
-        movieBookingCinemaAdapter.updateData(food);
-        System.out.println(noScheduleTextView.getText());
-        if (food == null) {
+        Optional<Map<String, Map<String, List<ShowtimeOfMovieBySchedule>>>> food = Optional.ofNullable(dateCityCinemaNameScreenTypeScheduleMap)
+                .map(map -> map.get(selectedDate.getDate()))
+                .map(map -> map.get(selectedCity.getCityId()));
+        movieBookingCinemaAdapter.updateData(food.orElse(null));
+        if (food.isEmpty()) {
             cinemaButtonsRecyclerView.setVisibility(View.GONE);
             noScheduleTextView.setVisibility(View.VISIBLE);
             return;

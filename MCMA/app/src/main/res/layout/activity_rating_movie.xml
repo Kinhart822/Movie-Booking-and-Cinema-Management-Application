@@ -149,7 +149,7 @@
                     android:lines="10"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="16dp"
-                    android:background="@drawable/tab_rect"
+                    android:background="@drawable/tab_layout_background"
                     android:padding="10dp" />
 
                 <Button

@@ -48,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Email"
-                android:background="@drawable/edit_group_box"
+                android:background="@drawable/shape_box"
                 android:padding="12dp"
                 android:textColor="@color/black"
                 android:layout_marginTop="12dp" />
@@ -67,7 +67,7 @@
                     android:layout_weight="1"
                     android:text="Last Name"
                     android:textColor="@color/black"
-                    android:background="@drawable/edit_group_box"
+                    android:background="@drawable/shape_box"
                     android:padding="12dp" />
 
                 <View
@@ -81,7 +81,7 @@
                     android:layout_weight="1"
                     android:text="First Name"
                     android:textColor="@color/black"
-                    android:background="@drawable/edit_group_box"
+                    android:background="@drawable/shape_box"
                     android:padding="12dp" />
             </LinearLayout>
 
@@ -91,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:text="Phone Number"
-                android:background="@drawable/edit_group_box"
+                android:background="@drawable/shape_box"
                 android:padding="12dp"
                 android:layout_marginTop="12dp" />
 
@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:text="Date of Birth"
-                android:background="@drawable/edit_group_box"
+                android:background="@drawable/shape_box"
                 android:padding="12dp"
                 android:layout_marginTop="12dp" />
 
@@ -111,14 +111,14 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:text="Address"
-                android:background="@drawable/edit_group_box"
+                android:background="@drawable/shape_box"
                 android:padding="12dp"
                 android:layout_marginTop="12dp" />
 
             <TextView
                 android:id="@+id/tvGender"
                 android:layout_width="match_parent"
-                android:background="@drawable/edit_group_box"
+                android:background="@drawable/shape_box"
                 android:text="Gender"
                 android:layout_height="48dp"
                 android:layout_marginTop="16dp"

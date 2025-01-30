@@ -121,5 +121,10 @@
     <string name="movie_poster">movie poster</string>
     <string name="banner">banner</string>
     <string name="expand_collapse">expand collapse</string>
+    <string name="home">Home</string>
+    <string name="showtimes">Showtimes</string>
+    <string name="store">Store</string>
+    <string name="feedback">Feedback</string>
+    <string name="account">Account</string>
 </resources>
 

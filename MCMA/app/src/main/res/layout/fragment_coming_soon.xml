@@ -18,7 +18,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:textColor="@color/black"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,18 +39,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
-            android:textColor="@color/black"
-            android:textSize="18sp"
+            android:textSize="15sp"
             tools:text="min" />
         <TextView
             android:id="@+id/text_view_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/tab_rect"
+            android:background="@drawable/text_view_rating"
             android:padding="5dp"
             android:textColor="@color/red"
-            android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:textSize="15sp"/>
     </LinearLayout>
     <View
         android:id="@+id/some_space_to_match_now_showing"

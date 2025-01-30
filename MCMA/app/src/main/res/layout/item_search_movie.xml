@@ -13,7 +13,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:background="@drawable/film_image_border"
+            android:background="@drawable/image_view_poster"
             android:padding="4dp">
             <ImageView
                 android:id="@+id/image_view_poster"
@@ -51,7 +51,7 @@
             android:id="@+id/text_view_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/tab_rect"
+            android:background="@drawable/tab_layout_background"
             android:padding="5dp"
             android:textColor="@color/red"
             android:textSize="18sp"

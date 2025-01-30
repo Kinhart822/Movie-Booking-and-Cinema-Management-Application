@@ -1,6 +1,7 @@
 package vn.edu.usth.mcma.frontend.component.main;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -130,28 +131,14 @@ public class SearchMovieActivity extends AppCompatActivity {
         GenreButton genreButton = new GenreButton(this);
         genreButton.setGenreId(genre.getId());
         genreButton.setText(genre.getName());
-        genreButton.setTransformationMethod(null);
-        //use selector xml
-        genreButton.setBackgroundColor(0xFFD0D0D0);
-        genreButton.setTextColor(ContextCompat.getColor(this, R.color.black));
-        genreButton.setPadding(20, 10, 20, 10);
-        genreButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17.5f);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        params.setMargins(8, 0, 8, 0);
-        genreButton.setLayoutParams(params);
         genreButton.setOnClickListener(v -> {
             if (genreButton.isSelected()) {
                 genreButton.setSelected(false);
-                genreButton.setBackgroundColor(0xFFD0D0D0);
                 selectedGenres.remove(genreButton.getGenreId());
                 findAllMovieByGenre();
                 return;
             }
             genreButton.setSelected(true);
-            genreButton.setBackgroundColor(0xFF6098EB);
             selectedGenres.add(genreButton.getGenreId());
             findAllMovieByGenre();
         });

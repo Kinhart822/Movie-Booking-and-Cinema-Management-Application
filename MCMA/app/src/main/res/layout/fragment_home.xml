@@ -33,18 +33,16 @@
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_margin="20dp"
-                android:background="@drawable/tab_rect"
-                android:elevation="3dp"
-                app:tabBackground="@drawable/tab_background"
-                app:tabGravity="fill"
-                app:tabIndicatorHeight="0dp"
-                app:tabMode="fixed"
-                app:tabRippleColor="@null"
-                app:tabSelectedTextColor="@color/white"
-                app:tabTextAppearance="@style/TabLayout"
-                app:tabTextColor="@color/black" />
+                android:padding="3dp"
+                android:background="@drawable/tab_layout_background"
+                app:tabIndicator="@drawable/tab_layout_indicator"
+                app:tabIndicatorHeight="34dp"
+                app:tabIndicatorGravity="center"
+                app:tabIndicatorFullWidth="true"
+                app:tabIndicatorColor="@color/tab_indicator"
+                app:tabSelectedTextColor="@color/white"/>
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/view_pager_2"
                 android:layout_width="match_parent"

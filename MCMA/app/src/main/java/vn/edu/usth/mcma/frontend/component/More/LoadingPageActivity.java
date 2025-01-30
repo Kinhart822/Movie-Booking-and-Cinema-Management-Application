@@ -18,13 +18,10 @@ public class LoadingPageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_loading_page);
 
         handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(LoadingPageActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        }, 3000);
+        handler.postDelayed(() -> {
+            Intent intent = new Intent(LoadingPageActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }, 3);///todo 3000
     }
 }

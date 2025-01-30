@@ -28,7 +28,7 @@
             <ImageButton
                 android:layout_width="29dp"
                 android:layout_height="30dp"
-                android:background="@drawable/home" />
+                android:background="@drawable/ic_home_1" />
 
             <TextView
                 android:layout_width="match_parent"

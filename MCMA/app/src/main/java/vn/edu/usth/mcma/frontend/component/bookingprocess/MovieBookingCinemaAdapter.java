@@ -72,14 +72,14 @@ public class MovieBookingCinemaAdapter extends RecyclerView.Adapter<MovieBooking
             return;
         }
         holder.nameTextView.setText(cinemaName);
-        holder.expandCollapseButton.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_down_black));
+        holder.expandCollapseButton.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_down_gray));
         holder.showtimeScreenTypeLinearLayout.setVisibility(View.GONE);
         holder.expandCollapseButton.setOnClickListener(v -> {
             if (holder.showtimeScreenTypeLinearLayout.getVisibility() == View.GONE) {
-                holder.expandCollapseButton.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_up_black));
+                holder.expandCollapseButton.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_up_gray));
                 holder.showtimeScreenTypeLinearLayout.setVisibility(View.VISIBLE);
             } else if (holder.showtimeScreenTypeLinearLayout.getVisibility() == View.VISIBLE) {
-                holder.expandCollapseButton.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_down_black));
+                holder.expandCollapseButton.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_down_gray));
                 holder.showtimeScreenTypeLinearLayout.setVisibility(View.GONE);
             }
         });
