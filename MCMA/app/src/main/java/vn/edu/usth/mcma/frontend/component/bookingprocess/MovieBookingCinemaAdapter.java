@@ -1,6 +1,5 @@
 package vn.edu.usth.mcma.frontend.component.bookingprocess;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.util.TypedValue;

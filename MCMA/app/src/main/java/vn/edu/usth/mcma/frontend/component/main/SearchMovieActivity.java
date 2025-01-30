@@ -1,17 +1,14 @@
 package vn.edu.usth.mcma.frontend.component.main;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
