@@ -4,8 +4,8 @@
     <color name="color_on_primary">#ffffffff</color>
     <color name="color_secondary">#ffd0d0d0</color>
     <color name="color_on_secondary">#d0d0d0d0</color>
-    <color name="tab_indicator">#ff999999</color>
-    <color name="tab_background">#99999999</color>
+    <color name="tab_indicator">#ff555555</color>
+    <color name="tab_background">#ff333333</color>
     <color name="transparent">#00000000</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>

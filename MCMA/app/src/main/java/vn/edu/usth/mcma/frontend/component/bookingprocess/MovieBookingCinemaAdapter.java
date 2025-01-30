@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -73,7 +74,7 @@ public class MovieBookingCinemaAdapter extends RecyclerView.Adapter<MovieBooking
         holder.nameTextView.setText(cinemaName);
         holder.expandCollapseButton.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_down_gray));
         holder.showtimeScreenTypeLinearLayout.setVisibility(View.GONE);
-        holder.expandCollapseButton.setOnClickListener(v -> {
+        holder.nameRelativeLayout.setOnClickListener(v -> {
             if (holder.showtimeScreenTypeLinearLayout.getVisibility() == View.GONE) {
                 holder.expandCollapseButton.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_up_gray));
                 holder.showtimeScreenTypeLinearLayout.setVisibility(View.VISIBLE);
@@ -95,19 +96,8 @@ public class MovieBookingCinemaAdapter extends RecyclerView.Adapter<MovieBooking
                     scheduleTimeLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
                     scheduleList
                             .forEach((schedule) -> {
-                                Button showtimeTimeButton = new Button(context);
+                                TimeButton showtimeTimeButton = new TimeButton(context);
                                 showtimeTimeButton.setText(schedule.getTime().toString());
-                                showtimeTimeButton.setTransformationMethod(null);
-                                showtimeTimeButton.setBackgroundResource(R.drawable.button_selector_showtime);
-                                showtimeTimeButton.setTextColor(ContextCompat.getColor(context, R.color.black));
-                                showtimeTimeButton.setPadding(20, 10, 20, 10);
-                                showtimeTimeButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17.5f);
-                                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                                        LinearLayout.LayoutParams.WRAP_CONTENT
-                                );
-                                params.setMargins(8, 0, 8, 0);
-                                showtimeTimeButton.setLayoutParams(params);
                                 showtimeTimeButton.setOnClickListener(v -> {
                                     System.out.println(schedule.getScheduleId());
                                     //todo: new activity
@@ -128,12 +118,14 @@ public class MovieBookingCinemaAdapter extends RecyclerView.Adapter<MovieBooking
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        RelativeLayout nameRelativeLayout;
         TextView nameTextView;
         ImageButton expandCollapseButton;
         LinearLayout showtimeScreenTypeLinearLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            nameRelativeLayout = itemView.findViewById(R.id.name);
             nameTextView = itemView.findViewById(R.id.text_view_name);
             expandCollapseButton = itemView.findViewById(R.id.image_button_expand_collapse);
             showtimeScreenTypeLinearLayout = itemView.findViewById(R.id.linear_layout_showtime_screen_type);
