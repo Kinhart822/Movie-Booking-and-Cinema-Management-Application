@@ -110,7 +110,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         scaleRatingBar.setRating(movieDetail.getAvgVotes() != null ? movieDetail.getAvgVotes().floatValue() : 0);
         lengthTextView.setText(String.format("%d minutes", movieDetail.getLength()));
         overviewTextView.setText(movieDetail.getOverview());
-        publishDateTextView.setText(Instant.parse(movieDetail.getPublishDate()).atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern("MMM dd, yyy")));
+        publishDateTextView.setText(Instant.parse(movieDetail.getReleaseDate()).atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern("MMM dd, yyy")));
         ratingTextView.setText(movieDetail.getRating());
         directorTextView.setText(String.join(", ", movieDetail.getDirectors()));
         castTextView.setText(String.join(", ", movieDetail.getActors()));

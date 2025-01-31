@@ -11,7 +11,7 @@ public class MovieResponse {
     private String name;
     private Integer length;
     private String description;
-    private String publishDate;
+    private String releaseDate;
     private String trailerUrl;
     private String poster;
     private String banner;

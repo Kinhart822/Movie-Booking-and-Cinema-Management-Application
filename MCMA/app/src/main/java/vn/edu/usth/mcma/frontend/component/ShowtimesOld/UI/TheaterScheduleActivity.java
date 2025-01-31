@@ -220,7 +220,7 @@ public class TheaterScheduleActivity extends AppCompatActivity implements MovieS
                                             .title(m.getName())
                                             .movieLength(m.getLength())
                                             .description(m.getDescription())
-                                            .publishDate(m.getPublishDate())
+                                            .publishDate(m.getReleaseDate())
                                             .trailerUrl(m.getTrailerUrl())
                                             .imageUrl(m.getPoster())
                                             .backgroundImageUrl(m.getBanner())
@@ -276,7 +276,7 @@ public class TheaterScheduleActivity extends AppCompatActivity implements MovieS
                             intent.putExtra(IntentKey.MOVIE_GENRES.name(), new ArrayList<>(movieResponse.getGenreResponses().stream().map(GenreResponse::getName).collect(Collectors.toList())));
                             intent.putExtra(IntentKey.MOVIE_LENGTH.name(), movieResponse.getLength());
                             intent.putExtra(IntentKey.MOVIE_DESCRIPTION.name(), movieResponse.getDescription());
-                            intent.putExtra(IntentKey.PUBLISHED_DATE.name(), movieResponse.getPublishDate());
+                            intent.putExtra(IntentKey.PUBLISHED_DATE.name(), movieResponse.getReleaseDate());
                             intent.putExtra(IntentKey.IMAGE_URL.name(), movieResponse.getPoster());
                             intent.putExtra(IntentKey.BACKGROUND_IMAGE_URL.name(), movieResponse.getBanner());
                             intent.putExtra(IntentKey.TRAILER.name(), movieResponse.getTrailerUrl());
