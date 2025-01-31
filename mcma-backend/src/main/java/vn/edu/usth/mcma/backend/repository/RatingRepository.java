@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import vn.edu.usth.mcma.backend.entity.Rating;
 
 @Repository
-public interface RatingRepository extends JpaRepository<Rating, Long> {
+public interface RatingRepository extends JpaRepository<Rating, String> {
 }

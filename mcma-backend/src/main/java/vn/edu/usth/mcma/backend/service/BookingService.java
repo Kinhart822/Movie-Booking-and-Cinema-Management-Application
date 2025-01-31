@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.*;
+import vn.edu.usth.mcma.backend.dto.booking.ScheduleDetail;
 import vn.edu.usth.mcma.backend.entity.*;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.*;
@@ -23,6 +24,7 @@ public class BookingService {
     private final ScreenRepository screenRepository;
     private final TicketRepository ticketRepository;
     private final SeatRepository seatRepository;
+    private final RatingRepository ratingRepository;
     private MovieRepository movieRepository;
     @Deprecated
     public MoviePresentation getAllInformationOfSelectedMovie(Long movieId) {
@@ -75,15 +77,15 @@ public class BookingService {
                 .toList();
         // schedules
         List<SchedulePresentation> schedules = scheduleRepository
-                .findAllByMovieAndStartTimeIsAfterAndStatusIs(movie, Instant.now(), CommonStatus.ACTIVE.getStatus())
+                .findAllByMovieAndStartDateTimeIsAfterAndStatusIs(movie, Instant.now(), CommonStatus.ACTIVE.getStatus())
                 .stream()
                 .map(s -> SchedulePresentation
                         .builder()
                         .id(s.getId())
                         .screenId(s.getScreen().getId())
                         .movieId(s.getMovie().getId())
-                        .startTime(s.getStartTime().toString())
-                        .endTime(s.getEndTime().toString())
+                        .startTime(s.getStartDateTime().toString())
+                        .endTime(s.getEndDateTime().toString())
                         .build())
                 .toList();
         return MoviePresentation
@@ -108,7 +110,7 @@ public class BookingService {
                 .findById(movieId)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         return scheduleRepository
-                .findAllByMovieAndStartTimeIsAfterAndStatusIs(movie, Instant.now(), CommonStatus.ACTIVE.getStatus())
+                .findAllByMovieAndStartDateTimeIsAfterAndStatusIs(movie, Instant.now(), CommonStatus.ACTIVE.getStatus())
                 .stream()
                 .map(Schedule::getScreen)
                 .map(Screen::getCinema)
@@ -128,7 +130,7 @@ public class BookingService {
                 .findById(movieId)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         return scheduleRepository
-                .findAllByMovieAndStartTimeIsAfterAndStatusIs(movie, Instant.now(), CommonStatus.ACTIVE.getStatus())
+                .findAllByMovieAndStartDateTimeIsAfterAndStatusIs(movie, Instant.now(), CommonStatus.ACTIVE.getStatus())
                 .stream()
                 .map(Schedule::getScreen)
                 .map(Screen::getCinema)
@@ -163,15 +165,15 @@ public class BookingService {
                 .findById(screenId)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         return scheduleRepository
-                .findAllByMovieAndScreenAndStartTimeIsAfterAndStatusIs(movie, screen, Instant.now(), CommonStatus.ACTIVE.getStatus())
+                .findAllByMovieAndScreenAndStartDateTimeIsAfterAndStatusIs(movie, screen, Instant.now(), CommonStatus.ACTIVE.getStatus())
                 .stream()
                 .map(s -> SchedulePresentation
                         .builder()
                         .id(s.getId())
                         .screenId(s.getScreen().getId())
                         .movieId(s.getMovie().getId())
-                        .startTime(s.getStartTime().toString())
-                        .endTime(s.getEndTime().toString())
+                        .startTime(s.getStartDateTime().toString())
+                        .endTime(s.getEndDateTime().toString())
                         .build())
                 .toList();
     }
@@ -190,6 +192,29 @@ public class BookingService {
                         .availability(s.getAvailability().ordinal())
                         .build())
                 .toList();
+    }
+
+    public ScheduleDetail findScheduleDetail(Long scheduleId) {
+        Schedule schedule = scheduleRepository
+                .findById(scheduleId)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+        return ScheduleDetail.builder()
+                .scheduleId(schedule.getId())
+                .cinemaName(schedule.getScreen().getCinema().getName())
+                .screenName(schedule.getScreen().getName())
+                .startDateTime(schedule.getStartDateTime())
+                .endDateTime(schedule.getEndDateTime())
+                .movieName(schedule.getMovie().getName())
+                .rating(schedule.getMovie().getRating().getName())
+                .screenType(schedule.getScreen().getScreenType().getName())
+                .build();
+    }
+
+    public Set<Audience> findAllAudienceTypeBySchedule(String ratingId) {
+        return ratingRepository
+                .findById(ratingId)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND))
+                .getAllowedAudiences();
     }
 //    public List<TicketResponse> getAllTickets() {
 //        List<Ticket> tickets = ticketRepository.findAll();

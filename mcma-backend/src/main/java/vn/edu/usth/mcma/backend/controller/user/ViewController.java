@@ -18,7 +18,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user/view")
 public class ViewController {
-    private final MovieService movieService;
     private final ViewService viewService;
 
     @GetMapping("/movie/advertisement")

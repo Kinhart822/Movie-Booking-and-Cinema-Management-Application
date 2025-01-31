@@ -23,14 +23,14 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             from schedule s
                      left join movie m on s.movie_id = m.id
             where s.status in :statuses
-              and s.start_time >= :now
+              and s.start_date_time >= :now
             group by m.id""")
     List<MovieDetailShortProjection> findAllNowShowing(@Param("statuses") List<Integer> statuses, @Param("now") Instant now);
     @Query(nativeQuery = true, value = """
             select m.id as id, m.name as name, m.length as length, m.poster as poster
             from movie m
             where m.status in :statuses
-              and m.publish_date >= :now
+              and m.release_date >= :now
             group by m.id""")
     List<MovieDetailShortProjection> findAllComingSoon(@Param("statuses") List<Integer> statuses, @Param("now") Instant now);
 

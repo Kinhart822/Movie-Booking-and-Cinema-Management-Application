@@ -8,5 +8,5 @@ import java.time.Instant;
 public class MovieScheduleRequest {
     private Long screenId;
     private Long movieId;
-    private Instant startTime;
+    private Instant startDateTime;
 }

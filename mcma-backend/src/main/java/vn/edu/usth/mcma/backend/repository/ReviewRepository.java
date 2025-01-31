@@ -21,8 +21,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
                      left join movie m on r.movie_id = m.id
                      left join schedule s on m.id = s.movie_id
             where m.status = :status
-              and m.publish_date < :now
-              and s.start_time > :now
+              and m.release_date < :now
+              and s.start_date_time > :now
             group by (s.movie_id)
             order by avgVote desc""")
     List<HighRatingMovieProjection> findHighestRatingMovies(@Param(value = "status") Integer status, @Param(value = "now") Instant now);

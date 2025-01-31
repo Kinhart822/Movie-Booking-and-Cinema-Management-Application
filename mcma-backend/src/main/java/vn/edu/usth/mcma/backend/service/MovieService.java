@@ -13,7 +13,6 @@ import vn.edu.usth.mcma.backend.repository.*;
 import vn.edu.usth.mcma.backend.security.JwtHelper;
 
 import java.time.Instant;
-import java.util.*;
 
 @Transactional
 @Service
@@ -36,7 +35,7 @@ public class MovieService {
                 .findById(movieId)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         Rating rating = ratingRepository
-                .findById(movieRequest.getRatingId())
+                .findById(movieRequest.getRatingName())
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         Long userId = jwtHelper.getIdUserRequesting();
         Instant now = Instant.now();
@@ -66,15 +65,15 @@ public class MovieService {
         Movie movie = movieRepository
                 .findById(request.getMovieId())
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
-        Instant startTime = request.getStartTime();
-        Instant endTime = startTime.plusSeconds(movie.getLength());
+        Instant startDateTime = request.getStartDateTime();
+        Instant endDateTime = startDateTime.plusSeconds(movie.getLength());
         if (movie.getReleaseDate().isAfter(Instant.now())) {
             throw new BusinessException(ApiResponseCode.MOVIE_NOT_PUBLISHED);
         }
-        if (startTime.isBefore(Instant.now())) {
+        if (startDateTime.isBefore(Instant.now())) {
             throw new BusinessException(ApiResponseCode.INVALID_START_TIME);
         }
-        if (!scheduleRepository.eventsInRange(request.getScreenId(), startTime, endTime).isEmpty()) {
+        if (!scheduleRepository.eventsInRange(request.getScreenId(), startDateTime, endDateTime).isEmpty()) {
             throw new BusinessException(ApiResponseCode.SCREEN_OCCUPIED);
         }
         scheduleRepository.save(Schedule
@@ -83,8 +82,8 @@ public class MovieService {
                         .findById(request.getScreenId())
                         .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND)))
                 .movie(movie)
-                .startTime(startTime)
-                .endTime(endTime)
+                .startDateTime(startDateTime)
+                .endDateTime(endDateTime)
                 .status(CommonStatus.ACTIVE.getStatus())
                 .build());
         return ApiResponse.success();

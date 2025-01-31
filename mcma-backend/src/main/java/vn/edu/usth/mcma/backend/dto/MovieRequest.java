@@ -17,6 +17,6 @@ public class MovieRequest {
     private String banner;
     private String publishDate;
     private String trailerUrl;
-    private Long ratingId;
+    private String ratingName;
     private Integer status;
 }

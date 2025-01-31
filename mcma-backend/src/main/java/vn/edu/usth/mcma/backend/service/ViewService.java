@@ -171,7 +171,7 @@ public class ViewService {
                         .findById(id)
                         .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         List<Schedule> schedules = scheduleRepository
-                .findAllByMovieAndStartTimeIsAfterAndStatusIs(
+                .findAllByMovieAndStartDateTimeIsAfterAndStatusIs(
                         movie,
                         Instant.now(),
                         CommonStatus.ACTIVE.getStatus());
@@ -212,7 +212,7 @@ public class ViewService {
                                                                 .stream()
                                                                 .map(schedule -> ShowtimeOfMovieBySchedule.builder()
                                                                         .scheduleId(schedule.getId())
-                                                                        .startTime(schedule.getStartTime())
+                                                                        .startTime(schedule.getStartDateTime())
                                                                         .build())
                                                                 .toList())
                                                         .build())

@@ -27,9 +27,9 @@ public class Schedule extends AbstractAuditing implements Serializable {
     @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
     @Column
-    private Instant startTime;//start datetime
+    private Instant startDateTime;
     @Column
-    private Instant endTime;//end datetime
+    private Instant endDateTime;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
 }
