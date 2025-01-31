@@ -41,6 +41,7 @@ public class UserController {
 //        return ResponseEntity.ok(movieService.getAllMoviesByMovieGenreName(name, limit, offset));
 //    }
     // TODO: Booking
+
     @GetMapping("/information/movie-information/{movieId}")
     public ResponseEntity<MoviePresentation> getAllInformationOfSelectedMovie(@PathVariable Long movieId) {
         return ResponseEntity.ok(bookingService.getAllInformationOfSelectedMovie(movieId));

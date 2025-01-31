@@ -59,7 +59,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     List<Movie> findAllByStatusIs(Integer status);
 
-    List<Movie> findAllByPublishDateAfterAndStatusIs(Instant time, Integer status);
+    List<Movie> findAllByReleaseDateAfterAndStatusIs(Instant time, Integer status);
 
 //    @Query(nativeQuery = true, value = """
 //                 SELECT

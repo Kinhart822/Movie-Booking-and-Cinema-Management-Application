@@ -13,16 +13,17 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class TicketType extends AbstractAuditing implements Serializable {
+public class Audience extends AbstractAuditing implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column
     private String name;
     @Column
     private String description;
     @Column
     private Double price;
+    @Column
+    private Integer ageLowerBound;
+    @Column
+    private Integer ageHigherBound;
 }

@@ -33,13 +33,13 @@ public class Movie extends AbstractAuditing implements Serializable {
     @Column
     private Integer length;
     @Column
-    private Instant publishDate;
+    private Instant releaseDate;
     @Column
     private String trailerUrl;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
     @ManyToOne
-    @JoinColumn(name = "rating_id")
+    @JoinColumn(name = "rating")
     private Rating rating;
     @ManyToMany
     @JoinTable(

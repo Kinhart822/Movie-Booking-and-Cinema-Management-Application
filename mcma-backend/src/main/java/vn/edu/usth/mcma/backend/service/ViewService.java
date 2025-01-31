@@ -101,7 +101,7 @@ public class ViewService {
                 .name(movie.getName())
                 .length(movie.getLength())
                 .overview(movie.getOverview())
-                .publishDate(movie.getPublishDate())
+                .releaseDate(movie.getReleaseDate())
                 .trailerUrl(movie.getTrailerUrl())
                 .poster(movie.getPoster())
                 .banner(movie.getBanner())

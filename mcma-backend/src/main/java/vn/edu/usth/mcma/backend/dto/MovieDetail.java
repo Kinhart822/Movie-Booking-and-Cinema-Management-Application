@@ -17,7 +17,7 @@ public class MovieDetail {
     private String name;
     private Integer length;
     private String overview;
-    private Instant publishDate;
+    private Instant releaseDate;
     private String trailerUrl;
     private String poster;
     private String banner;

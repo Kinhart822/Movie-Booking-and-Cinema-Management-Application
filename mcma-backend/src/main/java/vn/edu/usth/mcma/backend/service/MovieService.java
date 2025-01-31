@@ -48,7 +48,7 @@ public class MovieService {
                         .poster(movieRequest.getPoster())
                         .banner(movieRequest.getBanner())
                         .length(movieRequest.getLength())
-                        .publishDate(Instant.parse(movieRequest.getPublishDate()))
+                        .releaseDate(Instant.parse(movieRequest.getPublishDate()))
                         .trailerUrl(movieRequest.getTrailerUrl())
                         .status(movieRequest.getStatus())
                         .rating(rating)
@@ -68,7 +68,7 @@ public class MovieService {
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         Instant startTime = request.getStartTime();
         Instant endTime = startTime.plusSeconds(movie.getLength());
-        if (movie.getPublishDate().isAfter(Instant.now())) {
+        if (movie.getReleaseDate().isAfter(Instant.now())) {
             throw new BusinessException(ApiResponseCode.MOVIE_NOT_PUBLISHED);
         }
         if (startTime.isBefore(Instant.now())) {

@@ -24,6 +24,7 @@ public class BookingService {
     private final TicketRepository ticketRepository;
     private final SeatRepository seatRepository;
     private MovieRepository movieRepository;
+    @Deprecated
     public MoviePresentation getAllInformationOfSelectedMovie(Long movieId) {
         Movie movie = movieRepository
                 .findById(movieId)
@@ -57,7 +58,6 @@ public class BookingService {
         Rating r = movie.getRating();
         RatingPresentation rating = RatingPresentation
                 .builder()
-                .id(r.getId())
                 .name(r.getName())
                 .description(r.getDescription())
                 .build();
@@ -92,7 +92,7 @@ public class BookingService {
                 .name(movie.getName())
                 .length(movie.getLength())
                 .description(movie.getOverview())
-                .publishDate(movie.getPublishDate().toString().substring(0,10))
+                .publishDate(movie.getReleaseDate().toString().substring(0,10))
                 .trailerUrl(movie.getTrailerUrl())
                 .poster(movie.getPoster())
                 .banner(movie.getBanner())
