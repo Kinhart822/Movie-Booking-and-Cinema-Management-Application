@@ -88,7 +88,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                             return;
                         }
                         movieDetail = response.body();
-                        postFindMovieDetail(movieDetail);
+                        postFindMovieDetail();
                     }
                     @Override
                     public void onFailure(@NonNull Call<MovieDetail> call, @NonNull Throwable throwable) {
@@ -97,7 +97,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 });
     }
     @SuppressLint("DefaultLocale")
-    private void postFindMovieDetail(MovieDetail movieDetail) {
+    private void postFindMovieDetail() {
         youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
             @Override
             public void onReady(@NonNull YouTubePlayer youTubePlayer) {
@@ -110,7 +110,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         scaleRatingBar.setRating(movieDetail.getAvgVotes() != null ? movieDetail.getAvgVotes().floatValue() : 0);
         lengthTextView.setText(String.format("%d minutes", movieDetail.getLength()));
         overviewTextView.setText(movieDetail.getOverview());
-        publishDateTextView.setText(Instant.parse(movieDetail.getReleaseDate()).atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern("MMM dd, yyy")));
+        publishDateTextView.setText(Instant.parse(movieDetail.getReleaseDate()).atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern("MMM dd, uuuu")));
         ratingTextView.setText(movieDetail.getRating());
         directorTextView.setText(String.join(", ", movieDetail.getDirectors()));
         castTextView.setText(String.join(", ", movieDetail.getActors()));

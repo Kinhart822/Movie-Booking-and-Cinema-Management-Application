@@ -6,6 +6,8 @@
     <color name="color_on_secondary">#d0d0d0d0</color>
     <color name="tab_indicator">#ff555555</color>
     <color name="tab_background">#ff333333</color>
+    <color name="booking_summary">#ff333333</color>
+    <color name="screen_type_background">#ff666666</color>
     <color name="transparent">#00000000</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>

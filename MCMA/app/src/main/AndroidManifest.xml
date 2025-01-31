@@ -93,7 +93,7 @@
             android:name=".frontend.component.Feedback.RatingMovie_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.bookingprocess.TicketTypeSelectionActivity"
+            android:name=".frontend.component.bookingprocess.AudienceTypeSelectionActivity"
             android:exported="false" />
         <activity
             android:name=".frontend.component.ShowtimesOld.UI.PaymentBookingActivity"

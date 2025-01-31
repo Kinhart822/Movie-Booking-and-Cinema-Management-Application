@@ -2,11 +2,9 @@ package vn.edu.usth.mcma.frontend.component.bookingprocess;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -23,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.model.ShowtimeOfMovieBySchedule;
 
 public class MovieBookingCinemaAdapter extends RecyclerView.Adapter<MovieBookingCinemaAdapter.ViewHolder> {
@@ -101,7 +100,8 @@ public class MovieBookingCinemaAdapter extends RecyclerView.Adapter<MovieBooking
                                 showtimeTimeButton.setOnClickListener(v -> {
                                     System.out.println(schedule.getScheduleId());
                                     //todo: new activity
-                                    Intent intent = new Intent(context, TicketTypeSelectionActivity.class);
+                                    Intent intent = new Intent(context, AudienceTypeSelectionActivity.class);
+                                    intent.putExtra(IntentKey.SCHEDULE_ID.name(), schedule.getScheduleId());
                                     context.startActivity(intent);
                                 });
                                 scheduleTimeLinearLayout.addView(showtimeTimeButton);

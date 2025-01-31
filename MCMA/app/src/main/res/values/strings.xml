@@ -126,5 +126,14 @@
     <string name="store">Store</string>
     <string name="feedback">Feedback</string>
     <string name="account">Account</string>
+    <string name="total">Total</string>
+    <string name="audience_type_selection">Audience Type Selection</string>
+    <string name="hint_cinema_name">cinema_name</string>
+    <string name="hint_screen_name_date_duration">screen_name - MMM dd, uuuu HH:mm ~ HH:mm</string>
+    <string name="hint_movie_name">movie_name</string>
+    <string name="hint_rating_name">R</string>
+    <string name="hint_screen_type">IMAX</string>
+    <string name="hint_audience_number">n_audience</string>
+    <string name="hint_total_price">999</string>
 </resources>
 
