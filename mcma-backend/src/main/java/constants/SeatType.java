@@ -18,14 +18,14 @@ public enum SeatType {
     private final String description;
     private final int width;
     private final int length;
-    private final Double price;
+    private final Double unitPrice;
 
-    SeatType(int id, String description, int width, int length, Double price) {
+    SeatType(int id, String description, int width, int length, Double unitPrice) {
         this.id = id;
         this.description = description;
         this.width = width;
         this.length = length;
-        this.price = price;
+        this.unitPrice = unitPrice;
     }
 
     private static final Map<Integer, SeatType> ID_MAP = new HashMap<>();

@@ -18,7 +18,7 @@ public class Rating extends AbstractAuditing implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @Id
-    private String name;
+    private String id;
     @Column
     private String description;
     @Column(columnDefinition = "TINYINT")
@@ -26,7 +26,7 @@ public class Rating extends AbstractAuditing implements Serializable {
     @ManyToMany
     @JoinTable(
             name = "map_rating_audience",
-            joinColumns = @JoinColumn(name = "rating"),
-            inverseJoinColumns = @JoinColumn(name = "audience"))
+            joinColumns = @JoinColumn(name = "rating_id"),
+            inverseJoinColumns = @JoinColumn(name = "audience_id"))
     private Set<Audience> allowedAudiences;
 }

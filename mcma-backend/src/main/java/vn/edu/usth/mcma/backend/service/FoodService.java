@@ -27,10 +27,6 @@ public class FoodService {
         Food food = new Food();
         food.setName(request.getName());
         food.setDescription(request.getDescription());
-        food.setImageBase64(request.getImageUrl());
-//      debug  food.setSize(request.getSize());
-//      debug  food.setPrice(request.getPrice());
-        food.setStatus(CommonStatus.ACTIVE.getStatus());
         food.setCreatedBy(userId);
         food.setLastModifiedBy(userId);
         foodRepository.save(food);
@@ -46,9 +42,6 @@ public class FoodService {
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         food.setName(request.getName());
         food.setDescription(request.getDescription());
-        food.setImageBase64(request.getImageUrl());
-//      debug  food.setSize(request.getSize());
-//      debug  food.setPrice(request.getPrice());
         food.setLastModifiedBy(userId);
         food.setLastModifiedDate(Instant.now());
         foodRepository.save(food);
@@ -59,7 +52,6 @@ public class FoodService {
         Food food = foodRepository
                 .findById(id)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
-        food.setStatus(CommonStatus.INACTIVE.getStatus());
         food.setLastModifiedBy(userId);
         food.setLastModifiedDate(Instant.now());
         foodRepository.save(food);

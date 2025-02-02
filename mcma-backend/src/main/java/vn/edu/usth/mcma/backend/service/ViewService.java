@@ -75,7 +75,7 @@ public class ViewService {
                         .rating(movieMap
                                 .get(p.getId())
                                 .getRating()
-                                .getName())
+                                .getId())
                         .build())
                 .toList();
     }
@@ -102,7 +102,7 @@ public class ViewService {
                 .length(movie.getLength())
                 .overview(movie.getOverview())
                 .releaseDate(movie.getReleaseDate())
-                .trailerUrl(movie.getTrailerUrl())
+                .trailerUrl(movie.getTrailerYoutubeId())
                 .poster(movie.getPoster())
                 .banner(movie.getBanner())
                 .genres(movie
@@ -112,7 +112,7 @@ public class ViewService {
                         .toList())
                 .directors(directors)
                 .actors(actors)
-                .rating(movie.getRating().getName())
+                .rating(movie.getRating().getId())
                 .avgVotes(reviewRepository.findAvgVoteByMovieIdAndStatus(id, CommonStatus.ACTIVE.getStatus()))
                 .build();
     }
@@ -163,7 +163,7 @@ public class ViewService {
                 .name(movie.getName())
                 .length(movie.getLength())
                 .banner(movie.getBanner())
-                .rating(movie.getRating().getName()).build();
+                .rating(movie.getRating().getId()).build();
     }
     public List<ShowtimeOfMovieByCity> findAllShowtimeByMovie(Long id) {
         Movie movie =
@@ -206,7 +206,7 @@ public class ViewService {
                                                 .stream()
                                                 .map(screen -> ShowtimeOfMovieByScreen.builder()
                                                         .screenId(screen.getId())
-                                                        .screenType(screen.getScreenType().getName())
+                                                        .screenType(screen.getScreenType().getId())
                                                         .showtimeOfMovieBySchedule(screenScheduleMap
                                                                 .getOrDefault(screen, new HashSet<>())
                                                                 .stream()

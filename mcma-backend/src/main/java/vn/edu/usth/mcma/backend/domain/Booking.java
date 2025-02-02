@@ -27,7 +27,7 @@ public class Booking implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private String bookingNo;
+    private String bookingNo;//server generated
     @ManyToOne
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
@@ -53,16 +53,10 @@ public class Booking implements Serializable {
     private Set<Coupon> coupons;
     @ManyToMany
     @JoinTable(
-            name = "map_booking_food",
+            name = "map_booking_concession",
             joinColumns = @JoinColumn(name = "booking_id"),
-            inverseJoinColumns = @JoinColumn(name = "food_id"))
-    private Set<Food> foods;
-    @ManyToMany
-    @JoinTable(
-            name = "map_booking_drink",
-            joinColumns = @JoinColumn(name = "booking_id"),
-            inverseJoinColumns = @JoinColumn(name = "drink_id"))
-    private Set<Drink> drinks;
+            inverseJoinColumns = @JoinColumn(name = "concession_id"))
+    private Set<Concession> concessionSet;
 }
 
 

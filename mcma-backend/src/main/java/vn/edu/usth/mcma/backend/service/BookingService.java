@@ -60,7 +60,7 @@ public class BookingService {
         Rating r = movie.getRating();
         RatingPresentation rating = RatingPresentation
                 .builder()
-                .name(r.getName())
+                .name(r.getId())
                 .description(r.getDescription())
                 .build();
         // reviews
@@ -95,7 +95,7 @@ public class BookingService {
                 .length(movie.getLength())
                 .description(movie.getOverview())
                 .publishDate(movie.getReleaseDate().toString().substring(0,10))
-                .trailerUrl(movie.getTrailerUrl())
+                .trailerUrl(movie.getTrailerYoutubeId())
                 .poster(movie.getPoster())
                 .banner(movie.getBanner())
                 .schedules(schedules)
@@ -205,12 +205,12 @@ public class BookingService {
                 .startDateTime(schedule.getStartDateTime())
                 .endDateTime(schedule.getEndDateTime())
                 .movieName(schedule.getMovie().getName())
-                .rating(schedule.getMovie().getRating().getName())
-                .screenType(schedule.getScreen().getScreenType().getName())
+                .rating(schedule.getMovie().getRating().getId())
+                .screenType(schedule.getScreen().getScreenType().getId())
                 .build();
     }
 
-    public Set<Audience> findAllAudienceTypeBySchedule(String ratingId) {
+    public Set<Audience> findAllAudienceTypeByRating(String ratingId) {
         return ratingRepository
                 .findById(ratingId)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND))

@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import vn.edu.usth.mcma.backend.dto.ScreenPresentation;
 import vn.edu.usth.mcma.backend.dto.ScreenProjection;
 import vn.edu.usth.mcma.backend.entity.Cinema;
 import vn.edu.usth.mcma.backend.entity.Screen;
@@ -16,7 +15,7 @@ public interface ScreenRepository extends JpaRepository<Screen, Long> {
     @Query(nativeQuery = true, value = """
             select s.id                                         as id,
                    s.name                                       as name,
-                   st.name                                      as type,
+                   st.id                                        as type,
                    count(distinct se.screen_id, se.row, se.col) as numberOfSeats,
                    concat(u.first_name, ' ', u.last_name)       as lastModifiedBy,
                    s.last_modified_date                         as lastModifiedDate,

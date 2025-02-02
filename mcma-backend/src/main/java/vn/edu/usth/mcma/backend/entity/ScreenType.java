@@ -17,14 +17,11 @@ public class ScreenType extends AbstractAuditing implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column
-    private String name;
+    private String id;
     @Column
     private String description;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
     @Column
-    private Double price;
+    private Double unitPrice;
 }

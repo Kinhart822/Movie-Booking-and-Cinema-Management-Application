@@ -17,11 +17,11 @@ public class Audience extends AbstractAuditing implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @Id
-    private String name;
+    private String id;
     @Column
     private String description;
     @Column
-    private Double price;
+    private Double unitPrice;
     @Column
     private Integer ageLowerBound;
     @Column

@@ -29,17 +29,16 @@ public class Movie extends AbstractAuditing implements Serializable {
     private String poster;
     @Column(columnDefinition = "LONGTEXT")
     private String banner;
-    // length in minute
     @Column
     private Integer length;
     @Column
     private Instant releaseDate;
     @Column
-    private String trailerUrl;
+    private String trailerYoutubeId;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
     @ManyToOne
-    @JoinColumn(name = "rating")
+    @JoinColumn(name = "rating_id")
     private Rating rating;
     @ManyToMany
     @JoinTable(

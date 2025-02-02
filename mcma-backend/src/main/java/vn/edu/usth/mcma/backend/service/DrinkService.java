@@ -27,11 +27,6 @@ public class DrinkService {
         Drink drink = new Drink();
         drink.setName(request.getName());
         drink.setDescription(request.getDescription());
-        drink.setImageBase64(request.getImageUrl());
-//      debug  drink.setSize(request.getSize());
-        drink.setVolume(request.getVolume());
-//      debug  drink.setPrice(request.getPrice());
-        drink.setStatus(CommonStatus.ACTIVE.getStatus());
         drink.setCreatedBy(userId);
         drink.setLastModifiedBy(userId);
         drinkRepository.save(drink);
@@ -47,10 +42,6 @@ public class DrinkService {
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         drink.setName(request.getName());
         drink.setDescription(request.getDescription());
-        drink.setImageBase64(request.getImageUrl());
-//      debug  drink.setSize(request.getSize());
-        drink.setVolume(request.getVolume());
-//      debug  drink.setPrice(request.getPrice());
         drink.setLastModifiedBy(userId);
         drink.setLastModifiedDate(Instant.now());
         drinkRepository.save(drink);
@@ -61,7 +52,6 @@ public class DrinkService {
         Drink drink = drinkRepository
                 .findById(id)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
-        drink.setStatus(CommonStatus.INACTIVE.getStatus());
         drink.setLastModifiedBy(userId);
         drink.setLastModifiedDate(Instant.now());
         drinkRepository.save(drink);

@@ -141,7 +141,7 @@ public class SeatService {
                 .description(seatType.getDescription())
                 .width(seatType.getWidth())
                 .length(seatType.getLength())
-                .price(seatType.getPrice())
+                .price(seatType.getUnitPrice())
                 .build()));
         return seatTypes;
     }

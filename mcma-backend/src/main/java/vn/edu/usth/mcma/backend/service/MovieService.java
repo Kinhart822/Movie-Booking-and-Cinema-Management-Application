@@ -48,7 +48,7 @@ public class MovieService {
                         .banner(movieRequest.getBanner())
                         .length(movieRequest.getLength())
                         .releaseDate(Instant.parse(movieRequest.getPublishDate()))
-                        .trailerUrl(movieRequest.getTrailerUrl())
+                        .trailerYoutubeId(movieRequest.getTrailerUrl())
                         .status(movieRequest.getStatus())
                         .rating(rating)
                         .lastModifiedBy(userId)

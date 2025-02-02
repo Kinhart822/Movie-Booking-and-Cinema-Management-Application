@@ -23,7 +23,7 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.findScheduleDetail(scheduleId));
     }
     @GetMapping("/rating/{ratingId}/audience-type")
-    public ResponseEntity<Set<Audience>> findAllAudienceTypeBySchedule(@PathVariable String ratingId) {
-        return ResponseEntity.ok(bookingService.findAllAudienceTypeBySchedule(ratingId));
+    public ResponseEntity<Set<Audience>> findAllAudienceTypeByRating(@PathVariable String ratingId) {
+        return ResponseEntity.ok(bookingService.findAllAudienceTypeByRating(ratingId));
     }
 }
