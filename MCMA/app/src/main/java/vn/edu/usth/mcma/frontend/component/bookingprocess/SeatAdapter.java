@@ -1,6 +1,7 @@
 package vn.edu.usth.mcma.frontend.component.bookingprocess;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import vn.edu.usth.mcma.frontend.dto.response.SeatTypeResponse;
 import vn.edu.usth.mcma.frontend.helper.SeatMapHelper;
 
 public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
+    private static final String TAG = SeatAdapter.class.getName();
     private final Map<Integer, Map<Integer, Seat>> seatMatrix;
     private final Map<Integer, Map<Integer, List<Seat>>> rootSeatMatrix;
     private final Context context;
@@ -39,7 +41,6 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
     private final List<Seat> selectedSeats;
     @Getter // this contains list of root seats
     private final List<Seat> selectedRootSeats;
-//    private final String TAG = SeatAdapter.class.getName();
 
 
     public SeatAdapter(
@@ -95,8 +96,13 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
         int row = position / (maxSeatPerRow + 1);
         int col = position % (maxSeatPerRow + 1);
         if (col == 0) {
-            char rowLetter = (char) ('A' + row);
-            holder.seatIndexTextView.setText(String.valueOf(rowLetter));
+            for (Seat seat : Objects.requireNonNull(seatMatrix.get(row)).values()) {
+                if (seat.getName() != null) {
+                    holder.seatIndexTextView.setText(seat.getName().substring(0, 1));
+                    return;
+                }
+            }
+            holder.seatIndexTextView.setText(null);
             return;
         }
         Seat seat = Objects
@@ -107,7 +113,6 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
         int seatTypeId = seat.getTypeId();
         int availabilityId = seat.getAvailability();
         if (name != null) {
-//            holder.seatTextView.setText(name);
             holder.itemView.setBackground(ContextCompat
                     .getDrawable(context, SeatAvailability
                             .getById(availabilityId)
@@ -125,7 +130,6 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
                         .getDrawable(context, SeatAvailables.SELECTED.getBackgroundId()));
             }
         } else {
-//            holder.seatTextView.setText("");
             holder.itemView.setBackground(ContextCompat
                     .getDrawable(context, R.drawable.ic_seat_empty));
             holder.itemView.setOnClickListener(null);
@@ -140,9 +144,9 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
                                 .get(rootRow))
                 .get(rootCol));
         Optional<Seat> rootSeatOpt = rectangle
-                .parallelStream()
+                .stream()
                 .filter(s -> s.getRootRow() == rootRow && s.getRootCol() == rootCol)
-                .findAny();
+                .findFirst();//if use find any -> rootSeat may not be in selectedRootSeats
         Seat rootSeat = null;
         if (rootSeatOpt.isPresent()) {
             rootSeat = rootSeatOpt.get();
@@ -153,15 +157,13 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
             selectedRootSeats.remove(rootSeat);
         } else {
             if (isNumberOfTicketsExceeded(seat)) {
-                Toast.makeText(context, "Desired number of seats exceeded!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "toggleSeat: Desired number of seats exceeded!");
                 return;
             }
             selectedSeats.addAll(rectangle);
             selectedRootSeats.add(rootSeat);
         }
         rectangle.forEach(s -> notifyItemChanged(s.getRow() * (maxSeatPerRow + 1) + s.getCol() + 1));
-
-//        ((SeatSelectionActivity) context).onSeatClickListener();todo might not needed
         iSeatItemView.onSeatClickListener(seat);
     }
     private boolean isNumberOfTicketsExceeded(Seat seat) {
