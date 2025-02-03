@@ -13,6 +13,7 @@ import vn.edu.usth.mcma.backend.repository.*;
 import vn.edu.usth.mcma.backend.security.JwtHelper;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @Transactional
 @Service
@@ -66,7 +67,7 @@ public class MovieService {
                 .findById(request.getMovieId())
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         Instant startDateTime = request.getStartDateTime();
-        Instant endDateTime = startDateTime.plusSeconds(movie.getLength());
+        Instant endDateTime = startDateTime.plus(movie.getLength(), ChronoUnit.MINUTES);
         if (movie.getReleaseDate().isAfter(Instant.now())) {
             throw new BusinessException(ApiResponseCode.MOVIE_NOT_PUBLISHED);
         }
