@@ -44,7 +44,7 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
     private final String TAG = SeatAdapter.class.getName();
 
     public interface ISeatItemView {
-        void onSeatClicked(Seat seat);
+        void onSeatClickListener(Seat seat);
     }
     public SeatAdapter(
             Context context,
@@ -169,7 +169,7 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
             ((SeatSelectionActivity) context).updateSelectedSeatsDisplay();
         }
         if (iSeatItemView != null) {
-            iSeatItemView.onSeatClicked(seat);
+            iSeatItemView.onSeatClickListener(seat);
         }
     }
     private boolean isNumberOfTicketsExceeded(Seat seat) {

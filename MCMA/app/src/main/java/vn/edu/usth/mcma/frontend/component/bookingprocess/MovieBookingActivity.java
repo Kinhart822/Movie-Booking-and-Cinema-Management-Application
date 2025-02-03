@@ -30,6 +30,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.component.customview.filter.CityButton;
+import vn.edu.usth.mcma.frontend.component.customview.filter.DateButton;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort2;
 import vn.edu.usth.mcma.frontend.dto.movie.ShowtimeOfMovieByCityResponse;
 import vn.edu.usth.mcma.frontend.helper.ImageDecoder;

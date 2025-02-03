@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingprocess;
+package vn.edu.usth.mcma.frontend.component.customview.filter;
 
 import android.content.Context;
 
@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CityButton extends CustomButton {
+public class CityButton extends CustomFilterButton {
     private Long cityId;
     public CityButton(@NonNull Context context) {
         super(context);

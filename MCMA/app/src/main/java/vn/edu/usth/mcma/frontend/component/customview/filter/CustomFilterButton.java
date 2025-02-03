@@ -1,9 +1,8 @@
-package vn.edu.usth.mcma.frontend.component.bookingprocess;
+package vn.edu.usth.mcma.frontend.component.customview.filter;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
@@ -12,14 +11,13 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 
-import lombok.Setter;
 import vn.edu.usth.mcma.R;
 
 /*
  * tends to be used in linear layout
  */
-public class CustomButton extends AppCompatButton {
-    public CustomButton(@NonNull Context context) {
+public class CustomFilterButton extends AppCompatButton {
+    public CustomFilterButton(@NonNull Context context) {
         super(context);
         init();
     }
@@ -47,6 +45,7 @@ public class CustomButton extends AppCompatButton {
         selected.getPaint().setStyle(Paint.Style.FILL_AND_STROKE);
         selected.getPaint().setStrokeWidth(2);
         selected.getPaint().setColor(getResources().getColor(R.color.color_primary));
+
         StateListDrawable stateListDrawable = new StateListDrawable();
         stateListDrawable.addState(new int[]{-android.R.attr.state_selected}, unselected);
         stateListDrawable.addState(new int[]{android.R.attr.state_selected}, selected);

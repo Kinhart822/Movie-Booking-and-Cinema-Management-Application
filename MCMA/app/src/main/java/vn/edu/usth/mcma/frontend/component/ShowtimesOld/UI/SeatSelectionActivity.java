@@ -33,7 +33,7 @@ import vn.edu.usth.mcma.frontend.helper.SeatMapHelper;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Adapters.SeatAdapter;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Movie;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Theater;
-import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.TicketItem;
+import vn.edu.usth.mcma.frontend.model.AudienceType;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 //todo see commit 5675655 of branch AdditionalFunctionForUser
 public class SeatSelectionActivity extends AppCompatActivity {
@@ -46,7 +46,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private int desiredSeatCount;
     private double totalTicketAndSeatPrice;
     private int totalSeatCount;
-    private List<TicketItem> tickets = new ArrayList<>();
+    private List<AudienceType> tickets = new ArrayList<>();
     private Long movieId;
     private Long selectedCityId;
     private Long selectedCinemaId;
@@ -207,7 +207,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
                 return;
             }
             // Prepare intent for ComboSelectionActivity
-            List<TicketItem> ticketItems = getIntent().getParcelableArrayListExtra(IntentKey.TICKET_ITEMS.name());
+            List<AudienceType> ticketItems = getIntent().getParcelableArrayListExtra(IntentKey.TICKET_ITEMS.name());
             Intent intent = new Intent(this, ComboSelectionActivity.class);
             assert ticketItems != null;
             intent.putParcelableArrayListExtra(IntentKey.TICKET_ITEMS.name(), new ArrayList<>(ticketItems));

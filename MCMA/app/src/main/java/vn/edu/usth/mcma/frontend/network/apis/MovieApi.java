@@ -9,6 +9,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import vn.edu.usth.mcma.frontend.dto.bookingprocess.AudienceDetail;
 import vn.edu.usth.mcma.frontend.dto.bookingprocess.ScheduleDetail;
 import vn.edu.usth.mcma.frontend.dto.home.Advertisement;
 import vn.edu.usth.mcma.frontend.dto.movie.GenreShort;
@@ -47,6 +48,8 @@ public interface MovieApi {
 
     @GET("/api/v1/user/booking/schedule/{scheduleId}")
     Call<ScheduleDetail> findScheduleDetail(@Path("scheduleId") Long scheduleId);
+    @GET("/api/v1/user/booking/rating/{ratingId}/audience-type")
+    Call<List<AudienceDetail>> findAllAudienceTypeByRating(@Path("ratingId") String ratingId);
 
     @POST("/api/v1/user/movieRespond/add")
     Call<MovieRespondRequest> addRespond(@Body MovieRespondRequest movieRespondRequest);

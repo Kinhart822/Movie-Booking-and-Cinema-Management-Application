@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingprocess;
+package vn.edu.usth.mcma.frontend.component.customview.filter;
 
 import android.content.Context;
 
@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class GenreButton extends CustomButton {
+public class GenreButton extends CustomFilterButton {
     private Long genreId;
     public GenreButton(@NonNull Context context) {
         super(context);

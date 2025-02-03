@@ -25,7 +25,7 @@ import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Seat;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Adapters.ComboAdapter;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.ComboItem;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Theater;
-import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.TicketItem;
+import vn.edu.usth.mcma.frontend.model.AudienceType;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Utils.PriceCalculator;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 
@@ -54,7 +54,7 @@ public class ComboSelectionActivity extends AppCompatActivity {
     private int totalTicketCount;
     private List<ComboItem> comboItemList = new ArrayList<>();
     private int totalComboCount;
-    private List<TicketItem> items = new ArrayList<>();
+    private List<AudienceType> items = new ArrayList<>();
     private List<AvailableSeatResponse> seatItems = new ArrayList<>();
     private double totalTicketPrice;
     private double totalPriceOfSelectedChoice;
@@ -294,7 +294,7 @@ public class ComboSelectionActivity extends AppCompatActivity {
     private void setupCheckoutButton() {
         Button checkoutButton = findViewById(R.id.checkout_button);
         checkoutButton.setOnClickListener(v -> {
-            List<TicketItem> ticketItems = getIntent().getParcelableArrayListExtra(IntentKey.TICKET_ITEMS.name());
+            List<AudienceType> ticketItems = getIntent().getParcelableArrayListExtra(IntentKey.TICKET_ITEMS.name());
             List<Seat> selectedSeats = getIntent().getParcelableArrayListExtra(EXTRA_SELECTED_SEATS);
 //            List<ComboItem> selectedComboItems = comboAdapter.getSelectedComboItems();
 

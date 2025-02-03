@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingprocess;
+package vn.edu.usth.mcma.frontend.component.customview.filter;
 
 import android.content.Context;
 import android.graphics.Paint;
@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 
 import vn.edu.usth.mcma.R;
 
-public class TimeButton extends CustomButton{
+public class TimeButton extends CustomFilterButton {
     public TimeButton(@NonNull Context context) {
         super(context);
         init();

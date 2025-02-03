@@ -34,7 +34,7 @@ import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Adapters.SeatDetailsAdap
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Adapters.TicketDetailsAdapter;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.ComboItem;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Coupon;
-import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.TicketItem;
+import vn.edu.usth.mcma.frontend.model.AudienceType;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Utils.PriceCalculator;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 
@@ -48,7 +48,7 @@ public class PaymentBookingActivity extends AppCompatActivity {
     private double originalTotalPrice;
     private int totalTicketCount;
     private int totalComboCount;
-    private List<TicketItem> ticketItems = new ArrayList<>();
+    private List<AudienceType> ticketItems = new ArrayList<>();
     private List<ComboItem> comboItems = new ArrayList<>();
     private int movieId;
     private List<Coupon> couponList = new ArrayList<>();
@@ -306,8 +306,8 @@ public class PaymentBookingActivity extends AppCompatActivity {
                     .filter(item -> item.getQuantity() > 0)
                     .map(item -> new TicketDetailsAdapter.TicketDetailsItem(
                             item.getQuantity(),
-                            item.getType().getName(),
-                            item.getTotalPrice()
+                            item.getId(),
+                            item.getUnitPrice() * item.getQuantity()
                     ))
                     .collect(Collectors.toList());
 

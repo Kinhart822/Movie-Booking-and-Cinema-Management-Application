@@ -4,6 +4,7 @@
     <color name="color_on_primary">#ffffffff</color>
     <color name="color_secondary">#ffd0d0d0</color>
     <color name="color_on_secondary">#d0d0d0d0</color>
+    <color name="disabled">#ff9e9e9e</color>
     <color name="tab_indicator">#ff555555</color>
     <color name="tab_background">#ff333333</color>
     <color name="booking_summary">#ff333333</color>

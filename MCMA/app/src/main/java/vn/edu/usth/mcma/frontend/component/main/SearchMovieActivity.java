@@ -23,7 +23,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.component.bookingprocess.MovieBookingActivity;
-import vn.edu.usth.mcma.frontend.component.bookingprocess.GenreButton;
+import vn.edu.usth.mcma.frontend.component.customview.filter.GenreButton;
 import vn.edu.usth.mcma.frontend.dto.movie.GenreShort;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort;
 import vn.edu.usth.mcma.frontend.component.bookingprocess.MovieDetailActivity;

@@ -128,6 +128,7 @@
     <string name="account">Account</string>
     <string name="total">Total</string>
     <string name="audience_type_selection">Audience Type Selection</string>
+    <!--hint-->
     <string name="hint_cinema_name">cinema_name</string>
     <string name="hint_screen_name_date_duration">screen_name - MMM dd, uuuu HH:mm ~ HH:mm</string>
     <string name="hint_movie_name">movie_name</string>
@@ -135,5 +136,13 @@
     <string name="hint_screen_type">IMAX</string>
     <string name="hint_audience_number">n_audience</string>
     <string name="hint_total_price">999</string>
+    <string name="hint_audience_type">audience_type</string>
+    <string name="hint_sum_per_type">$99.0</string>
+    <string name="hint_count_per_type">9</string>
+    <string name="hint_text_view">text_view</string>
+    <string name="hint_unit_price">$11.0 x</string>
+    <!--content description-->
+    <string name="decrement">decrement</string>
+    <string name="increment">increment</string>
 </resources>
 

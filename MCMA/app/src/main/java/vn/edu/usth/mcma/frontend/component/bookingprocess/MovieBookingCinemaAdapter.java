@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.component.customview.filter.TimeButton;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.model.ShowtimeOfMovieBySchedule;
 
@@ -73,7 +74,7 @@ public class MovieBookingCinemaAdapter extends RecyclerView.Adapter<MovieBooking
         holder.nameTextView.setText(cinemaName);
         holder.expandCollapseButton.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_down_gray));
         holder.showtimeScreenTypeLinearLayout.setVisibility(View.GONE);
-        holder.nameRelativeLayout.setOnClickListener(v -> {
+        View.OnClickListener expandCollapseListener = v -> {
             if (holder.showtimeScreenTypeLinearLayout.getVisibility() == View.GONE) {
                 holder.expandCollapseButton.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_up_gray));
                 holder.showtimeScreenTypeLinearLayout.setVisibility(View.VISIBLE);
@@ -81,7 +82,9 @@ public class MovieBookingCinemaAdapter extends RecyclerView.Adapter<MovieBooking
                 holder.expandCollapseButton.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_down_gray));
                 holder.showtimeScreenTypeLinearLayout.setVisibility(View.GONE);
             }
-        });
+        };
+        holder.nameRelativeLayout.setOnClickListener(expandCollapseListener);
+        holder.expandCollapseButton.setOnClickListener(expandCollapseListener);
         screenTypeScheduleMap
                 .forEach((screenType, scheduleList) -> {
                     LinearLayout screenTypeLinearLayout = new LinearLayout(context);

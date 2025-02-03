@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingprocess;
+package vn.edu.usth.mcma.frontend.component.customview.filter;
 
 import android.content.Context;
 
@@ -11,7 +11,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DateButton extends CustomButton {
+public class DateButton extends CustomFilterButton {
     private LocalDate date;
     public DateButton(@NonNull Context context) {
         super(context);
