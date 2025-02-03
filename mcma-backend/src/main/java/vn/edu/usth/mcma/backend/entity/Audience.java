@@ -3,6 +3,7 @@ package vn.edu.usth.mcma.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,7 +14,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Audience extends AbstractAuditing implements Serializable {
+public class Audience extends AbstractAuditing implements Serializable, Comparable<Audience> {
     @Serial
     private static final long serialVersionUID = 1L;
     @Id
@@ -26,4 +27,9 @@ public class Audience extends AbstractAuditing implements Serializable {
     private Integer ageLowerBound;
     @Column
     private Integer ageHigherBound;
+
+    @Override
+    public int compareTo(@NotNull Audience o) {
+        return this.ageLowerBound.compareTo(o.ageLowerBound);
+    }
 }

@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.*;
+import vn.edu.usth.mcma.backend.dto.booking.AudienceDetail;
 import vn.edu.usth.mcma.backend.dto.booking.ScheduleDetail;
 import vn.edu.usth.mcma.backend.entity.*;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
@@ -210,11 +211,21 @@ public class BookingService {
                 .build();
     }
 
-    public Set<Audience> findAllAudienceTypeByRating(String ratingId) {
+    public List<AudienceDetail> findAllAudienceTypeByRating(String ratingId) {
         return ratingRepository
                 .findById(ratingId)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND))
-                .getAllowedAudiences();
+                .getAllowedAudiences()
+                .stream()
+                .sorted()
+                .map(a -> AudienceDetail.builder()
+                        .id(a.getId())
+                        .description(a.getDescription())
+                        .unitPrice(a.getUnitPrice())
+                        .ageLowerBound(a.getAgeLowerBound())
+                        .ageHigherBound(a.getAgeHigherBound())
+                        .build())
+                .toList();
     }
 //    public List<TicketResponse> getAllTickets() {
 //        List<Ticket> tickets = ticketRepository.findAll();
