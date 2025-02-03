@@ -136,7 +136,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="7dp"
                         android:layout_gravity="center_vertical"
-                        android:text="@string/hint_audience_number"
+                        android:text="@string/hint_total_audience_count"
                         android:textSize="14sp"/>
                 </LinearLayout>
             </LinearLayout>

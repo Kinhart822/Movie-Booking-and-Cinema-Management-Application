@@ -16,21 +16,38 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Booking implements Parcelable {
     //todo separate details
+    private Long scheduleId;
     private String cinemaName;
     private String screenNameDateDuration;
     private String movieName;
     private String rating;
     private String screenType;
+    private Integer totalAudienceCount;
+    private Double totalPrice;
     @Override
     public int describeContents() {
         return 0;
     }
     protected Booking(Parcel in) {
-
+        scheduleId = in.readLong();
+        cinemaName = in.readString();
+        screenNameDateDuration = in.readString();
+        movieName = in.readString();
+        rating = in.readString();
+        screenType = in.readString();
+        totalAudienceCount = in.readInt();
+        totalPrice = in.readDouble();
     }
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-
+        dest.writeLong(scheduleId);
+        dest.writeString(cinemaName);
+        dest.writeString(screenNameDateDuration);
+        dest.writeString(movieName);
+        dest.writeString(rating);
+        dest.writeString(screenType);
+        dest.writeInt(totalAudienceCount);
+        dest.writeDouble(totalPrice);
     }
     public static final Creator<Booking> CREATOR = new Parcelable.Creator<>() {
         @Override

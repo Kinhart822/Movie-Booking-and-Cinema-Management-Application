@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,7 +25,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.SeatSelectionActivity;
 import vn.edu.usth.mcma.frontend.component.customview.navigate.CustomNavigateButton;
 import vn.edu.usth.mcma.frontend.dto.bookingprocess.AudienceDetail;
 import vn.edu.usth.mcma.frontend.dto.bookingprocess.ScheduleDetail;
@@ -55,6 +53,7 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
     private Double totalPrice;
     private CustomNavigateButton nextButton;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +74,8 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
 
         backButton
                 .setOnClickListener(v -> onBackPressed());
+        totalAudienceCountTextView.setText("0 audiences");
+        totalPriceTextView.setText("$0.0");
 
         findScheduleDetail();
         prepareNextButton();
@@ -123,8 +124,6 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
         movieNameTextView.setText(movieName);
         ratingTextView.setText(rating);
         screenTypeTextView.setText(screenType);
-        totalAudienceCountTextView.setText("0 audiences");
-        totalPriceTextView.setText("$0.0");
 
         findAllAudienceTypeByRating();
     }
@@ -191,6 +190,11 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
         nextButton
                 .setOnClickListener(v -> {
                     //todo warning dialog
+                    booking = booking.toBuilder()
+                            .scheduleId(scheduleId)
+                            .totalAudienceCount(totalAudienceCount)
+                            .totalPrice(totalPrice)
+                            .build();
                     Intent intent = new Intent(this, SeatSelectionActivity.class);
                     intent.putExtra(IntentKey.BOOKING.name(), booking);
                     startActivity(intent);

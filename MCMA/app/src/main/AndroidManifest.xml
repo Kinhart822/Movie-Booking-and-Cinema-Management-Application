@@ -102,7 +102,7 @@
             android:name=".frontend.component.ShowtimesOld.UI.ComboSelectionActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.ShowtimesOld.UI.SeatSelectionActivity"
+            android:name=".frontend.component.bookingprocess.SeatSelectionActivity"
             android:exported="false" />
         <activity
             android:name=".frontend.component.bookingprocess.MovieBookingActivity"

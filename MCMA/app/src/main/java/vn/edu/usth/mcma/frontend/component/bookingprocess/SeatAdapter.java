@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.ShowtimesOld.Adapters;
+package vn.edu.usth.mcma.frontend.component.bookingprocess;
 
 import android.content.Context;
 import android.util.Log;
@@ -23,39 +23,34 @@ import lombok.Getter;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.constant.SeatAvailability;
 import vn.edu.usth.mcma.frontend.constant.SeatAvailables;
-import vn.edu.usth.mcma.frontend.dto.response.SeatTypeResponse;
 import vn.edu.usth.mcma.frontend.dto.response.Seat;
-import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.SeatSelectionActivity;
 import vn.edu.usth.mcma.frontend.helper.SeatMapHelper;
 
-public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder> {
+public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
     private final Map<Integer, Map<Integer, Seat>> seatMatrix;
     private final Map<Integer, Map<Integer, List<Seat>>> rootSeatMatrix;
-    private final Map<Integer, SeatTypeResponse> seatTypes;
     private final Context context;
     private final ISeatItemView iSeatItemView;
     private int numberOfTicketCounts = 0;
     @Deprecated
     private int desiredNumberOfTickets;
+    @Getter
     private final int maxSeatPerRow;
     private final List<Seat> selectedSeats;
     @Getter // this contains list of root seats
     private final List<Seat> selectedRootSeats;
-    private final String TAG = SeatAdapter.class.getName();
+//    private final String TAG = SeatAdapter.class.getName();
 
-    public interface ISeatItemView {
-        void onSeatClickListener(Seat seat);
-    }
+
     public SeatAdapter(
             Context context,
-            SeatMapHelper seatMapHelper,
-            Map<Integer, SeatTypeResponse> seatTypes,
+            List<Seat> seats,
             ISeatItemView iSeatItemView,
             int desiredNumberOfTickets) {
+        SeatMapHelper seatMapHelper = new SeatMapHelper(seats);
         this.seatMatrix = seatMapHelper.getSeatMatrix();
         this.rootSeatMatrix = seatMapHelper.getRootSeatMatrix();
         this.maxSeatPerRow = seatMapHelper.getMaxSeatPerRow();
-        this.seatTypes = seatTypes;
         this.context = context;
         this.iSeatItemView = iSeatItemView;
         this.desiredNumberOfTickets = desiredNumberOfTickets;
@@ -76,18 +71,18 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
 
     @NonNull
     @Override
-    public SeatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        SeatViewHolder holder = null;
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        ViewHolder holder = null;
         int holderSide = context.getResources().getDisplayMetrics().widthPixels / (maxSeatPerRow + 1);
         if (viewType == 0) {
             View itemView = LayoutInflater
                     .from(parent.getContext())
                     .inflate(R.layout.item_seat_index, parent, false);
-            holder = new SeatViewHolder(itemView);
+            holder = new ViewHolder(itemView);
             holder.seatIndexTextView = itemView.findViewById(R.id.text_view_seat_index);
             holder.seatIndexTextView.setTextSize((float) holderSide * 0.2f);
         } else if (viewType == 1) {
-            holder = new SeatViewHolder(LayoutInflater
+            holder = new ViewHolder(LayoutInflater
                     .from(parent.getContext())
                     .inflate(R.layout.item_seat, parent, false));
         }
@@ -96,7 +91,7 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
         return holder;
     }
     @Override
-    public void onBindViewHolder(@NonNull SeatViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         int row = position / (maxSeatPerRow + 1);
         int col = position % (maxSeatPerRow + 1);
         if (col == 0) {
@@ -166,7 +161,7 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
         }
         rectangle.forEach(s -> notifyItemChanged(s.getRow() * (maxSeatPerRow + 1) + s.getCol() + 1));
         if (context instanceof SeatSelectionActivity) {
-            ((SeatSelectionActivity) context).updateSelectedSeatsDisplay();
+            ((SeatSelectionActivity) context).onSeatClickListener();
         }
         if (iSeatItemView != null) {
             iSeatItemView.onSeatClickListener(seat);
@@ -197,11 +192,11 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.SeatViewHolder
     public int getItemCount() {
         return seatMatrix.size() * (maxSeatPerRow + 1);
     }
-    public static class SeatViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 //        TextView seatTextView;
         View seatView;
         TextView seatIndexTextView;
-        SeatViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
 //            seatTextView = itemView.findViewById(R.id.seatTextView);//todo monospace font
         }

@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI;
+package vn.edu.usth.mcma.frontend.component.bookingprocess;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -26,23 +26,25 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.ComboSelectionActivity;
 import vn.edu.usth.mcma.frontend.component.customview.navigate.CustomNavigateButton;
 import vn.edu.usth.mcma.frontend.dto.response.SeatTypeResponse;
 import vn.edu.usth.mcma.frontend.dto.response.Seat;
 import vn.edu.usth.mcma.frontend.model.Booking;
 import vn.edu.usth.mcma.frontend.network.ApiService;
-import vn.edu.usth.mcma.frontend.helper.SeatMapHelper;
-import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Adapters.SeatAdapter;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Movie;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Theater;
 import vn.edu.usth.mcma.frontend.model.AudienceType;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 
 public class SeatSelectionActivity extends AppCompatActivity {
+    private static final String TAG = SeatSelectionActivity.class.getName();
     private Booking booking;
     private TextView cinemaNameTextView;
     private TextView screenNameDateDurationTextView;
     private RecyclerView seatMatrixRecyclerView;
+    private SeatAdapter seatAdapter;
+    private Integer totalAudienceCount;
     private TextView textViewMovieName;
     private TextView ratingTextView;
     private TextView screenTypeTextView;
@@ -54,7 +56,6 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private double totalTicketPrice;
     private int totalTicketCount;
     private RecyclerView seatRecyclerView;
-    private SeatAdapter seatAdapter;
     private Theater selectedTheater;
     private Movie selectedMovie;
     private int desiredSeatCount;
@@ -85,6 +86,8 @@ public class SeatSelectionActivity extends AppCompatActivity {
         totalPriceTextView = findViewById(R.id.text_view_total_price);
         nextButton = findViewById(R.id.button_next);
 
+        findAllSeatBySchedule();
+
         movieId = getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L);
         selectedCityId = getIntent().getLongExtra(IntentKey.SELECTED_CITY_ID.name(), -1L);
         selectedCinemaId = getIntent().getLongExtra(IntentKey.SELECTED_CINEMA_ID.name(), -1L);
@@ -106,7 +109,56 @@ public class SeatSelectionActivity extends AppCompatActivity {
         setupCheckoutButton();
         setupBackButton();
         fetchAllSeatTypes();
-        fetchAllSeats();
+    }
+    private void findAllSeatBySchedule() {
+        ApiService
+                .getCinemaApi(this)
+                .findAllSeatBySchedule(booking.getScheduleId())
+                .enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<Seat>> call, @NonNull Response<List<Seat>> response) {
+                        if (!response.isSuccessful() || response.body() == null) {
+                            Log.e(TAG, "findAllSeatBySchedule onResponse: code not 200 || body is null");
+                            return;
+                        }
+                        postFindAllSeatBySchedule(response.body());
+                    }
+                    @Override
+                    public void onFailure(@NonNull Call<List<Seat>> call, @NonNull Throwable throwable) {
+                        Log.e(TAG, "findAllSeatBySchedule onFailure: " + throwable);
+                    }
+                });
+    }
+    private void postFindAllSeatBySchedule(List<Seat> seats) {
+        seatAdapter = new SeatAdapter(
+                this,
+                seats,
+                seat -> onSeatClickListener(),
+                totalAudienceCount = booking.getTotalAudienceCount());
+        seatMatrixRecyclerView.setLayoutManager(new GridLayoutManager(this, seatAdapter.getMaxSeatPerRow() + 1));
+        seatMatrixRecyclerView.setAdapter(seatAdapter);
+    }
+    public void onSeatClickListener() {
+        TextView noOfSeatsTV = findViewById(R.id.no_of_seats);
+        TextView seatPriceTV = findViewById(R.id.seat_price_total);
+        Button checkoutButton = findViewById(R.id.checkout_button);
+
+        List<Seat> selectedSeats = seatAdapter.getSelectedRootSeats();
+        int seatCount = selectedSeats.size();
+        noOfSeatsTV.setText(seatCount + " seat(s)");
+        // Tính giá tiền ghế
+        double totalSeatPrice = calculateTotalSeatPrice(selectedSeats);
+        double finalPrice = totalTicketPrice + totalSeatPrice;
+        totalTicketAndSeatPrice = finalPrice;
+        totalSeatCount = seatCount;
+        seatPriceTV.setText(formatCurrency(finalPrice));
+        // Kích hoạt nút "Checkout" nếu số ghế chọn đúng
+        boolean isCorrectSeatCount = seatCount == desiredSeatCount;
+        checkoutButton.setEnabled(isCorrectSeatCount);
+        checkoutButton.setBackgroundResource(isCorrectSeatCount
+                ? R.drawable.rounded_active_background
+                : R.drawable.rounded_dark_background
+        );
     }
     private void fetchAllSeatTypes() {
         seatTypes = new HashMap<>();
@@ -128,62 +180,6 @@ public class SeatSelectionActivity extends AppCompatActivity {
                         Toast.makeText(SeatSelectionActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-    private void fetchAllSeats() {
-        selectedScreenId = getIntent().getLongExtra(IntentKey.SELECTED_SCREEN_ID.name(), -1L);
-        ApiService
-                .getCinemaApi(this)
-                .getAllSeatsByScreenId(selectedScreenId)
-                .enqueue(new Callback<>() {
-                    @SuppressLint("NotifyDataSetChanged")
-                    @Override
-                    public void onResponse(@NonNull Call<List<Seat>> call, @NonNull Response<List<Seat>> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            SeatMapHelper seatMapHelper = new SeatMapHelper(response.body());
-                            seatAdapter = new SeatAdapter(
-                                    SeatSelectionActivity.this,
-                                    seatMapHelper,
-                                    seatTypes,
-                                    seat -> updateSelectedSeatsDisplay(),
-                                    desiredSeatCount);
-                            seatRecyclerView = findViewById(R.id.seatRecyclerView);
-                            seatRecyclerView.setLayoutManager(new GridLayoutManager(SeatSelectionActivity.this, seatMapHelper.getMaxSeatPerRow() + 1));
-                            seatRecyclerView.setAdapter(seatAdapter);
-                            seatAdapter.notifyDataSetChanged();
-                        } else {
-                            String cinemaName = getIntent().getStringExtra(IntentKey.THEATER_NAME.name());
-                            Toast.makeText(SeatSelectionActivity.this, "Failed to fetch seats of " + cinemaName, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<List<Seat>> call, @NonNull Throwable t) {
-                        Toast.makeText(SeatSelectionActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-    @SuppressLint("SetTextI18n")
-    public void updateSelectedSeatsDisplay() {
-        TextView noOfSeatsTV = findViewById(R.id.no_of_seats);
-        TextView seatPriceTV = findViewById(R.id.seat_price_total);
-        Button checkoutButton = findViewById(R.id.checkout_button);
-
-        List<Seat> selectedSeats = seatAdapter.getSelectedRootSeats();
-        int seatCount = selectedSeats.size();
-        noOfSeatsTV.setText(seatCount + " seat(s)");
-        // Tính giá tiền ghế
-        double totalSeatPrice = calculateTotalSeatPrice(selectedSeats);
-        double finalPrice = totalTicketPrice + totalSeatPrice;
-        totalTicketAndSeatPrice = finalPrice;
-        totalSeatCount = seatCount;
-        seatPriceTV.setText(formatCurrency(finalPrice));
-        // Kích hoạt nút "Checkout" nếu số ghế chọn đúng
-        boolean isCorrectSeatCount = seatCount == desiredSeatCount;
-        checkoutButton.setEnabled(isCorrectSeatCount);
-        checkoutButton.setBackgroundResource(isCorrectSeatCount
-                ? R.drawable.rounded_active_background
-                : R.drawable.rounded_dark_background
-        );
     }
     @SuppressLint("SetTextI18n")
     private void setupTheaterInfo() {
