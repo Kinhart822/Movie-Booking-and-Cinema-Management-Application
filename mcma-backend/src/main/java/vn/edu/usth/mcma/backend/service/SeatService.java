@@ -132,17 +132,18 @@ public class SeatService {
         return ApiResponse.success();
     }
 
-    public List<SeatTypePresentation> getAllSeatTypes() {
+    public List<SeatTypePresentation> findAllSeatTypes() {
         List<SeatTypePresentation> seatTypes = new ArrayList<>();
-        SeatType.getIdMap().forEach((id, seatType) ->  seatTypes.add(SeatTypePresentation
-                .builder()
-                .id(seatType.getId())
-                .name(seatType.name())
-                .description(seatType.getDescription())
-                .width(seatType.getWidth())
-                .length(seatType.getLength())
-                .price(seatType.getUnitPrice())
-                .build()));
+        SeatType.getIdMap()
+                .forEach((id, seatType) ->  seatTypes
+                        .add(SeatTypePresentation.builder()
+                                .id(seatType.getId())
+                                .name(seatType.name())
+                                .description(seatType.getDescription())
+                                .width(seatType.getWidth())
+                                .length(seatType.getLength())
+                                .unitPrice(seatType.getUnitPrice())
+                                .build()));
         return seatTypes;
     }
 //    public ApiResponse deleteSeat(Long id) {

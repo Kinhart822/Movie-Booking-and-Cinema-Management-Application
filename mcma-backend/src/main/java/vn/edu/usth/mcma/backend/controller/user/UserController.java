@@ -67,10 +67,6 @@ public class UserController {
             @RequestParam(required = false, name = "screenId") Long screenId) {
         return ResponseEntity.ok(bookingService.getAllSchedulesByMovieAndScreen(movieId, screenId));
     }
-    @GetMapping("/booking/seat-types")
-    public ResponseEntity<List<SeatTypePresentation>> getAllSeatTypes() {
-        return ResponseEntity.ok(seatService.getAllSeatTypes());
-    }
 //    @GetMapping("/booking/allTickets")
 //    public ResponseEntity<List<TicketPresentation>> getAllTickets() {
 //        return ResponseEntity.ok(bookingService.getAllTickets());
