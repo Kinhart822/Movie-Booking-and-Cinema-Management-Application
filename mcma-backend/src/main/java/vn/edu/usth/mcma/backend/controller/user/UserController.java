@@ -71,10 +71,6 @@ public class UserController {
     public ResponseEntity<List<SeatTypePresentation>> getAllSeatTypes() {
         return ResponseEntity.ok(seatService.getAllSeatTypes());
     }
-    @GetMapping("/booking/seat/{screenId}")
-    public ResponseEntity<List<SeatPresentation>> getAllSeatsByScreenId(@PathVariable Long screenId) {
-        return ResponseEntity.ok(bookingService.getAllSeatsByScreenId(screenId));
-    }
 //    @GetMapping("/booking/allTickets")
 //    public ResponseEntity<List<TicketPresentation>> getAllTickets() {
 //        return ResponseEntity.ok(bookingService.getAllTickets());

@@ -178,22 +178,6 @@ public class BookingService {
                         .build())
                 .toList();
     }
-    public List<SeatPresentation> getAllSeatsByScreenId(Long screenId) {
-        return seatRepository
-                .findAllByScreenId(screenId)
-                .stream()
-                .map(s -> SeatPresentation
-                        .builder()
-                        .row(s.getPk().getRow())
-                        .col(s.getPk().getCol())
-                        .typeId(s.getTypeId())
-                        .name(s.getName())
-                        .rootRow(s.getRootRow())
-                        .rootCol(s.getRootCol())
-                        .availability(s.getAvailability().ordinal())
-                        .build())
-                .toList();
-    }
 
     public ScheduleDetail findScheduleDetail(Long scheduleId) {
         Schedule schedule = scheduleRepository
@@ -224,6 +208,26 @@ public class BookingService {
                         .unitPrice(a.getUnitPrice())
                         .ageLowerBound(a.getAgeLowerBound())
                         .ageHigherBound(a.getAgeHigherBound())
+                        .build())
+                .toList();
+    }
+    public List<SeatPresentation> findAllSeatBySchedule(Long scheduleId) {
+        return seatRepository
+                .findAllByScreenId(scheduleRepository
+                        .findById(scheduleId)
+                        .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND))
+                        .getScreen()
+                        .getId())
+                .stream()
+                .map(s -> SeatPresentation
+                        .builder()
+                        .row(s.getPk().getRow())
+                        .col(s.getPk().getCol())
+                        .typeId(s.getTypeId())
+                        .name(s.getName())
+                        .rootRow(s.getRootRow())
+                        .rootCol(s.getRootCol())
+                        .availability(s.getAvailability().ordinal())
                         .build())
                 .toList();
     }
