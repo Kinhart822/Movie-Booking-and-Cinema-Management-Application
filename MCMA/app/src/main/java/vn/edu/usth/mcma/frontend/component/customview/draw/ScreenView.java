@@ -37,8 +37,8 @@ public class ScreenView extends View {
 
         // Define the curved path for the screen
         path.reset();
-        path.moveTo(0, height * 0.7f); // Start from left
-        path.quadTo(width / 2f, height * 0.4f, width, height * 0.7f); // Curve to right
+        path.moveTo(0, height * 1.0f); // Start from left
+        path.quadTo(width / 2f, height * 0.0f, width, height * 1.0f); // Curve to right
 
         canvas.drawPath(path, paint);
     }

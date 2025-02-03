@@ -132,7 +132,7 @@ public class ComboSelectionActivity extends AppCompatActivity {
 
             // Find TextView references with null checks
             TextView seatCountText = findViewById(R.id.no_of_seats);
-            TextView seatPriceText = findViewById(R.id.seat_price_total);
+//            TextView seatPriceText = findViewById(R.id.seat_price_total);
 
             if (seatCountText != null) {
                 seatCountText.setText(String.format("%d seat(s)", seatCount));
@@ -157,7 +157,7 @@ public class ComboSelectionActivity extends AppCompatActivity {
         comboRecyclerView = findViewById(R.id.combo_recycler_view);
         checkoutButton = findViewById(R.id.checkout_button);
         seatCountText = findViewById(R.id.no_of_seats);
-        seatPriceText = findViewById(R.id.seat_price_total);
+//        seatPriceText = findViewById(R.id.seat_price_total);
         comboPriceText = findViewById(R.id.combo_price_total);
         totalPriceText = findViewById(R.id.total_price_0);
         theaterNameTV = findViewById(R.id.theater_name);

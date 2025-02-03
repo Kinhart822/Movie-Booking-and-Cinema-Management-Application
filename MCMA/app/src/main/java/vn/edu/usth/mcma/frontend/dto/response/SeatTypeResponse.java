@@ -9,5 +9,5 @@ public class SeatTypeResponse {
     private String description;
     private Integer width;
     private Integer length;
-    private Double price;
+    private Double unitPrice;
 }
