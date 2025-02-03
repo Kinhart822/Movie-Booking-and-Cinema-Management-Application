@@ -5,6 +5,9 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +25,7 @@ public class Booking implements Parcelable {
     private String movieName;
     private String rating;
     private String screenType;
+    private List<AudienceType> audienceTypes;
     private Integer totalAudienceCount;
     private Double totalPrice;
     @Override
@@ -35,6 +39,7 @@ public class Booking implements Parcelable {
         movieName = in.readString();
         rating = in.readString();
         screenType = in.readString();
+        audienceTypes = in.readParcelableList(audienceTypes = new ArrayList<>(), AudienceType.class.getClassLoader());
         totalAudienceCount = in.readInt();
         totalPrice = in.readDouble();
     }
@@ -46,6 +51,7 @@ public class Booking implements Parcelable {
         dest.writeString(movieName);
         dest.writeString(rating);
         dest.writeString(screenType);
+        dest.writeParcelableList(audienceTypes, 0);
         dest.writeInt(totalAudienceCount);
         dest.writeDouble(totalPrice);
     }

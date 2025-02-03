@@ -40,15 +40,17 @@ import vn.edu.usth.mcma.frontend.constant.IntentKey;
 public class SeatSelectionActivity extends AppCompatActivity {
     private static final String TAG = SeatSelectionActivity.class.getName();
     private Booking booking;
+    private Map<Integer, SeatTypeResponse> seatTypes;
     private TextView cinemaNameTextView;
     private TextView screenNameDateDurationTextView;
     private RecyclerView seatMatrixRecyclerView;
     private SeatAdapter seatAdapter;
-    private Integer totalAudienceCount;
+    private Integer totalSeatCount;
+    private Double totalPrice;
     private TextView textViewMovieName;
     private TextView ratingTextView;
     private TextView screenTypeTextView;
-    private TextView totalAudienceCountTextView;
+    private TextView totalSeatCountTextView;
     private TextView totalPriceTextView;
     private CustomNavigateButton nextButton;
 
@@ -60,7 +62,6 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private Movie selectedMovie;
     private int desiredSeatCount;
     private double totalTicketAndSeatPrice;
-    private int totalSeatCount;
     private List<AudienceType> tickets = new ArrayList<>();
     private Long movieId;
     private Long selectedCityId;
@@ -68,24 +69,33 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private Long selectedScreenId;
     private Long selectedScheduleId;
     private final List<Long> selectedTicketIds = new ArrayList<>();
-    private Map<Integer, SeatTypeResponse> seatTypes;
 
+    @SuppressLint({"DefaultLocale", "SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seat_selection);
         booking = getIntent().getParcelableExtra(IntentKey.BOOKING.name());
+        seatTypes = new HashMap<>();
         ImageButton backButton = findViewById(R.id.button_back);
         cinemaNameTextView = findViewById(R.id.text_view_cinema_name);
         screenNameDateDurationTextView = findViewById(R.id.text_view_screen_name_date_duration);
         seatMatrixRecyclerView = findViewById(R.id.recycler_view_seat_matrix);
+        totalSeatCount = 0;
+        totalPrice = booking.getAudienceTypes().stream().mapToDouble(a -> a.getUnitPrice() * a.getQuantity()).sum();
         textViewMovieName = findViewById(R.id.text_view_movie_name);
         ratingTextView = findViewById(R.id.text_view_rating);
         screenTypeTextView = findViewById(R.id.text_view_screen_type);
-        totalAudienceCountTextView = findViewById(R.id.text_view_total_audience_count);
+        totalSeatCountTextView = findViewById(R.id.text_view_total_seat_count);
         totalPriceTextView = findViewById(R.id.text_view_total_price);
         nextButton = findViewById(R.id.button_next);
 
+        backButton
+                .setOnClickListener(v -> onBackPressed());
+        totalSeatCountTextView.setText(String.format("%d / %d seats selected", totalSeatCount, booking.getTotalAudienceCount()));
+        totalPriceTextView.setText("$" + totalPrice);
+
+        findAllSeatTypes();
         findAllSeatBySchedule();
 
         movieId = getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L);
@@ -108,7 +118,26 @@ public class SeatSelectionActivity extends AppCompatActivity {
         setupTheaterInfo();
         setupCheckoutButton();
         setupBackButton();
-        fetchAllSeatTypes();
+    }
+    private void findAllSeatTypes() {
+        ApiService
+                .getCinemaApi(this)
+                .findAllSeatTypes()
+                .enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<SeatTypeResponse>> call, @NonNull Response<List<SeatTypeResponse>> response) {
+                        if (!response.isSuccessful() || response.body() == null) {
+                            Log.e(TAG, "findAllSeatTypes onResponse: code not 200 || body is null");
+                            return;
+                        }
+                        response.body()
+                                .forEach(st -> seatTypes.put(st.getId(), st));
+                    }
+                    @Override
+                    public void onFailure(@NonNull Call<List<SeatTypeResponse>> call, @NonNull Throwable t) {
+                        Log.e(TAG, "findAllSeatTypes onFailure: " + t);
+                    }
+                });
     }
     private void findAllSeatBySchedule() {
         ApiService
@@ -134,11 +163,14 @@ public class SeatSelectionActivity extends AppCompatActivity {
                 this,
                 seats,
                 seat -> onSeatClickListener(),
-                totalAudienceCount = booking.getTotalAudienceCount());
+                booking.getTotalAudienceCount());
         seatMatrixRecyclerView.setLayoutManager(new GridLayoutManager(this, seatAdapter.getMaxSeatPerRow() + 1));
         seatMatrixRecyclerView.setAdapter(seatAdapter);
     }
+    @SuppressLint({"DefaultLocale", "SetTextI18n"})
     public void onSeatClickListener() {
+        totalSeatCountTextView.setText(String.format("%d / %d seats selected", seatAdapter.get, booking.getTotalAudienceCount()));
+        totalPriceTextView.setText("$" + totalPrice);
         TextView noOfSeatsTV = findViewById(R.id.no_of_seats);
         TextView seatPriceTV = findViewById(R.id.seat_price_total);
         Button checkoutButton = findViewById(R.id.checkout_button);
@@ -159,27 +191,6 @@ public class SeatSelectionActivity extends AppCompatActivity {
                 ? R.drawable.rounded_active_background
                 : R.drawable.rounded_dark_background
         );
-    }
-    private void fetchAllSeatTypes() {
-        seatTypes = new HashMap<>();
-        ApiService
-                .getCinemaApi(this)
-                .getAllSeatTypes()
-                .enqueue(new Callback<>() {
-                    @Override
-                    public void onResponse(@NonNull Call<List<SeatTypeResponse>> call, @NonNull Response<List<SeatTypeResponse>> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            response.body()
-                                    .forEach(st -> seatTypes.put(st.getId(), st));
-                        } else {
-                            Toast.makeText(SeatSelectionActivity.this, "Failed to fetch seatType list", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    @Override
-                    public void onFailure(@NonNull Call<List<SeatTypeResponse>> call, @NonNull Throwable t) {
-                        Toast.makeText(SeatSelectionActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
     @SuppressLint("SetTextI18n")
     private void setupTheaterInfo() {

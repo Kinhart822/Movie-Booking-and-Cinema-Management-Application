@@ -192,6 +192,7 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
                     //todo warning dialog
                     booking = booking.toBuilder()
                             .scheduleId(scheduleId)
+                            .audienceTypes(audienceTypeAdapter.getItems())
                             .totalAudienceCount(totalAudienceCount)
                             .totalPrice(totalPrice)
                             .build();
