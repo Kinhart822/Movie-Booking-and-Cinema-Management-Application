@@ -43,7 +43,6 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
     private List<AudienceDetail> audienceDetails;
     private TextView cinemaNameTextView;
     private TextView screenNameDateDurationTextView;
-    private LinearLayout audienceTypeLinearLayout;
     private double priceForStudent;
     private RecyclerView audienceTypeRecyclerView;
     private AudienceTypeAdapter audienceTypeAdapter;
@@ -65,7 +64,6 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
         ImageButton backButton = findViewById(R.id.button_back);
         cinemaNameTextView = findViewById(R.id.text_view_cinema_name);
         screenNameDateDurationTextView = findViewById(R.id.text_view_screen_name_date_duration);
-        audienceTypeLinearLayout = findViewById(R.id.linear_layout_audience_type);
         priceForStudent = 9;
         audienceTypeRecyclerView = findViewById(R.id.recycler_view_audience_type);
         movieNameTextView = findViewById(R.id.text_view_movie_name);
@@ -194,7 +192,7 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
                 .setOnClickListener(v -> {
                     //todo warning dialog
                     Intent intent = new Intent(this, SeatSelectionActivity.class);
-                    // todo
+                    intent.putExtra(IntentKey.BOOKING.name(), booking);
                     startActivity(intent);
                 });
     }

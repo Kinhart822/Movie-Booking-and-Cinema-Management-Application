@@ -20,7 +20,7 @@ import vn.edu.usth.mcma.frontend.component.main.MainActivity;
 import vn.edu.usth.mcma.frontend.constant.IP;
 
 public class ApiClient {
-    private static final String BASE_URL = IP.MINOXD_FPT.getIp();
+    private static final String BASE_URL = IP.MINOXD_P2XL.getIp();
     private static Retrofit authenticatedRetrofit;
     private static Retrofit unauthenticatedRetrofit;
     public static Retrofit getAuthenticatedClient(Context context) {

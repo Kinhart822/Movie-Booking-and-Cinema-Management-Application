@@ -26,8 +26,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.component.customview.navigate.CustomNavigateButton;
 import vn.edu.usth.mcma.frontend.dto.response.SeatTypeResponse;
 import vn.edu.usth.mcma.frontend.dto.response.Seat;
+import vn.edu.usth.mcma.frontend.model.Booking;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.helper.SeatMapHelper;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Adapters.SeatAdapter;
@@ -35,8 +37,20 @@ import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Movie;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Theater;
 import vn.edu.usth.mcma.frontend.model.AudienceType;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
-//todo see commit 5675655 of branch AdditionalFunctionForUser
+
 public class SeatSelectionActivity extends AppCompatActivity {
+    private Booking booking;
+    private TextView cinemaNameTextView;
+    private TextView screenNameDateDurationTextView;
+    private RecyclerView seatMatrixRecyclerView;
+    private TextView textViewMovieName;
+    private TextView ratingTextView;
+    private TextView screenTypeTextView;
+    private TextView totalAudienceCountTextView;
+    private TextView totalPriceTextView;
+    private CustomNavigateButton nextButton;
+
+
     private double totalTicketPrice;
     private int totalTicketCount;
     private RecyclerView seatRecyclerView;
@@ -59,6 +73,17 @@ public class SeatSelectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seat_selection);
+        booking = getIntent().getParcelableExtra(IntentKey.BOOKING.name());
+        ImageButton backButton = findViewById(R.id.button_back);
+        cinemaNameTextView = findViewById(R.id.text_view_cinema_name);
+        screenNameDateDurationTextView = findViewById(R.id.text_view_screen_name_date_duration);
+        seatMatrixRecyclerView = findViewById(R.id.recycler_view_seat_matrix);
+        textViewMovieName = findViewById(R.id.text_view_movie_name);
+        ratingTextView = findViewById(R.id.text_view_rating);
+        screenTypeTextView = findViewById(R.id.text_view_screen_type);
+        totalAudienceCountTextView = findViewById(R.id.text_view_total_audience_count);
+        totalPriceTextView = findViewById(R.id.text_view_total_price);
+        nextButton = findViewById(R.id.button_next);
 
         movieId = getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L);
         selectedCityId = getIntent().getLongExtra(IntentKey.SELECTED_CITY_ID.name(), -1L);

@@ -61,5 +61,6 @@ public enum IntentKey {
     SELECTED_COMBO_ITEMS,
     TICKET_ITEMS,
     SCHEDULE_ID,
+    BOOKING,
     ;
 }
