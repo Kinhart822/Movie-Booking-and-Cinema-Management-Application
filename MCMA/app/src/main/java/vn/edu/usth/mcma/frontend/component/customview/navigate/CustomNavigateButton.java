@@ -38,13 +38,10 @@ public class CustomNavigateButton extends AppCompatButton {
         this.setPadding(50, 5, 50, 5);
         this.setMinWidth(0);
         this.setMinHeight(0);
-        ShapeDrawable drawable = new ShapeDrawable(new RoundRectShape(new float[]{15f, 15f, 15f, 15f, 15f, 15f, 15f, 15f}, null, null));
-        drawable.getPaint().setStyle(Paint.Style.FILL);
-        drawable.getPaint().setColor(getResources().getColor(R.color.color_primary));
 
         // disabled state
         ShapeDrawable disabled = new ShapeDrawable(new RoundRectShape(new float[]{15f, 15f, 15f, 15f, 15f, 15f, 15f, 15f}, null, null));
-        disabled.getPaint().setColor(R.color.disabled);
+        disabled.getPaint().setColor(getResources().getColor(R.color.disabled));
         // enabled state
         ShapeDrawable enabled = new ShapeDrawable(new RoundRectShape(new float[]{15f, 15f, 15f, 15f, 15f, 15f, 15f, 15f}, null, null));
         enabled.getPaint().setColor(getResources().getColor(R.color.color_primary));
