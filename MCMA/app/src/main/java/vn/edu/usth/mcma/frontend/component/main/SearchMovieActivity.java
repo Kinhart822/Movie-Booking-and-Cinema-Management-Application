@@ -100,7 +100,7 @@ public class SearchMovieActivity extends AppCompatActivity {
     }
     private void openMovieBookingActivity(int position) {
         MovieDetailShort movie = items.get(position);
-        Intent intent = new Intent(SearchMovieActivity.this, MovieBookingActivity.class);
+        Intent intent = new Intent(this, MovieBookingActivity.class);
         intent.putExtra(IntentKey.MOVIE_ID.name(), movie.getId());
         startActivity(intent);
     }

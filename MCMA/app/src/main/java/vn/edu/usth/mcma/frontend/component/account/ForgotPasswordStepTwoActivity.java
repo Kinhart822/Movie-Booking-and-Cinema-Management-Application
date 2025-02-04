@@ -43,6 +43,7 @@ public class ForgotPasswordStepTwoActivity extends AppCompatActivity {
     private boolean isOtpOk, waitForResendOtp;
     private Handler checkOtpHandler;
     private int dotCount;
+    private Handler timeRemainingHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +80,7 @@ public class ForgotPasswordStepTwoActivity extends AppCompatActivity {
         infoTextView.setText(info);
     }
     private void prepareTimeRemaining() {
-        Handler timeRemainingHandler = new Handler(Looper.getMainLooper());
+        timeRemainingHandler = new Handler(Looper.getMainLooper());
         Runnable timeRemainingRunnable = new Runnable() {
             @SuppressLint({"SetTextI18n", "DefaultLocale"})
             @Override
@@ -207,5 +208,12 @@ public class ForgotPasswordStepTwoActivity extends AppCompatActivity {
         Intent intent = new Intent(ForgotPasswordStepTwoActivity.this, ForgotPasswordStepThreeActivity.class);
         intent.putExtra(IntentKey.FORGOT_PASSWORD_SESSION_ID.name(), sessionId);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        timeRemainingHandler.removeCallbacksAndMessages(null);
+        checkOtpHandler.removeCallbacksAndMessages(null);
     }
 }

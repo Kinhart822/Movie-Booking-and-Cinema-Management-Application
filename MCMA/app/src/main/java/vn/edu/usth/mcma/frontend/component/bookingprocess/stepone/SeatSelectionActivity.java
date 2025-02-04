@@ -4,27 +4,28 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.component.bookingprocess.MovieBookingActivity;
 import vn.edu.usth.mcma.frontend.component.bookingprocess.steptwo.AudienceTypeSelectionActivity;
 import vn.edu.usth.mcma.frontend.component.customview.navigate.CustomNavigateButton;
 import vn.edu.usth.mcma.frontend.dto.bookingprocess.ScheduleDetail;
@@ -36,7 +37,7 @@ import vn.edu.usth.mcma.frontend.constant.IntentKey;
 
 public class SeatSelectionActivity extends AppCompatActivity {
     private static final String TAG = SeatSelectionActivity.class.getName();
-    private static final int BOOKING_TIME_LIMIT = 7; //todo dotenv
+    private static final double BOOKING_TIME_LIMIT = 0.; //todo dotenv
     private TextView timeRemainingTextView;
     private TextView cinemaNameTextView;
     private TextView screenNameDateDurationTextView;
@@ -57,8 +58,8 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private SeatAdapter seatAdapter;
     private int totalAudienceCount;
     private double totalPrice;
-    private Instant bookingStartTime;
-    private Instant bookingEndTime;
+    private Handler timeRemainingHandler;
+    private long bookingEndTimeMillis;
 
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
     @Override
@@ -204,21 +205,28 @@ public class SeatSelectionActivity extends AppCompatActivity {
         nextButton.setEnabled(totalAudienceCount != 0);
     }
     private void prepareTimeRemaining() {
-        bookingEndTime = (bookingStartTime = Instant.now())
-                .plus(BOOKING_TIME_LIMIT, ChronoUnit.MINUTES);
+        bookingEndTimeMillis = SystemClock.elapsedRealtime() + (long) (BOOKING_TIME_LIMIT * 60 * 1000);
 
-        Handler timeRemainingHandler = new Handler(Looper.getMainLooper());
+        timeRemainingHandler = new Handler(Looper.getMainLooper());
         Runnable timeRemainingRunnable = new Runnable() {
             @SuppressLint("DefaultLocale")
             @Override
             public void run() {
-                Duration timeRemaining = Duration.between(Instant.now(), bookingEndTime);
-                if (timeRemaining.isNegative() || timeRemaining.isZero()) {
-                    // navigate to movie booking activity with intent
+                long timeRemainingMillis = bookingEndTimeMillis - SystemClock.elapsedRealtime();
+                if (timeRemainingMillis <= 0) {
+                    new AlertDialog.Builder(SeatSelectionActivity.this)
+                            .setTitle("Timeout")
+                            .setMessage("Your booking session has timed out. Returning to the showtime selection of this movie.")
+                            .setPositiveButton("OK", (dialog, which) -> {
+                                Intent intent = new Intent(SeatSelectionActivity.this, MovieBookingActivity.class);
+                                intent.putExtra(IntentKey.MOVIE_ID.name(), getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L));
+                                startActivity(intent);
+                            })
+                            .setCancelable(false)
+                            .show();
                     return;
                 }
-                System.out.println(bookingEndTime);
-                timeRemainingTextView.setText(String.format("%02d:%02d", timeRemaining.toMinutesPart(), timeRemaining.toSecondsPart()));
+                timeRemainingTextView.setText(String.format("%02d:%02d", timeRemainingMillis / (60 * 1000), (timeRemainingMillis / 1000) % 60));
                 timeRemainingHandler.postDelayed(this, 1000);
             }
         };
@@ -230,6 +238,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
         nextButton.setEnabled(false);
         nextButton
                 .setOnClickListener(v -> {
+                    //todo held seats
                     booking = booking.toBuilder()
                             .scheduleId(scheduleId)
                             .rootSeats(seatAdapter.getSelectedRootSeats())
@@ -238,7 +247,15 @@ public class SeatSelectionActivity extends AppCompatActivity {
                             .build();
                     Intent intent = new Intent(this, AudienceTypeSelectionActivity.class);
                     intent.putExtra(IntentKey.BOOKING.name(), booking);
+                    intent.putExtra(IntentKey.BOOKING_END_TIME.name(), bookingEndTimeMillis);
+                    intent.putExtra(IntentKey.MOVIE_ID.name(), getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L));
                     startActivity(intent);
                 });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        timeRemainingHandler.removeCallbacksAndMessages(null);
     }
 }

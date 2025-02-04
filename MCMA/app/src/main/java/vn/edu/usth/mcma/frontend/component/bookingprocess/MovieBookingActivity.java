@@ -210,7 +210,7 @@ public class MovieBookingActivity extends AppCompatActivity {
     }
     private void prepareCinemaButtonsRecyclerView() {
         cinemaButtonsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        movieBookingCinemaAdapter = new MovieBookingCinemaAdapter(this);
+        movieBookingCinemaAdapter = new MovieBookingCinemaAdapter(this, id);
         feedAdapter();
         cinemaButtonsRecyclerView.setAdapter(movieBookingCinemaAdapter);
     }

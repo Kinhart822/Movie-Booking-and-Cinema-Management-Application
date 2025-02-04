@@ -43,6 +43,7 @@ public class SignUpStepTwoActivity extends AppCompatActivity {
     private Button checkButton;
     private Handler checkOtpHandler;
     private int dotCount;
+    private Handler timeRemainingHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +80,7 @@ public class SignUpStepTwoActivity extends AppCompatActivity {
         infoTextView.setText(info);
     }
     private void prepareTimeRemaining() {
-        Handler timeRemainingHandler = new Handler(Looper.getMainLooper());
+        timeRemainingHandler = new Handler(Looper.getMainLooper());
         Runnable timeRemainingRunnable = new Runnable() {
             @SuppressLint({"SetTextI18n", "DefaultLocale"})
             @Override
@@ -212,5 +213,6 @@ public class SignUpStepTwoActivity extends AppCompatActivity {
         super.onDestroy();
         waitForResendOtp = false;
         checkOtpHandler.removeCallbacksAndMessages(null);
+        timeRemainingHandler.removeCallbacksAndMessages(null);
     }
 }

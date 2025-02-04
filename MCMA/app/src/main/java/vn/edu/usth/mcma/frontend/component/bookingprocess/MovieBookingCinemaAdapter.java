@@ -28,11 +28,13 @@ import vn.edu.usth.mcma.frontend.model.ShowtimeOfMovieBySchedule;
 
 public class MovieBookingCinemaAdapter extends RecyclerView.Adapter<MovieBookingCinemaAdapter.ViewHolder> {
     private final Context context;
+    private final Long movieId;
     private final Map<String, Map<String, List<ShowtimeOfMovieBySchedule>>> cinemaNameScreenTypeScheduleMap;
     private final List<String> cinemaNames;
 
-    public MovieBookingCinemaAdapter(Context context) {
+    public MovieBookingCinemaAdapter(Context context, Long movieId) {
         this.context = context;
+        this.movieId = movieId;
         this.cinemaNameScreenTypeScheduleMap = new HashMap<>();
         this.cinemaNames = new ArrayList<>();
     }
@@ -105,6 +107,7 @@ public class MovieBookingCinemaAdapter extends RecyclerView.Adapter<MovieBooking
                                     //todo: time dialog
                                     Intent intent = new Intent(context, SeatSelectionActivity.class);
                                     intent.putExtra(IntentKey.BOOKING_SCHEDULE_ID.name(), schedule.getScheduleId());
+                                    intent.putExtra(IntentKey.MOVIE_ID.name(), movieId);
                                     context.startActivity(intent);
                                 });
                                 scheduleTimeLinearLayout.addView(showtimeTimeButton);

@@ -142,8 +142,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         });
     }
     private void openMovieBookingActivity() {
-        Intent intent = new Intent(MovieDetailActivity.this, MovieBookingActivity.class);
-        intent.putExtra(IntentKey.MOVIE_TITLE.name(), movieDetail.getName());//todo
+        Intent intent = new Intent(this, MovieBookingActivity.class);
         intent.putExtra(IntentKey.MOVIE_ID.name(), movieDetail.getId());
         startActivity(intent);
     }

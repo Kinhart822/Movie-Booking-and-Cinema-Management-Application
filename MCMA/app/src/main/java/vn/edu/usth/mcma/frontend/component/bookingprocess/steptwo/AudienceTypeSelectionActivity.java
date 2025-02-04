@@ -3,12 +3,16 @@ package vn.edu.usth.mcma.frontend.component.bookingprocess.steptwo;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.SystemClock;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +24,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.component.bookingprocess.MovieBookingActivity;
 import vn.edu.usth.mcma.frontend.component.bookingprocess.stepthree.ConcessionSelectionActivity;
 import vn.edu.usth.mcma.frontend.component.customview.navigate.CustomNavigateButton;
 import vn.edu.usth.mcma.frontend.dto.bookingprocess.AudienceDetail;
@@ -31,6 +36,7 @@ import vn.edu.usth.mcma.frontend.constant.IntentKey;
 public class AudienceTypeSelectionActivity extends AppCompatActivity {
     private static final String TAG = AudienceTypeSelectionActivity.class.getName();
     private static final double priceForStudent = 9;//todo dotenv
+    private TextView timeRemainingTextView;
     private TextView totalAudienceCountTextView;
     private TextView totalPriceTextView;
     private CustomNavigateButton nextButton;
@@ -42,6 +48,7 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
     private int targetAudienceCount;
     private int currentAudienceCount;
     private double totalPrice;
+    private Handler timeRemainingHandler;
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -49,6 +56,7 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audience_type_selection);
         ImageButton backButton = findViewById(R.id.button_back);
+        timeRemainingTextView = findViewById(R.id.text_view_time_remaining);
         TextView cinemaNameTextView = findViewById(R.id.text_view_cinema_name);
         TextView screenNameDateDurationTextView = findViewById(R.id.text_view_screen_name_date_duration);
         TextView movieNameTextView = findViewById(R.id.text_view_movie_name);
@@ -78,6 +86,7 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
         totalPriceTextView.setText(String.format("$%.1f", totalPrice));
 
         findAllAudienceTypeByRating();
+        prepareTimeRemaining();
         prepareNextButton();
     }
     private void findAllAudienceTypeByRating() {
@@ -130,19 +139,53 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
         totalPriceTextView.setText(String.format("$%.1f", totalPrice));
         nextButton.setEnabled(currentAudienceCount == targetAudienceCount);
     }
+    private void prepareTimeRemaining() {
+        timeRemainingHandler = new Handler(Looper.getMainLooper());
+        Runnable timeRemainingRunnable = new Runnable() {
+            @SuppressLint("DefaultLocale")
+            @Override
+            public void run() {
+                long timeRemainingMillis = getIntent().getLongExtra(IntentKey.BOOKING_END_TIME.name(), -1L) - SystemClock.elapsedRealtime();
+                if (timeRemainingMillis <= 0) {
+                    new AlertDialog.Builder(AudienceTypeSelectionActivity.this)
+                            .setTitle("Timeout")
+                            .setMessage("Your booking session has timed out. Returning to the showtime selection of this movie.")
+                            .setPositiveButton("OK", (dialog, which) -> {
+                                Intent intent = new Intent(AudienceTypeSelectionActivity.this, MovieBookingActivity.class);
+                                intent.putExtra(IntentKey.MOVIE_ID.name(), getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L));
+                                startActivity(intent);
+                            })
+                            .setCancelable(false)
+                            .show();
+                    return;
+                }
+                timeRemainingTextView.setText(String.format("%02d:%02d", timeRemainingMillis / (60 * 1000), (timeRemainingMillis / 1000) % 60));
+                timeRemainingHandler.postDelayed(this, 1000);
+            }
+        };
+        timeRemainingHandler.post(timeRemainingRunnable);
+    }
     @SuppressLint("SetTextI18n")
     private void prepareNextButton() {
         nextButton.setText("Next (2/4)");
         nextButton.setEnabled(false);
         nextButton
                 .setOnClickListener(v -> {
-                    //todo warning dialog
+                    //todo warning dialog cccd
                     booking = booking.toBuilder()
                             .audienceTypes(audienceTypeAdapter.getItems())
                             .build();
                     Intent intent = new Intent(this, ConcessionSelectionActivity.class);
                     intent.putExtra(IntentKey.BOOKING.name(), booking);
+                    intent.putExtra(IntentKey.BOOKING_END_TIME.name(), getIntent().getLongExtra(IntentKey.BOOKING_END_TIME.name(), -1L));
+                    intent.putExtra(IntentKey.MOVIE_ID.name(), getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L));
                     startActivity(intent);
                 });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        timeRemainingHandler.removeCallbacksAndMessages(null);
     }
 }

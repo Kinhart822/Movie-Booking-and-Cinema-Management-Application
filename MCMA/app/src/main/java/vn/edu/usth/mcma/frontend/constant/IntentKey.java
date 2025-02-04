@@ -62,6 +62,6 @@ public enum IntentKey {
     TICKET_ITEMS,
     BOOKING,
     BOOKING_SCHEDULE_ID,
-    BOOKING_TIME_LIMIT,
+    BOOKING_END_TIME,
     ;
 }
