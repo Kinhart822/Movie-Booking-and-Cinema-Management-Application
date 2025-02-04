@@ -14,6 +14,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Entity
 @SuperBuilder(toBuilder = true)
+@Deprecated
 public class Ticket extends AbstractAuditing implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
