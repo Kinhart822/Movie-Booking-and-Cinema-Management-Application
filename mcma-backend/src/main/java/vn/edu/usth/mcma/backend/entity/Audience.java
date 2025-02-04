@@ -14,6 +14,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+//todo discounted audience with method
 public class Audience extends AbstractAuditing implements Serializable, Comparable<Audience> {
     @Serial
     private static final long serialVersionUID = 1L;
