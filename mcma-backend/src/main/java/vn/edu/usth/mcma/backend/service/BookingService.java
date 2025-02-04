@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.*;
 import vn.edu.usth.mcma.backend.dto.booking.AudienceDetail;
+import vn.edu.usth.mcma.backend.dto.booking.ConcessionDetail;
 import vn.edu.usth.mcma.backend.dto.booking.ScheduleDetail;
 import vn.edu.usth.mcma.backend.entity.*;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
@@ -228,6 +229,24 @@ public class BookingService {
                         .rootRow(s.getRootRow())
                         .rootCol(s.getRootCol())
                         .availability(s.getAvailability().ordinal())
+                        .build())
+                .toList();
+    }
+
+    public List<ConcessionDetail> findAllConcessionBySchedule(Long scheduleId) {
+        return scheduleRepository
+                .findById(scheduleId)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND))
+                .getScreen()
+                .getCinema()
+                .getConcessionSet()
+                .stream()
+                .map(c -> ConcessionDetail.builder()
+                        .id(c.getId())
+                        .name(c.getName())
+                        .description(c.getDescription())
+                        .comboPrice(c.getComboPrice())
+                        .imageBase64(c.getImageBase64())
                         .build())
                 .toList();
     }
