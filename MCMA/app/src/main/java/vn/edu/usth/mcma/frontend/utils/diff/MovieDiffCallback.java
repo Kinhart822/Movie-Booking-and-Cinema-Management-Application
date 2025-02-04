@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.helper.diff;
+package vn.edu.usth.mcma.frontend.utils.diff;
 
 import androidx.recyclerview.widget.DiffUtil;
 

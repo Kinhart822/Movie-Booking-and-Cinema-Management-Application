@@ -146,6 +146,8 @@
     <string name="hint_text_view">text_view</string>
     <string name="hint_unit_price">$11.0 x</string>
     <string name="hint_total_seat_count">.... seats selected</string>
+    <string name="hint_concession_name">concession_name</string>
+    <string name="hint_concession_description">concession_description</string>
     <!--content description-->
     <string name="decrement">decrement</string>
     <string name="increment">increment</string>

@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingprocess;
+package vn.edu.usth.mcma.frontend.component.bookingprocess.stepone;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -24,7 +24,7 @@ import vn.edu.usth.mcma.frontend.constant.SeatAvailability;
 import vn.edu.usth.mcma.frontend.constant.SeatAvailables;
 import vn.edu.usth.mcma.frontend.model.Seat;
 import vn.edu.usth.mcma.frontend.dto.response.SeatTypeResponse;
-import vn.edu.usth.mcma.frontend.helper.SeatMapHelper;
+import vn.edu.usth.mcma.frontend.utils.helper.SeatMapHelper;
 
 public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
     private static final String TAG = SeatAdapter.class.getName();

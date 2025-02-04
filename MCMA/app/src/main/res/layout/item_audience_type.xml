@@ -46,11 +46,11 @@
             android:background="@drawable/shape_box"
             app:tint="@color/color_on_secondary" 
             app:layout_constraintStart_toEndOf="@id/text_view_unit_price"
-            app:layout_constraintEnd_toStartOf="@id/text_view_ticket_quantity"
+            app:layout_constraintEnd_toStartOf="@id/text_view_audience_type_quantity"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
         <TextView
-            android:id="@+id/text_view_ticket_quantity"
+            android:id="@+id/text_view_audience_type_quantity"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -68,7 +68,7 @@
             android:src="@drawable/ic_plus"
             android:background="@drawable/shape_box"
             app:tint="@color/color_on_secondary" 
-            app:layout_constraintStart_toEndOf="@id/text_view_ticket_quantity"
+            app:layout_constraintStart_toEndOf="@id/text_view_audience_type_quantity"
             app:layout_constraintEnd_toStartOf="@id/text_view_sum_per_type"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

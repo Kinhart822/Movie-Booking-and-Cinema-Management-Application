@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.helper;
+package vn.edu.usth.mcma.frontend.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

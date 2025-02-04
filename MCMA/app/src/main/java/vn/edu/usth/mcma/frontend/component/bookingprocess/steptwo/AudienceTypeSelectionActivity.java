@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingprocess;
+package vn.edu.usth.mcma.frontend.component.bookingprocess.steptwo;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -20,6 +20,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.component.bookingprocess.stepthree.ConcessionSelectionActivity;
 import vn.edu.usth.mcma.frontend.component.customview.navigate.CustomNavigateButton;
 import vn.edu.usth.mcma.frontend.dto.bookingprocess.AudienceDetail;
 import vn.edu.usth.mcma.frontend.model.Booking;
@@ -83,7 +84,7 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
     }
     private void findAllAudienceTypeByRating() {
         ApiService
-                .getMovieApi(this)
+                .getBookingApi(this)
                 .findAllAudienceTypeByRating(booking.getRating())
                 .enqueue(new Callback<>() {
                     @Override
@@ -102,12 +103,13 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
                 });
     }
     private void postFindAllAudienceTypeByRating() {
+        //todo: after audienceDiscount, do all this in adapter instead
         List<AudienceType> items = audienceDetails
                 .stream()
                 .map(a -> AudienceType.builder()
                         .id(a.getId())
-                        .quantity(0)
                         .unitPrice(a.getUnitPrice())
+                        .quantity(0)
                         .build())
                 .collect(Collectors.toList());
         items.add(0, AudienceType.builder()

@@ -15,7 +15,7 @@ import java.util.List;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort;
-import vn.edu.usth.mcma.frontend.helper.ImageDecoder;
+import vn.edu.usth.mcma.frontend.utils.ImageDecoder;
 
 public class ComingSoonAdapter extends RecyclerView.Adapter<ComingSoonAdapter.ViewHolder> {
     private final Context context;

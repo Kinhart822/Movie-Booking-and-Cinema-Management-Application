@@ -25,7 +25,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.home.Advertisement;
-import vn.edu.usth.mcma.frontend.helper.ImageDecoder;
+import vn.edu.usth.mcma.frontend.utils.ImageDecoder;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class HomeFragment extends Fragment {

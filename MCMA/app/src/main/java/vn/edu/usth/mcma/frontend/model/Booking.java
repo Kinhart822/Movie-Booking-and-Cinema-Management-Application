@@ -27,7 +27,7 @@ public class Booking implements Parcelable {
 
     private Long scheduleId;
     private List<Seat> rootSeats;
-    private List<AudienceType> audienceTypes;
+    private List<AudienceType> audienceTypes;//todo get quantity>0
     private Integer totalAudience;// todo method to get total audience instead
     private Double totalPrice;//todo method to get total price instead
     @Override

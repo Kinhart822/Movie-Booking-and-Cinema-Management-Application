@@ -2,7 +2,6 @@ package vn.edu.usth.mcma.frontend.component.main;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort;
-import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.GenreResponse;
-import vn.edu.usth.mcma.frontend.dto.response.SearchMovieByNameResponse;
-import vn.edu.usth.mcma.frontend.helper.ImageDecoder;
+import vn.edu.usth.mcma.frontend.utils.ImageDecoder;
 
 public class SearchMovieAdapter extends RecyclerView.Adapter<SearchMovieAdapter.ViewHolder> {
     private final Context context;

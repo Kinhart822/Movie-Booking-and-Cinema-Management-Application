@@ -18,11 +18,7 @@ import vn.edu.usth.mcma.frontend.dto.response.ViewCinemaResponse;
 public interface CinemaApi {
     @GET("/api/v1/user/view/city/{cityId}/cinema")
     Call<List<CinemaDetailShort>> findAllCinemaByCity(@Path("cityId") Long cityId);
-    @GET("/api/v1/user/booking/schedule/{scheduleId}/seat")
-    Call<List<Seat>> findAllSeatBySchedule(@Path("scheduleId") Long scheduleId);
 
-    @GET("/api/v1/user/booking/seat-types")
-    Call<List<SeatTypeResponse>> findAllSeatTypes();
     @GET("/api/v1/user/view/cinemaList")
     Call<ViewCinemaResponse> getCinemaList();
 

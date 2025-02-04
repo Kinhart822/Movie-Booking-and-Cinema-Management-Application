@@ -28,7 +28,7 @@ import vn.edu.usth.mcma.frontend.dto.movie.GenreShort;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort;
 import vn.edu.usth.mcma.frontend.component.bookingprocess.MovieDetailActivity;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
-import vn.edu.usth.mcma.frontend.helper.diff.MovieDiffCallback;
+import vn.edu.usth.mcma.frontend.utils.diff.MovieDiffCallback;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
 public class SearchMovieActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.helper;
+package vn.edu.usth.mcma.frontend.utils.helper;
 
 import java.util.ArrayList;
 import java.util.List;

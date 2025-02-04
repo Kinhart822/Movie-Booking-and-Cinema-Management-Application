@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.ShowtimesOld.Adapters;
+package vn.edu.usth.mcma.frontend.component.bookingprocess.stepthree;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -17,72 +17,62 @@ import java.util.stream.Collectors;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.ComboItem;
+import vn.edu.usth.mcma.frontend.model.item.ConcessionItem;
 
-public class ComboAdapter extends RecyclerView.Adapter<ComboAdapter.ComboViewHolder> {
-    private List<ComboItem> comboItems;
-    private OnTotalPriceChangedListener listener;
+public class ConcessionAdapter extends RecyclerView.Adapter<ConcessionAdapter.ViewHolder> {
+    private final List<ConcessionItem> items;
+    private final IConcessionItemView iConcessionItemView;
 
-    public ComboAdapter(List<ComboItem> comboItems) {
-        this.comboItems = comboItems;
-    }
-
-    // Custom listener interface for price updates
-    public interface OnTotalPriceChangedListener {
-        void onTotalPriceChanged(List<ComboItem> comboItems);
-    }
-    public void setTotalPriceChangedListener(OnTotalPriceChangedListener listener) {
-        this.listener = listener;
+    public ConcessionAdapter(List<ConcessionItem> items, IConcessionItemView iConcessionItemView) {
+        this.items = items;
+        this.iConcessionItemView = iConcessionItemView;
     }
 
     @NonNull
     @Override
-    public ComboViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.select_item_combo, parent, false);
-        return new ComboViewHolder(view);
+                .inflate(R.layout.item_concession, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ComboViewHolder holder, int position) {
-        ComboItem item = comboItems.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        ComboItem item = items.get(position);
         holder.bind(item);
     }
-
     @Override
     public int getItemCount() {
-        return comboItems != null ? comboItems.size() : 0;
+        return items.size();
     }
 
     public List<ComboItem> getSelectedComboItems() {
-        return comboItems.stream()
+        return items.stream()
                 .filter(item -> item.getQuantity() > 0)
                 .collect(Collectors.toList());
     }
-
     // Updates the quantity of a ComboItem and recalculates the total price
     private void updateQuantity(int position, int delta) {
-        ComboItem item = comboItems.get(position);
+        ComboItem item = items.get(position);
         int newQuantity = Math.max(0, item.getQuantity() + delta);
 
         if (newQuantity != item.getQuantity()) {
             item.setQuantity(newQuantity);
             notifyItemChanged(position); // Update only the modified item
             if (listener != null) {
-                listener.onTotalPriceChanged(comboItems); // Notify the listener to update the total price
+                listener.onTotalPriceChanged(items); // Notify the listener to update the total price
             }
         }
     }
-
     // ViewHolder class for ComboItem
-    class ComboViewHolder extends RecyclerView.ViewHolder {
-        private TextView nameText;
-        private TextView priceText;
-        private TextView quantityText;
-        private ImageView plusButton;
-        private ImageView minusButton;
-        private ImageView comboImage;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private ImageView concessionImageView;
+        private TextView concessionNameTextView;
+        private TextView concessionDescriptionTextView;
+        private TextView concessionQuantityTextView;
 
-        ComboViewHolder(@NonNull View itemView) {
+
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             nameText = itemView.findViewById(R.id.combo_name);
             priceText = itemView.findViewById(R.id.combo_price);

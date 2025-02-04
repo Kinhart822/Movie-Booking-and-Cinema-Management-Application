@@ -93,16 +93,16 @@
             android:name=".frontend.component.Feedback.RatingMovie_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.bookingprocess.AudienceTypeSelectionActivity"
+            android:name=".frontend.component.bookingprocess.steptwo.AudienceTypeSelectionActivity"
             android:exported="false" />
         <activity
             android:name=".frontend.component.ShowtimesOld.UI.PaymentBookingActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.bookingprocess.ConcessionSelectionActivity"
+            android:name=".frontend.component.bookingprocess.stepthree.ConcessionSelectionActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.bookingprocess.SeatSelectionActivity"
+            android:name=".frontend.component.bookingprocess.stepone.SeatSelectionActivity"
             android:exported="false" />
         <activity
             android:name=".frontend.component.bookingprocess.MovieBookingActivity"

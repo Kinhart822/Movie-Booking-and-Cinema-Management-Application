@@ -8,14 +8,31 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import vn.edu.usth.mcma.frontend.dto.bookingprocess.AudienceDetail;
+import vn.edu.usth.mcma.frontend.model.response.ConcessionResponse;
+import vn.edu.usth.mcma.frontend.dto.bookingprocess.ScheduleDetail;
 import vn.edu.usth.mcma.frontend.dto.request.BookingRequest;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CouponResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.SendBookingResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.TicketResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingResponse;
+import vn.edu.usth.mcma.frontend.dto.response.SeatTypeResponse;
 import vn.edu.usth.mcma.frontend.dto.response.ViewCouponResponse;
+import vn.edu.usth.mcma.frontend.model.Seat;
 
 public interface BookingApi {
+    @GET("/api/v1/user/booking/schedule/{scheduleId}")
+    Call<ScheduleDetail> findScheduleDetail(@Path("scheduleId") Long scheduleId);
+    @GET("/api/v1/user/booking/rating/{ratingId}/audience-type")
+    Call<List<AudienceDetail>> findAllAudienceTypeByRating(@Path("ratingId") String ratingId);
+    @GET("/api/v1/user/booking/seat-types")
+    Call<List<SeatTypeResponse>> findAllSeatTypes();
+    @GET("/api/v1/user/booking/schedule/{scheduleId}/seat")
+    Call<List<Seat>> findAllSeatBySchedule(@Path("scheduleId") Long scheduleId);
+    @GET("/api/v1/user/booking/schedule/{scheduleId}/concession")
+    Call<List<ConcessionResponse>> findAllConcessionBySchedule(@Path("scheduleId") Long scheduleId);
+
+
     @POST("/api/v1/user/booking/processingBooking")
     Call<SendBookingResponse> processBooking(@Body BookingRequest bookingRequest);
 

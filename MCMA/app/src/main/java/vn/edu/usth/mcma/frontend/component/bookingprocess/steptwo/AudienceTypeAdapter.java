@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingprocess;
+package vn.edu.usth.mcma.frontend.component.bookingprocess.steptwo;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -110,7 +110,7 @@ public class AudienceTypeAdapter extends RecyclerView.Adapter<AudienceTypeAdapte
             unitPriceTextView = itemView.findViewById(R.id.text_view_unit_price);
             minusButton = itemView.findViewById(R.id.button_minus);
             plusButton = itemView.findViewById(R.id.button_plus);
-            ticketQuantityTextView = itemView.findViewById(R.id.text_view_ticket_quantity);
+            ticketQuantityTextView = itemView.findViewById(R.id.text_view_audience_type_quantity);
             sumPerTypeTextView = itemView.findViewById(R.id.text_view_sum_per_type);
         }
     }

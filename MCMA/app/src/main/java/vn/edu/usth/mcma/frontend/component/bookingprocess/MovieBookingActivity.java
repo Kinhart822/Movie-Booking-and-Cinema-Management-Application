@@ -34,7 +34,7 @@ import vn.edu.usth.mcma.frontend.component.customview.filter.CityButton;
 import vn.edu.usth.mcma.frontend.component.customview.filter.DateButton;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort2;
 import vn.edu.usth.mcma.frontend.dto.movie.ShowtimeOfMovieByCityResponse;
-import vn.edu.usth.mcma.frontend.helper.ImageDecoder;
+import vn.edu.usth.mcma.frontend.utils.ImageDecoder;
 import vn.edu.usth.mcma.frontend.model.ShowtimeOfMovieBySchedule;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 

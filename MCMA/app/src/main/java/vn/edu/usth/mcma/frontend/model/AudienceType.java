@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AudienceType implements Parcelable {
     private String id;
-    private int quantity;
     private Double unitPrice;
+    private int quantity;
 
     @Override
     public int describeContents() {
@@ -29,10 +29,10 @@ public class AudienceType implements Parcelable {
         unitPrice = in.readDouble();
     }
     @Override
-    public void writeToParcel(@NonNull Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeInt(quantity);
-        parcel.writeDouble(unitPrice);
+    public void writeToParcel(@NonNull Parcel dest, int i) {
+        dest.writeString(id);
+        dest.writeInt(quantity);
+        dest.writeDouble(unitPrice);
     }
     public static final Creator<AudienceType> CREATOR = new Parcelable.Creator<>() {
         @Override

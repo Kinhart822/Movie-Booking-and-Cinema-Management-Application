@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingprocess;
+package vn.edu.usth.mcma.frontend.component.bookingprocess.stepone;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -21,6 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.component.bookingprocess.steptwo.AudienceTypeSelectionActivity;
 import vn.edu.usth.mcma.frontend.component.customview.navigate.CustomNavigateButton;
 import vn.edu.usth.mcma.frontend.dto.bookingprocess.ScheduleDetail;
 import vn.edu.usth.mcma.frontend.dto.response.SeatTypeResponse;
@@ -82,7 +83,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
     }
     private void findScheduleDetail() {
         ApiService
-                .getMovieApi(this)
+                .getBookingApi(this)
                 .findScheduleDetail(scheduleId)
                 .enqueue(new Callback<>() {
                     @Override
@@ -130,7 +131,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
     }
     private void findAllSeatTypes() {
         ApiService
-                .getCinemaApi(this)
+                .getBookingApi(this)
                 .findAllSeatTypes()
                 .enqueue(new Callback<>() {
                     @Override
@@ -153,7 +154,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
     }
     private void findAllSeatBySchedule() {
         ApiService
-                .getCinemaApi(this)
+                .getBookingApi(this)
                 .findAllSeatBySchedule(scheduleId)
                 .enqueue(new Callback<>() {
                     @Override

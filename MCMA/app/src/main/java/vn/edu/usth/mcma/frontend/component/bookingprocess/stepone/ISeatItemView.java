@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingprocess;
+package vn.edu.usth.mcma.frontend.component.bookingprocess.stepone;
 
 import vn.edu.usth.mcma.frontend.model.Seat;
 
