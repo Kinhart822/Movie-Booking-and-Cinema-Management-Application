@@ -87,6 +87,10 @@ public class AudienceTypeAdapter extends RecyclerView.Adapter<AudienceTypeAdapte
     private void updateQuantity(int position, int delta) {
         AudienceType item = getItemByPosition(position);
         item.setQuantity(Math.max(0, item.getQuantity() + delta));
+        if (this.getCurrentAudienceCount() > targetAudienceCount) {
+            item.setQuantity(item.getQuantity() - delta);
+            return;
+        }
         notifyItemChanged(position);
         iAudienceTypeItemView.onQuantityChangeListener();
     }

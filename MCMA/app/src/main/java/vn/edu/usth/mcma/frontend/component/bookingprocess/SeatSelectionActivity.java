@@ -154,7 +154,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private void findAllSeatBySchedule() {
         ApiService
                 .getCinemaApi(this)
-                .findAllSeatBySchedule(booking.getScheduleId())
+                .findAllSeatBySchedule(scheduleId)
                 .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<List<Seat>> call, @NonNull Response<List<Seat>> response) {
