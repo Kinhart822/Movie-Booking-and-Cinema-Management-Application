@@ -60,7 +60,8 @@ public enum IntentKey {
     SELECTED_DRINK_IDS,
     SELECTED_COMBO_ITEMS,
     TICKET_ITEMS,
-    SCHEDULE_ID,
     BOOKING,
+    BOOKING_SCHEDULE_ID,
+    BOOKING_TIME_LIMIT,
     ;
 }

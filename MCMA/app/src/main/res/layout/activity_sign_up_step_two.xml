@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="20dp"
-    android:background="@color/white"
     tools:context=".frontend.component.account.SignUpStepTwoActivity">
 
     <!--Header-->
@@ -31,7 +30,6 @@
             android:layout_centerVertical="true"
             android:gravity="center"
             android:text="@string/sign_up"
-            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
     </RelativeLayout>
@@ -84,6 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
+                android:text="@string/hint_time_remaining"
                 android:textSize="15sp"
                 tools:ignore="RelativeOverlap" />
         </RelativeLayout>
@@ -99,6 +98,5 @@
         android:padding="10dp"
         android:text="@string/check"
         android:textAllCaps="false"
-        android:textColor="@color/white"
         android:textSize="20sp"/>
 </RelativeLayout>

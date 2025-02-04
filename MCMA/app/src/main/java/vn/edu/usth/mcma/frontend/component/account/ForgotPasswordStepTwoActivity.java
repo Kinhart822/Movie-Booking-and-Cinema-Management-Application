@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.util.Log;
@@ -57,7 +58,7 @@ public class ForgotPasswordStepTwoActivity extends AppCompatActivity {
         timeRemainingTextView = findViewById(R.id.text_view_time_remaining);
         checkButton = findViewById(R.id.button_check);
         waitForResendOtp = false;
-        checkOtpHandler = new Handler();
+        checkOtpHandler = new Handler(Looper.getMainLooper());
         dotCount = 0;
         isOtpOk = false;
 
@@ -78,7 +79,7 @@ public class ForgotPasswordStepTwoActivity extends AppCompatActivity {
         infoTextView.setText(info);
     }
     private void prepareTimeRemaining() {
-        Handler timeRemainingHandler = new Handler();
+        Handler timeRemainingHandler = new Handler(Looper.getMainLooper());
         Runnable timeRemainingRunnable = new Runnable() {
             @SuppressLint({"SetTextI18n", "DefaultLocale"})
             @Override

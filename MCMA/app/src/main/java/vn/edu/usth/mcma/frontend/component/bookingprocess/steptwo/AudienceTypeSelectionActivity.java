@@ -30,13 +30,13 @@ import vn.edu.usth.mcma.frontend.constant.IntentKey;
 
 public class AudienceTypeSelectionActivity extends AppCompatActivity {
     private static final String TAG = AudienceTypeSelectionActivity.class.getName();
+    private static final double priceForStudent = 9;//todo dotenv
     private TextView totalAudienceCountTextView;
     private TextView totalPriceTextView;
     private CustomNavigateButton nextButton;
 
     private Booking booking;
     private List<AudienceDetail> audienceDetails;
-    private double priceForStudent;
     private RecyclerView audienceTypeRecyclerView;
     private AudienceTypeAdapter audienceTypeAdapter;
     private int targetAudienceCount;
@@ -76,8 +76,6 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
         totalPrice = booking.getTotalPrice();
         totalAudienceCountTextView.setText(String.format("%d / %d audiences", currentAudienceCount, targetAudienceCount));
         totalPriceTextView.setText(String.format("$%.1f", totalPrice));
-
-        priceForStudent = 9;
 
         findAllAudienceTypeByRating();
         prepareNextButton();

@@ -149,6 +149,7 @@
     <string name="hint_concession_name">concession_name</string>
     <string name="hint_concession_description">concession_description</string>
     <string name="hint_concession_combo_price">Price: $11.0</string>
+    <string name="hint_time_remaining">00:00</string>
     <!--content description-->
     <string name="decrement">decrement</string>
     <string name="increment">increment</string>

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,7 +43,7 @@ public class ForgotPasswordStepOneActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.edit_text_email);
         waitForOtp = false;
         nextButton = findViewById(R.id.button_next);
-        nextHandler = new Handler();
+        nextHandler = new Handler(Looper.getMainLooper());
         dotCount = 0;
 
         backButton

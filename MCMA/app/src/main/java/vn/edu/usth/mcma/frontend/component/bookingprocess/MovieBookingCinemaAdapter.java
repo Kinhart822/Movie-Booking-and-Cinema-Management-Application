@@ -102,10 +102,9 @@ public class MovieBookingCinemaAdapter extends RecyclerView.Adapter<MovieBooking
                                 TimeButton showtimeTimeButton = new TimeButton(context);
                                 showtimeTimeButton.setText(schedule.getTime().toString());
                                 showtimeTimeButton.setOnClickListener(v -> {
-                                    System.out.println(schedule.getScheduleId());
-                                    //todo: new activity
+                                    //todo: time dialog
                                     Intent intent = new Intent(context, SeatSelectionActivity.class);
-                                    intent.putExtra(IntentKey.SCHEDULE_ID.name(), schedule.getScheduleId());
+                                    intent.putExtra(IntentKey.BOOKING_SCHEDULE_ID.name(), schedule.getScheduleId());
                                     context.startActivity(intent);
                                 });
                                 scheduleTimeLinearLayout.addView(showtimeTimeButton);

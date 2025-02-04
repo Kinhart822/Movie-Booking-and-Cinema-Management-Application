@@ -71,11 +71,11 @@ public class AudienceTypeAdapter extends RecyclerView.Adapter<AudienceTypeAdapte
         }
         AudienceType item = getItemByPosition(position);
         holder.audienceTypeTextView.setText(item.getId());
-        holder.unitPriceTextView.setText(item.getUnitPrice() + " x");
+        holder.unitPriceTextView.setText(String.format("$%.1f x", item.getUnitPrice()));
         holder.minusButton.setOnClickListener(v -> updateQuantity(position, -1));
         holder.plusButton.setOnClickListener(v -> updateQuantity(position, 1));
         holder.audienceTypeQuantityTextView.setText(Integer.toString(item.getQuantity()));
-        holder.sumPerTypeTextView.setText(Double.toString(item.getUnitPrice() * item.getQuantity()));
+        holder.sumPerTypeTextView.setText(String.format("$%.1f", item.getUnitPrice() * item.getQuantity()));
     }
     @Override
     public int getItemCount() {

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.util.Log;
@@ -59,7 +60,7 @@ public class SignUpStepTwoActivity extends AppCompatActivity {
         checkButton = findViewById(R.id.button_check);
         waitForResendOtp = false;
         dotCount = 0;
-        checkOtpHandler = new Handler();
+        checkOtpHandler = new Handler(Looper.getMainLooper());
 
         backButton
                 .setOnClickListener(v -> onBackPressed());
@@ -78,13 +79,13 @@ public class SignUpStepTwoActivity extends AppCompatActivity {
         infoTextView.setText(info);
     }
     private void prepareTimeRemaining() {
-        Handler timeRemainingHandler = new Handler();
+        Handler timeRemainingHandler = new Handler(Looper.getMainLooper());
         Runnable timeRemainingRunnable = new Runnable() {
             @SuppressLint({"SetTextI18n", "DefaultLocale"})
             @Override
             public void run() {
                 Instant now = Instant.now();
-                Log.d(TAG, "prepareTimeRemaining run: "+now.toString()+" "+otpDueDate.toString());
+                Log.d(TAG, "prepareTimeRemaining run: " + now.toString()+" "+otpDueDate.toString());
                 Duration timeRemaining = Duration.between(now, otpDueDate);
                 if (timeRemaining.isNegative() || timeRemaining.isZero()) {
                     checkButton.setOnClickListener(null);

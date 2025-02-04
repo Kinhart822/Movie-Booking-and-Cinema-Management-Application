@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -48,14 +49,14 @@ public class SignUpStepOneActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up_step_one);
         ImageButton backButton = findViewById(R.id.button_back);
         isEmailOk = false;
-        checkExistHandler = new Handler();
+        checkExistHandler = new Handler(Looper.getMainLooper());
         emailEditText = findViewById(R.id.edit_text_email);
         statusIconTextView = findViewById(R.id.text_view_email_status_icon);
         statusDescriptionTextView = findViewById(R.id.text_view_email_status_description);
         nextButton = findViewById(R.id.button_next);
         waitForOtp = false;
         dotCount = 0;
-        nextHandler = new Handler();
+        nextHandler = new Handler(Looper.getMainLooper());
 
         backButton
                 .setOnClickListener(v -> this.onBackPressed());

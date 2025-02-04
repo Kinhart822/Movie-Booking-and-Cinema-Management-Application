@@ -1,6 +1,7 @@
 package vn.edu.usth.mcma.frontend.constant;
 
 public enum IP {
+    //todo dotenv
     KINHART822("192.168.33.102"),
     MINOXD_LAPTOP("192.168.0.109"),
     MINOXD_PX6A("10.34.61.77"),

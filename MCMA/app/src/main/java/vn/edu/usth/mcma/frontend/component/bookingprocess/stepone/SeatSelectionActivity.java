@@ -2,6 +2,8 @@ package vn.edu.usth.mcma.frontend.component.bookingprocess.stepone;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -12,9 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import retrofit2.Call;
@@ -32,6 +36,8 @@ import vn.edu.usth.mcma.frontend.constant.IntentKey;
 
 public class SeatSelectionActivity extends AppCompatActivity {
     private static final String TAG = SeatSelectionActivity.class.getName();
+    private static final int BOOKING_TIME_LIMIT = 7; //todo dotenv
+    private TextView timeRemainingTextView;
     private TextView cinemaNameTextView;
     private TextView screenNameDateDurationTextView;
     private TextView movieNameTextView;
@@ -51,6 +57,8 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private SeatAdapter seatAdapter;
     private int totalAudienceCount;
     private double totalPrice;
+    private Instant bookingStartTime;
+    private Instant bookingEndTime;
 
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
     @Override
@@ -58,6 +66,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seat_selection);
         ImageButton backButton = findViewById(R.id.button_back);
+        timeRemainingTextView = findViewById(R.id.text_view_time_remaining);
         cinemaNameTextView = findViewById(R.id.text_view_cinema_name);
         screenNameDateDurationTextView = findViewById(R.id.text_view_screen_name_date_duration);
         movieNameTextView = findViewById(R.id.text_view_movie_name);
@@ -69,7 +78,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
         nextButton = findViewById(R.id.button_next);
         seatMatrixRecyclerView = findViewById(R.id.recycler_view_seat_matrix);
 
-        scheduleId = getIntent().getLongExtra(IntentKey.SCHEDULE_ID.name(), -1L);
+        scheduleId = getIntent().getLongExtra(IntentKey.BOOKING_SCHEDULE_ID.name(), -1L);
         booking = new Booking();
         totalAudienceCount = 0;
         totalPrice = 0.0;
@@ -183,14 +192,37 @@ public class SeatSelectionActivity extends AppCompatActivity {
         seatMatrixRecyclerView.setAdapter(seatAdapter);
 
         availableRowsTextView.setText(String.format("Nearest row:  %s\nFarthest row: %s", seatAdapter.getNearestRow(), seatAdapter.getFarthestRow()));
+
+        prepareTimeRemaining();
     }
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
-    public void onSeatClickListener() {
+    private void onSeatClickListener() {
         totalAudienceCount = seatAdapter.getTotalAudienceCount();
         totalPrice = seatAdapter.getTotalSeatPrice();
         totalSeatCountTextView.setText(String.format("%d seats selected", totalAudienceCount));
         totalPriceTextView.setText(String.format("$%.1f", totalPrice));
         nextButton.setEnabled(totalAudienceCount != 0);
+    }
+    private void prepareTimeRemaining() {
+        bookingEndTime = (bookingStartTime = Instant.now())
+                .plus(BOOKING_TIME_LIMIT, ChronoUnit.MINUTES);
+
+        Handler timeRemainingHandler = new Handler(Looper.getMainLooper());
+        Runnable timeRemainingRunnable = new Runnable() {
+            @SuppressLint("DefaultLocale")
+            @Override
+            public void run() {
+                Duration timeRemaining = Duration.between(Instant.now(), bookingEndTime);
+                if (timeRemaining.isNegative() || timeRemaining.isZero()) {
+                    // navigate to movie booking activity with intent
+                    return;
+                }
+                System.out.println(bookingEndTime);
+                timeRemainingTextView.setText(String.format("%02d:%02d", timeRemaining.toMinutesPart(), timeRemaining.toSecondsPart()));
+                timeRemainingHandler.postDelayed(this, 1000);
+            }
+        };
+        timeRemainingHandler.post(timeRemainingRunnable);
     }
     @SuppressLint("SetTextI18n")
     private void prepareNextButton() {
