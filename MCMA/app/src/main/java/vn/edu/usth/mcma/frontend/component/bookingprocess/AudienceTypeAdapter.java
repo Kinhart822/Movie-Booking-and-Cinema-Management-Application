@@ -17,6 +17,7 @@ import lombok.Getter;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.model.AudienceType;
 
+//todo quantity limited
 public class AudienceTypeAdapter extends RecyclerView.Adapter<AudienceTypeAdapter.ViewHolder> {
     @Getter
     private final List<AudienceType> items;

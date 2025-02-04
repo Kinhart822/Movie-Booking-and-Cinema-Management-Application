@@ -19,15 +19,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Booking implements Parcelable {
     //todo separate details
-    private Long scheduleId;
     private String cinemaName;
     private String screenNameDateDuration;
     private String movieName;
     private String rating;
     private String screenType;
+
+    private Long scheduleId;
+    private List<Seat> rootSeats;
     private List<AudienceType> audienceTypes;
     private Integer totalAudienceCount;
-    private Double totalPrice;
+    private Double totalPrice;//todo method to get total price instead
     @Override
     public int describeContents() {
         return 0;

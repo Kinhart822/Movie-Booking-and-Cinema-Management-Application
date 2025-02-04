@@ -136,14 +136,14 @@
     <string name="hint_movie_name">movie_name</string>
     <string name="hint_rating_name">R</string>
     <string name="hint_screen_type">IMAX</string>
-    <string name="hint_total_audience_count">n_audience</string>
+    <string name="hint_total_audience_count">00 / 00 audiences</string>
     <string name="hint_total_price">999</string>
     <string name="hint_audience_type">audience_type</string>
     <string name="hint_sum_per_type">$99.0</string>
     <string name="hint_count_per_type">9</string>
     <string name="hint_text_view">text_view</string>
     <string name="hint_unit_price">$11.0 x</string>
-    <string name="hint_total_seat_count">.... / .... seats selected</string>
+    <string name="hint_total_seat_count">.... seats selected</string>
     <!--content description-->
     <string name="decrement">decrement</string>
     <string name="increment">increment</string>

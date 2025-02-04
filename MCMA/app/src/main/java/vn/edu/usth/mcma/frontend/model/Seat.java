@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.dto.response;
+package vn.edu.usth.mcma.frontend.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+//todo consider separate response and model
 public class Seat implements Parcelable {
     private Integer row;
     private Integer col;
@@ -24,6 +25,7 @@ public class Seat implements Parcelable {
     private Integer rootRow;
     private Integer rootCol;
     private Integer availability;//todo
+    //todo price
 
     @Override
     public boolean equals(Object o) {
@@ -41,13 +43,13 @@ public class Seat implements Parcelable {
         return 0;
     }
     @Override
-    public void writeToParcel(@NonNull Parcel parcel, int i) {
-        parcel.writeInt(row);
-        parcel.writeInt(col);
-        parcel.writeInt(typeId);
-        parcel.writeString(name);
-        parcel.writeInt(rootRow);
-        parcel.writeInt(rootCol);
+    public void writeToParcel(@NonNull Parcel dest, int i) {
+        dest.writeInt(row);
+        dest.writeInt(col);
+        dest.writeInt(typeId);
+        dest.writeString(name);
+        dest.writeInt(rootRow);
+        dest.writeInt(rootCol);
     }
     protected Seat(Parcel in) {
         row = in.readInt();

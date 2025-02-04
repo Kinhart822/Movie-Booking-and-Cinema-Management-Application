@@ -103,7 +103,7 @@ public class MovieBookingCinemaAdapter extends RecyclerView.Adapter<MovieBooking
                                 showtimeTimeButton.setOnClickListener(v -> {
                                     System.out.println(schedule.getScheduleId());
                                     //todo: new activity
-                                    Intent intent = new Intent(context, AudienceTypeSelectionActivity.class);
+                                    Intent intent = new Intent(context, SeatSelectionActivity.class);
                                     intent.putExtra(IntentKey.SCHEDULE_ID.name(), schedule.getScheduleId());
                                     context.startActivity(intent);
                                 });

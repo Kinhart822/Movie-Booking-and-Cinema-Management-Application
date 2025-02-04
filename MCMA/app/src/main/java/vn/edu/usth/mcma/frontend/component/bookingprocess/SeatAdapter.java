@@ -1,18 +1,17 @@
 package vn.edu.usth.mcma.frontend.component.bookingprocess;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -23,19 +22,17 @@ import lombok.Getter;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.constant.SeatAvailability;
 import vn.edu.usth.mcma.frontend.constant.SeatAvailables;
-import vn.edu.usth.mcma.frontend.dto.response.Seat;
+import vn.edu.usth.mcma.frontend.model.Seat;
 import vn.edu.usth.mcma.frontend.dto.response.SeatTypeResponse;
 import vn.edu.usth.mcma.frontend.helper.SeatMapHelper;
 
 public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
     private static final String TAG = SeatAdapter.class.getName();
+    private final Context context;
+    private final Map<Integer, SeatTypeResponse> seatTypes;
     private final Map<Integer, Map<Integer, Seat>> seatMatrix;
     private final Map<Integer, Map<Integer, List<Seat>>> rootSeatMatrix;
-    private final Context context;
     private final ISeatItemView iSeatItemView;
-    @Getter
-    private int totalAudienceCount;
-    private int targetAudienceCount;
     @Getter
     private final int maxSeatPerRow;
     private final List<Seat> selectedSeats;
@@ -45,16 +42,18 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
 
     public SeatAdapter(
             Context context,
-            List<Seat> seats,
-            ISeatItemView iSeatItemView,
-            int targetAudienceCount) {
+            List<SeatTypeResponse> seatTypeResponses,
+            List<Seat> seatResponses,
+            ISeatItemView iSeatItemView) {
         this.context = context;
-        SeatMapHelper seatMapHelper = new SeatMapHelper(seats);
+        this.seatTypes = new HashMap<>();
+        seatTypeResponses
+                .forEach(st -> this.seatTypes.put(st.getId(), st));
+        SeatMapHelper seatMapHelper = new SeatMapHelper(seatResponses);
         this.seatMatrix = seatMapHelper.getSeatMatrix();
         this.rootSeatMatrix = seatMapHelper.getRootSeatMatrix();
         this.maxSeatPerRow = seatMapHelper.getMaxSeatPerRow();
         this.iSeatItemView = iSeatItemView;
-        this.targetAudienceCount = targetAudienceCount;
         this.selectedSeats = new ArrayList<>();
         this.selectedRootSeats  = new ArrayList<>();
     }
@@ -69,7 +68,6 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
         int col = position % (maxSeatPerRow + 1);
         return (col == 0) ? 0 : 1;
     }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -156,25 +154,11 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
             selectedSeats.removeAll(rectangle);
             selectedRootSeats.remove(rootSeat);
         } else {
-            if (isNumberOfTicketsExceeded(seat)) {
-                Log.e(TAG, "toggleSeat: Desired number of seats exceeded!");
-                return;
-            }
             selectedSeats.addAll(rectangle);
             selectedRootSeats.add(rootSeat);
         }
         rectangle.forEach(s -> notifyItemChanged(s.getRow() * (maxSeatPerRow + 1) + s.getCol() + 1));
         iSeatItemView.onSeatClickListener(seat);
-    }
-    private boolean isNumberOfTicketsExceeded(Seat seat) {
-        int additionalAudienceCount = getNumberOfAudiencePerSeat(seat);
-        int currentAudienceCount = getCurrentAudienceCount();
-        int newTotalAudienceCount = currentAudienceCount + additionalAudienceCount;
-        if (newTotalAudienceCount > targetAudienceCount) {
-            return true;
-        }
-        totalAudienceCount = newTotalAudienceCount;
-        return false;
     }
     private int getNumberOfAudiencePerSeat(Seat seat) {
         return (Objects.equals(seat.getTypeId(), SeatAvailables.LOVERS.getId()) ||
@@ -193,13 +177,13 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
             //todo consider monospace font
         }
     }
-    public int getCurrentAudienceCount() {
+    public int getTotalAudienceCount() {
         return selectedRootSeats
                 .stream()
                 .mapToInt(this::getNumberOfAudiencePerSeat)
                 .sum();
     }
-    public double getTotalSeatPrice(Map<Integer, SeatTypeResponse> seatTypes) {
+    public double getTotalSeatPrice() {
         return this.selectedRootSeats
                 .stream()
                 .mapToDouble(s -> Objects.requireNonNull(seatTypes
