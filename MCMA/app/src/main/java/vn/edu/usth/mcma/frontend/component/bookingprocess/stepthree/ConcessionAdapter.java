@@ -1,9 +1,11 @@
 package vn.edu.usth.mcma.frontend.component.bookingprocess.stepthree;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,14 +18,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.ComboItem;
 import vn.edu.usth.mcma.frontend.model.item.ConcessionItem;
+import vn.edu.usth.mcma.frontend.utils.ImageDecoder;
 
 public class ConcessionAdapter extends RecyclerView.Adapter<ConcessionAdapter.ViewHolder> {
+    private final Context context;
     private final List<ConcessionItem> items;
     private final IConcessionItemView iConcessionItemView;
 
-    public ConcessionAdapter(List<ConcessionItem> items, IConcessionItemView iConcessionItemView) {
+    public ConcessionAdapter(
+            Context context,
+            List<ConcessionItem> items,
+            IConcessionItemView iConcessionItemView) {
+        this.context = context;
         this.items = items;
         this.iConcessionItemView = iConcessionItemView;
     }
@@ -36,74 +43,70 @@ public class ConcessionAdapter extends RecyclerView.Adapter<ConcessionAdapter.Vi
         return new ViewHolder(view);
     }
 
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ComboItem item = items.get(position);
-        holder.bind(item);
+        ConcessionItem item = items.get(position);
+        if (item.getImageBase64() != null) {
+            Glide
+                    .with(context)
+                    .load(ImageDecoder.decode(item.getImageBase64()))
+                    .placeholder(R.drawable.placeholder1080x1920)
+                    .error(R.drawable.placeholder1080x1920)
+                    .into(holder.concessionImageView);
+        }
+        holder.concessionNameTextView.setText(item.getName());
+        holder.concessionDescriptionTextView.setText(item.getDescription());
+        holder.concessionComboPrice.setText(String.format("Price: $%.1f", item.getComboPrice()));
+        holder.minusButton.setOnClickListener(v -> updateQuantity(position, -1));
+        holder.plusButton.setOnClickListener(v -> updateQuantity(position, 1));
+        holder.concessionQuantityTextView.setText(Integer.toString(item.getQuantity()));
+        holder.sumPerTypeTextView.setText("$" + item.getComboPrice() * item.getQuantity());
     }
     @Override
     public int getItemCount() {
         return items.size();
     }
-
-    public List<ComboItem> getSelectedComboItems() {
-        return items.stream()
-                .filter(item -> item.getQuantity() > 0)
-                .collect(Collectors.toList());
-    }
-    // Updates the quantity of a ComboItem and recalculates the total price
     private void updateQuantity(int position, int delta) {
-        ComboItem item = items.get(position);
-        int newQuantity = Math.max(0, item.getQuantity() + delta);
-
-        if (newQuantity != item.getQuantity()) {
-            item.setQuantity(newQuantity);
-            notifyItemChanged(position); // Update only the modified item
-            if (listener != null) {
-                listener.onTotalPriceChanged(items); // Notify the listener to update the total price
-            }
-        }
+        ConcessionItem item = items.get(position);
+        item.setQuantity(Math.max(0, item.getQuantity() + delta));
+        notifyItemChanged(position);
+        iConcessionItemView.onConcessionClickListener();
     }
-    // ViewHolder class for ComboItem
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView concessionImageView;
-        private TextView concessionNameTextView;
-        private TextView concessionDescriptionTextView;
-        private TextView concessionQuantityTextView;
+        private final ImageView concessionImageView;
+        private final TextView concessionNameTextView;
+        private final TextView concessionDescriptionTextView;
+        private final TextView concessionComboPrice;
+        private final TextView concessionQuantityTextView;
+        private final TextView sumPerTypeTextView;
+        private final ImageButton minusButton;
+        private final ImageButton plusButton;
 
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-            nameText = itemView.findViewById(R.id.combo_name);
-            priceText = itemView.findViewById(R.id.combo_price);
-            quantityText = itemView.findViewById(R.id.combo_quantity);
-            plusButton = itemView.findViewById(R.id.plus_button);
-            minusButton = itemView.findViewById(R.id.minus_button);
-            comboImage = itemView.findViewById(R.id.combo_image);
-
-            // Setting up button click listeners to adjust quantity
-            plusButton.setOnClickListener(v -> updateQuantity(getAdapterPosition(), 1));
-            minusButton.setOnClickListener(v -> updateQuantity(getAdapterPosition(), -1));
+            concessionImageView = itemView.findViewById(R.id.image_view_concession);
+            concessionNameTextView = itemView.findViewById(R.id.text_view_concession_name);
+            concessionDescriptionTextView = itemView.findViewById(R.id.text_view_concession_description);
+            concessionComboPrice = itemView.findViewById(R.id.text_view_concession_combo_price);
+            concessionQuantityTextView = itemView.findViewById(R.id.text_view_concession_quantity);
+            sumPerTypeTextView = itemView.findViewById(R.id.text_view_sum_per_type);
+            minusButton = itemView.findViewById(R.id.button_minus);
+            plusButton = itemView.findViewById(R.id.button_plus);
         }
-
-        // Binds data to the view holder elements
-        @SuppressLint({"SetTextI18n", "DefaultLocale"})
-        void bind(ComboItem item) {
-            nameText.setText(item.getName());
-            priceText.setText(String.format("$%.2f", item.getPrice()));
-            quantityText.setText(String.valueOf(item.getQuantity()));
-
-            // Check if image URL is null or empty, then load default image, otherwise load from URL
-            if (item.getImageUrl() == null || item.getImageUrl().isEmpty()) {
-                comboImage.setImageResource(R.drawable.combo_image_1);
-            } else {
-                Glide.with(itemView.getContext())
-                        .load(item.getImageUrl())
-                        .placeholder(R.drawable.combo_image_1) // Placeholder while loading image
-                        .error(R.drawable.combo_image_1) // Fallback image if image URL fails to load
-                        .into(comboImage);
-            }
-        }
-
+    }
+    public List<ConcessionItem> getItems() {
+        return items
+                .stream()
+                .filter(c -> c.getQuantity() > 0)
+                .collect(Collectors.toList());
+    }
+    public double getTotalConcessionPrice() {
+        return this
+                .items
+                .stream()
+                .mapToDouble(a -> a.getComboPrice() * a.getQuantity())
+                .sum();
     }
 }

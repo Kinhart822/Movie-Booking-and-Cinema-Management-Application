@@ -6,7 +6,7 @@ public enum IP {
     MINOXD_PX6A("10.34.61.77"),
     MINOXD_P2XL("192.168.168.77"),
     MINOXD_MLCM("192.168.1.89"),
-    MINOXD_CIRCLE_K("172.19.200.184"),
+    MINOXD_CIRCLE_K("172.19.200.98"),
     MINOXD_FPT("100.80.28.111"),
     ;
     private final String ip;

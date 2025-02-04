@@ -38,6 +38,10 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
     private final List<Seat> selectedSeats;
     @Getter // this contains list of root seats
     private final List<Seat> selectedRootSeats;
+    @Getter
+    private String nearestRow;
+    @Getter
+    private String farthestRow;
 
 
     public SeatAdapter(
@@ -53,6 +57,8 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
         this.seatMatrix = seatMapHelper.getSeatMatrix();
         this.rootSeatMatrix = seatMapHelper.getRootSeatMatrix();
         this.maxSeatPerRow = seatMapHelper.getMaxSeatPerRow();
+        this.nearestRow = seatMapHelper.getNearestRow();
+        this.farthestRow = seatMapHelper.getFarthestRow();
         this.iSeatItemView = iSeatItemView;
         this.selectedSeats = new ArrayList<>();
         this.selectedRootSeats  = new ArrayList<>();

@@ -148,6 +148,7 @@
     <string name="hint_total_seat_count">.... seats selected</string>
     <string name="hint_concession_name">concession_name</string>
     <string name="hint_concession_description">concession_description</string>
+    <string name="hint_concession_combo_price">Price: $11.0</string>
     <!--content description-->
     <string name="decrement">decrement</string>
     <string name="increment">increment</string>

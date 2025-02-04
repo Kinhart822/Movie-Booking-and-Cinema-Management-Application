@@ -40,6 +40,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private CustomNavigateButton nextButton;
     private TextView totalSeatCountTextView;
     private TextView totalPriceTextView;
+    private TextView availableRowsTextView;
 
     private Long scheduleId;
     private ScheduleDetail scheduleDetail;
@@ -64,6 +65,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
         screenTypeTextView = findViewById(R.id.text_view_screen_type);
         totalSeatCountTextView = findViewById(R.id.text_view_total_seat_count);
         totalPriceTextView = findViewById(R.id.text_view_total_price);
+        availableRowsTextView = findViewById(R.id.text_view_available_rows);
         nextButton = findViewById(R.id.button_next);
         seatMatrixRecyclerView = findViewById(R.id.recycler_view_seat_matrix);
 
@@ -78,7 +80,6 @@ public class SeatSelectionActivity extends AppCompatActivity {
                 .setOnClickListener(v -> onBackPressed());
 
         prepareNextButton();
-
         findScheduleDetail();
     }
     private void findScheduleDetail() {
@@ -180,6 +181,8 @@ public class SeatSelectionActivity extends AppCompatActivity {
                 seat -> onSeatClickListener());
         seatMatrixRecyclerView.setLayoutManager(new GridLayoutManager(this, seatAdapter.getMaxSeatPerRow() + 1));
         seatMatrixRecyclerView.setAdapter(seatAdapter);
+
+        availableRowsTextView.setText(String.format("Nearest row:  %s\nFarthest row: %s", seatAdapter.getNearestRow(), seatAdapter.getFarthestRow()));
     }
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
     public void onSeatClickListener() {
@@ -187,10 +190,12 @@ public class SeatSelectionActivity extends AppCompatActivity {
         totalPrice = seatAdapter.getTotalSeatPrice();
         totalSeatCountTextView.setText(String.format("%d seats selected", totalAudienceCount));
         totalPriceTextView.setText(String.format("$%.1f", totalPrice));
+        nextButton.setEnabled(totalAudienceCount != 0);
     }
     @SuppressLint("SetTextI18n")
     private void prepareNextButton() {
         nextButton.setText("Next (1/4)");
+        nextButton.setEnabled(false);
         nextButton
                 .setOnClickListener(v -> {
                     booking = booking.toBuilder()

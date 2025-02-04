@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import vn.edu.usth.mcma.frontend.model.parcelable.ConcessionParcelable;
 
 @Data
 @Builder(toBuilder = true)
@@ -28,6 +29,7 @@ public class Booking implements Parcelable {
     private Long scheduleId;
     private List<Seat> rootSeats;
     private List<AudienceType> audienceTypes;//todo get quantity>0
+    private List<ConcessionParcelable> concessions;
     private Integer totalAudience;// todo method to get total audience instead
     private Double totalPrice;//todo method to get total price instead
     @Override
@@ -35,25 +37,29 @@ public class Booking implements Parcelable {
         return 0;
     }
     protected Booking(Parcel in) {
-        scheduleId = in.readLong();
         cinemaName = in.readString();
         screenNameDateDuration = in.readString();
         movieName = in.readString();
         rating = in.readString();
         screenType = in.readString();
+        scheduleId = in.readLong();
+        rootSeats = in.readParcelableList(rootSeats = new ArrayList<>(), Seat.class.getClassLoader());
         audienceTypes = in.readParcelableList(audienceTypes = new ArrayList<>(), AudienceType.class.getClassLoader());
+        concessions = in.readParcelableList(concessions = new ArrayList<>(), ConcessionParcelable.class.getClassLoader());
         totalAudience = in.readInt();
         totalPrice = in.readDouble();
     }
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeLong(scheduleId);
         dest.writeString(cinemaName);
         dest.writeString(screenNameDateDuration);
         dest.writeString(movieName);
         dest.writeString(rating);
         dest.writeString(screenType);
+        dest.writeLong(scheduleId);
+        dest.writeParcelableList(rootSeats, 0);
         dest.writeParcelableList(audienceTypes, 0);
+        dest.writeParcelableList(concessions, 0);
         dest.writeInt(totalAudience);
         dest.writeDouble(totalPrice);
     }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import lombok.Getter;
 import vn.edu.usth.mcma.frontend.model.Seat;
@@ -16,10 +17,14 @@ public class SeatMapHelper {
     private Map<Integer, Map<Integer, List<Seat>>> rootSeatMatrix;
     @Getter
     private int maxSeatPerRow;
+    @Getter
+    private String nearestRow;
+    @Getter
+    private String farthestRow;
     public SeatMapHelper(List<Seat> seatResponses) {
         this.seatResponses = seatResponses;
         this.generateSeatMatrix();
-        this.calculateMaxSeatPerRow();
+        this.calculateMaxSeatPerRowAndNearestRowAndFarthestRow();
     }
     private void generateSeatMatrix() {
         seatMatrix = new TreeMap<>();
@@ -34,12 +39,27 @@ public class SeatMapHelper {
                     .add(seat);
         }
     }
-    private void calculateMaxSeatPerRow() {
+    private void calculateMaxSeatPerRowAndNearestRowAndFarthestRow() {
         maxSeatPerRow = -1;
-        seatMatrix.forEach((row, map) -> {
-            if (map.size() >= maxSeatPerRow) {
-                maxSeatPerRow = map.size();
-            }
+        nearestRow = null;
+        farthestRow = null;
+        TreeSet<String> rowLetters = new TreeSet<>();
+
+        seatMatrix.forEach((row, colSeatMap) -> {
+            maxSeatPerRow = Math.max(maxSeatPerRow, colSeatMap.size());
+
+            colSeatMap.forEach((col, seat) -> {
+                if (seat.getName() != null) {
+                    String letter = seat.getName().substring(0, 1);
+                    rowLetters.add(letter);
+                }
+            });
         });
+
+        if (!rowLetters.isEmpty()) {
+            nearestRow = rowLetters.first();
+            farthestRow = rowLetters.last();
+        }
     }
+
 }

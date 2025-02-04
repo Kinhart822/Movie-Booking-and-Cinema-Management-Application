@@ -74,7 +74,7 @@ public class AudienceTypeAdapter extends RecyclerView.Adapter<AudienceTypeAdapte
         holder.unitPriceTextView.setText(item.getUnitPrice() + " x");
         holder.minusButton.setOnClickListener(v -> updateQuantity(position, -1));
         holder.plusButton.setOnClickListener(v -> updateQuantity(position, 1));
-        holder.ticketQuantityTextView.setText(Integer.toString(item.getQuantity()));
+        holder.audienceTypeQuantityTextView.setText(Integer.toString(item.getQuantity()));
         holder.sumPerTypeTextView.setText(Double.toString(item.getUnitPrice() * item.getQuantity()));
     }
     @Override
@@ -101,7 +101,7 @@ public class AudienceTypeAdapter extends RecyclerView.Adapter<AudienceTypeAdapte
         private final TextView unitPriceTextView;
         private final ImageView minusButton;
         private final ImageView plusButton;
-        private final TextView ticketQuantityTextView;
+        private final TextView audienceTypeQuantityTextView;
         private final TextView sumPerTypeTextView;
 
         public ViewHolder(@NonNull View itemView) {
@@ -110,7 +110,7 @@ public class AudienceTypeAdapter extends RecyclerView.Adapter<AudienceTypeAdapte
             unitPriceTextView = itemView.findViewById(R.id.text_view_unit_price);
             minusButton = itemView.findViewById(R.id.button_minus);
             plusButton = itemView.findViewById(R.id.button_plus);
-            ticketQuantityTextView = itemView.findViewById(R.id.text_view_audience_type_quantity);
+            audienceTypeQuantityTextView = itemView.findViewById(R.id.text_view_audience_type_quantity);
             sumPerTypeTextView = itemView.findViewById(R.id.text_view_sum_per_type);
         }
     }
