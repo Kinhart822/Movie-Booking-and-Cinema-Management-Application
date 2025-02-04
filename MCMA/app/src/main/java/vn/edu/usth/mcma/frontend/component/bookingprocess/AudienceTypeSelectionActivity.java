@@ -20,7 +20,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.ComboSelectionActivity;
 import vn.edu.usth.mcma.frontend.component.customview.navigate.CustomNavigateButton;
 import vn.edu.usth.mcma.frontend.dto.bookingprocess.AudienceDetail;
 import vn.edu.usth.mcma.frontend.model.Booking;
@@ -64,13 +63,14 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
 
         booking = getIntent().getParcelableExtra(IntentKey.BOOKING.name());
 
+        assert booking != null;
         cinemaNameTextView.setText(booking.getCinemaName());
         screenNameDateDurationTextView.setText(booking.getScreenNameDateDuration());
         movieNameTextView.setText(booking.getMovieName());
         ratingTextView.setText(booking.getRating());
         screenTypeTextView.setText(booking.getScreenType());
 
-        targetAudienceCount = booking.getTotalAudienceCount();
+        targetAudienceCount = booking.getTotalAudience();
         currentAudienceCount = 0;
         totalPrice = booking.getTotalPrice();
         totalAudienceCountTextView.setText(String.format("%d / %d audiences", currentAudienceCount, targetAudienceCount));
@@ -132,7 +132,7 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
     }
     @SuppressLint("SetTextI18n")
     private void prepareNextButton() {
-        nextButton.setText("Next");
+        nextButton.setText("Next (2/4)");
         nextButton.setEnabled(false);
         nextButton
                 .setOnClickListener(v -> {
@@ -140,7 +140,7 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
                     booking = booking.toBuilder()
                             .audienceTypes(audienceTypeAdapter.getItems())
                             .build();
-                    Intent intent = new Intent(this, ComboSelectionActivity.class);
+                    Intent intent = new Intent(this, ConcessionSelectionActivity.class);
                     intent.putExtra(IntentKey.BOOKING.name(), booking);
                     startActivity(intent);
                 });

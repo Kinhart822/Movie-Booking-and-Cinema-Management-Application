@@ -28,7 +28,7 @@ public class Booking implements Parcelable {
     private Long scheduleId;
     private List<Seat> rootSeats;
     private List<AudienceType> audienceTypes;
-    private Integer totalAudienceCount;// todo method to get total audience count instead
+    private Integer totalAudience;// todo method to get total audience instead
     private Double totalPrice;//todo method to get total price instead
     @Override
     public int describeContents() {
@@ -42,7 +42,7 @@ public class Booking implements Parcelable {
         rating = in.readString();
         screenType = in.readString();
         audienceTypes = in.readParcelableList(audienceTypes = new ArrayList<>(), AudienceType.class.getClassLoader());
-        totalAudienceCount = in.readInt();
+        totalAudience = in.readInt();
         totalPrice = in.readDouble();
     }
     @Override
@@ -54,7 +54,7 @@ public class Booking implements Parcelable {
         dest.writeString(rating);
         dest.writeString(screenType);
         dest.writeParcelableList(audienceTypes, 0);
-        dest.writeInt(totalAudienceCount);
+        dest.writeInt(totalAudience);
         dest.writeDouble(totalPrice);
     }
     public static final Creator<Booking> CREATOR = new Parcelable.Creator<>() {

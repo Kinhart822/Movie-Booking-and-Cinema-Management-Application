@@ -99,7 +99,7 @@
             android:name=".frontend.component.ShowtimesOld.UI.PaymentBookingActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.ShowtimesOld.UI.ComboSelectionActivity"
+            android:name=".frontend.component.bookingprocess.ConcessionSelectionActivity"
             android:exported="false" />
         <activity
             android:name=".frontend.component.bookingprocess.SeatSelectionActivity"

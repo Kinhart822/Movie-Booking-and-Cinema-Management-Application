@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI;
+package vn.edu.usth.mcma.frontend.component.bookingprocess;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.usth.mcma.R;
+import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.PaymentBookingActivity;
+import vn.edu.usth.mcma.frontend.component.customview.navigate.CustomNavigateButton;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.Seat.AvailableSeatResponse;
 import vn.edu.usth.mcma.frontend.dto.response.ListFoodAndDrinkToOrderingResponse;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Movie;
@@ -28,11 +30,13 @@ import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Theater;
 import vn.edu.usth.mcma.frontend.model.AudienceType;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Utils.PriceCalculator;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
+import vn.edu.usth.mcma.frontend.model.Booking;
 
-public class ComboSelectionActivity extends AppCompatActivity {
-    public static final String EXTRA_SELECTED_SEATS = "extra_selected_seats";
-    public static final String EXTRA_THEATER = "extra_theater";
-    public static final String EXTRA_MOVIE = "extra_movie";
+public class ConcessionSelectionActivity extends AppCompatActivity {
+    private static final String TAG = ConcessionSelectionActivity.class.getName();
+    private CustomNavigateButton nextButton;
+
+    private Booking booking;
 
     private double seatPriceTotal;
     private RecyclerView comboRecyclerView;
@@ -64,61 +68,43 @@ public class ComboSelectionActivity extends AppCompatActivity {
     private List<Integer> selectedTicketIds = new ArrayList<>();
     private List<Integer> selectedSeatIds = new ArrayList<>();
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_combo_selection);
+        setContentView(R.layout.activity_concession_selection);
+        ImageButton backButton = findViewById(R.id.button_back);
+        TextView cinemaNameTextView = findViewById(R.id.text_view_cinema_name);
+        TextView screenNameDateDurationTextView = findViewById(R.id.text_view_screen_name_date_duration);
+        TextView movieNameTextView = findViewById(R.id.text_view_movie_name);
+        TextView ratingTextView = findViewById(R.id.text_view_rating);
+        TextView screenTypeTextView = findViewById(R.id.text_view_screen_type);
+        TextView totalAudienceTextView= findViewById(R.id.text_view_total_audience);
 
-        movieId = getIntent().getIntExtra(IntentKey.MOVIE_ID.name(), -1);
-        selectedCityId = getIntent().getIntExtra(IntentKey.SELECTED_CITY_ID.name(), -1);
-        cinemaId = getIntent().getIntExtra(IntentKey.SELECTED_CINEMA_ID.name(), -1);
-        selectedScreenId = getIntent().getIntExtra(IntentKey.SELECTED_SCREEN_ID.name(), -1);
-        selectedScheduleId = getIntent().getIntExtra(IntentKey.SELECTED_SCHEDULE_ID.name(), -1);
+        backButton
+                .setOnClickListener(v -> onBackPressed());
 
-        totalTicketCount = getIntent().getIntExtra(IntentKey.TOTAL_TICKET_COUNT.name(), 0);
-        Log.d("ComboSelection", IntentKey.TOTAL_TICKET_COUNT.name() +" received: " + totalTicketCount);
-        totalTicketPrice = getIntent().getDoubleExtra(IntentKey.TOTAL_TICKET_PRICE.name(), 0.0);
-        Log.d("ComboSelection", IntentKey.TOTAL_TICKET_PRICE.name()+" received: " + totalTicketPrice);
-        items = getIntent().getParcelableArrayListExtra(IntentKey.SELECTED_TICKET_ITEMS.name());
-        Log.d("ComboSelection", IntentKey.SELECTED_TICKET_ITEMS.name()+" received: " + items);
+        booking = getIntent().getParcelableExtra(IntentKey.BOOKING.name());
 
-        seatItems = getIntent().getParcelableArrayListExtra(IntentKey.SELECTED_SEAT_ITEMS.name());
-        Log.d("ComboSelection", IntentKey.SELECTED_SEAT_ITEMS.name()+" received: " + seatItems);
+        assert booking != null;
+        cinemaNameTextView.setText(booking.getCinemaName());
+        screenNameDateDurationTextView.setText(booking.getScreenNameDateDuration());
+        movieNameTextView.setText(booking.getMovieName());
+        ratingTextView.setText(booking.getRating());
+        screenTypeTextView.setText(booking.getScreenType());
+        totalAudienceTextView.setText(Integer.toString(booking.getTotalAudience()));
+
 
         initializeViews();
         handleIntentExtras();
         setupBackButton();
         setupCheckoutButton();
-//        fetchComboItems(cinemaId);
+        fetchComboItems(cinemaId);
     }
 
     @SuppressLint("DefaultLocale")
     private void handleIntentExtras() {
         try {
-            // Parse seat price and count
-            seatPriceTotal = getIntent().getDoubleExtra(IntentKey.TOTAL_TICKET_AND_SEAT_PRICE.name(), 0.0);
-            int seatCount = getIntent().getIntExtra(IntentKey.TOTAL_SEAT_COUNT.name(), 0);
-
-            // Theater name handling
-            Theater selectedTheater = (Theater) getIntent().getSerializableExtra(EXTRA_THEATER);
-            String theaterName = getIntent().getStringExtra(IntentKey.THEATER_NAME.name());
-            if (selectedTheater != null && theaterNameTV != null) {
-                theaterNameTV.setText(theaterName != null ? theaterName : selectedTheater.getName());
-                cinemaName = selectedTheater.getName();
-            }
-
-            // Movie name handling
-            Movie selectedMovie = (Movie) getIntent().getSerializableExtra(EXTRA_MOVIE);
-            if (selectedMovie != null && movieNameTV != null) {
-                movieNameTV.setText(selectedMovie.getTitle());
-                movieName = selectedMovie.getTitle();
-            }
-
-            String selectedDate = getIntent().getStringExtra(IntentKey.SELECTED_DATE.name());
-            if (releaseDateTV != null) {
-                releaseDateTV.setText(selectedDate);
-            }
-
             // Screen number handling
             String selectedScreenRoom = getIntent().getStringExtra(IntentKey.SELECTED_SCREEN_ROOM.name());
             if (screenRoomTV != null) {
@@ -152,7 +138,6 @@ public class ComboSelectionActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("WrongViewCast")
     private void initializeViews() {
         comboRecyclerView = findViewById(R.id.combo_recycler_view);
         checkoutButton = findViewById(R.id.checkout_button);
@@ -170,31 +155,30 @@ public class ComboSelectionActivity extends AppCompatActivity {
             Log.e("ComboSelectionActivity", "checkoutButton is null");
         }
     }
-    //todo
-//    private void fetchComboItems(int cinemaId) {
-//        ApiService
-//                .getMovieApi(this)
-//                .getViewFoodsAndDrinks(cinemaId).enqueue(new Callback<List<ListFoodAndDrinkToOrderingResponse>>() {
-//            @Override
-//            public void onResponse(Call<List<ListFoodAndDrinkToOrderingResponse>> call, Response<List<ListFoodAndDrinkToOrderingResponse>> response) {
-//                if (response.isSuccessful() && response.body() != null) {
-//                    List<ListFoodAndDrinkToOrderingResponse> comboData = response.body();
-//                    List<ComboItem> comboItems = convertResponseToComboItems(comboData);
-//                    updateComboList(comboItems);
-//                    comboItemList.addAll(comboItems);
-//                } else {
-//                    Log.e("ComboSelectionActivity", "Failed to load combos: " + response.message());
-//                    Toast.makeText(ComboSelectionActivity.this, "No available combos", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<ListFoodAndDrinkToOrderingResponse>> call, Throwable t) {
-//                Log.e("StoreFragment", "API Call Failed: " + t.getMessage(), t);
-//                Toast.makeText(ComboSelectionActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
-//            }
-//        });
-//    }
+    private void fetchComboItems(int cinemaId) {
+        ApiService
+                .getMovieApi(this)
+                .getViewFoodsAndDrinks(cinemaId).enqueue(new Callback<List<ListFoodAndDrinkToOrderingResponse>>() {
+            @Override
+            public void onResponse(Call<List<ListFoodAndDrinkToOrderingResponse>> call, Response<List<ListFoodAndDrinkToOrderingResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<ListFoodAndDrinkToOrderingResponse> comboData = response.body();
+                    List<ComboItem> comboItems = convertResponseToComboItems(comboData);
+                    updateComboList(comboItems);
+                    comboItemList.addAll(comboItems);
+                } else {
+                    Log.e("ComboSelectionActivity", "Failed to load combos: " + response.message());
+                    Toast.makeText(ComboSelectionActivity.this, "No available combos", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ListFoodAndDrinkToOrderingResponse>> call, Throwable t) {
+                Log.e("StoreFragment", "API Call Failed: " + t.getMessage(), t);
+                Toast.makeText(ComboSelectionActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
     private List<ComboItem> convertResponseToComboItems(List<ListFoodAndDrinkToOrderingResponse> comboData) {
         List<ComboItem> items = new ArrayList<>();
@@ -244,7 +228,7 @@ public class ComboSelectionActivity extends AppCompatActivity {
         });
 
         comboRecyclerView.setAdapter(comboAdapter);
-        comboRecyclerView.setLayoutManager(new LinearLayoutManager(ComboSelectionActivity.this));
+        comboRecyclerView.setLayoutManager(new LinearLayoutManager(ConcessionSelectionActivity.this));
         updateTotalPrice(comboItems);
     }
 

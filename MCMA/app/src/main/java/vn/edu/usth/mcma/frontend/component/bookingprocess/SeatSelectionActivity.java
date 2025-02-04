@@ -189,13 +189,13 @@ public class SeatSelectionActivity extends AppCompatActivity {
     }
     @SuppressLint("SetTextI18n")
     private void prepareNextButton() {
-        nextButton.setText("Next");
+        nextButton.setText("Next (1/4)");
         nextButton
                 .setOnClickListener(v -> {
                     booking = booking.toBuilder()
                             .scheduleId(scheduleId)
                             .rootSeats(seatAdapter.getSelectedRootSeats())
-                            .totalAudienceCount(totalAudienceCount)
+                            .totalAudience(totalAudienceCount)
                             .totalPrice(totalPrice)
                             .build();
                     Intent intent = new Intent(this, AudienceTypeSelectionActivity.class);
