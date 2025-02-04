@@ -22,10 +22,15 @@ public class AudienceTypeAdapter extends RecyclerView.Adapter<AudienceTypeAdapte
     @Getter
     private final List<AudienceType> items;
     private final IAudienceTypeItemView iAudienceTypeItemView;
+    private final int targetAudienceCount;
 
-    public AudienceTypeAdapter(List<AudienceType> items, IAudienceTypeItemView iAudienceTypeItemView) {
+    public AudienceTypeAdapter(
+            List<AudienceType> items,
+            IAudienceTypeItemView iAudienceTypeItemView,
+            int targetAudienceCount) {
         this.items = items;
         this.iAudienceTypeItemView = iAudienceTypeItemView;
+        this.targetAudienceCount = targetAudienceCount;
     }
 
     @Override
@@ -83,7 +88,7 @@ public class AudienceTypeAdapter extends RecyclerView.Adapter<AudienceTypeAdapte
         AudienceType item = getItemByPosition(position);
         item.setQuantity(Math.max(0, item.getQuantity() + delta));
         notifyItemChanged(position);
-        iAudienceTypeItemView.onQuantityChangeListener(items);
+        iAudienceTypeItemView.onQuantityChangeListener();
     }
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textView;
@@ -104,5 +109,19 @@ public class AudienceTypeAdapter extends RecyclerView.Adapter<AudienceTypeAdapte
             ticketQuantityTextView = itemView.findViewById(R.id.text_view_ticket_quantity);
             sumPerTypeTextView = itemView.findViewById(R.id.text_view_sum_per_type);
         }
+    }
+    public int getCurrentAudienceCount() {
+        return this
+                .items
+                .stream()
+                .mapToInt(AudienceType::getQuantity)
+                .sum();
+    }
+    public double getTotalAudienceTypePrice() {
+        return this
+                .items
+                .stream()
+                .mapToDouble(a -> a.getUnitPrice() * a.getQuantity())
+                .sum();
     }
 }

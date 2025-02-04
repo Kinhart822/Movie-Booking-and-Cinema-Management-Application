@@ -165,19 +165,19 @@ public class AudienceTypeSelectionActivityOld extends AppCompatActivity {
 //        audienceTypeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 //        audienceTypeRecyclerView.setAdapter(audienceTypeAdapter);
 //    }
-    @SuppressLint("SetTextI18n")
-    private void onQuantityChangeListener(List<AudienceType> items) {
-        totalAudienceCount = items
-                .stream()
-                .mapToInt(AudienceType::getQuantity)
-                .sum();
-        totalPrice = items
-                .stream()
-                .mapToDouble(a -> a.getUnitPrice() * a.getQuantity())
-                .sum();
-        totalAudienceCountTextView.setText(totalAudienceCount + " audiences");
-        totalPriceTextView.setText("$" + totalPrice);
-    }
+//    @SuppressLint("SetTextI18n")
+//    private void onQuantityChangeListener(List<AudienceType> items) {
+//        totalAudienceCount = items
+//                .stream()
+//                .mapToInt(AudienceType::getQuantity)
+//                .sum();
+//        totalPrice = items
+//                .stream()
+//                .mapToDouble(a -> a.getUnitPrice() * a.getQuantity())
+//                .sum();
+//        totalAudienceCountTextView.setText(totalAudienceCount + " audiences");
+//        totalPriceTextView.setText("$" + totalPrice);
+//    }
 
 //    @SuppressLint("SetTextI18n")
 //    private void prepareNextButton() {
@@ -187,9 +187,9 @@ public class AudienceTypeSelectionActivityOld extends AppCompatActivity {
                     //todo warning dialog
 //                    booking = booking.toBuilder()
 //                            .scheduleId(scheduleId)
-                            .audienceTypes(audienceTypeAdapter.getItems())
-                            .totalAudienceCount(totalAudienceCount)
-                            .totalPrice(totalPrice)
+//                            .audienceTypes(audienceTypeAdapter.getItems())
+//                            .totalAudienceCount(totalAudienceCount)
+//                            .totalPrice(totalPrice)
 //                            .build();
 //                    Intent intent = new Intent(this, SeatSelectionActivity.class);
 //                    intent.putExtra(IntentKey.BOOKING.name(), booking);

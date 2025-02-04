@@ -104,7 +104,7 @@ public class SeatSelectionActivityOld extends AppCompatActivity {
 //                this,
 //                seats,
 //                seat -> onSeatClickListener(),
-                booking.getTotalAudienceCount());
+//                booking.getTotalAudienceCount());
 //        seatMatrixRecyclerView.setLayoutManager(new GridLayoutManager(this, seatAdapter.getMaxSeatPerRow() + 1));
 //        seatMatrixRecyclerView.setAdapter(seatAdapter);
 //    }
@@ -112,7 +112,7 @@ public class SeatSelectionActivityOld extends AppCompatActivity {
 //    public void onSeatClickListener() {
 //        totalSeatCountTextView.setText(String.format("%d / %d seats selected", seatAdapter.getTotalAudienceCount(), booking.getTotalAudienceCount()));
 //        totalPriceTextView.setText("$" + (previousTotalPrice + seatAdapter.getTotalSeatPrice(seatTypes)));
-        nextButton.setEnabled(seatAdapter.getTotalAudienceCount() == booking.getTotalAudienceCount());
+//        nextButton.setEnabled(seatAdapter.getTotalAudienceCount() == booking.getTotalAudienceCount());
 //    }
 //    @SuppressLint("SetTextI18n")
 //    private void prepareNextButton() {

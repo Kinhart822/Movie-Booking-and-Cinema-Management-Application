@@ -13,12 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.NumberFormat;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;
@@ -28,7 +23,6 @@ import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.ComboSelectionActivity;
 import vn.edu.usth.mcma.frontend.component.customview.navigate.CustomNavigateButton;
 import vn.edu.usth.mcma.frontend.dto.bookingprocess.AudienceDetail;
-import vn.edu.usth.mcma.frontend.dto.bookingprocess.ScheduleDetail;
 import vn.edu.usth.mcma.frontend.model.Booking;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.model.AudienceType;
@@ -45,8 +39,9 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
     private double priceForStudent;
     private RecyclerView audienceTypeRecyclerView;
     private AudienceTypeAdapter audienceTypeAdapter;
-    private int totalAudienceCount;
-    private double previousTotalPrice;
+    private int targetAudienceCount;
+    private int currentAudienceCount;
+    private double totalPrice;
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -75,10 +70,11 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
         ratingTextView.setText(booking.getRating());
         screenTypeTextView.setText(booking.getScreenType());
 
-        totalAudienceCount = 0;
-        previousTotalPrice = booking.getTotalPrice();
-        totalAudienceCountTextView.setText(String.format("00 / %d audiences", booking.getTotalAudienceCount()));
-        totalPriceTextView.setText(String.format("$%.1f", previousTotalPrice));
+        targetAudienceCount = booking.getTotalAudienceCount();
+        currentAudienceCount = 0;
+        totalPrice = booking.getTotalPrice();
+        totalAudienceCountTextView.setText(String.format("%d / %d audiences", currentAudienceCount, targetAudienceCount));
+        totalPriceTextView.setText(String.format("$%.1f", totalPrice));
 
         priceForStudent = 9;
 
@@ -119,15 +115,31 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
                 .quantity(0)
                 .unitPrice(priceForStudent)
                 .build());
-        audienceTypeAdapter = new AudienceTypeAdapter(items, this::onQuantityChangeListener);
+        audienceTypeAdapter = new AudienceTypeAdapter(
+                items,
+                this::onQuantityChangeListener,
+                targetAudienceCount);
         audienceTypeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         audienceTypeRecyclerView.setAdapter(audienceTypeAdapter);
+    }
+    @SuppressLint("DefaultLocale")
+    private void onQuantityChangeListener() {
+        currentAudienceCount = audienceTypeAdapter.getCurrentAudienceCount();
+        totalPrice = booking.getTotalPrice() + audienceTypeAdapter.getTotalAudienceTypePrice();
+        totalAudienceCountTextView.setText(String.format("%d / %d audiences", currentAudienceCount, targetAudienceCount));
+        totalPriceTextView.setText(String.format("$%.1f", totalPrice));
+        nextButton.setEnabled(currentAudienceCount == targetAudienceCount);
     }
     @SuppressLint("SetTextI18n")
     private void prepareNextButton() {
         nextButton.setText("Next");
+        nextButton.setEnabled(false);
         nextButton
                 .setOnClickListener(v -> {
+                    //todo warning dialog
+                    booking = booking.toBuilder()
+                            .audienceTypes(audienceTypeAdapter.getItems())
+                            .build();
                     Intent intent = new Intent(this, ComboSelectionActivity.class);
                     intent.putExtra(IntentKey.BOOKING.name(), booking);
                     startActivity(intent);
