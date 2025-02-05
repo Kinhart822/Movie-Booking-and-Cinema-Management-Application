@@ -85,8 +85,9 @@ public class SeatSelectionActivity extends AppCompatActivity {
         nextButton = findViewById(R.id.button_next);
         seatMatrixRecyclerView = findViewById(R.id.recycler_view_seat_matrix);
 
-        scheduleId = getIntent().getLongExtra(IntentKey.BOOKING_SCHEDULE_ID.name(), -1L);
-        booking = new Booking();
+        booking = getIntent().getParcelableExtra(IntentKey.BOOKING.name());
+        assert booking != null;
+        scheduleId = booking.getScheduleId();
         totalAudienceCount = 0;
         totalPrice = 0.0;
         totalSeatCountTextView.setText(String.format("%d seats selected", totalAudienceCount));
@@ -225,7 +226,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
                             .setMessage("Your booking session has timed out. Returning to the showtime selection of this movie.")
                             .setPositiveButton("OK", (dialog, which) -> {
                                 Intent intent = new Intent(SeatSelectionActivity.this, MovieBookingActivity.class);
-                                intent.putExtra(IntentKey.MOVIE_ID.name(), getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L));
+                                intent.putExtra(IntentKey.MOVIE_ID.name(), booking.getMovieId());
                                 startActivity(intent);
                             })
                             .setCancelable(false)
@@ -245,15 +246,13 @@ public class SeatSelectionActivity extends AppCompatActivity {
         nextButton
                 .setOnClickListener(v -> holdSeatRequest(() -> {
                     booking = booking.toBuilder()
-                            .scheduleId(scheduleId)
+                            .limitPlusCurrentElapsedBootTime(limitPlusCurrentElapsedBootTime)
                             .rootSeats(seatAdapter.getSelectedRootSeats())
                             .totalAudience(totalAudienceCount)
                             .totalPrice(totalPrice)
                             .build();
                     Intent intent = new Intent(this, AudienceTypeSelectionActivity.class);
                     intent.putExtra(IntentKey.BOOKING.name(), booking);
-                    intent.putExtra(IntentKey.BOOKING_TIME_LIMIT_PLUS_CURRENT_ELAPSED_BOOT_TIME.name(), limitPlusCurrentElapsedBootTime);
-                    intent.putExtra(IntentKey.MOVIE_ID.name(), getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L));
                     startActivity(intent);
                 }));
     }
@@ -263,7 +262,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
                 .holdSeatRequest(
                         scheduleId,
                         HoldSeatRequest.builder()
-                                .sessionId(getIntent().getStringExtra(IntentKey.BOOKING_SESSION_ID.name()))
+                                .sessionId(booking.getSessionId())
                                 .rootSeats(seatAdapter
                                         .getSelectedRootSeats().stream()
                                         .map(r -> HoldRootSeat.builder()

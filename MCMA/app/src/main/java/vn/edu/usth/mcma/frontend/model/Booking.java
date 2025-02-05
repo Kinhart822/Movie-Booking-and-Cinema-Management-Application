@@ -19,13 +19,16 @@ import vn.edu.usth.mcma.frontend.model.parcelable.ConcessionParcelable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Booking implements Parcelable {
-    //todo separate details
+    //todo consider separate details
+    private Long movieId;
     private String cinemaName;
     private String screenNameDateDuration;
     private String movieName;
     private String rating;
     private String screenType;
 
+    private String sessionId;
+    private Long limitPlusCurrentElapsedBootTime;
     private Long scheduleId;
     private List<Seat> rootSeats;
     private List<AudienceType> audienceTypes;//todo get quantity>0
@@ -37,11 +40,15 @@ public class Booking implements Parcelable {
         return 0;
     }
     protected Booking(Parcel in) {
+        movieId = in.readLong();
         cinemaName = in.readString();
         screenNameDateDuration = in.readString();
         movieName = in.readString();
         rating = in.readString();
         screenType = in.readString();
+
+        sessionId = in.readString();
+        limitPlusCurrentElapsedBootTime = in.readLong();
         scheduleId = in.readLong();
         rootSeats = in.readParcelableList(rootSeats = new ArrayList<>(), Seat.class.getClassLoader());
         audienceTypes = in.readParcelableList(audienceTypes = new ArrayList<>(), AudienceType.class.getClassLoader());
@@ -51,11 +58,15 @@ public class Booking implements Parcelable {
     }
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeLong(movieId);
         dest.writeString(cinemaName);
         dest.writeString(screenNameDateDuration);
         dest.writeString(movieName);
         dest.writeString(rating);
         dest.writeString(screenType);
+
+        dest.writeString(sessionId);
+        dest.writeLong(limitPlusCurrentElapsedBootTime);
         dest.writeLong(scheduleId);
         dest.writeParcelableList(rootSeats, 0);
         dest.writeParcelableList(audienceTypes, 0);

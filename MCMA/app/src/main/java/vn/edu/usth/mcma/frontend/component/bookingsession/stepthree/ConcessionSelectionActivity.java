@@ -122,14 +122,14 @@ public class ConcessionSelectionActivity extends AppCompatActivity {
             @SuppressLint("DefaultLocale")
             @Override
             public void run() {
-                long timeRemaining = getIntent().getLongExtra(IntentKey.BOOKING_TIME_LIMIT_PLUS_CURRENT_ELAPSED_BOOT_TIME.name(), -1L) - SystemClock.elapsedRealtime();
+                long timeRemaining = booking.getLimitPlusCurrentElapsedBootTime() - SystemClock.elapsedRealtime();
                 if (timeRemaining <= 0) {
                     new AlertDialog.Builder(ConcessionSelectionActivity.this)
                             .setTitle("Timeout")
                             .setMessage("Your booking session has timed out. Returning to the showtime selection of this movie.")
                             .setPositiveButton("OK", (dialog, which) -> {
                                 Intent intent = new Intent(ConcessionSelectionActivity.this, MovieBookingActivity.class);
-                                intent.putExtra(IntentKey.MOVIE_ID.name(), getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L));
+                                intent.putExtra(IntentKey.MOVIE_ID.name(), booking.getMovieId());
                                 startActivity(intent);
                             })
                             .setCancelable(false)
@@ -154,8 +154,6 @@ public class ConcessionSelectionActivity extends AppCompatActivity {
                             .build();
                     Intent intent = new Intent(this, PaymentBookingActivity.class);
                     intent.putExtra(IntentKey.BOOKING.name(), booking);
-                    intent.putExtra(IntentKey.BOOKING_TIME_LIMIT_PLUS_CURRENT_ELAPSED_BOOT_TIME.name(), getIntent().getLongExtra(IntentKey.BOOKING_TIME_LIMIT_PLUS_CURRENT_ELAPSED_BOOT_TIME.name(), -1L));
-                    intent.putExtra(IntentKey.MOVIE_ID.name(), getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L));
                     startActivity(intent);
                 });
     }

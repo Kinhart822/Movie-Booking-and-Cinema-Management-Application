@@ -15,17 +15,16 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.component.bookingsession.stepone.SeatSelectionActivity;
 import vn.edu.usth.mcma.frontend.component.customview.filter.TimeButton;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
+import vn.edu.usth.mcma.frontend.model.Booking;
 import vn.edu.usth.mcma.frontend.model.ShowtimeOfMovieBySchedule;
 
 public class MovieBookingCinemaAdapter extends RecyclerView.Adapter<MovieBookingCinemaAdapter.ViewHolder> {
@@ -109,10 +108,14 @@ public class MovieBookingCinemaAdapter extends RecyclerView.Adapter<MovieBooking
                                 showtimeTimeButton.setText(schedule.getTime().toString());
                                 showtimeTimeButton.setOnClickListener(v -> iTimeButton.onClickListener(sessionId -> {
                                     //todo: time dialog
+
                                     Intent intent = new Intent(context, SeatSelectionActivity.class);
-                                    intent.putExtra(IntentKey.BOOKING_SCHEDULE_ID.name(), schedule.getScheduleId());
-                                    intent.putExtra(IntentKey.MOVIE_ID.name(), movieId);
-                                    intent.putExtra(IntentKey.BOOKING_SESSION_ID.name(), sessionId);
+                                    intent.putExtra(
+                                            IntentKey.BOOKING.name(),
+                                            Booking.builder()
+                                                    .movieId(movieId)
+                                                    .sessionId(sessionId)
+                                                    .scheduleId(schedule.getScheduleId()).build());
                                     context.startActivity(intent);
                                 }));
                                 scheduleTimeLinearLayout.addView(showtimeTimeButton);
