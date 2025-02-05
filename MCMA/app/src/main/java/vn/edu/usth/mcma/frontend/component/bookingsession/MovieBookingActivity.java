@@ -2,6 +2,7 @@ package vn.edu.usth.mcma.frontend.component.bookingsession;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +36,9 @@ import vn.edu.usth.mcma.frontend.component.customview.filter.CityButton;
 import vn.edu.usth.mcma.frontend.component.customview.filter.DateButton;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort2;
 import vn.edu.usth.mcma.frontend.dto.movie.ShowtimeOfMovieByCityResponse;
+import vn.edu.usth.mcma.frontend.dto.response.ApiResponse;
+import vn.edu.usth.mcma.frontend.model.request.SessionRegistration;
+import vn.edu.usth.mcma.frontend.network.apis.BookingApi;
 import vn.edu.usth.mcma.frontend.utils.ImageDecoder;
 import vn.edu.usth.mcma.frontend.model.ShowtimeOfMovieBySchedule;
 import vn.edu.usth.mcma.frontend.network.ApiService;
@@ -210,9 +215,37 @@ public class MovieBookingActivity extends AppCompatActivity {
     }
     private void prepareCinemaButtonsRecyclerView() {
         cinemaButtonsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        movieBookingCinemaAdapter = new MovieBookingCinemaAdapter(this, id);
+        movieBookingCinemaAdapter = new MovieBookingCinemaAdapter(
+                this,
+                id,
+                this::onTimeButtonCLickListener);
         feedAdapter();
         cinemaButtonsRecyclerView.setAdapter(movieBookingCinemaAdapter);
+    }
+    private void onTimeButtonCLickListener(BookingApi.RegisterBookingSessionCallback callback) {
+        registerBookingSession(callback);
+    }
+    private void registerBookingSession(BookingApi.RegisterBookingSessionCallback callback) {
+        String sessionId = UUID.randomUUID().toString() + "-" + SystemClock.elapsedRealtime();
+        ApiService
+                .getBookingApi(this)
+                .registerBookingSession(SessionRegistration.builder()
+                        .sessionId(sessionId)
+                        .build())
+                .enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
+                        if (!response.isSuccessful() || response.body() == null) {
+                            Log.e(TAG, "registerBookingSession onResponse: code not 200 || body is null");
+                            return;
+                        }
+                        callback.onSessionRegistered(sessionId);
+                    }
+                    @Override
+                    public void onFailure(@NonNull Call<ApiResponse> call, @NonNull Throwable throwable) {
+                        Log.e(TAG, "registerBookingSession onFailure: " + throwable);
+                    }
+                });
     }
     /*
      * used after initialize adapter or want to update data

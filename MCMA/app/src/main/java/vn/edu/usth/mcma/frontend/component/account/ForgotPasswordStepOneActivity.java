@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -79,7 +80,7 @@ public class ForgotPasswordStepOneActivity extends AppCompatActivity {
      * this calls postForgotPasswordBegin
      */
     private void forgotPasswordBegin() {
-        sessionId = UUID.randomUUID().toString() + "-" + Instant.now().getEpochSecond();
+        sessionId = UUID.randomUUID().toString() + "-" + SystemClock.elapsedRealtime();
         ApiService
                 .getAccountApi(this)
                 .forgotPasswordBegin(SendOtpRequest

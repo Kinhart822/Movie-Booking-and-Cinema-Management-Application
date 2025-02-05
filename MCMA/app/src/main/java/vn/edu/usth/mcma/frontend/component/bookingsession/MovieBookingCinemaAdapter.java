@@ -15,10 +15,12 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.component.bookingsession.stepone.SeatSelectionActivity;
@@ -29,12 +31,14 @@ import vn.edu.usth.mcma.frontend.model.ShowtimeOfMovieBySchedule;
 public class MovieBookingCinemaAdapter extends RecyclerView.Adapter<MovieBookingCinemaAdapter.ViewHolder> {
     private final Context context;
     private final Long movieId;
+    private final ITimeButton iTimeButton;
     private final Map<String, Map<String, List<ShowtimeOfMovieBySchedule>>> cinemaNameScreenTypeScheduleMap;
     private final List<String> cinemaNames;
 
-    public MovieBookingCinemaAdapter(Context context, Long movieId) {
+    public MovieBookingCinemaAdapter(Context context, Long movieId, ITimeButton iTimeButton) {
         this.context = context;
         this.movieId = movieId;
+        this.iTimeButton = iTimeButton;
         this.cinemaNameScreenTypeScheduleMap = new HashMap<>();
         this.cinemaNames = new ArrayList<>();
     }
@@ -103,13 +107,14 @@ public class MovieBookingCinemaAdapter extends RecyclerView.Adapter<MovieBooking
                             .forEach((schedule) -> {
                                 TimeButton showtimeTimeButton = new TimeButton(context);
                                 showtimeTimeButton.setText(schedule.getTime().toString());
-                                showtimeTimeButton.setOnClickListener(v -> {
+                                showtimeTimeButton.setOnClickListener(v -> iTimeButton.onClickListener(sessionId -> {
                                     //todo: time dialog
                                     Intent intent = new Intent(context, SeatSelectionActivity.class);
                                     intent.putExtra(IntentKey.BOOKING_SCHEDULE_ID.name(), schedule.getScheduleId());
                                     intent.putExtra(IntentKey.MOVIE_ID.name(), movieId);
+                                    intent.putExtra(IntentKey.BOOKING_SESSION_ID.name(), sessionId);
                                     context.startActivity(intent);
-                                });
+                                }));
                                 scheduleTimeLinearLayout.addView(showtimeTimeButton);
                             });
                     scheduleTimeHorizontalScrollView.addView(scheduleTimeLinearLayout);

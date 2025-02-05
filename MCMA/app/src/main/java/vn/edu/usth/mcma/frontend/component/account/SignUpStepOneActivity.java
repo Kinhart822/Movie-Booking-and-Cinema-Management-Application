@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -163,7 +164,7 @@ public class SignUpStepOneActivity extends AppCompatActivity {
      * this calls postSignUpBegin
      */
     private void signUpBegin() {
-        sessionId = UUID.randomUUID().toString() + "-" + Instant.now().getEpochSecond();
+        sessionId = UUID.randomUUID().toString() + "-" + SystemClock.elapsedRealtime();
         ApiService
                 .getAccountApi(this)
                 .signUpBegin(SendOtpRequest

@@ -7,8 +7,12 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import vn.edu.usth.mcma.frontend.dto.bookingsession.AudienceDetail;
+import vn.edu.usth.mcma.frontend.dto.response.ApiResponse;
+import vn.edu.usth.mcma.frontend.model.request.HoldSeatRequest;
+import vn.edu.usth.mcma.frontend.model.request.SessionRegistration;
 import vn.edu.usth.mcma.frontend.model.response.ConcessionResponse;
 import vn.edu.usth.mcma.frontend.dto.bookingsession.ScheduleDetail;
 import vn.edu.usth.mcma.frontend.dto.request.BookingRequest;
@@ -31,6 +35,17 @@ public interface BookingApi {
     Call<List<Seat>> findAllSeatBySchedule(@Path("scheduleId") Long scheduleId);
     @GET("/api/v1/user/booking/schedule/{scheduleId}/concession")
     Call<List<ConcessionResponse>> findAllConcessionBySchedule(@Path("scheduleId") Long scheduleId);
+
+    @POST("/api/v1/user/booking/register-booking-session")
+    Call<ApiResponse> registerBookingSession(@Body SessionRegistration request);
+    interface RegisterBookingSessionCallback {
+        void onSessionRegistered(String sessionId);
+    }
+    @PUT("/api/v1/user/booking/schedule/{scheduleId}/seat/hold-request")
+    Call<ApiResponse> holdSeatRequest(@Path("scheduleId") Long scheduleId, @Body HoldSeatRequest request);
+    interface HoldSeatRequestCallback {
+        void onSeatHoldSuccessfully();
+    }
 
 
     @POST("/api/v1/user/booking/processingBooking")

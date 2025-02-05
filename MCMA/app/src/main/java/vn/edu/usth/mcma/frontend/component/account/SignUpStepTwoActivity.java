@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.util.Log;
@@ -179,7 +180,7 @@ public class SignUpStepTwoActivity extends AppCompatActivity {
      * this calls postSignUpBegin
      */
     private void signUpBegin(String email) {
-        sessionId = UUID.randomUUID().toString() + "-" + Instant.now().getEpochSecond();
+        sessionId = UUID.randomUUID().toString() + "-" + SystemClock.elapsedRealtime();
         ApiService
                 .getAccountApi(this)
                 .signUpBegin(SendOtpRequest

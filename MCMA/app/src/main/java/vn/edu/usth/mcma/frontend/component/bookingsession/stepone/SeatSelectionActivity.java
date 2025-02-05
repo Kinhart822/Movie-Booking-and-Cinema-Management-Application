@@ -20,6 +20,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,11 +30,15 @@ import vn.edu.usth.mcma.frontend.component.bookingsession.MovieBookingActivity;
 import vn.edu.usth.mcma.frontend.component.bookingsession.steptwo.AudienceTypeSelectionActivity;
 import vn.edu.usth.mcma.frontend.component.customview.navigate.CustomNavigateButton;
 import vn.edu.usth.mcma.frontend.dto.bookingsession.ScheduleDetail;
+import vn.edu.usth.mcma.frontend.dto.response.ApiResponse;
 import vn.edu.usth.mcma.frontend.dto.response.SeatTypeResponse;
 import vn.edu.usth.mcma.frontend.model.Seat;
 import vn.edu.usth.mcma.frontend.model.Booking;
+import vn.edu.usth.mcma.frontend.model.request.HoldRootSeat;
+import vn.edu.usth.mcma.frontend.model.request.HoldSeatRequest;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
+import vn.edu.usth.mcma.frontend.network.apis.BookingApi;
 
 public class SeatSelectionActivity extends AppCompatActivity {
     private static final String TAG = SeatSelectionActivity.class.getName();
@@ -238,8 +243,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
         nextButton.setText("Next (1/4)");
         nextButton.setEnabled(false);
         nextButton
-                .setOnClickListener(v -> {
-                    //todo held seats
+                .setOnClickListener(v -> holdSeatRequest(() -> {
                     booking = booking.toBuilder()
                             .scheduleId(scheduleId)
                             .rootSeats(seatAdapter.getSelectedRootSeats())
@@ -251,12 +255,42 @@ public class SeatSelectionActivity extends AppCompatActivity {
                     intent.putExtra(IntentKey.BOOKING_TIME_LIMIT_PLUS_CURRENT_ELAPSED_BOOT_TIME.name(), limitPlusCurrentElapsedBootTime);
                     intent.putExtra(IntentKey.MOVIE_ID.name(), getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L));
                     startActivity(intent);
+                }));
+    }
+    private void holdSeatRequest(BookingApi.HoldSeatRequestCallback callback) {
+        ApiService
+                .getBookingApi(this)
+                .holdSeatRequest(
+                        scheduleId,
+                        HoldSeatRequest.builder()
+                                .sessionId(getIntent().getStringExtra(IntentKey.BOOKING_SESSION_ID.name()))
+                                .rootSeats(seatAdapter
+                                        .getSelectedRootSeats().stream()
+                                        .map(r -> HoldRootSeat.builder()
+                                                .rootRow(r.getRootRow())
+                                                .rootCol(r.getRootCol())
+                                                .build())
+                                        .collect(Collectors.toList()))
+                                .timeRemaining(timeRemaining).build())
+                .enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
+                        if (!response.isSuccessful() || response.body() == null) {
+                            Log.e(TAG, "holdSeatRequest onResponse: code not 200 || body is null");
+                            return;
+                        }
+                        callback.onSeatHoldSuccessfully();
+                    }
+                    @Override
+                    public void onFailure(@NonNull Call<ApiResponse> call, @NonNull Throwable throwable) {
+                        Log.e(TAG, "holdSeatRequest onFailure: " + throwable);
+                    }
                 });
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         timeRemainingHandler.removeCallbacksAndMessages(null);
     }
+    //todo when back no more held
 }
