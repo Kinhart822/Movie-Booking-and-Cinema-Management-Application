@@ -23,7 +23,7 @@ import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.component.bookingsession.MovieDetailActivity;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort;
-import vn.edu.usth.mcma.frontend.component.bookingsession.MovieBookingActivity;
+import vn.edu.usth.mcma.frontend.component.bookingsession.BookingShowtimeSelectionActivity;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 
@@ -108,7 +108,7 @@ public class NowShowingFragment extends Fragment {
         startActivity(intent);
     }
     private void openMovieBookingActivity(MovieDetailShort movie) {
-        Intent intent = new Intent(requireContext(), MovieBookingActivity.class);
+        Intent intent = new Intent(requireContext(), BookingShowtimeSelectionActivity.class);
         intent.putExtra(IntentKey.MOVIE_ID.name(), movie.getId());
         startActivity(intent);
     }

@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingsession.steptwo;
+package vn.edu.usth.mcma.frontend.component.bookingsession;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -18,13 +18,13 @@ import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.model.AudienceType;
 
 //todo quantity limited
-public class AudienceTypeAdapter extends RecyclerView.Adapter<AudienceTypeAdapter.ViewHolder> {
+public class BookingAudienceTypeAdapter extends RecyclerView.Adapter<BookingAudienceTypeAdapter.ViewHolder> {
     @Getter
     private final List<AudienceType> items;
     private final IAudienceTypeItemView iAudienceTypeItemView;
     private final int targetAudienceCount;
 
-    public AudienceTypeAdapter(
+    public BookingAudienceTypeAdapter(
             List<AudienceType> items,
             IAudienceTypeItemView iAudienceTypeItemView,
             int targetAudienceCount) {

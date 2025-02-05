@@ -45,8 +45,8 @@ import vn.edu.usth.mcma.frontend.network.ApiService;
 
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 
-public class MovieBookingActivity extends AppCompatActivity {
-    private static final String TAG = MovieBookingActivity.class.getName();
+public class BookingShowtimeSelectionActivity extends AppCompatActivity {
+    private static final String TAG = BookingShowtimeSelectionActivity.class.getName();
     private Long id;
     private ImageButton backButton;
     private MovieDetailShort2 movie;
@@ -61,13 +61,13 @@ public class MovieBookingActivity extends AppCompatActivity {
     private CityButton selectedCity;
     private TextView noScheduleTextView;
     private RecyclerView cinemaButtonsRecyclerView;
-    private MovieBookingCinemaAdapter movieBookingCinemaAdapter;
+    private BookingShowtimeCinemaAdapter bookingShowtimeCinemaAdapter;
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movie_booking);
+        setContentView(R.layout.activity_booking_showtime_selection);
         id = getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L);
         backButton = findViewById(R.id.button_back);
         bannerImageView = findViewById(R.id.image_view_banner);
@@ -215,12 +215,12 @@ public class MovieBookingActivity extends AppCompatActivity {
     }
     private void prepareCinemaButtonsRecyclerView() {
         cinemaButtonsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        movieBookingCinemaAdapter = new MovieBookingCinemaAdapter(
+        bookingShowtimeCinemaAdapter = new BookingShowtimeCinemaAdapter(
                 this,
                 id,
                 this::onTimeButtonCLickListener);
         feedAdapter();
-        cinemaButtonsRecyclerView.setAdapter(movieBookingCinemaAdapter);
+        cinemaButtonsRecyclerView.setAdapter(bookingShowtimeCinemaAdapter);
     }
     private void onTimeButtonCLickListener(BookingApi.RegisterBookingSessionCallback callback) {
         registerBookingSession(callback);
@@ -254,7 +254,7 @@ public class MovieBookingActivity extends AppCompatActivity {
         Optional<Map<String, Map<String, List<ShowtimeOfMovieBySchedule>>>> food = Optional.ofNullable(dateCityCinemaNameScreenTypeScheduleMap)
                 .map(map -> map.get(selectedDate.getDate()))
                 .map(map -> map.get(selectedCity.getCityId()));
-        movieBookingCinemaAdapter.updateData(food.orElse(null));
+        bookingShowtimeCinemaAdapter.updateData(food.orElse(null));
         if (food.isEmpty()) {
             cinemaButtonsRecyclerView.setVisibility(View.GONE);
             noScheduleTextView.setVisibility(View.VISIBLE);

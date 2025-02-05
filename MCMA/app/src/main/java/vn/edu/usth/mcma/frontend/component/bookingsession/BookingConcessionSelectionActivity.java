@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingsession.stepthree;
+package vn.edu.usth.mcma.frontend.component.bookingsession;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -23,8 +23,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.PaymentBookingActivity;
-import vn.edu.usth.mcma.frontend.component.bookingsession.MovieBookingActivity;
+import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.BookingCheckoutActivity;
 import vn.edu.usth.mcma.frontend.component.customview.navigate.CustomNavigateButton;
 import vn.edu.usth.mcma.frontend.model.response.ConcessionResponse;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
@@ -32,8 +31,8 @@ import vn.edu.usth.mcma.frontend.model.Booking;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.utils.mapper.ConcessionMapper;
 
-public class ConcessionSelectionActivity extends AppCompatActivity {
-    private static final String TAG = ConcessionSelectionActivity.class.getName();
+public class BookingConcessionSelectionActivity extends AppCompatActivity {
+    private static final String TAG = BookingConcessionSelectionActivity.class.getName();
     private TextView timeRemainingTextView;
     private TextView totalPriceTextView;
     private CustomNavigateButton nextButton;
@@ -41,7 +40,7 @@ public class ConcessionSelectionActivity extends AppCompatActivity {
     private Booking booking;
     private List<ConcessionResponse> concessionResponses;
     private RecyclerView concessionRecyclerView;
-    private ConcessionAdapter concessionAdapter;
+    private BookingConcessionAdapter bookingConcessionAdapter;
     private double totalPrice;
     private Handler timeRemainingHandler;
 
@@ -49,7 +48,7 @@ public class ConcessionSelectionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_concession_selection);
+        setContentView(R.layout.activity_booking_concession_selection);
         ImageButton backButton = findViewById(R.id.button_back);
         timeRemainingTextView = findViewById(R.id.text_view_time_remaining);
         TextView cinemaNameTextView = findViewById(R.id.text_view_cinema_name);
@@ -103,16 +102,16 @@ public class ConcessionSelectionActivity extends AppCompatActivity {
                 });
     }
     private void postFindAllConcessionBySchedule() {
-        concessionAdapter = new ConcessionAdapter(
+        bookingConcessionAdapter = new BookingConcessionAdapter(
                 this,
                 ConcessionMapper.fromResponseList(concessionResponses),
                 this::onConcessionClickListener);
         concessionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        concessionRecyclerView.setAdapter(concessionAdapter);
+        concessionRecyclerView.setAdapter(bookingConcessionAdapter);
     }
     @SuppressLint("DefaultLocale")
     private void onConcessionClickListener() {
-        totalPrice = booking.getTotalPrice() + concessionAdapter.getTotalConcessionPrice();
+        totalPrice = booking.getTotalPrice() + bookingConcessionAdapter.getTotalConcessionPrice();
         totalPriceTextView.setText(String.format("$%.1f", totalPrice));
     }
     private void prepareTimeRemaining() {
@@ -124,11 +123,11 @@ public class ConcessionSelectionActivity extends AppCompatActivity {
             public void run() {
                 long timeRemaining = booking.getLimitPlusCurrentElapsedBootTime() - SystemClock.elapsedRealtime();
                 if (timeRemaining <= 0) {
-                    new AlertDialog.Builder(ConcessionSelectionActivity.this)
+                    new AlertDialog.Builder(BookingConcessionSelectionActivity.this)
                             .setTitle("Timeout")
                             .setMessage("Your booking session has timed out. Returning to the showtime selection of this movie.")
                             .setPositiveButton("OK", (dialog, which) -> {
-                                Intent intent = new Intent(ConcessionSelectionActivity.this, MovieBookingActivity.class);
+                                Intent intent = new Intent(BookingConcessionSelectionActivity.this, BookingShowtimeSelectionActivity.class);
                                 intent.putExtra(IntentKey.MOVIE_ID.name(), booking.getMovieId());
                                 startActivity(intent);
                             })
@@ -149,10 +148,10 @@ public class ConcessionSelectionActivity extends AppCompatActivity {
                 .setOnClickListener(v -> {
                     booking = booking.toBuilder()
                             .concessions(ConcessionMapper
-                                    .fromItemList(concessionAdapter
+                                    .fromItemList(bookingConcessionAdapter
                                             .getItems()))
                             .build();
-                    Intent intent = new Intent(this, PaymentBookingActivity.class);
+                    Intent intent = new Intent(this, BookingCheckoutActivity.class);
                     intent.putExtra(IntentKey.BOOKING.name(), booking);
                     startActivity(intent);
                 });

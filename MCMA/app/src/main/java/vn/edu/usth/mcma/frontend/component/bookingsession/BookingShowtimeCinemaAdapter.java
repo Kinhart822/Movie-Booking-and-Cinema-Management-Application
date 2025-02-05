@@ -21,20 +21,19 @@ import java.util.List;
 import java.util.Map;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.component.bookingsession.stepone.SeatSelectionActivity;
 import vn.edu.usth.mcma.frontend.component.customview.filter.TimeButton;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.model.Booking;
 import vn.edu.usth.mcma.frontend.model.ShowtimeOfMovieBySchedule;
 
-public class MovieBookingCinemaAdapter extends RecyclerView.Adapter<MovieBookingCinemaAdapter.ViewHolder> {
+public class BookingShowtimeCinemaAdapter extends RecyclerView.Adapter<BookingShowtimeCinemaAdapter.ViewHolder> {
     private final Context context;
     private final Long movieId;
     private final ITimeButton iTimeButton;
     private final Map<String, Map<String, List<ShowtimeOfMovieBySchedule>>> cinemaNameScreenTypeScheduleMap;
     private final List<String> cinemaNames;
 
-    public MovieBookingCinemaAdapter(Context context, Long movieId, ITimeButton iTimeButton) {
+    public BookingShowtimeCinemaAdapter(Context context, Long movieId, ITimeButton iTimeButton) {
         this.context = context;
         this.movieId = movieId;
         this.iTimeButton = iTimeButton;
@@ -109,7 +108,7 @@ public class MovieBookingCinemaAdapter extends RecyclerView.Adapter<MovieBooking
                                 showtimeTimeButton.setOnClickListener(v -> iTimeButton.onClickListener(sessionId -> {
                                     //todo: time dialog
 
-                                    Intent intent = new Intent(context, SeatSelectionActivity.class);
+                                    Intent intent = new Intent(context, BookingSeatSelectionActivity.class);
                                     intent.putExtra(
                                             IntentKey.BOOKING.name(),
                                             Booking.builder()

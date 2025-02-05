@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingsession.steptwo;
+package vn.edu.usth.mcma.frontend.component.bookingsession;
 
 public interface IAudienceTypeItemView {
     void onQuantityChangeListener();

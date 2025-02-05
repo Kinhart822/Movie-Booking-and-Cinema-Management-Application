@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingsession.stepone;
+package vn.edu.usth.mcma.frontend.component.bookingsession;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -26,8 +26,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.component.bookingsession.MovieBookingActivity;
-import vn.edu.usth.mcma.frontend.component.bookingsession.steptwo.AudienceTypeSelectionActivity;
 import vn.edu.usth.mcma.frontend.component.customview.navigate.CustomNavigateButton;
 import vn.edu.usth.mcma.frontend.dto.bookingsession.ScheduleDetail;
 import vn.edu.usth.mcma.frontend.dto.response.ApiResponse;
@@ -40,8 +38,8 @@ import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.network.apis.BookingApi;
 
-public class SeatSelectionActivity extends AppCompatActivity {
-    private static final String TAG = SeatSelectionActivity.class.getName();
+public class BookingSeatSelectionActivity extends AppCompatActivity {
+    private static final String TAG = BookingSeatSelectionActivity.class.getName();
     private static final double BOOKING_TIME_LIMIT = 0.3; //todo dotenv
     private TextView timeRemainingTextView;
     private TextView cinemaNameTextView;
@@ -60,7 +58,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private List<SeatTypeResponse> seatTypeResponses;
     private List<Seat> seatResponses;
     private RecyclerView seatMatrixRecyclerView;
-    private SeatAdapter seatAdapter;
+    private BookingSeatAdapter bookingSeatAdapter;
     private int totalAudienceCount;
     private double totalPrice;
     private Handler timeRemainingHandler;
@@ -71,7 +69,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_seat_selection);
+        setContentView(R.layout.activity_booking_seat_selection);
         ImageButton backButton = findViewById(R.id.button_back);
         timeRemainingTextView = findViewById(R.id.text_view_time_remaining);
         cinemaNameTextView = findViewById(R.id.text_view_cinema_name);
@@ -191,22 +189,22 @@ public class SeatSelectionActivity extends AppCompatActivity {
                 });
     }
     private void postFindAllSeatBySchedule() {
-        seatAdapter = new SeatAdapter(
+        bookingSeatAdapter = new BookingSeatAdapter(
                 this,
                 seatTypeResponses,
                 seatResponses,
                 seat -> onSeatClickListener());
-        seatMatrixRecyclerView.setLayoutManager(new GridLayoutManager(this, seatAdapter.getMaxSeatPerRow() + 1));
-        seatMatrixRecyclerView.setAdapter(seatAdapter);
+        seatMatrixRecyclerView.setLayoutManager(new GridLayoutManager(this, bookingSeatAdapter.getMaxSeatPerRow() + 1));
+        seatMatrixRecyclerView.setAdapter(bookingSeatAdapter);
 
-        availableRowsTextView.setText(String.format("Nearest row:  %s\nFarthest row: %s", seatAdapter.getNearestRow(), seatAdapter.getFarthestRow()));
+        availableRowsTextView.setText(String.format("Nearest row:  %s\nFarthest row: %s", bookingSeatAdapter.getNearestRow(), bookingSeatAdapter.getFarthestRow()));
 
         prepareTimeRemaining();
     }
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
     private void onSeatClickListener() {
-        totalAudienceCount = seatAdapter.getTotalAudienceCount();
-        totalPrice = seatAdapter.getTotalSeatPrice();
+        totalAudienceCount = bookingSeatAdapter.getTotalAudienceCount();
+        totalPrice = bookingSeatAdapter.getTotalSeatPrice();
         totalSeatCountTextView.setText(String.format("%d seats selected", totalAudienceCount));
         totalPriceTextView.setText(String.format("$%.1f", totalPrice));
         nextButton.setEnabled(totalAudienceCount != 0);
@@ -221,11 +219,11 @@ public class SeatSelectionActivity extends AppCompatActivity {
             public void run() {
                 timeRemaining = limitPlusCurrentElapsedBootTime - SystemClock.elapsedRealtime();
                 if (timeRemaining <= 0) {
-                    new AlertDialog.Builder(SeatSelectionActivity.this)
+                    new AlertDialog.Builder(BookingSeatSelectionActivity.this)
                             .setTitle("Timeout")
                             .setMessage("Your booking session has timed out. Returning to the showtime selection of this movie.")
                             .setPositiveButton("OK", (dialog, which) -> {
-                                Intent intent = new Intent(SeatSelectionActivity.this, MovieBookingActivity.class);
+                                Intent intent = new Intent(BookingSeatSelectionActivity.this, BookingShowtimeSelectionActivity.class);
                                 intent.putExtra(IntentKey.MOVIE_ID.name(), booking.getMovieId());
                                 startActivity(intent);
                             })
@@ -247,11 +245,11 @@ public class SeatSelectionActivity extends AppCompatActivity {
                 .setOnClickListener(v -> holdSeatRequest(() -> {
                     booking = booking.toBuilder()
                             .limitPlusCurrentElapsedBootTime(limitPlusCurrentElapsedBootTime)
-                            .rootSeats(seatAdapter.getSelectedRootSeats())
+                            .rootSeats(bookingSeatAdapter.getSelectedRootSeats())
                             .totalAudience(totalAudienceCount)
                             .totalPrice(totalPrice)
                             .build();
-                    Intent intent = new Intent(this, AudienceTypeSelectionActivity.class);
+                    Intent intent = new Intent(this, BookingAudienceTypeSelectionActivity.class);
                     intent.putExtra(IntentKey.BOOKING.name(), booking);
                     startActivity(intent);
                 }));
@@ -263,7 +261,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
                         scheduleId,
                         HoldSeatRequest.builder()
                                 .sessionId(booking.getSessionId())
-                                .rootSeats(seatAdapter
+                                .rootSeats(bookingSeatAdapter
                                         .getSelectedRootSeats().stream()
                                         .map(r -> HoldRootSeat.builder()
                                                 .rootRow(r.getRootRow())

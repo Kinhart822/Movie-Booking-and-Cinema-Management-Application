@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingsession.stepone;
+package vn.edu.usth.mcma.frontend.component.bookingsession;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -26,8 +26,8 @@ import vn.edu.usth.mcma.frontend.model.Seat;
 import vn.edu.usth.mcma.frontend.dto.response.SeatTypeResponse;
 import vn.edu.usth.mcma.frontend.utils.helper.SeatMapHelper;
 
-public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
-    private static final String TAG = SeatAdapter.class.getName();
+public class BookingSeatAdapter extends RecyclerView.Adapter<BookingSeatAdapter.ViewHolder> {
+    private static final String TAG = BookingSeatAdapter.class.getName();
     private final Context context;
     private final Map<Integer, SeatTypeResponse> seatTypes;
     private final Map<Integer, Map<Integer, Seat>> seatMatrix;
@@ -44,7 +44,7 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
     private final String farthestRow;
 
 
-    public SeatAdapter(
+    public BookingSeatAdapter(
             Context context,
             List<SeatTypeResponse> seatTypeResponses,
             List<Seat> seatResponses,

@@ -32,85 +32,31 @@ import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Adapters.ComboDetailsAda
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Adapters.CouponAdapter;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Adapters.SeatDetailsAdapter;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Adapters.TicketDetailsAdapter;
-import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.ComboItem;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Coupon;
-import vn.edu.usth.mcma.frontend.model.AudienceType;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Utils.PriceCalculator;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 
-public class PaymentBookingActivity extends AppCompatActivity {
-    private List<AvailableSeatResponse> selectedSeats = new ArrayList<>();
-    private double totalPrice;
+public class BookingCheckoutActivity extends AppCompatActivity {
     private Button buttonCoupon;
     private Coupon selectedCoupon;
-    private TextView totalPriceTV;
     private TextView totalPriceCouponTV;
-    private double originalTotalPrice;
-    private int totalTicketCount;
-    private int totalComboCount;
-    private List<AudienceType> ticketItems = new ArrayList<>();
-    private List<ComboItem> comboItems = new ArrayList<>();
-    private int movieId;
     private List<Coupon> couponList = new ArrayList<>();
-    private int selectedCityId;
-    private int selectedCinemaId;
-    private int selectedScreenId;
-    private int selectedScheduleId;
-    private List<Integer> selectedTicketIds = new ArrayList<>();
-    private List<Integer> selectedSeatIds = new ArrayList<>();
-    private List<Integer> selectedFoodIds = new ArrayList<>();
-    private List<Integer> selectedDrinkIds = new ArrayList<>();
     private int selectedMovieCouponId;
     private int selectedUserCouponId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_payment_booking);
+        setContentView(R.layout.activity_booking_checkout);
 
         ImageButton backButton = findViewById(R.id.button_back);
         backButton.setOnClickListener(view -> onBackPressed());
-
-        movieId = getIntent().getIntExtra(IntentKey.MOVIE_ID.name(), -1);
-        selectedCityId = getIntent().getIntExtra(IntentKey.SELECTED_CITY_ID.name(), -1);
-        selectedCinemaId = getIntent().getIntExtra(IntentKey.SELECTED_CINEMA_ID.name(), -1);
-        selectedScreenId = getIntent().getIntExtra(IntentKey.SELECTED_SCREEN_ID.name(), -1);
-        selectedScheduleId = getIntent().getIntExtra(IntentKey.SELECTED_SCHEDULE_ID.name(), -1);
-        selectedTicketIds =  getIntent().getIntegerArrayListExtra(IntentKey.SELECTED_TICKET_IDS.name());
-        selectedSeatIds = getIntent().getIntegerArrayListExtra(IntentKey.SELECTED_SEAT_IDS.name());
-        selectedFoodIds = getIntent().getIntegerArrayListExtra(IntentKey.SELECTED_FOOD_IDS.name());
-        selectedDrinkIds = getIntent().getIntegerArrayListExtra(IntentKey.SELECTED_DRINK_IDS.name());
-
-        totalTicketCount = getIntent().getIntExtra(IntentKey.TOTAL_TICKET_COUNT.name(), 0);
-        Log.d("PaymentBookingActivity", "Total Ticket Count: " + totalTicketCount);
-
-        ticketItems = getIntent().getParcelableArrayListExtra(IntentKey.SELECTED_TICKET_ITEMS.name());
-        Log.d("PaymentBookingActivity", IntentKey.SELECTED_TICKET_ITEMS.name()+" received: " + ticketItems);
-
-        double totalTicketPrice = getIntent().getDoubleExtra(IntentKey.TOTAL_TICKET_PRICE.name(), 0.0);
-        Log.d("PaymentBookingActivity", IntentKey.TOTAL_TICKET_PRICE.name()+" received: " + totalTicketPrice);
-
-        totalComboCount = getIntent().getIntExtra(IntentKey.TOTAL_COMBO_COUNT.name(), 0);
-        Log.d("PaymentBookingActivity", "Total Combo Count: " + totalComboCount);
-
-        comboItems = getIntent().getParcelableArrayListExtra(IntentKey.SELECTED_COMBO_ITEMS.name());
-        Log.d("PaymentBookingActivity", IntentKey.SELECTED_COMBO_ITEMS+" received: " + comboItems);
-
-        selectedSeats = getIntent().getParcelableArrayListExtra(IntentKey.SELECTED_SEAT_ITEMS.name());
-        Log.d("PaymentBookingActivity", IntentKey.SELECTED_SEAT_ITEMS.name()+" received: " + selectedSeats);
-
         initializeViews();
         retrieveIntentExtras();
-        couponList = fetchCoupons(movieId);
         setupCouponButton();
         updateCouponButton();
-        originalTotalPrice = totalPrice;
         updateTotalPriceWithCoupon();
         setupCheckoutButton();
-    }
-
-    private void setupCouponButton() {
-        buttonCoupon.setOnClickListener(v -> showCouponSelectionDialog());
     }
 
     private void showCouponSelectionDialog() {

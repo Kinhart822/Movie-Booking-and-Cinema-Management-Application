@@ -22,7 +22,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.component.bookingsession.MovieBookingActivity;
+import vn.edu.usth.mcma.frontend.component.bookingsession.BookingShowtimeSelectionActivity;
 import vn.edu.usth.mcma.frontend.component.customview.filter.GenreButton;
 import vn.edu.usth.mcma.frontend.dto.movie.GenreShort;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort;
@@ -100,7 +100,7 @@ public class SearchMovieActivity extends AppCompatActivity {
     }
     private void openMovieBookingActivity(int position) {
         MovieDetailShort movie = items.get(position);
-        Intent intent = new Intent(this, MovieBookingActivity.class);
+        Intent intent = new Intent(this, BookingShowtimeSelectionActivity.class);
         intent.putExtra(IntentKey.MOVIE_ID.name(), movie.getId());
         startActivity(intent);
     }

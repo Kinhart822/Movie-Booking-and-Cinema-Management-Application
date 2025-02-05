@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingsession.stepthree;
+package vn.edu.usth.mcma.frontend.component.bookingsession;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -21,12 +21,12 @@ import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.model.item.ConcessionItem;
 import vn.edu.usth.mcma.frontend.utils.ImageDecoder;
 
-public class ConcessionAdapter extends RecyclerView.Adapter<ConcessionAdapter.ViewHolder> {
+public class BookingConcessionAdapter extends RecyclerView.Adapter<BookingConcessionAdapter.ViewHolder> {
     private final Context context;
     private final List<ConcessionItem> items;
     private final IConcessionItemView iConcessionItemView;
 
-    public ConcessionAdapter(
+    public BookingConcessionAdapter(
             Context context,
             List<ConcessionItem> items,
             IConcessionItemView iConcessionItemView) {
