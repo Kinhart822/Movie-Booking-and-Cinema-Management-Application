@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Embeddable
 @Data
@@ -21,4 +22,14 @@ public class SeatPK implements Serializable {
     private Integer row;
     @Column(columnDefinition = "TINYINT UNSIGNED")
     private Integer col;
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof SeatPK seatPK)) return false;
+        return Objects.equals(getScreenId(), seatPK.getScreenId()) && Objects.equals(getRow(), seatPK.getRow()) && Objects.equals(getCol(), seatPK.getCol());
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(getScreenId(), getRow(), getCol());
+    }
 }

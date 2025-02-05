@@ -16,5 +16,5 @@ public class SeatPresentation {
     private String name;
     private Integer rootRow;
     private Integer rootCol;
-    private Integer availability;
+    private String availability;
 }

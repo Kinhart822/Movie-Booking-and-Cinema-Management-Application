@@ -31,9 +31,6 @@ public class Seat implements Serializable {
     @Column
     private String name;
     @Column
-    @Enumerated(EnumType.ORDINAL)
-    private SeatAvailability availability;
-    @Column
     private Integer rootRow;
     @Column
     private Integer rootCol;

@@ -15,10 +15,13 @@ import vn.edu.usth.mcma.backend.repository.*;
 import java.time.Instant;
 import java.util.*;
 
+import static vn.edu.usth.mcma.backend.config.AppConfig.dotenv;
+
 @Transactional
 @Service
 @AllArgsConstructor
 public class BookingService {
+    private static final String SEAT_AVAILABILITY_DETAIL_SEPARATOR = dotenv().get("SEAT_AVAILABILITY_DETAIL_SEPARATOR");
     private final ScheduleRepository scheduleRepository;
     private final ReviewRepository reviewRepository;
     private final CityRepository cityRepository;
@@ -27,6 +30,7 @@ public class BookingService {
     private final TicketRepository ticketRepository;
     private final SeatRepository seatRepository;
     private final RatingRepository ratingRepository;
+    private final ScheduleSeatRepository scheduleSeatRepository;
     private MovieRepository movieRepository;
     @Deprecated
     public MoviePresentation getAllInformationOfSelectedMovie(Long movieId) {
@@ -213,6 +217,10 @@ public class BookingService {
                 .toList();
     }
     public List<SeatPresentation> findAllSeatBySchedule(Long scheduleId) {
+        Map<ScheduleSeatPK, ScheduleSeat> scheduleSeatIdMap = new HashMap<>();
+        scheduleSeatRepository
+                .findAllByScheduleId(scheduleId)
+                .forEach(scheduleSeat -> scheduleSeatIdMap.put(scheduleSeat.getId(), scheduleSeat));
         return seatRepository
                 .findAllByScreenId(scheduleRepository
                         .findById(scheduleId)
@@ -220,16 +228,22 @@ public class BookingService {
                         .getScreen()
                         .getId())
                 .stream()
-                .map(s -> SeatPresentation
-                        .builder()
-                        .row(s.getPk().getRow())
-                        .col(s.getPk().getCol())
-                        .typeId(s.getTypeId())
-                        .name(s.getName())
-                        .rootRow(s.getRootRow())
-                        .rootCol(s.getRootCol())
-                        .availability(s.getAvailability().ordinal())
-                        .build())
+                .map(s -> {
+                    Optional<ScheduleSeat> scheduleSeatOpt = Optional.ofNullable(scheduleSeatIdMap
+                            .get(ScheduleSeatPK.builder()
+                                    .scheduleId(scheduleId)
+                                    .seatId(s.getPk())
+                                    .build()));
+                    return SeatPresentation.builder()
+                            .row(s.getPk().getRow())
+                            .col(s.getPk().getCol())
+                            .typeId(s.getTypeId())
+                            .name(s.getName())
+                            .rootRow(s.getRootRow())
+                            .rootCol(s.getRootCol())
+                            .availability(scheduleSeatOpt.isEmpty() ? SeatAvailability.BUYABLE.name() : scheduleSeatOpt.get().getSeatAvailability().split(Objects.requireNonNull(SEAT_AVAILABILITY_DETAIL_SEPARATOR))[0])
+                            .build();
+                })
                 .toList();
     }
 

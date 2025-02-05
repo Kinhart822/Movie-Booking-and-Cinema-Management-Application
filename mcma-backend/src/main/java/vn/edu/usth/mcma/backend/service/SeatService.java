@@ -32,7 +32,7 @@ public class SeatService {
     private final SeatRepository seatRepository;
     private final ScreenRepository screenRepository;
     private final JwtHelper jwtHelper;
-    private final SeatAvailability DEFAULT_SEAT_AVAILABILITY = SeatAvailability.Buyable;
+    private final SeatAvailability DEFAULT_SEAT_AVAILABILITY = SeatAvailability.BUYABLE;
 
     public ApiResponse initSeatMap(Long screenId, List<SeatHelperInput> seatHelperInputs) {
         Screen screen = screenRepository
@@ -60,7 +60,6 @@ public class SeatService {
                         .rootCol(output.getRootCol())
                         .typeId(output.getTypeId())
                         .name(output.getName())
-                        .availability(DEFAULT_SEAT_AVAILABILITY)
                         .createdBy(userId)
                         .createdDate(now)
                         .lastModifiedBy(userId)
