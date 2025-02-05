@@ -2,21 +2,15 @@ package vn.edu.usth.mcma.backend.controller.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.dto.SeatPresentation;
 import vn.edu.usth.mcma.backend.dto.SeatTypePresentation;
-import vn.edu.usth.mcma.backend.dto.booking.AudienceDetail;
-import vn.edu.usth.mcma.backend.dto.booking.ConcessionDetail;
-import vn.edu.usth.mcma.backend.dto.booking.ScheduleDetail;
-import vn.edu.usth.mcma.backend.entity.Concession;
+import vn.edu.usth.mcma.backend.dto.bookingsession.*;
+import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.service.BookingService;
 import vn.edu.usth.mcma.backend.service.SeatService;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,6 +38,14 @@ public class BookingController {
     @GetMapping("/schedule/{scheduleId}/concession")
     public ResponseEntity<List<ConcessionDetail>> findAllConcessionBySchedule(@PathVariable Long scheduleId) {
         return ResponseEntity.ok(bookingService.findAllConcessionBySchedule(scheduleId));
-
     }
+    @PostMapping("/register-booking-session")
+    public ResponseEntity<ApiResponse> registerBookingSession(@RequestBody SessionRegistration request) {
+        return ResponseEntity.ok(bookingService.registerBookingSession(request));
+    }
+    @PutMapping("/schedule/{scheduleId}/seat/hold-request")
+    public ResponseEntity<ApiResponse> holdSeatRequest(@PathVariable Long scheduleId, @RequestBody HoldSeatRequest request) {
+        return ResponseEntity.ok(bookingService.holdSeatRequest(scheduleId, request));
+    }
+
 }

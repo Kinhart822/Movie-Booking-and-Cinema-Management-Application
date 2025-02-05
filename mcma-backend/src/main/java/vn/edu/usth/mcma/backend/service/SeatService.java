@@ -66,7 +66,7 @@ public class SeatService {
                         .lastModifiedDate(now)
                         .build())
                 .toList());
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 
     public List<SeatResponse> findSeatMapByScreenId(Long screenId) {
@@ -128,7 +128,7 @@ public class SeatService {
             updatedSeats.add(updatedSeat);
         }
         seatRepository.saveAll(updatedSeats);
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 
     public List<SeatTypePresentation> findAllSeatTypes() {

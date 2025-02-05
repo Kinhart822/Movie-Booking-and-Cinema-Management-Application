@@ -20,7 +20,10 @@ public class ApiResponse {
         this.message = apiResponseCode.name();
         this.description = apiResponseCode.getDescription();
     }
-    public static ApiResponse success() {
+    public static ApiResponse ok() {
         return new ApiResponse(ApiResponseCode.SUCCESS);
+    }
+    public static ApiResponse badRequest() {
+        return new ApiResponse(ApiResponseCode.BAD_REQUEST);
     }
 }

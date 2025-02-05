@@ -5,10 +5,9 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.*;
-import vn.edu.usth.mcma.backend.dto.booking.AudienceDetail;
-import vn.edu.usth.mcma.backend.dto.booking.ConcessionDetail;
-import vn.edu.usth.mcma.backend.dto.booking.ScheduleDetail;
+import vn.edu.usth.mcma.backend.dto.bookingsession.*;
 import vn.edu.usth.mcma.backend.entity.*;
+import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.*;
 
@@ -31,7 +30,8 @@ public class BookingService {
     private final SeatRepository seatRepository;
     private final RatingRepository ratingRepository;
     private final ScheduleSeatRepository scheduleSeatRepository;
-    private MovieRepository movieRepository;
+    private final MovieRepository movieRepository;
+    private static Set<String> sessionSet = new HashSet<>();
     @Deprecated
     public MoviePresentation getAllInformationOfSelectedMovie(Long movieId) {
         Movie movie = movieRepository
@@ -232,7 +232,10 @@ public class BookingService {
                     Optional<ScheduleSeat> scheduleSeatOpt = Optional.ofNullable(scheduleSeatIdMap
                             .get(ScheduleSeatPK.builder()
                                     .scheduleId(scheduleId)
-                                    .seatId(s.getPk())
+                                    .seatId(SeatPK.builder()
+                                            .screenId(s.getPk().getScreenId())
+                                            .row(s.getRootRow())
+                                            .col(s.getRootCol()).build())
                                     .build()));
                     return SeatPresentation.builder()
                             .row(s.getPk().getRow())
@@ -241,8 +244,13 @@ public class BookingService {
                             .name(s.getName())
                             .rootRow(s.getRootRow())
                             .rootCol(s.getRootCol())
-                            .availability(scheduleSeatOpt.isEmpty() ? SeatAvailability.BUYABLE.name() : scheduleSeatOpt.get().getSeatAvailability().split(Objects.requireNonNull(SEAT_AVAILABILITY_DETAIL_SEPARATOR))[0])
-                            .build();
+                            .availability(scheduleSeatOpt
+                                    .map(scheduleSeat -> SeatAvailability.HELD.name().equals(scheduleSeat.getSeatAvailability().split(Objects.requireNonNull(SEAT_AVAILABILITY_DETAIL_SEPARATOR))[0])
+                                            ? Instant.parse(scheduleSeat.getSeatAvailability().split(Objects.requireNonNull(SEAT_AVAILABILITY_DETAIL_SEPARATOR))[1]).isBefore(Instant.now())
+                                                    ? SeatAvailability.BUYABLE.name()
+                                                    : SeatAvailability.HELD.name()
+                                            : SeatAvailability.SOLD.name())
+                                    .orElseGet(SeatAvailability.BUYABLE::name)).build();
                 })
                 .toList();
     }
@@ -263,6 +271,38 @@ public class BookingService {
                         .imageBase64(c.getImageBase64())
                         .build())
                 .toList();
+    }
+
+    public ApiResponse registerBookingSession(SessionRegistration request) {
+        if (sessionSet.add(request.getSessionId())) {
+            return ApiResponse.ok();
+        }
+        return ApiResponse.badRequest();
+    }
+
+    public ApiResponse holdSeatRequest(Long scheduleId, HoldSeatRequest request) {
+        if (!sessionSet.contains(request.getSessionId())) {
+            throw new BusinessException(ApiResponseCode.SESSION_ID_NOT_FOUND);
+        }
+        scheduleSeatRepository
+                .saveAll(request
+                        .getRootSeats().stream()
+                        .map(r -> ScheduleSeat.builder()
+                                .id(ScheduleSeatPK.builder()
+                                        .scheduleId(scheduleId)
+                                        .seatId(SeatPK.builder()
+                                                .screenId(scheduleRepository
+                                                        .findById(scheduleId)
+                                                        .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND))
+                                                        .getScreen()
+                                                        .getId())
+                                                .row(r.getRootRow())
+                                                .col(r.getRootCol()).build()).build())
+                                .seatAvailability(SeatAvailability.HELD.name()
+                                        + Objects.requireNonNull(SEAT_AVAILABILITY_DETAIL_SEPARATOR)
+                                        + Instant.now().plusMillis(request.getTimeRemaining()).toString()).build())
+                        .toList());
+        return ApiResponse.ok();
     }
 //    public List<TicketResponse> getAllTickets() {
 //        List<Ticket> tickets = ticketRepository.findAll();

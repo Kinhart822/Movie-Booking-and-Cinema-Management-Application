@@ -51,7 +51,7 @@ public class ScreenService {
                         .lastModifiedBy(userId)
                         .lastModifiedDate(now)
                         .build());
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
     public List<ScreenProjection> findAllProjectionByQuery(Long cinemaId, String query) {
         Cinema cinema = cinemaRepository
@@ -79,7 +79,7 @@ public class ScreenService {
                 .lastModifiedBy(userId)
                 .lastModifiedDate(now)
                 .build());
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
     public ApiResponse toggleStatus(Long screenId) {
         Screen screen = screenRepository
@@ -91,7 +91,7 @@ public class ScreenService {
                 .lastModifiedBy(jwtHelper.getIdUserRequesting())
                 .lastModifiedDate(Instant.now())
                 .build());
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
     public ApiResponse deactivateScreens(List<Long> ids) {
         Long userId = jwtHelper.getIdUserRequesting();
@@ -107,6 +107,6 @@ public class ScreenService {
                                 .lastModifiedDate(now)
                                 .build())
                         .toList());
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 }

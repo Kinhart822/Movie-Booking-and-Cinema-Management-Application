@@ -55,7 +55,7 @@ public class MovieService {
                         .lastModifiedBy(userId)
                         .lastModifiedDate(now)
                         .build());
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
     /*
      * ========
@@ -87,7 +87,7 @@ public class MovieService {
                 .endDateTime(endDateTime)
                 .status(CommonStatus.ACTIVE.getStatus())
                 .build());
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
     /*
      * TODO:USER

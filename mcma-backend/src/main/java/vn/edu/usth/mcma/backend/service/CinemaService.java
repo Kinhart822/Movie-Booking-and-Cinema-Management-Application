@@ -46,7 +46,7 @@ public class CinemaService {
                         .lastModifiedBy(userId)
                         .lastModifiedDate(now)
                         .build());
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
     public List<CinemaProjection> findAll(String query) {
         return cinemaRepository.findAllProjectionByQuery(query);
@@ -65,7 +65,7 @@ public class CinemaService {
                         .lastModifiedBy(jwtHelper.getIdUserRequesting())
                         .lastModifiedDate(Instant.now())
                         .build());
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
     public ApiResponse toggleStatus(Long id) {
         Cinema cinema = cinemaRepository.findById(id).orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
@@ -76,7 +76,7 @@ public class CinemaService {
                         .lastModifiedBy(jwtHelper.getIdUserRequesting())
                         .lastModifiedDate(Instant.now())
                         .build());
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
     public ApiResponse deactivateCinemas(List<Long> ids) {
         Long userId = jwtHelper.getIdUserRequesting();
@@ -92,7 +92,7 @@ public class CinemaService {
                                 .lastModifiedDate(now)
                                 .build())
                         .toList());
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 
     /*

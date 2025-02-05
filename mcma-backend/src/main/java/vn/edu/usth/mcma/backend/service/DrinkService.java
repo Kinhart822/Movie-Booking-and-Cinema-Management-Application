@@ -1,7 +1,6 @@
 package vn.edu.usth.mcma.backend.service;
 
 import constants.ApiResponseCode;
-import constants.CommonStatus;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +29,7 @@ public class DrinkService {
         drink.setCreatedBy(userId);
         drink.setLastModifiedBy(userId);
         drinkRepository.save(drink);
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
     public List<Drink> findAll(String query, Pageable pageable) {
         return drinkRepository.findAllByNameContaining(query, pageable);
@@ -45,7 +44,7 @@ public class DrinkService {
         drink.setLastModifiedBy(userId);
         drink.setLastModifiedDate(Instant.now());
         drinkRepository.save(drink);
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
     public ApiResponse deleteDrink(Long id) {
         Long userId = jwtHelper.getIdUserRequesting();
@@ -55,6 +54,6 @@ public class DrinkService {
         drink.setLastModifiedBy(userId);
         drink.setLastModifiedDate(Instant.now());
         drinkRepository.save(drink);
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 }

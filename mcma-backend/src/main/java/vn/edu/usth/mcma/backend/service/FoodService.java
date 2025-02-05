@@ -1,7 +1,6 @@
 package vn.edu.usth.mcma.backend.service;
 
 import constants.ApiResponseCode;
-import constants.CommonStatus;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +29,7 @@ public class FoodService {
         food.setCreatedBy(userId);
         food.setLastModifiedBy(userId);
         foodRepository.save(food);
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
     public List<Food> findAll(String query, Pageable pageable) {
         return foodRepository.findAllByNameContaining(query, pageable);
@@ -45,7 +44,7 @@ public class FoodService {
         food.setLastModifiedBy(userId);
         food.setLastModifiedDate(Instant.now());
         foodRepository.save(food);
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
     public ApiResponse deleteFood(Long id) {
         Long userId = jwtHelper.getIdUserRequesting();
@@ -55,6 +54,6 @@ public class FoodService {
         food.setLastModifiedBy(userId);
         food.setLastModifiedDate(Instant.now());
         foodRepository.save(food);
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 }

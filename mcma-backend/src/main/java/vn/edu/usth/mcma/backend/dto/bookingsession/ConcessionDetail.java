@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.backend.dto.booking;
+package vn.edu.usth.mcma.backend.dto.bookingsession;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AudienceDetail {
-    private String id;
+public class ConcessionDetail {
+    private Long id;
+    private String name;
     private String description;
-    private Double unitPrice;
-    private Integer ageLowerBound;
-    private Integer ageHigherBound;
+    private Double comboPrice;
+    private String imageBase64;
 }

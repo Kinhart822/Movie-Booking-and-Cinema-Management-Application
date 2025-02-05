@@ -31,7 +31,7 @@ public class CityService {
         city.setCreatedBy(userId);
         city.setLastModifiedBy(userId);
         cityRepository.save(city);
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
     public List<City> findAll(String query, Pageable pageable) {
         return cityRepository.findAllByNameContaining(query, pageable);
@@ -45,7 +45,7 @@ public class CityService {
         city.setLastModifiedBy(userId);
         city.setLastModifiedDate(Instant.now());
         cityRepository.save(city);
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
     public ApiResponse deleteCity(Long id) {
         Long userId = jwtHelper.getIdUserRequesting();
@@ -56,6 +56,6 @@ public class CityService {
         city.setLastModifiedBy(userId);
         city.setLastModifiedDate(Instant.now());
         cityRepository.save(city);
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 }

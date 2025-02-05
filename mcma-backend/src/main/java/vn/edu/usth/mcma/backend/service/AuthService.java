@@ -105,6 +105,6 @@ public class AuthService {
                                 .status(CommonStatus.DELETED.getStatus())
                                 .build())
                         .toList());
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 }

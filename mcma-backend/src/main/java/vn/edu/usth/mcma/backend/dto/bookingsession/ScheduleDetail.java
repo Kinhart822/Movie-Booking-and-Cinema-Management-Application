@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.backend.dto.booking;
+package vn.edu.usth.mcma.backend.dto.bookingsession;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

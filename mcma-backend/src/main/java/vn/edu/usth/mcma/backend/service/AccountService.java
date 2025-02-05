@@ -53,7 +53,7 @@ public class AccountService {
                         .lastModifiedBy(userId)
                         .lastModifiedDate(now)
                         .build());
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 
     public Map<String, Boolean> signUpCheckEmailExistence(String query) {
@@ -83,7 +83,7 @@ public class AccountService {
                         .lastModifiedDate(now)
                         .build());
         sessionOtpMap.remove(request.getSessionId());
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 
     private Map<String, Instant> sendOtpToEmail(SendOtpRequest request) {
@@ -130,7 +130,7 @@ public class AccountService {
                         .lastModifiedDate(Instant.now())
                         .build());
         sessionOtpMap.remove(sessionId);
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 
     public AdminPresentation getAdmin() {
@@ -177,7 +177,7 @@ public class AccountService {
             throw new BusinessException(ApiResponseCode.USERNAME_NOT_EXISTED_OR_DEACTIVATED);
         }
         emailService.sendResetPasswordMail(user.get());
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
     public Map<String, Boolean> resetPasswordCheck(ResetPasswordCheck check) {
         String resetKey = check.getResetKey();
@@ -192,7 +192,7 @@ public class AccountService {
         if (user.isEmpty()) {
             throw new BusinessException(ApiResponseCode.INVALID_RESET_KEY);
         }
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 
     /**
@@ -216,7 +216,7 @@ public class AccountService {
                         .lastModifiedBy(id)
                         .lastModifiedDate(Instant.now())
                         .build());
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 //    public void deleteAccount(Long userId) {
 //        User user = userRepository
