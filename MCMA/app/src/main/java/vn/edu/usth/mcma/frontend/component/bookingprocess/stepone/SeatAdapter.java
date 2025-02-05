@@ -39,9 +39,9 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
     @Getter // this contains list of root seats
     private final List<Seat> selectedRootSeats;
     @Getter
-    private String nearestRow;
+    private final String nearestRow;
     @Getter
-    private String farthestRow;
+    private final String farthestRow;
 
 
     public SeatAdapter(
@@ -115,14 +115,14 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
         assert seat != null;
         String name = seat.getName();
         int seatTypeId = seat.getTypeId();
-        int availabilityId = seat.getAvailability();
+        String availability = seat.getAvailability();
         if (name != null) {
             holder.itemView.setBackground(ContextCompat
                     .getDrawable(context, SeatAvailability
-                            .getById(availabilityId)
+                            .getById(availability)
                             .getBackgroundId()));
             holder.itemView.setOnClickListener(null);
-            if (availabilityId == SeatAvailability.Buyable.getId()) {
+            if (Objects.equals(availability, SeatAvailability.BUYABLE.name())) {
                 holder.itemView.setBackground(ContextCompat
                         .getDrawable(context, SeatAvailables
                                 .getById(seatTypeId)

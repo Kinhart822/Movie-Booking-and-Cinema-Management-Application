@@ -37,7 +37,7 @@ import vn.edu.usth.mcma.frontend.constant.IntentKey;
 
 public class SeatSelectionActivity extends AppCompatActivity {
     private static final String TAG = SeatSelectionActivity.class.getName();
-    private static final double BOOKING_TIME_LIMIT = 0.; //todo dotenv
+    private static final double BOOKING_TIME_LIMIT = 0.3; //todo dotenv
     private TextView timeRemainingTextView;
     private TextView cinemaNameTextView;
     private TextView screenNameDateDurationTextView;
@@ -59,7 +59,8 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private int totalAudienceCount;
     private double totalPrice;
     private Handler timeRemainingHandler;
-    private long bookingEndTimeMillis;
+    private long limitPlusCurrentElapsedBootTime;
+    private long timeRemaining;
 
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
     @Override
@@ -205,15 +206,15 @@ public class SeatSelectionActivity extends AppCompatActivity {
         nextButton.setEnabled(totalAudienceCount != 0);
     }
     private void prepareTimeRemaining() {
-        bookingEndTimeMillis = SystemClock.elapsedRealtime() + (long) (BOOKING_TIME_LIMIT * 60 * 1000);
+        limitPlusCurrentElapsedBootTime = SystemClock.elapsedRealtime() + (long) (BOOKING_TIME_LIMIT * 60 * 1000);
 
         timeRemainingHandler = new Handler(Looper.getMainLooper());
         Runnable timeRemainingRunnable = new Runnable() {
             @SuppressLint("DefaultLocale")
             @Override
             public void run() {
-                long timeRemainingMillis = bookingEndTimeMillis - SystemClock.elapsedRealtime();
-                if (timeRemainingMillis <= 0) {
+                timeRemaining = limitPlusCurrentElapsedBootTime - SystemClock.elapsedRealtime();
+                if (timeRemaining <= 0) {
                     new AlertDialog.Builder(SeatSelectionActivity.this)
                             .setTitle("Timeout")
                             .setMessage("Your booking session has timed out. Returning to the showtime selection of this movie.")
@@ -226,7 +227,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
                             .show();
                     return;
                 }
-                timeRemainingTextView.setText(String.format("%02d:%02d", timeRemainingMillis / (60 * 1000), (timeRemainingMillis / 1000) % 60));
+                timeRemainingTextView.setText(String.format("%02d:%02d", timeRemaining / (60 * 1000), (timeRemaining / 1000) % 60));
                 timeRemainingHandler.postDelayed(this, 1000);
             }
         };
@@ -247,7 +248,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
                             .build();
                     Intent intent = new Intent(this, AudienceTypeSelectionActivity.class);
                     intent.putExtra(IntentKey.BOOKING.name(), booking);
-                    intent.putExtra(IntentKey.BOOKING_END_TIME.name(), bookingEndTimeMillis);
+                    intent.putExtra(IntentKey.BOOKING_TIME_LIMIT_PLUS_CURRENT_ELAPSED_BOOT_TIME.name(), limitPlusCurrentElapsedBootTime);
                     intent.putExtra(IntentKey.MOVIE_ID.name(), getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L));
                     startActivity(intent);
                 });

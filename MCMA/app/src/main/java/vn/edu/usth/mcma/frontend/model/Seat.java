@@ -24,7 +24,7 @@ public class Seat implements Parcelable {
     private String name;
     private Integer rootRow;
     private Integer rootCol;
-    private Integer availability;//todo
+    private String availability;//todo
     //todo price
 
     @Override

@@ -122,8 +122,8 @@ public class ConcessionSelectionActivity extends AppCompatActivity {
             @SuppressLint("DefaultLocale")
             @Override
             public void run() {
-                long timeRemainingMillis = getIntent().getLongExtra(IntentKey.BOOKING_END_TIME.name(), -1L) - SystemClock.elapsedRealtime();
-                if (timeRemainingMillis <= 0) {
+                long timeRemaining = getIntent().getLongExtra(IntentKey.BOOKING_TIME_LIMIT_PLUS_CURRENT_ELAPSED_BOOT_TIME.name(), -1L) - SystemClock.elapsedRealtime();
+                if (timeRemaining <= 0) {
                     new AlertDialog.Builder(ConcessionSelectionActivity.this)
                             .setTitle("Timeout")
                             .setMessage("Your booking session has timed out. Returning to the showtime selection of this movie.")
@@ -136,7 +136,7 @@ public class ConcessionSelectionActivity extends AppCompatActivity {
                             .show();
                     return;
                 }
-                timeRemainingTextView.setText(String.format("%02d:%02d", timeRemainingMillis / (60 * 1000), (timeRemainingMillis / 1000) % 60));
+                timeRemainingTextView.setText(String.format("%02d:%02d", timeRemaining / (60 * 1000), (timeRemaining / 1000) % 60));
                 timeRemainingHandler.postDelayed(this, 1000);
             }
         };
@@ -154,7 +154,7 @@ public class ConcessionSelectionActivity extends AppCompatActivity {
                             .build();
                     Intent intent = new Intent(this, PaymentBookingActivity.class);
                     intent.putExtra(IntentKey.BOOKING.name(), booking);
-                    intent.putExtra(IntentKey.BOOKING_END_TIME.name(), getIntent().getLongExtra(IntentKey.BOOKING_END_TIME.name(), -1L));
+                    intent.putExtra(IntentKey.BOOKING_TIME_LIMIT_PLUS_CURRENT_ELAPSED_BOOT_TIME.name(), getIntent().getLongExtra(IntentKey.BOOKING_TIME_LIMIT_PLUS_CURRENT_ELAPSED_BOOT_TIME.name(), -1L));
                     intent.putExtra(IntentKey.MOVIE_ID.name(), getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L));
                     startActivity(intent);
                 });
