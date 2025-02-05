@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.dto.bookingprocess;
+package vn.edu.usth.mcma.frontend.dto.bookingsession;
 
 import lombok.Data;
 

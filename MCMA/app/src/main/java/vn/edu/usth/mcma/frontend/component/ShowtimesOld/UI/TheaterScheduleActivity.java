@@ -33,7 +33,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.component.bookingprocess.MovieDetailActivity;
+import vn.edu.usth.mcma.frontend.component.bookingsession.MovieDetailActivity;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.GenreResponse;
 import vn.edu.usth.mcma.frontend.dto.response.MovieResponse;
 import vn.edu.usth.mcma.frontend.dto.response.PerformerResponse;

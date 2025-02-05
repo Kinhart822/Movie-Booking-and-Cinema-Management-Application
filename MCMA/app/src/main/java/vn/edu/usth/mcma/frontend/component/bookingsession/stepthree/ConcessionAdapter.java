@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingprocess.stepthree;
+package vn.edu.usth.mcma.frontend.component.bookingsession.stepthree;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

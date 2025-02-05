@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingprocess;
+package vn.edu.usth.mcma.frontend.component.bookingsession;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.component.bookingprocess.stepone.SeatSelectionActivity;
+import vn.edu.usth.mcma.frontend.component.bookingsession.stepone.SeatSelectionActivity;
 import vn.edu.usth.mcma.frontend.component.customview.filter.TimeButton;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.model.ShowtimeOfMovieBySchedule;

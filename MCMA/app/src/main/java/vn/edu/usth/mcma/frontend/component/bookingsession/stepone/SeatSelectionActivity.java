@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingprocess.stepone;
+package vn.edu.usth.mcma.frontend.component.bookingsession.stepone;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -25,10 +25,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.component.bookingprocess.MovieBookingActivity;
-import vn.edu.usth.mcma.frontend.component.bookingprocess.steptwo.AudienceTypeSelectionActivity;
+import vn.edu.usth.mcma.frontend.component.bookingsession.MovieBookingActivity;
+import vn.edu.usth.mcma.frontend.component.bookingsession.steptwo.AudienceTypeSelectionActivity;
 import vn.edu.usth.mcma.frontend.component.customview.navigate.CustomNavigateButton;
-import vn.edu.usth.mcma.frontend.dto.bookingprocess.ScheduleDetail;
+import vn.edu.usth.mcma.frontend.dto.bookingsession.ScheduleDetail;
 import vn.edu.usth.mcma.frontend.dto.response.SeatTypeResponse;
 import vn.edu.usth.mcma.frontend.model.Seat;
 import vn.edu.usth.mcma.frontend.model.Booking;

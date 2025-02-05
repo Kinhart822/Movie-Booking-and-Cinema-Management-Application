@@ -9,8 +9,6 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import vn.edu.usth.mcma.frontend.dto.bookingprocess.AudienceDetail;
-import vn.edu.usth.mcma.frontend.dto.bookingprocess.ScheduleDetail;
 import vn.edu.usth.mcma.frontend.dto.home.Advertisement;
 import vn.edu.usth.mcma.frontend.dto.movie.GenreShort;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetail;

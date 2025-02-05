@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingprocess.steptwo;
+package vn.edu.usth.mcma.frontend.component.bookingsession.steptwo;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;

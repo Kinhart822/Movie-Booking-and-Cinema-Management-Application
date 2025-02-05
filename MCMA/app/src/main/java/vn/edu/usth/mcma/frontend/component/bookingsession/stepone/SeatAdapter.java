@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingprocess.stepone;
+package vn.edu.usth.mcma.frontend.component.bookingsession.stepone;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -117,27 +117,23 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
         int seatTypeId = seat.getTypeId();
         String availability = seat.getAvailability();
         if (name != null) {
-            holder.itemView.setBackground(ContextCompat
-                    .getDrawable(context, SeatAvailability
-                            .getById(availability)
-                            .getBackgroundId()));
+            setSeatBackground(holder.itemView, SeatAvailability.getById(availability).getBackgroundId());
             holder.itemView.setOnClickListener(null);
-            if (Objects.equals(availability, SeatAvailability.BUYABLE.name())) {
-                holder.itemView.setBackground(ContextCompat
-                        .getDrawable(context, SeatAvailables
-                                .getById(seatTypeId)
-                                .getBackgroundId()));
+            if (availability.equals(SeatAvailability.BUYABLE.name())) {
+                setSeatBackground(holder.itemView, SeatAvailables.getById(seatTypeId).getBackgroundId());
                 holder.itemView.setOnClickListener(v -> toggleSeat(seat));
             }
             if (selectedSeats.contains(seat)) {
-                holder.itemView.setBackground(ContextCompat
-                        .getDrawable(context, SeatAvailables.SELECTED.getBackgroundId()));
+                setSeatBackground(holder.itemView, SeatAvailables.SELECTED.getBackgroundId());
             }
         } else {
-            holder.itemView.setBackground(ContextCompat
-                    .getDrawable(context, R.drawable.ic_seat_empty));
+            setSeatBackground(holder.itemView, R.drawable.ic_seat_empty);
             holder.itemView.setOnClickListener(null);
         }
+
+    }
+    private void setSeatBackground(View view, int backgroundId) {
+        view.setBackground(ContextCompat.getDrawable(context, backgroundId));
     }
     private void toggleSeat(Seat seat) {
         int rootRow = seat.getRootRow();

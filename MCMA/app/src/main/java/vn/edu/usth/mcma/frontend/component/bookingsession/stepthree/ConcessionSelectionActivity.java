@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.component.bookingprocess.steptwo;
+package vn.edu.usth.mcma.frontend.component.bookingsession.stepthree;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
-import android.util.Log;
-import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.ImageButton;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,43 +18,38 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.component.bookingprocess.MovieBookingActivity;
-import vn.edu.usth.mcma.frontend.component.bookingprocess.stepthree.ConcessionSelectionActivity;
+import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.PaymentBookingActivity;
+import vn.edu.usth.mcma.frontend.component.bookingsession.MovieBookingActivity;
 import vn.edu.usth.mcma.frontend.component.customview.navigate.CustomNavigateButton;
-import vn.edu.usth.mcma.frontend.dto.bookingprocess.AudienceDetail;
+import vn.edu.usth.mcma.frontend.model.response.ConcessionResponse;
+import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.model.Booking;
 import vn.edu.usth.mcma.frontend.network.ApiService;
-import vn.edu.usth.mcma.frontend.model.AudienceType;
-import vn.edu.usth.mcma.frontend.constant.IntentKey;
+import vn.edu.usth.mcma.frontend.utils.mapper.ConcessionMapper;
 
-public class AudienceTypeSelectionActivity extends AppCompatActivity {
-    private static final String TAG = AudienceTypeSelectionActivity.class.getName();
-    private static final double priceForStudent = 9;//todo dotenv
+public class ConcessionSelectionActivity extends AppCompatActivity {
+    private static final String TAG = ConcessionSelectionActivity.class.getName();
     private TextView timeRemainingTextView;
-    private TextView totalAudienceCountTextView;
     private TextView totalPriceTextView;
     private CustomNavigateButton nextButton;
 
     private Booking booking;
-    private List<AudienceDetail> audienceDetails;
-    private RecyclerView audienceTypeRecyclerView;
-    private AudienceTypeAdapter audienceTypeAdapter;
-    private int targetAudienceCount;
-    private int currentAudienceCount;
+    private List<ConcessionResponse> concessionResponses;
+    private RecyclerView concessionRecyclerView;
+    private ConcessionAdapter concessionAdapter;
     private double totalPrice;
     private Handler timeRemainingHandler;
 
-    @SuppressLint("DefaultLocale")
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_audience_type_selection);
+        setContentView(R.layout.activity_concession_selection);
         ImageButton backButton = findViewById(R.id.button_back);
         timeRemainingTextView = findViewById(R.id.text_view_time_remaining);
         TextView cinemaNameTextView = findViewById(R.id.text_view_cinema_name);
@@ -62,10 +57,10 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
         TextView movieNameTextView = findViewById(R.id.text_view_movie_name);
         TextView ratingTextView = findViewById(R.id.text_view_rating);
         TextView screenTypeTextView = findViewById(R.id.text_view_screen_type);
-        totalAudienceCountTextView = findViewById(R.id.text_view_total_audience_count);
+        TextView totalAudienceTextView = findViewById(R.id.text_view_total_audience);
         totalPriceTextView = findViewById(R.id.text_view_total_price);
         nextButton = findViewById(R.id.button_next);
-        audienceTypeRecyclerView = findViewById(R.id.recycler_view_audience_type);
+        concessionRecyclerView = findViewById(R.id.recycler_view_concession);
 
         backButton
                 .setOnClickListener(v -> onBackPressed());
@@ -78,68 +73,50 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
         movieNameTextView.setText(booking.getMovieName());
         ratingTextView.setText(booking.getRating());
         screenTypeTextView.setText(booking.getScreenType());
+        totalAudienceTextView.setText(String.format("%d audiences", booking.getTotalAudience()));
 
-        targetAudienceCount = booking.getTotalAudience();
-        currentAudienceCount = 0;
         totalPrice = booking.getTotalPrice();
-        totalAudienceCountTextView.setText(String.format("%d / %d audiences", currentAudienceCount, targetAudienceCount));
         totalPriceTextView.setText(String.format("$%.1f", totalPrice));
 
-        findAllAudienceTypeByRating();
+        findAllConcessionBySchedule();
         prepareTimeRemaining();
         prepareNextButton();
     }
-    private void findAllAudienceTypeByRating() {
+    private void findAllConcessionBySchedule() {
         ApiService
                 .getBookingApi(this)
-                .findAllAudienceTypeByRating(booking.getRating())
+                .findAllConcessionBySchedule(booking.getScheduleId())
                 .enqueue(new Callback<>() {
                     @Override
-                    public void onResponse(@NonNull Call<List<AudienceDetail>> call, @NonNull Response<List<AudienceDetail>> response) {
+                    public void onResponse(@NonNull Call<List<ConcessionResponse>> call, @NonNull Response<List<ConcessionResponse>> response) {
                         if (!response.isSuccessful() || response.body() == null) {
-                            Log.e(TAG, "findAllAudienceTypeByRating onResponse: code not 200 || body is null");
+                            Log.e(TAG, "findAllConcessionBySchedule onResponse: code not 200 || body is null");
                             return;
                         }
-                        audienceDetails = response.body();
-                        postFindAllAudienceTypeByRating();
+                        concessionResponses = response.body();
+                        postFindAllConcessionBySchedule();
                     }
                     @Override
-                    public void onFailure(@NonNull Call<List<AudienceDetail>> call, @NonNull Throwable throwable) {
-                        Log.e(TAG, "findAllAudienceTypeByRating onFailure: " + throwable);
+                    public void onFailure(@NonNull Call<List<ConcessionResponse>> call, @NonNull Throwable throwable) {
+                        Log.e(TAG, "findAllConcessionBySchedule onFailure: " + throwable);
                     }
                 });
     }
-    private void postFindAllAudienceTypeByRating() {
-        //todo: after audienceDiscount, do all this in adapter instead
-        List<AudienceType> items = audienceDetails
-                .stream()
-                .map(a -> AudienceType.builder()
-                        .id(a.getId())
-                        .unitPrice(a.getUnitPrice())
-                        .quantity(0)
-                        .build())
-                .collect(Collectors.toList());
-        items.add(0, AudienceType.builder()
-                .id("Student")
-                .quantity(0)
-                .unitPrice(priceForStudent)
-                .build());
-        audienceTypeAdapter = new AudienceTypeAdapter(
-                items,
-                this::onQuantityChangeListener,
-                targetAudienceCount);
-        audienceTypeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        audienceTypeRecyclerView.setAdapter(audienceTypeAdapter);
+    private void postFindAllConcessionBySchedule() {
+        concessionAdapter = new ConcessionAdapter(
+                this,
+                ConcessionMapper.fromResponseList(concessionResponses),
+                this::onConcessionClickListener);
+        concessionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        concessionRecyclerView.setAdapter(concessionAdapter);
     }
     @SuppressLint("DefaultLocale")
-    private void onQuantityChangeListener() {
-        currentAudienceCount = audienceTypeAdapter.getCurrentAudienceCount();
-        totalPrice = booking.getTotalPrice() + audienceTypeAdapter.getTotalAudienceTypePrice();
-        totalAudienceCountTextView.setText(String.format("%d / %d audiences", currentAudienceCount, targetAudienceCount));
+    private void onConcessionClickListener() {
+        totalPrice = booking.getTotalPrice() + concessionAdapter.getTotalConcessionPrice();
         totalPriceTextView.setText(String.format("$%.1f", totalPrice));
-        nextButton.setEnabled(currentAudienceCount == targetAudienceCount);
     }
     private void prepareTimeRemaining() {
+
         timeRemainingHandler = new Handler(Looper.getMainLooper());
         Runnable timeRemainingRunnable = new Runnable() {
             @SuppressLint("DefaultLocale")
@@ -147,11 +124,11 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
             public void run() {
                 long timeRemaining = getIntent().getLongExtra(IntentKey.BOOKING_TIME_LIMIT_PLUS_CURRENT_ELAPSED_BOOT_TIME.name(), -1L) - SystemClock.elapsedRealtime();
                 if (timeRemaining <= 0) {
-                    new AlertDialog.Builder(AudienceTypeSelectionActivity.this)
+                    new AlertDialog.Builder(ConcessionSelectionActivity.this)
                             .setTitle("Timeout")
                             .setMessage("Your booking session has timed out. Returning to the showtime selection of this movie.")
                             .setPositiveButton("OK", (dialog, which) -> {
-                                Intent intent = new Intent(AudienceTypeSelectionActivity.this, MovieBookingActivity.class);
+                                Intent intent = new Intent(ConcessionSelectionActivity.this, MovieBookingActivity.class);
                                 intent.putExtra(IntentKey.MOVIE_ID.name(), getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L));
                                 startActivity(intent);
                             })
@@ -167,15 +144,15 @@ public class AudienceTypeSelectionActivity extends AppCompatActivity {
     }
     @SuppressLint("SetTextI18n")
     private void prepareNextButton() {
-        nextButton.setText("Next (2/4)");
-        nextButton.setEnabled(false);
+        nextButton.setText("Next (3/4)");
         nextButton
                 .setOnClickListener(v -> {
-                    //todo warning dialog cccd
                     booking = booking.toBuilder()
-                            .audienceTypes(audienceTypeAdapter.getItems())
+                            .concessions(ConcessionMapper
+                                    .fromItemList(concessionAdapter
+                                            .getItems()))
                             .build();
-                    Intent intent = new Intent(this, ConcessionSelectionActivity.class);
+                    Intent intent = new Intent(this, PaymentBookingActivity.class);
                     intent.putExtra(IntentKey.BOOKING.name(), booking);
                     intent.putExtra(IntentKey.BOOKING_TIME_LIMIT_PLUS_CURRENT_ELAPSED_BOOT_TIME.name(), getIntent().getLongExtra(IntentKey.BOOKING_TIME_LIMIT_PLUS_CURRENT_ELAPSED_BOOT_TIME.name(), -1L));
                     intent.putExtra(IntentKey.MOVIE_ID.name(), getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L));
