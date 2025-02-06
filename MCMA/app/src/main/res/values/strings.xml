@@ -100,26 +100,20 @@
     <string name="forgot_password">Forgot Password</string>
     <string name="logo">logo</string>
     <string name="background">background</string>
-    <string name="overview">Overview</string>
-    <string name="cast">Cast</string>
-    <string name="director">Director</string>
     <string name="name">SpotCinema+</string>
     <string name="book_tickets_by_theater">Book Tickets by Theater</string>
     <string name="book_tickets">Book Tickets</string>
     <string name="dash">-</string>
     <string name="movie_name">movie name</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading…</string>
     <string name="spotcinema">SpotCinema+</string>
     <string name="search_icon">search icon</string>
     <string name="menu_icon">menu icon</string>
     <string name="notification_icon">notification icon</string>
     <string name="movie_trailer">movie trailer</string>
-    <string name="release_date">Release date</string>
-    <string name="rating">Rating</string>
     <string name="voting">Voting</string>
     <string name="genre">Genre</string>
     <string name="movie_poster">movie poster</string>
-    <string name="banner">banner</string>
     <string name="expand_collapse">expand collapse</string>
     <string name="home">Home</string>
     <string name="showtimes">Showtimes</string>
@@ -131,6 +125,12 @@
     <string name="header_seat_selection">Seat Selection</string>
     <string name="header_audience_type_selection">Audience Type Selection</string>
     <string name="header_concession_selection">Concession Selection</string>
+    <!--category-->
+    <string name="category_movie_overview">Overview</string>
+    <string name="category_movie_release_date">Release date</string>
+    <string name="category_movie_rating">Rating</string>
+    <string name="category_movie_director">Director</string>
+    <string name="category_movie_cast">Cast</string>
     <!--hint-->
     <string name="hint_cinema_name">cinema_name</string>
     <string name="hint_screen_name_date_duration">screen_name - MMM dd, uuuu HH:mm ~ HH:mm</string>
@@ -150,8 +150,19 @@
     <string name="hint_concession_description">concession_description</string>
     <string name="hint_concession_combo_price">Price: $11.0</string>
     <string name="hint_time_remaining">00:00</string>
+    <string name="hint_movie_genres">genre01, genre02, genre03, …</string>
+    <string name="hint_movie_length">99 min</string>
+    <string name="hint_movie_overview">This is a movie.</string>
+    <string name="hint_see_more">See more</string>
+    <string name="hint_movie_director">John Doe</string>
+    <string name="hint_movie_casts">John Doe, Other Doe</string>
+    <string name="hint_movie_rating_description">rating_description</string>
+    <string name="hint_cinema_name_screen_name">cinema_name - screen_name</string>
+    <string name="hint_date_duration">MMM dd, uuuu HH:mm ~ HH:mm</string>
+    <string name="hint_items_ordered_summary">9 tickets + 9 concessions</string>
     <!--content description-->
-    <string name="decrement">decrement</string>
-    <string name="increment">increment</string>
+    <string name="content_description_decrement">decrement</string>
+    <string name="content_description_increment">increment</string>
+    <string name="content_description_banner">banner</string>
 </resources>
 

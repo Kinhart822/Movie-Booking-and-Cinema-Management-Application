@@ -53,10 +53,15 @@ public class BookingCheckoutActivity extends AppCompatActivity {
         backButton.setOnClickListener(view -> onBackPressed());
         initializeViews();
         retrieveIntentExtras();
+        couponList = fetchCoupons(movieId);
         setupCouponButton();
         updateCouponButton();
         updateTotalPriceWithCoupon();
         setupCheckoutButton();
+    }
+
+    private void setupCouponButton() {
+        buttonCoupon.setOnClickListener(v -> showCouponSelectionDialog());
     }
 
     private void showCouponSelectionDialog() {

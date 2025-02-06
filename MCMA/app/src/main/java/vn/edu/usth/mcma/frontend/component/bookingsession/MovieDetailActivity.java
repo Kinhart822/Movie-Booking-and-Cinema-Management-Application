@@ -64,8 +64,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         overviewTextView = findViewById(R.id.text_view_overview);
         seeMoreLessTextView = findViewById(R.id.text_view_see_more_less);
         isOverviewExpanded = false;
-        publishDateTextView = findViewById(R.id.text_view_publish_date);
-        ratingTextView = findViewById(R.id.text_view_rating);
+        publishDateTextView = findViewById(R.id.text_view_release_date);
+        ratingTextView = findViewById(R.id.text_view_rating);//todo: description instead, color red in xml?
         directorTextView = findViewById(R.id.text_view_director);
         castTextView = findViewById(R.id.text_view_cast);
         Button bookTicketsButton = findViewById(R.id.button_book_tickets);

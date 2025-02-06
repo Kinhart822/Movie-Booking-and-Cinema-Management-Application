@@ -15,7 +15,7 @@
             android:id="@+id/image_view_banner"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:contentDescription="@string/banner"
+            android:contentDescription="@string/content_description_banner"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
