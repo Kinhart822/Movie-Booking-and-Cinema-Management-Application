@@ -185,13 +185,26 @@
                 android:layout_height="1dp"
                 android:background="#BDBDBD"
                 app:layout_constraintTop_toBottomOf=""
-                app:layout_constraintBottom_toTopOf=""/>
+                app:layout_constraintBottom_toTopOf="@id/category_payment_methods"/>
             <!--payment methods-->
             <TextView
-                android:id="category_payment_methods"
+                android:id="@+id/category_payment_methods"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-            <!--assume paid-->
+                android:layout_marginHorizontal="20dp"
+                android:text="@string/category_payment_methods"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/separator_3"
+                app:layout_constraintBottom_toTopOf="@id/recycler_view_payment_methods"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_payment_methods"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                app:layout_constraintTop_toBottomOf="@id/category_payment_methods"
+                app:layout_constraintBottom_toBottomOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
     <!--summary-->
@@ -221,5 +234,6 @@
             android:id="@+id/button_next"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+        <!--todo assume paid-->
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
