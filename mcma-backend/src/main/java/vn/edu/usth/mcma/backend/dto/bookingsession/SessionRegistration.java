@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class SessionRegistration {
     private String sessionId;
+    //todo system elapsed time
 }

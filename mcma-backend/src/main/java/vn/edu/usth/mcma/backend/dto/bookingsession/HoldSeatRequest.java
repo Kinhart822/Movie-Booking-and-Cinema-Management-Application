@@ -8,5 +8,5 @@ import java.util.List;
 public class HoldSeatRequest {
     private String sessionId;
     private List<HoldRootSeat> rootSeats;
-    private Long timeRemaining;
+    private Long timeRemaining;//todo: system elapsed time instead
 }
