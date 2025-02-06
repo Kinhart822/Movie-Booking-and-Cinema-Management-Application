@@ -66,13 +66,13 @@ public class Booking implements Parcelable {
         dest.writeString(screenType);
 
         dest.writeString(sessionId);
-        dest.writeLong(limitPlusCurrentElapsedBootTime);
+        dest.writeLong(limitPlusCurrentElapsedBootTime == null ? 0L : limitPlusCurrentElapsedBootTime);
         dest.writeLong(scheduleId);
         dest.writeParcelableList(rootSeats, 0);
         dest.writeParcelableList(audienceTypes, 0);
         dest.writeParcelableList(concessions, 0);
-        dest.writeInt(totalAudience);
-        dest.writeDouble(totalPrice);
+        dest.writeInt(totalAudience == null ? 0 : totalAudience);
+        dest.writeDouble(totalPrice == null ? 0.0 : totalPrice);
     }
     public static final Creator<Booking> CREATOR = new Parcelable.Creator<>() {
         @Override

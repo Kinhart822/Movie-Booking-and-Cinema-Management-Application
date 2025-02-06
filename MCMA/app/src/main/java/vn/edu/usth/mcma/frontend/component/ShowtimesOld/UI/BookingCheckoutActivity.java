@@ -51,7 +51,7 @@ public class BookingCheckoutActivity extends AppCompatActivity {
 
         ImageButton backButton = findViewById(R.id.button_back);
         backButton.setOnClickListener(view -> onBackPressed());
-        couponList = fetchCoupons(movieId);
+//        couponList = fetchCoupons(movieId);todo
         setupCouponButton();
         updateCouponButton();
         updateTotalPriceWithCoupon();
@@ -115,11 +115,11 @@ public class BookingCheckoutActivity extends AppCompatActivity {
         if (selectedCoupon != null) {
             // Calculate discounted price
             double discountPercentage = selectedCoupon.getDiscountPercentage();
-            double discountAmount = originalTotalPrice * discountPercentage;
-            double discountedPrice = originalTotalPrice - discountAmount;
+//            double discountAmount = originalTotalPrice * discountPercentage;
+//            double discountedPrice = originalTotalPrice - discountAmount;
 
             // Update total price with coupon TextView
-            totalPriceCouponTV.setText(String.format("$%.2f", discountedPrice));
+//            totalPriceCouponTV.setText(String.format("$%.2f", discountedPrice));
         }
     }
 
@@ -207,16 +207,6 @@ public class BookingCheckoutActivity extends AppCompatActivity {
                         intent.putExtra(IntentKey.SELECTED_SHOWTIME.name(), getIntent().getStringExtra(IntentKey.SELECTED_SHOWTIME.name()));
                         intent.putExtra(IntentKey.SELECTED_SCREEN_ROOM.name(), getIntent().getStringExtra(IntentKey.SELECTED_SCREEN_ROOM.name()));
 
-                        // Booking
-                        intent.putExtra(IntentKey.MOVIE_ID.name(), movieId);
-                        intent.putExtra(IntentKey.SELECTED_CITY_ID.name(), selectedCityId);
-                        intent.putExtra(IntentKey.SELECTED_CINEMA_ID.name(), selectedCinemaId);
-                        intent.putExtra(IntentKey.SELECTED_SCREEN_ID.name(), selectedScreenId);
-                        intent.putExtra(IntentKey.SELECTED_SCHEDULE_ID.name(), selectedScheduleId);
-                        intent.putIntegerArrayListExtra("SELECTED_TICKET_IDS", new ArrayList<>(selectedTicketIds));
-                        intent.putIntegerArrayListExtra("SELECTED_SEAT_IDS", new ArrayList<>(selectedSeatIds));
-                        intent.putIntegerArrayListExtra("SELECTED_FOOD_IDS", new ArrayList<>(selectedFoodIds));
-                        intent.putIntegerArrayListExtra("SELECTED_DRINK_IDS", new ArrayList<>(selectedDrinkIds));
                         if (selectedMovieCouponId != 0 && selectedMovieCouponId > 0) {
                             intent.putExtra(IntentKey.SELECTED_MOVIE_COUPON_ID.name(), selectedMovieCouponId);
                         }
