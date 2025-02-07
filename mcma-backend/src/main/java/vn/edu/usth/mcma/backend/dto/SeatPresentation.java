@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class SeatPresentation {
     private Integer row;
     private Integer col;
-    private Integer typeId;
+    private String typeId;
     private String name;
     private Integer rootRow;
     private Integer rootCol;

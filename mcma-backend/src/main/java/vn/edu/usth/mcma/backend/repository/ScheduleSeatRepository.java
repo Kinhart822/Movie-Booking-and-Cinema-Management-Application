@@ -11,6 +11,6 @@ import java.util.List;
 
 @Repository
 public interface ScheduleSeatRepository extends JpaRepository<ScheduleSeat, ScheduleSeatPK> {
-    @Query("select ss from ScheduleSeat ss where ss.id.scheduleId = :scheduleId order by ss.id.seatId.row, ss.id.seatId.col")
+    @Query("select ss from ScheduleSeat ss where ss.id.schedule.id = :scheduleId order by ss.id.seat.rootRow, ss.id.seat.rootCol")
     List<ScheduleSeat> findAllByScheduleId(@Param("scheduleId") Long scheduleId);
 }

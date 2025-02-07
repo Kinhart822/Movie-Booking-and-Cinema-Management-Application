@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class SeatHelperInput {
     private int row;
     private int col;
-    private int typeId;
+    private String typeId;
 }

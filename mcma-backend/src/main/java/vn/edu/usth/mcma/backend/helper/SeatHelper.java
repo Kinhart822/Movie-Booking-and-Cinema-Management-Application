@@ -1,11 +1,11 @@
 package vn.edu.usth.mcma.backend.helper;
 
 import constants.ApiResponseCode;
-import constants.SeatType;
 import lombok.Getter;
 import vn.edu.usth.mcma.backend.dto.SeatHelperInput;
 import vn.edu.usth.mcma.backend.dto.SeatHelperOutput;
 import vn.edu.usth.mcma.backend.dto.SeatTile;
+import vn.edu.usth.mcma.backend.entity.SeatType;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
 
 import java.util.*;
@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SeatHelper {
     private final List<SeatHelperInput> seatHelperInputs;
+    private final Map<String, SeatType> idSeatTypeMap;
     @Getter
     private List<SeatHelperOutput> seatHelperOutputs;
     /*
@@ -21,13 +22,16 @@ public class SeatHelper {
      */
     @Getter
     private Map<Integer, Map<Integer, SeatTile>> seatGrid;
-    public SeatHelper(List<SeatHelperInput> seatHelperInputs) {
+    public SeatHelper(
+            List<SeatHelperInput> seatHelperInputs,
+            Map<String, SeatType> idSeatTypeMap) {
         this.seatHelperInputs = seatHelperInputs;
+        this.idSeatTypeMap = idSeatTypeMap;
         this.validateSeatMap();
         this.assignName();
     }
     private void validateSeatMap() {
-        Set<Integer> seatTypeIds = SeatType.getIdMap().keySet();
+        Set<String> seatTypeIds = idSeatTypeMap.keySet();
         // check typeId existent -> map to seatValidate object -> sort (see overridden sorting method of SeatTile)
         List<SeatTile> tiles = this
                 .seatHelperInputs
@@ -45,14 +49,14 @@ public class SeatHelper {
                 continue;
             }
             // already checked above if seat type exists
-            SeatType seatType = SeatType.getById(seat.getTypeId());
+            SeatType seatType = idSeatTypeMap.get(seat.getTypeId());
             // validate rectangle
-            if (!validateRectangle(seat, seatGrid, seatType.getWidth(), seatType.getLength())) {
+            if (!validateRectangle(seat, seatGrid, seatType.getWidth(), seatType.getHeight())) {
                 throw new BusinessException(ApiResponseCode.INVALID_SEAT_MAP);
             }
         }
     }
-    private SeatTile verifyAndConvertFromRequestToTile(SeatHelperInput seat, Set<Integer> seatTypeIds) {
+    private SeatTile verifyAndConvertFromRequestToTile(SeatHelperInput seat, Set<String> seatTypeIds) {
         if (!seatTypeIds.contains(seat.getTypeId())) {
             throw new BusinessException(ApiResponseCode.SEAT_TYPE_NOT_FOUND);
         }
@@ -79,7 +83,7 @@ public class SeatHelper {
         for (int row = rootRow; row < rootRow + length; row++) {
             for (int col = rootCol; col < rootCol + width; col++) {
                 SeatTile seat = seatGrid.get(row).get(col);
-                if (seat == null || seat.getTypeId() != startSeat.getTypeId()) {
+                if (seat == null || !Objects.equals(seat.getTypeId(), startSeat.getTypeId())) {
                     return false;
                 }
             }
@@ -111,13 +115,13 @@ public class SeatHelper {
             if (columnMap
                     .values()
                     .stream()
-                    .allMatch(seat -> seat.getTypeId() == SeatType.NOT_PLACEABLE.getId() || seat.getTypeId() == SeatType.PLACEABLE.getId())) {
+                    .allMatch(seat -> Objects.equals(seat.getTypeId(), "NOT_PLACEABLE") || Objects.equals(seat.getTypeId(), "PLACEABLE"))) {
                 columnMap.forEach((col, seat) -> seatHelperOutputs.add(createSeatResponse(seat)));
                 return;
             }
             AtomicInteger currentNumber = new AtomicInteger(0);
             columnMap.forEach((col, seat) -> {
-                if (seat.getTypeId() == SeatType.NOT_PLACEABLE.getId() || seat.getTypeId() == SeatType.PLACEABLE.getId()) {
+                if (Objects.equals(seat.getTypeId(), "NOT_PLACEABLE") || Objects.equals(seat.getTypeId(), "PLACEABLE")) {
                     seatHelperOutputs.add(createSeatResponse(seat));
                     return;
                 }

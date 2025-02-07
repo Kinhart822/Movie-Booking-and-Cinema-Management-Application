@@ -14,24 +14,20 @@ import vn.edu.usth.mcma.backend.repository.*;
 import java.time.Instant;
 import java.util.*;
 
-import static vn.edu.usth.mcma.backend.config.AppConfig.dotenv;
-
 @Transactional
 @Service
 @AllArgsConstructor
 public class BookingService {
-    private static final String SEAT_AVAILABILITY_DETAIL_SEPARATOR = dotenv().get("SEAT_AVAILABILITY_DETAIL_SEPARATOR");
     private final ScheduleRepository scheduleRepository;
     private final ReviewRepository reviewRepository;
     private final CityRepository cityRepository;
     private final CinemaRepository cinemaRepository;
     private final ScreenRepository screenRepository;
-    private final TicketRepository ticketRepository;
     private final SeatRepository seatRepository;
     private final RatingRepository ratingRepository;
     private final ScheduleSeatRepository scheduleSeatRepository;
     private final MovieRepository movieRepository;
-    private static Set<String> sessionSet = new HashSet<>();
+    private static final Set<String> sessionSet = new HashSet<>();
     @Deprecated
     public MoviePresentation getAllInformationOfSelectedMovie(Long movieId) {
         Movie movie = movieRepository
@@ -217,36 +213,33 @@ public class BookingService {
                 .toList();
     }
     public List<SeatPresentation> findAllSeatBySchedule(Long scheduleId) {
-        Map<ScheduleSeatPK, ScheduleSeat> scheduleSeatIdMap = new HashMap<>();
+        Schedule schedule = scheduleRepository
+                .findById(scheduleId)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+        Map<SeatPK, ScheduleSeat> rootSeatIdScheduleSeatMap = new HashMap<>();
         scheduleSeatRepository
                 .findAllByScheduleId(scheduleId)
-                .forEach(scheduleSeat -> scheduleSeatIdMap.put(scheduleSeat.getId(), scheduleSeat));
+                .forEach(scheduleSeat -> rootSeatIdScheduleSeatMap.put(scheduleSeat.getId().getSeat().getId(), scheduleSeat));
         return seatRepository
-                .findAllByScreenId(scheduleRepository
-                        .findById(scheduleId)
-                        .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND))
-                        .getScreen()
-                        .getId())
+                .findAllByScreenId(schedule.getScreen().getId())
                 .stream()
                 .map(s -> {
-                    Optional<ScheduleSeat> scheduleSeatOpt = Optional.ofNullable(scheduleSeatIdMap
-                            .get(ScheduleSeatPK.builder()
-                                    .scheduleId(scheduleId)
-                                    .seatId(SeatPK.builder()
-                                            .screenId(s.getPk().getScreenId())
-                                            .row(s.getRootRow())
-                                            .col(s.getRootCol()).build())
+                    Optional<ScheduleSeat> scheduleSeatOpt = Optional.ofNullable(rootSeatIdScheduleSeatMap
+                            .get(SeatPK.builder()
+                                    .screenId(s.getId().getScreenId())
+                                    .row(s.getRootRow())
+                                    .col(s.getRootCol())
                                     .build()));
                     return SeatPresentation.builder()
-                            .row(s.getPk().getRow())
-                            .col(s.getPk().getCol())
-                            .typeId(s.getTypeId())
+                            .row(s.getId().getRow())
+                            .col(s.getId().getCol())
+                            .typeId(s.getSeatType().getId())
                             .name(s.getName())
                             .rootRow(s.getRootRow())
                             .rootCol(s.getRootCol())
                             .availability(scheduleSeatOpt
-                                    .map(scheduleSeat -> SeatAvailability.HELD.name().equals(scheduleSeat.getSeatAvailability().split(Objects.requireNonNull(SEAT_AVAILABILITY_DETAIL_SEPARATOR))[0])
-                                            ? Instant.parse(scheduleSeat.getSeatAvailability().split(Objects.requireNonNull(SEAT_AVAILABILITY_DETAIL_SEPARATOR))[1]).isBefore(Instant.now())
+                                    .map(scheduleSeat -> scheduleSeat.getSeatAvailability().equals(SeatAvailability.HELD.name())
+                                            ? scheduleSeat.getHoldUntil().isBefore(Instant.now())
                                                     ? SeatAvailability.BUYABLE.name()
                                                     : SeatAvailability.HELD.name()
                                             : SeatAvailability.SOLD.name())
@@ -284,23 +277,25 @@ public class BookingService {
         if (!sessionSet.contains(request.getSessionId())) {
             throw new BusinessException(ApiResponseCode.SESSION_ID_NOT_FOUND);
         }
+        Schedule schedule = scheduleRepository
+                .findById(scheduleId)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+        Map<SeatPK, Seat> rootSeatIdSeatMap = new HashMap<>();
+        seatRepository
+                .findAllRootByScreenId(schedule.getScreen().getId())
+                .forEach(s -> rootSeatIdSeatMap.put(s.getId(), s));
         scheduleSeatRepository
                 .saveAll(request
                         .getRootSeats().stream()
                         .map(r -> ScheduleSeat.builder()
                                 .id(ScheduleSeatPK.builder()
-                                        .scheduleId(scheduleId)
-                                        .seatId(SeatPK.builder()
-                                                .screenId(scheduleRepository
-                                                        .findById(scheduleId)
-                                                        .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND))
-                                                        .getScreen()
-                                                        .getId())
+                                        .schedule(schedule)
+                                        .seat(rootSeatIdSeatMap.get(SeatPK.builder()
+                                                .screenId(schedule.getScreen().getId())
                                                 .row(r.getRootRow())
-                                                .col(r.getRootCol()).build()).build())
-                                .seatAvailability(SeatAvailability.HELD.name()
-                                        + Objects.requireNonNull(SEAT_AVAILABILITY_DETAIL_SEPARATOR)
-                                        + Instant.now().plusMillis(request.getTimeRemaining()).toString()).build())
+                                                .col(r.getRootCol()).build())).build())
+                                .seatAvailability(SeatAvailability.HELD.name())
+                                .holdUntil(Instant.now().plusMillis(request.getTimeRemaining())).build())
                         .toList());
         return ApiResponse.ok();
     }

@@ -1,11 +1,11 @@
 package vn.edu.usth.mcma.backend.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import vn.edu.usth.mcma.backend.domain.Booking;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -19,19 +19,14 @@ import java.util.Objects;
 public class ScheduleSeatPK implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    @Column
-    private Long scheduleId;
-    @Column
-    private SeatPK seatId;
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof ScheduleSeatPK that)) return false;
-        return Objects.equals(getScheduleId(), that.getScheduleId()) && getSeatId().equals(that.getSeatId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getScheduleId(), getSeatId());
-    }
+    @ManyToOne
+    @JoinColumn(name = "schedule_id")
+    private Schedule schedule;
+    @ManyToOne
+    @JoinColumns({
+            @JoinColumn(name = "screen_id", referencedColumnName = "screenId"),
+            @JoinColumn(name = "root_row", referencedColumnName = "row"),
+            @JoinColumn(name = "root_col", referencedColumnName = "col")
+    })
+    private Seat seat;
 }

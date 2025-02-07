@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class SeatTile implements Comparable<SeatTile> {
     private int row;
     private int col;
-    private int typeId;
+    private String typeId;
     private String name;
     private int rootRow;
     private int rootCol;

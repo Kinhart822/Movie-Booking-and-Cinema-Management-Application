@@ -11,6 +11,8 @@ import java.util.List;
 
 @Repository
 public interface SeatRepository extends JpaRepository<Seat, SeatPK> {
-    @Query("select s from Seat s where s.pk.screenId = :screenId order by s.pk.row, s.pk.col")
+    @Query("select s from Seat s where s.id.screenId = :screenId order by s.id.row, s.id.col")
     List<Seat> findAllByScreenId(@Param("screenId") Long screenId);
+    @Query("select s from Seat s where s.id.screenId = :screenId and s.id.row = s.rootRow and s.id.col = s.rootCol order by s.id.row, s.id.col")
+    List<Seat> findAllRootByScreenId(@Param("screenId") Long screenId);
 }

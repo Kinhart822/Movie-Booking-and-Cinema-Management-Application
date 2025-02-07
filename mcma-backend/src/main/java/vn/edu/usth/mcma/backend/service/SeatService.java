@@ -18,12 +18,11 @@ import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.helper.SeatHelper;
 import vn.edu.usth.mcma.backend.repository.ScreenRepository;
 import vn.edu.usth.mcma.backend.repository.SeatRepository;
+import vn.edu.usth.mcma.backend.repository.SeatTypeRepository;
 import vn.edu.usth.mcma.backend.security.JwtHelper;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Transactional
 @Service
@@ -33,6 +32,7 @@ public class SeatService {
     private final ScreenRepository screenRepository;
     private final JwtHelper jwtHelper;
     private final SeatAvailability DEFAULT_SEAT_AVAILABILITY = SeatAvailability.BUYABLE;
+    private final SeatTypeRepository seatTypeRepository;
 
     public ApiResponse initSeatMap(Long screenId, List<SeatHelperInput> seatHelperInputs) {
         Screen screen = screenRepository
@@ -44,13 +44,15 @@ public class SeatService {
         }
         Long userId = jwtHelper.getIdUserRequesting();
         Instant now = Instant.now();
-        SeatHelper seatHelper = new SeatHelper(seatHelperInputs);
+        Map<String, vn.edu.usth.mcma.backend.entity.SeatType> idSeatTypeMap = new HashMap<>();
+        seatTypeRepository.findAll().forEach(seatType -> idSeatTypeMap.put(seatType.getId(), seatType));
+        SeatHelper seatHelper = new SeatHelper(seatHelperInputs, idSeatTypeMap);
         seatRepository.saveAll(seatHelper
                 .getSeatHelperOutputs() // sorted btw
                 .stream()
                 .map(output -> Seat
                         .builder()
-                        .pk(SeatPK
+                        .id(SeatPK
                                 .builder()
                                 .screenId(screen.getId())
                                 .row(output.getRow())
@@ -58,7 +60,7 @@ public class SeatService {
                                 .build())
                         .rootRow(output.getRootRow())
                         .rootCol(output.getRootCol())
-                        .typeId(output.getTypeId())
+                        .seatType(idSeatTypeMap.get(output.getTypeId()))
                         .name(output.getName())
                         .createdBy(userId)
                         .createdDate(now)
@@ -75,9 +77,9 @@ public class SeatService {
                 .stream()
                 .map(s -> SeatResponse
                         .builder()
-                        .row(s.getPk().getRow())
-                        .col(s.getPk().getCol())
-                        .typeId(s.getTypeId())
+                        .row(s.getId().getRow())
+                        .col(s.getId().getCol())
+                        .typeId(s.getSeatType().getId())
                         .name(s.getName())
                         .rootRow(s.getRootRow())
                         .rootCol(s.getRootCol())
@@ -93,32 +95,34 @@ public class SeatService {
         }
         Long userId = jwtHelper.getIdUserRequesting();
         Instant now = Instant.now();
-        SeatHelper seatHelper = new SeatHelper(seatHelperInputs);
+        Map<String, vn.edu.usth.mcma.backend.entity.SeatType> idSeatTypeMap = new HashMap<>();
+        seatTypeRepository.findAll().forEach(seatType -> idSeatTypeMap.put(seatType.getId(), seatType));
+        SeatHelper seatHelper = new SeatHelper(seatHelperInputs, idSeatTypeMap);
         Map<Integer, Map<Integer, SeatTile>> seatGrid = seatHelper.getSeatGrid();
         List<Seat> seats = seatRepository.findAllByScreenId(screenId);
         // a for loop to detect mutation of type = -1
         for (Seat seat : seats) {
-            Integer row = seat.getPk().getRow();
-            Integer col = seat.getPk().getCol();
-            Integer typeId = seat.getTypeId();
-            Integer newTypeId = seatGrid.get(row).get(col).getTypeId();
+            Integer row = seat.getId().getRow();
+            Integer col = seat.getId().getCol();
+            String typeId = seat.getSeatType().getId();
+            String newTypeId = seatGrid.get(row).get(col).getTypeId();
             // TODO: low priority: better response for error: seat with type -1 at cannot be mutated
-            if (typeId == SeatType.NOT_PLACEABLE.getId() && !typeId.equals(newTypeId)) {
+            if (Objects.equals(typeId, "NOT_PLACEABLE") && !typeId.equals(newTypeId)) {
                 throw new BusinessException(ApiResponseCode.INVALID_SEAT_MAP);
             }
-            if (newTypeId == SeatType.NOT_PLACEABLE.getId() && !typeId.equals(newTypeId)) {
+            if (Objects.equals(newTypeId, "NOT_PLACEABLE") && !typeId.equals(newTypeId)) {
                 throw new BusinessException(ApiResponseCode.INVALID_SEAT_MAP);
             }
         }
         // begin update
         List<Seat> updatedSeats = new ArrayList<>();
         for (Seat seat : seats) {
-            Integer row = seat.getPk().getRow();
-            Integer col = seat.getPk().getCol();
+            Integer row = seat.getId().getRow();
+            Integer col = seat.getId().getCol();
             SeatTile tile = seatGrid.get(row).get(col);
             Seat updatedSeat = seat
                     .toBuilder()
-                    .typeId(tile.getTypeId())
+                    .seatType(idSeatTypeMap.get(tile.getTypeId()))
                     .rootRow(tile.getRootRow())
                     .rootCol(tile.getRootCol())
                     .name(tile.getName())

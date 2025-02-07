@@ -1,6 +1,5 @@
 package vn.edu.usth.mcma.backend.entity;
 
-import constants.SeatAvailability;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -25,9 +24,10 @@ public class Seat implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @EmbeddedId
-    private SeatPK pk;
-    @Column(columnDefinition = "TINYINT")
-    private Integer typeId;
+    private SeatPK id;
+    @ManyToOne
+    @JoinColumn(name = "type_id")
+    private SeatType seatType;
     @Column
     private String name;
     @Column
