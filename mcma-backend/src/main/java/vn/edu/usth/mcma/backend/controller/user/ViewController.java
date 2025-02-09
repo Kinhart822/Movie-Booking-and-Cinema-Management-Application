@@ -4,13 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.dto.*;
-import vn.edu.usth.mcma.backend.dto.movie.MovieDetailShort;
-import vn.edu.usth.mcma.backend.dto.movie.MovieDetailShort2;
-import vn.edu.usth.mcma.backend.dto.movie.ShowtimeOfMovieByCity;
-import vn.edu.usth.mcma.backend.service.MovieService;
+import vn.edu.usth.mcma.backend.dto.movie.*;
 import vn.edu.usth.mcma.backend.service.ViewService;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 

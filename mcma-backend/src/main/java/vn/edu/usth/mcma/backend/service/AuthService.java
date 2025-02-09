@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.edu.usth.mcma.backend.dto.*;
+import vn.edu.usth.mcma.backend.dto.account.RefreshRequest;
 import vn.edu.usth.mcma.backend.entity.RefreshToken;
 import vn.edu.usth.mcma.backend.entity.User;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;

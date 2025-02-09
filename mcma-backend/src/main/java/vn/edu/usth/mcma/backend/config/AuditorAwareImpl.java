@@ -13,8 +13,8 @@ public class AuditorAwareImpl implements AuditorAware<Long> {
 
     private final JwtHelper jwtUtil;
 
-    public AuditorAwareImpl(JwtHelper jwtUtil) {
-        this.jwtUtil = jwtUtil;
+    public AuditorAwareImpl(JwtHelper jwtHelper) {
+        this.jwtUtil = jwtHelper;
     }
 
     @NotNull

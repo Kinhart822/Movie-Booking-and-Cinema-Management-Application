@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.backend.dto;
+package vn.edu.usth.mcma.backend.dto.movie;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,9 +7,11 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class RatingPresentation {
+@AllArgsConstructor
+public class HighRatingMovie {
+    private Long id;
     private String name;
-    private String description;
+    private String poster;
+    private Double avgVote;
 }

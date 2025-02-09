@@ -13,16 +13,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Drink extends AbstractAuditing implements Serializable {
+public class Drink extends ConcessionItem implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
-    private String name;
-    @Column
-    private String description;
-    @Column
-    private Double unitPrice;
 }

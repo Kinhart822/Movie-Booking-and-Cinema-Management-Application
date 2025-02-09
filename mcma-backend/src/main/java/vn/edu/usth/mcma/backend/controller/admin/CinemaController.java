@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.dto.*;
+import vn.edu.usth.mcma.backend.dto.cinema.CinemaProjection;
+import vn.edu.usth.mcma.backend.dto.cinema.CinemaRequest;
 import vn.edu.usth.mcma.backend.entity.Screen;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.repository.ScreenRepository;

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public enum ApiResponseCode {
     SUCCESS("200", "SUCCESS"),
     SESSION_ID_NOT_FOUND("404", "Unknown session ID!"),
@@ -28,5 +27,13 @@ public enum ApiResponseCode {
     BUSY_SCREEN("400", "Cannot update SeatMap: Screen is going to be used"),
     ;
     private final String status;
-    private final String description;
+    private String description;
+    ApiResponseCode(String status, String defaultDescription) {
+        this.status = status;
+        this.description = defaultDescription;
+    }
+    public ApiResponseCode setDescription(String description) {
+        this.description = description;
+        return this;
+    }
 }

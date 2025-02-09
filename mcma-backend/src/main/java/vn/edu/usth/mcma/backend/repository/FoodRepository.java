@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface FoodRepository extends JpaRepository<Food, Long> {
-    List<Food> findAllByNameContaining(String query, Pageable pageable);
+    List<Food> findAllByNameContaining(String query);
 }

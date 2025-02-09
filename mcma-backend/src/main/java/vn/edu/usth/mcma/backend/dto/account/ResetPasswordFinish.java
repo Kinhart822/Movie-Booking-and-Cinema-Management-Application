@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.backend.dto;
+package vn.edu.usth.mcma.backend.dto.account;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

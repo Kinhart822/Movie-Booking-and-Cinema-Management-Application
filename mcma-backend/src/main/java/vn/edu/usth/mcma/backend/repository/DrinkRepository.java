@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface DrinkRepository extends JpaRepository<Drink, Long> {
-    List<Drink> findAllByNameContaining(String query, Pageable pageable);
+    List<Drink> findAllByNameContaining(String query);
 }

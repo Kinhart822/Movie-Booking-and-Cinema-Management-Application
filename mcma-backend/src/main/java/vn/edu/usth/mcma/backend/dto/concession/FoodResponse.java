@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.backend.dto;
+package vn.edu.usth.mcma.backend.dto.concession;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GenrePresentation {
+public class FoodResponse {
     private Long id;
     private String name;
     private String description;
-    private String imageUrl;
+    private Double unitPrice;
+    private Integer quantity;
 }

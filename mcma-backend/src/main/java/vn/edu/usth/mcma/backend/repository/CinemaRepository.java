@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import vn.edu.usth.mcma.backend.dto.CinemaProjection;
+import vn.edu.usth.mcma.backend.dto.cinema.CinemaProjection;
 import vn.edu.usth.mcma.backend.entity.Cinema;
 import vn.edu.usth.mcma.backend.entity.City;
 

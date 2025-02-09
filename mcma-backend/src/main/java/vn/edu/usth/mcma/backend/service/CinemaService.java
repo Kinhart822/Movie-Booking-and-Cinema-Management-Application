@@ -5,13 +5,13 @@ import constants.CommonStatus;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vn.edu.usth.mcma.backend.dto.CinemaDetailShort;
-import vn.edu.usth.mcma.backend.dto.CinemaProjection;
+import vn.edu.usth.mcma.backend.dto.cinema.CinemaDetailShort;
+import vn.edu.usth.mcma.backend.dto.cinema.CinemaProjection;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.CityRepository;
 import vn.edu.usth.mcma.backend.security.JwtHelper;
-import vn.edu.usth.mcma.backend.dto.CinemaRequest;
+import vn.edu.usth.mcma.backend.dto.cinema.CinemaRequest;
 import vn.edu.usth.mcma.backend.repository.CinemaRepository;
 import vn.edu.usth.mcma.backend.entity.Cinema;
 

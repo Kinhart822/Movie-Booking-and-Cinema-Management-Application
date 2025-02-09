@@ -3,8 +3,8 @@ package vn.edu.usth.mcma.backend.controller.admin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.usth.mcma.backend.dto.MovieRequest;
-import vn.edu.usth.mcma.backend.dto.MovieScheduleRequest;
+import vn.edu.usth.mcma.backend.dto.movie.MovieRequest;
+import vn.edu.usth.mcma.backend.dto.movie.MovieScheduleRequest;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.service.MovieService;
 
