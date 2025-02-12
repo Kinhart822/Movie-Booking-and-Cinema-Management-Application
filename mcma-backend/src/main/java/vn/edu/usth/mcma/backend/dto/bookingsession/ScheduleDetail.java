@@ -19,5 +19,6 @@ public class ScheduleDetail {
     private Instant endDateTime;
     private String movieName;
     private String rating;
+    private String ratingDescription;
     private String screenType;
 }

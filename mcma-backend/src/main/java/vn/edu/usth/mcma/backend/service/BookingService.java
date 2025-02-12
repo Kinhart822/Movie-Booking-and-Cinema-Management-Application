@@ -34,6 +34,9 @@ public class BookingService {
     private final ScheduleSeatRepository scheduleSeatRepository;
     private final MovieRepository movieRepository;
     private static final Set<String> sessionSet = new HashSet<>();
+    private final SeatTypeRepository seatTypeRepository;
+    private final PaymentMethodRepository paymentMethodRepository;
+
     @Deprecated
     public MoviePresentation getAllInformationOfSelectedMovie(Long movieId) {
         Movie movie = movieRepository
@@ -198,16 +201,18 @@ public class BookingService {
                 .endDateTime(schedule.getEndDateTime())
                 .movieName(schedule.getMovie().getName())
                 .rating(schedule.getMovie().getRating().getId())
+                .ratingDescription(schedule.getMovie().getRating().getDescription())
                 .screenType(schedule.getScreen().getScreenType().getId())
                 .build();
     }
 
-    public List<AudienceDetail> findAllAudienceTypeByRating(String ratingId) {
-        return ratingRepository
-                .findById(ratingId)
+    public List<AudienceDetail> findAllAudienceTypeBySchedule(Long scheduleId) {
+        return scheduleRepository
+                .findById(scheduleId)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND))
-                .getAllowedAudiences()
-                .stream()
+                .getMovie()
+                .getRating()
+                .getAllowedAudiences().stream()
                 .sorted()
                 .map(a -> AudienceDetail.builder()
                         .id(a.getId())
@@ -227,12 +232,12 @@ public class BookingService {
                 .findAllByScheduleId(scheduleId)
                 .forEach(scheduleSeat -> rootSeatIdScheduleSeatMap.put(scheduleSeat.getId().getSeat().getId(), scheduleSeat));
         return seatRepository
-                .findAllByScreenId(schedule.getScreen().getId())
+                .findAllByScreen(schedule.getScreen())
                 .stream()
                 .map(s -> {
                     Optional<ScheduleSeat> scheduleSeatOpt = Optional.ofNullable(rootSeatIdScheduleSeatMap
                             .get(SeatPK.builder()
-                                    .screenId(s.getId().getScreenId())
+                                    .screen(s.getId().getScreen())
                                     .row(s.getRootRow())
                                     .col(s.getRootCol())
                                     .build()));
@@ -288,7 +293,7 @@ public class BookingService {
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         Map<SeatPK, Seat> rootSeatIdSeatMap = new HashMap<>();
         seatRepository
-                .findAllRootByScreenId(schedule.getScreen().getId())
+                .findAllRootByScreen(schedule.getScreen())
                 .forEach(s -> rootSeatIdSeatMap.put(s.getId(), s));
         scheduleSeatRepository
                 .saveAll(request
@@ -297,13 +302,33 @@ public class BookingService {
                                 .id(ScheduleSeatPK.builder()
                                         .schedule(schedule)
                                         .seat(rootSeatIdSeatMap.get(SeatPK.builder()
-                                                .screenId(schedule.getScreen().getId())
+                                                .screen(schedule.getScreen())
                                                 .row(r.getRootRow())
                                                 .col(r.getRootCol()).build())).build())
                                 .seatAvailability(SeatAvailability.HELD.name())
                                 .holdUntil(Instant.now().plusMillis(request.getTimeRemaining())).build())
                         .toList());
         return ApiResponse.ok();
+    }
+
+    public List<SeatTypeResponse> findAllSeatTypeBySchedule(Long scheduleId) {
+        return seatTypeRepository
+                .findAllBySchedule(scheduleRepository
+                        .findById(scheduleId)
+                        .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND.setDescription(String.format("Schedule not found: %d", scheduleId)))))
+                .stream()
+                .map(st -> SeatTypeResponse.builder()
+                        .id(st.getId())
+                        .description(st.getDescription())
+                        .width(st.getWidth())
+                        .height(st.getHeight())
+                        .unitPrice(st.getUnitPrice())
+                        .build())
+                .toList();
+    }
+
+    public List<PaymentMethod> findAllPaymentMethod() {
+        return paymentMethodRepository.findAll();
     }
 //    public List<TicketResponse> getAllTickets() {
 //        List<Ticket> tickets = ticketRepository.findAll();

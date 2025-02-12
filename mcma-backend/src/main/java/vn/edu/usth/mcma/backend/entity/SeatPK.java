@@ -2,7 +2,12 @@ package vn.edu.usth.mcma.backend.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.*;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,8 +21,9 @@ import java.util.Objects;
 public class SeatPK implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    @Column
-    private Long screenId;
+    @ManyToOne
+    @JoinColumn(name = "screen_id")
+    private Screen screen;
     @Column(columnDefinition = "TINYINT UNSIGNED")
     private Integer row;
     @Column(columnDefinition = "TINYINT UNSIGNED")
@@ -26,10 +32,10 @@ public class SeatPK implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof SeatPK seatPK)) return false;
-        return Objects.equals(getScreenId(), seatPK.getScreenId()) && Objects.equals(getRow(), seatPK.getRow()) && Objects.equals(getCol(), seatPK.getCol());
+        return Objects.equals(getScreen().getId(), seatPK.getScreen().getId()) && Objects.equals(getRow(), seatPK.getRow()) && Objects.equals(getCol(), seatPK.getCol());
     }
     @Override
     public int hashCode() {
-        return Objects.hash(getScreenId(), getRow(), getCol());
+        return Objects.hash(getScreen().getId(), getRow(), getCol());
     }
 }

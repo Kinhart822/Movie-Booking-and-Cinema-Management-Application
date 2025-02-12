@@ -112,7 +112,7 @@ public class ViewService {
                         .toList())
                 .directors(directors)
                 .actors(actors)
-                .rating(movie.getRating().getId())
+                .ratingDescription(movie.getRating().getDescription())
                 .avgVotes(reviewRepository.findAvgVoteByMovieIdAndStatus(id, CommonStatus.ACTIVE.getStatus()))
                 .build();
     }

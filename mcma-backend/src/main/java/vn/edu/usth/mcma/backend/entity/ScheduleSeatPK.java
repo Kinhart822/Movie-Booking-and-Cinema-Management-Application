@@ -24,7 +24,7 @@ public class ScheduleSeatPK implements Serializable {
     private Schedule schedule;
     @ManyToOne
     @JoinColumns({
-            @JoinColumn(name = "screen_id", referencedColumnName = "screenId"),
+            @JoinColumn(name = "screen_id", referencedColumnName = "screen_id"),
             @JoinColumn(name = "root_row", referencedColumnName = "row"),
             @JoinColumn(name = "root_col", referencedColumnName = "col")
     })

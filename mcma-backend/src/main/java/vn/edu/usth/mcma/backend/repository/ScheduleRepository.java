@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import vn.edu.usth.mcma.backend.entity.Movie;
 import vn.edu.usth.mcma.backend.entity.Schedule;
 import vn.edu.usth.mcma.backend.entity.Screen;
+import vn.edu.usth.mcma.backend.entity.SeatType;
 
 import java.time.Instant;
 import java.util.List;

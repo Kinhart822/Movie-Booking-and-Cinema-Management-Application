@@ -4,8 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.usth.mcma.backend.dto.SeatPresentation;
-import vn.edu.usth.mcma.backend.dto.SeatTypePresentation;
+import vn.edu.usth.mcma.backend.dto.SeatTypeResponse;
 import vn.edu.usth.mcma.backend.dto.bookingsession.*;
+import vn.edu.usth.mcma.backend.entity.PaymentMethod;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.service.BookingService;
 import vn.edu.usth.mcma.backend.service.SeatService;
@@ -23,13 +24,13 @@ public class BookingController {
     public ResponseEntity<ScheduleDetail> findScheduleDetail(@PathVariable Long scheduleId) {
         return ResponseEntity.ok(bookingService.findScheduleDetail(scheduleId));
     }
-    @GetMapping("/rating/{ratingId}/audience-type")//todo /schedule/{scheduleId}/audience-type
-    public ResponseEntity<List<AudienceDetail>> findAllAudienceTypeByRating(@PathVariable String ratingId) {
-        return ResponseEntity.ok(bookingService.findAllAudienceTypeByRating(ratingId));
+    @GetMapping("/schedule/{scheduleId}/audience-type")
+    public ResponseEntity<List<AudienceDetail>> findAllAudienceTypeBySchedule(@PathVariable Long scheduleId) {
+        return ResponseEntity.ok(bookingService.findAllAudienceTypeBySchedule(scheduleId));
     }
-    @GetMapping("/seat-types")//todo /schedule/{scheduleId}/seat-types
-    public ResponseEntity<List<SeatTypePresentation>> findAllSeatTypes() {
-        return ResponseEntity.ok(seatService.findAllSeatTypes());
+    @GetMapping("/schedule/{scheduleId}/seat-types")
+    public ResponseEntity<List<SeatTypeResponse>> findAllSeatTypeBySchedule(@PathVariable Long scheduleId) {
+        return ResponseEntity.ok(bookingService.findAllSeatTypeBySchedule(scheduleId));
     }
     @GetMapping("/schedule/{scheduleId}/seat")
     public ResponseEntity<List<SeatPresentation>> findAllSeatBySchedule(@PathVariable Long scheduleId) {
@@ -47,5 +48,8 @@ public class BookingController {
     public ResponseEntity<ApiResponse> holdSeatRequest(@PathVariable Long scheduleId, @RequestBody HoldSeatRequest request) {
         return ResponseEntity.ok(bookingService.holdSeatRequest(scheduleId, request));
     }
-
+    @GetMapping("/payment-method")
+    public ResponseEntity<List<PaymentMethod>> findAllPaymentMethod() {
+        return ResponseEntity.ok(bookingService.findAllPaymentMethod());
+    }
 }

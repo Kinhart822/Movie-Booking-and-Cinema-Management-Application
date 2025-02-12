@@ -9,11 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SeatTypePresentation {
-    private Integer id;
-    private String name;
+public class SeatTypeResponse {
+    private String id;
     private String description;
     private Integer width;
-    private Integer length;
+    private Integer height;
     private Double unitPrice;
 }

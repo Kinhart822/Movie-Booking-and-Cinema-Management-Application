@@ -1,7 +1,6 @@
 package vn.edu.usth.mcma.backend.service;
 
 import constants.ApiResponseCode;
-import constants.SeatAvailability;
 import constants.SeatType;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -9,7 +8,7 @@ import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.dto.SeatHelperInput;
 import vn.edu.usth.mcma.backend.dto.SeatResponse;
 import vn.edu.usth.mcma.backend.dto.SeatTile;
-import vn.edu.usth.mcma.backend.dto.SeatTypePresentation;
+import vn.edu.usth.mcma.backend.dto.SeatTypeResponse;
 import vn.edu.usth.mcma.backend.entity.Screen;
 import vn.edu.usth.mcma.backend.entity.Seat;
 import vn.edu.usth.mcma.backend.entity.SeatPK;
@@ -53,7 +52,7 @@ public class SeatService {
                         .builder()
                         .id(SeatPK
                                 .builder()
-                                .screenId(screen.getId())
+                                .screen(screen)
                                 .row(output.getRow())
                                 .col(output.getCol())
                                 .build())
@@ -72,7 +71,9 @@ public class SeatService {
 
     public List<SeatResponse> findSeatMapByScreenId(Long screenId) {
         return seatRepository
-                .findAllByScreenId(screenId)
+                .findAllByScreen(screenRepository
+                        .findById(screenId)
+                        .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND)))
                 .stream()
                 .map(s -> SeatResponse
                         .builder()
@@ -98,7 +99,7 @@ public class SeatService {
         seatTypeRepository.findAll().forEach(seatType -> idSeatTypeMap.put(seatType.getId(), seatType));
         SeatHelper seatHelper = new SeatHelper(seatHelperInputs, idSeatTypeMap);
         Map<Integer, Map<Integer, SeatTile>> seatGrid = seatHelper.getSeatGrid();
-        List<Seat> seats = seatRepository.findAllByScreenId(screenId);
+        List<Seat> seats = seatRepository.findAllByScreen(screen);
         // a for loop to detect mutation of type = -1
         for (Seat seat : seats) {
             Integer row = seat.getId().getRow();
@@ -132,21 +133,6 @@ public class SeatService {
         }
         seatRepository.saveAll(updatedSeats);
         return ApiResponse.ok();
-    }
-
-    public List<SeatTypePresentation> findAllSeatTypes() {
-        List<SeatTypePresentation> seatTypes = new ArrayList<>();
-        SeatType.getIdMap()
-                .forEach((id, seatType) ->  seatTypes
-                        .add(SeatTypePresentation.builder()
-                                .id(seatType.getId())
-                                .name(seatType.name())
-                                .description(seatType.getDescription())
-                                .width(seatType.getWidth())
-                                .length(seatType.getLength())
-                                .unitPrice(seatType.getUnitPrice())
-                                .build()));
-        return seatTypes;
     }
 //    public ApiResponse deleteSeat(Long id) {
 //        Long userId = jwtUtil.getUserIdFromToken(hsRequest);

@@ -29,6 +29,9 @@ public class Booking implements Serializable {
     @Column
     private String bookingNo;//server generated
     @ManyToOne
+    @JoinColumn(name = "payment_method")
+    private PaymentMethod paymentMethod;
+    @ManyToOne
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
     @CreatedDate
