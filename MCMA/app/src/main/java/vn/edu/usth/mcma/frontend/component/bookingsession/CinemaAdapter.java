@@ -26,14 +26,14 @@ import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.model.Booking;
 import vn.edu.usth.mcma.frontend.model.ShowtimeOfMovieBySchedule;
 
-public class BookingShowtimeCinemaAdapter extends RecyclerView.Adapter<BookingShowtimeCinemaAdapter.ViewHolder> {
+public class CinemaAdapter extends RecyclerView.Adapter<CinemaAdapter.ViewHolder> {
     private final Context context;
     private final Long movieId;
     private final ITimeButton iTimeButton;
     private final Map<String, Map<String, List<ShowtimeOfMovieBySchedule>>> cinemaNameScreenTypeScheduleMap;
     private final List<String> cinemaNames;
 
-    public BookingShowtimeCinemaAdapter(Context context, Long movieId, ITimeButton iTimeButton) {
+    public CinemaAdapter(Context context, Long movieId, ITimeButton iTimeButton) {
         this.context = context;
         this.movieId = movieId;
         this.iTimeButton = iTimeButton;

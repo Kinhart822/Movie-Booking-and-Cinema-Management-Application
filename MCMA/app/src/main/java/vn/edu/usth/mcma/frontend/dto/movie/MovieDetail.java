@@ -18,6 +18,6 @@ public class MovieDetail {
     private List<String> genres;
     private List<String> directors;
     private List<String> actors;
-    private String rating;
+    private String ratingDescription;
     private Double avgVotes;
 }

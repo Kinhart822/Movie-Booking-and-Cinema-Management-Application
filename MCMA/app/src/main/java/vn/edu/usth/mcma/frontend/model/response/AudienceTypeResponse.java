@@ -1,9 +1,9 @@
-package vn.edu.usth.mcma.frontend.dto.bookingsession;
+package vn.edu.usth.mcma.frontend.model.response;
 
 import lombok.Data;
 
 @Data
-public class AudienceDetail {
+public class AudienceTypeResponse {
     private String id;
     private String description;
     private Double unitPrice;

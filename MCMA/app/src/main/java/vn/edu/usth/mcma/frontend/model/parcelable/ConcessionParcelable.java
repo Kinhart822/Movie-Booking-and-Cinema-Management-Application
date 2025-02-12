@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ConcessionParcelable implements Parcelable {
     private Long id;
+    private String name;
     private Double comboPrice;
     private int quantity;
 
@@ -25,12 +26,14 @@ public class ConcessionParcelable implements Parcelable {
     }
     protected ConcessionParcelable(Parcel in) {
         id = in.readLong();
+        name = in.readString();
         comboPrice = in.readDouble();
         quantity = in.readInt();
     }
     @Override
     public void writeToParcel(@NonNull Parcel dest, int i) {
         dest.writeLong(id);
+        dest.writeString(name);
         dest.writeDouble(comboPrice);
         dest.writeInt(quantity);
     }

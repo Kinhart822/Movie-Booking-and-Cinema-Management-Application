@@ -29,18 +29,20 @@ import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.component.customview.navigate.CustomNavigateButton;
 import vn.edu.usth.mcma.frontend.dto.bookingsession.ScheduleDetail;
 import vn.edu.usth.mcma.frontend.dto.response.ApiResponse;
-import vn.edu.usth.mcma.frontend.dto.response.SeatTypeResponse;
-import vn.edu.usth.mcma.frontend.model.Seat;
+import vn.edu.usth.mcma.frontend.model.response.SeatTypeResponse;
 import vn.edu.usth.mcma.frontend.model.Booking;
 import vn.edu.usth.mcma.frontend.model.request.HoldRootSeat;
 import vn.edu.usth.mcma.frontend.model.request.HoldSeatRequest;
+import vn.edu.usth.mcma.frontend.model.response.SeatResponse;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
 import vn.edu.usth.mcma.frontend.network.apis.BookingApi;
+import vn.edu.usth.mcma.frontend.utils.mapper.SeatMapper;
+import vn.edu.usth.mcma.frontend.utils.mapper.SeatTypeMapper;
 
 public class BookingSeatSelectionActivity extends AppCompatActivity {
     private static final String TAG = BookingSeatSelectionActivity.class.getName();
-    private static final double BOOKING_TIME_LIMIT = 0.3; //todo dotenv
+    private static final double BOOKING_TIME_LIMIT = 1; //todo dotenv
     private TextView timeRemainingTextView;
     private TextView cinemaNameTextView;
     private TextView screenNameDateDurationTextView;
@@ -56,9 +58,9 @@ public class BookingSeatSelectionActivity extends AppCompatActivity {
     private ScheduleDetail scheduleDetail;
     private Booking booking;
     private List<SeatTypeResponse> seatTypeResponses;
-    private List<Seat> seatResponses;
+    private List<SeatResponse> seatResponses;
     private RecyclerView seatMatrixRecyclerView;
-    private BookingSeatAdapter bookingSeatAdapter;
+    private SeatAdapter seatAdapter;
     private int totalAudienceCount;
     private double totalPrice;
     private Handler timeRemainingHandler;
@@ -83,7 +85,7 @@ public class BookingSeatSelectionActivity extends AppCompatActivity {
         nextButton = findViewById(R.id.button_next);
         seatMatrixRecyclerView = findViewById(R.id.recycler_view_seat_matrix);
 
-        booking = getIntent().getParcelableExtra(IntentKey.BOOKING.name());
+        booking = getIntent().getParcelableExtra(IntentKey.BOOKING.name(), Booking.class);
         assert booking != null;
         scheduleId = booking.getScheduleId();
         totalAudienceCount = 0;
@@ -148,12 +150,12 @@ public class BookingSeatSelectionActivity extends AppCompatActivity {
     private void findAllSeatTypes() {
         ApiService
                 .getBookingApi(this)
-                .findAllSeatTypes()
+                .findAllSeatTypeBySchedule(booking.getScheduleId())
                 .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<List<SeatTypeResponse>> call, @NonNull Response<List<SeatTypeResponse>> response) {
                         if (!response.isSuccessful() || response.body() == null) {
-                            Log.e(TAG, "findAllSeatTypes onResponse: code not 200 || body is null");
+                            Log.e(TAG, "findAllSeatTypeBySchedule onResponse: code not 200 || body is null");
                             return;
                         }
                         seatTypeResponses = response.body();
@@ -161,7 +163,7 @@ public class BookingSeatSelectionActivity extends AppCompatActivity {
                     }
                     @Override
                     public void onFailure(@NonNull Call<List<SeatTypeResponse>> call, @NonNull Throwable t) {
-                        Log.e(TAG, "findAllSeatTypes onFailure: " + t);
+                        Log.e(TAG, "findAllSeatTypeBySchedule onFailure: " + t);
                     }
                 });
     }
@@ -174,7 +176,7 @@ public class BookingSeatSelectionActivity extends AppCompatActivity {
                 .findAllSeatBySchedule(scheduleId)
                 .enqueue(new Callback<>() {
                     @Override
-                    public void onResponse(@NonNull Call<List<Seat>> call, @NonNull Response<List<Seat>> response) {
+                    public void onResponse(@NonNull Call<List<SeatResponse>> call, @NonNull Response<List<SeatResponse>> response) {
                         if (!response.isSuccessful() || response.body() == null) {
                             Log.e(TAG, "findAllSeatBySchedule onResponse: code not 200 || body is null");
                             return;
@@ -183,28 +185,28 @@ public class BookingSeatSelectionActivity extends AppCompatActivity {
                         postFindAllSeatBySchedule();
                     }
                     @Override
-                    public void onFailure(@NonNull Call<List<Seat>> call, @NonNull Throwable throwable) {
+                    public void onFailure(@NonNull Call<List<SeatResponse>> call, @NonNull Throwable throwable) {
                         Log.e(TAG, "findAllSeatBySchedule onFailure: " + throwable);
                     }
                 });
     }
     private void postFindAllSeatBySchedule() {
-        bookingSeatAdapter = new BookingSeatAdapter(
+        seatAdapter = new SeatAdapter(
                 this,
-                seatTypeResponses,
-                seatResponses,
+                SeatTypeMapper.fromResponseList(seatTypeResponses),
+                SeatMapper.fromResponseList(seatResponses),
                 seat -> onSeatClickListener());
-        seatMatrixRecyclerView.setLayoutManager(new GridLayoutManager(this, bookingSeatAdapter.getMaxSeatPerRow() + 1));
-        seatMatrixRecyclerView.setAdapter(bookingSeatAdapter);
+        seatMatrixRecyclerView.setLayoutManager(new GridLayoutManager(this, seatAdapter.getMaxSeatPerRow() + 1));
+        seatMatrixRecyclerView.setAdapter(seatAdapter);
 
-        availableRowsTextView.setText(String.format("Nearest row:  %s\nFarthest row: %s", bookingSeatAdapter.getNearestRow(), bookingSeatAdapter.getFarthestRow()));
+        availableRowsTextView.setText(String.format("Nearest row:  %s\nFarthest row: %s", seatAdapter.getNearestRow(), seatAdapter.getFarthestRow()));
 
         prepareTimeRemaining();
     }
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
     private void onSeatClickListener() {
-        totalAudienceCount = bookingSeatAdapter.getTotalAudienceCount();
-        totalPrice = bookingSeatAdapter.getTotalSeatPrice();
+        totalAudienceCount = seatAdapter.getTotalAudienceCount();
+        totalPrice = seatAdapter.getTotalSeatPrice();
         totalSeatCountTextView.setText(String.format("%d seats selected", totalAudienceCount));
         totalPriceTextView.setText(String.format("$%.1f", totalPrice));
         nextButton.setEnabled(totalAudienceCount != 0);
@@ -244,11 +246,10 @@ public class BookingSeatSelectionActivity extends AppCompatActivity {
         nextButton
                 .setOnClickListener(v -> holdSeatRequest(() -> {
                     booking = booking.toBuilder()
+                            .ratingDescription(scheduleDetail.getRatingDescription())
                             .limitPlusCurrentElapsedBootTime(limitPlusCurrentElapsedBootTime)
-                            .rootSeats(bookingSeatAdapter.getSelectedRootSeats())
-                            .totalAudience(totalAudienceCount)
-                            .totalPrice(totalPrice)
-                            .build();
+                            .seatTypes(SeatTypeMapper.fromItemMap(seatAdapter.getSeatTypes())).build()
+                            .setSeats(SeatMapper.fromItemList(seatAdapter.getSelectedSeats()));
                     Intent intent = new Intent(this, BookingAudienceTypeSelectionActivity.class);
                     intent.putExtra(IntentKey.BOOKING.name(), booking);
                     startActivity(intent);
@@ -261,13 +262,13 @@ public class BookingSeatSelectionActivity extends AppCompatActivity {
                         scheduleId,
                         HoldSeatRequest.builder()
                                 .sessionId(booking.getSessionId())
-                                .rootSeats(bookingSeatAdapter
+                                .rootSeats(seatAdapter
                                         .getSelectedRootSeats().stream()
                                         .map(r -> HoldRootSeat.builder()
                                                 .rootRow(r.getRootRow())
                                                 .rootCol(r.getRootCol())
                                                 .build())
-                                        .collect(Collectors.toList()))
+                                        .toList())
                                 .timeRemaining(timeRemaining).build())
                 .enqueue(new Callback<>() {
                     @Override

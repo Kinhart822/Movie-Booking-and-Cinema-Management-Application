@@ -6,7 +6,6 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".frontend.component.bookingsession.MovieDetailActivity">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -15,7 +14,7 @@
         <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
             android:id="@+id/youtube_player_view_movie_trailer"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="230dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -136,46 +135,58 @@
                 app:layout_constraintTop_toBottomOf="@id/text_view_see_more_less"
                 app:layout_constraintBottom_toTopOf="@id/publish_date"/>
             <!--publish date-->
-            <TextView
+            <LinearLayout
                 android:id="@+id/publish_date"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:text="@string/category_movie_release_date"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/separator_1"
-                app:layout_constraintBottom_toTopOf="@id/rating"/>
-            <TextView
-                android:id="@+id/text_view_release_date"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                app:layout_constraintBaseline_toBaselineOf="@id/publish_date"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintBottom_toTopOf="@id/rating">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_weight="1"
+                    android:text="@string/category_movie_release_date"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"/>
+                <TextView
+                    android:id="@+id/text_view_release_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:layout_marginEnd="20dp"
+                    android:textSize="16sp"/>
+            </LinearLayout>
             <!--rating-->
-            <TextView
+            <LinearLayout
                 android:id="@+id/rating"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:text="@string/category_movie_rating"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/publish_date"
-                app:layout_constraintBottom_toTopOf="@id/separator_2"/>
-            <TextView
-                android:id="@+id/text_view_rating"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textColor="#FF4444"
-                android:textSize="16sp"
-                app:layout_constraintBaseline_toBaselineOf="@id/rating"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintBottom_toTopOf="@id/separator_2">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_weight="1"
+                    android:text="@string/category_movie_rating"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"/>
+                <TextView
+                    android:id="@+id/text_view_movie_rating_description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:layout_marginEnd="20dp"
+                    android:text="@string/hint_movie_rating_description"
+                    android:textColor="#FF4444"
+                    android:textSize="16sp"/></LinearLayout>
             <!--separator-->
             <View
                 android:id="@+id/separator_2"
@@ -232,31 +243,22 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cast"
-                app:layout_constraintBottom_toTopOf="@id/card_view_book_tickets"/>
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_view_book_tickets"
+                app:layout_constraintBottom_toTopOf="@id/button_book_tickets"/>
+
+            <Button
+                android:id="@+id/button_book_tickets"
                 android:layout_width="200dp"
                 android:layout_height="60dp"
                 android:layout_margin="16dp"
-                android:layout_centerHorizontal="true"
-                app:cardBackgroundColor="#3373C4"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="6dp"
-                app:layout_constraintStart_toStartOf="parent"
+                android:padding="10dp"
+                android:text="@string/book_tickets"
+                android:textAllCaps="false"
+                android:textSize="17sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/text_view_cast"
-                app:layout_constraintBottom_toBottomOf="parent">
-                <Button
-                    android:id="@+id/button_book_tickets"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:backgroundTint="#3373C4"
-                    android:drawablePadding="8dp"
-                    android:padding="10dp"
-                    android:text="@string/book_tickets"
-                    android:textAllCaps="false"
-                    android:textSize="20sp" />
-            </androidx.cardview.widget.CardView>
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_view_cast" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

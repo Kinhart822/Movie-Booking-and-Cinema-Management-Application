@@ -61,7 +61,7 @@ public class Movie_Feedback_Activity extends AppCompatActivity {
                             items.clear();
                             // Map NowShowingResponse
                             for (NowShowingResponse movie : response.body()) {
-                                String genres = TextUtils.join(", ", movie.getGenres().stream().map(GenreResponse::getName).collect(Collectors.toList()));
+                                String genres = TextUtils.join(", ", movie.getGenres().stream().map(GenreResponse::getName).toList());
 
                                 items.add(new Movie_Feedback_Item(
                                         movie.getId(),

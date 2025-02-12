@@ -11,8 +11,6 @@ import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CinemaResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.ScreenResponse;
 import vn.edu.usth.mcma.frontend.dto.response.ListFoodAndDrinkToOrderingResponse;
 import vn.edu.usth.mcma.frontend.dto.response.ScheduleSelectedByCinemaResponse;
-import vn.edu.usth.mcma.frontend.dto.response.SeatTypeResponse;
-import vn.edu.usth.mcma.frontend.model.Seat;
 import vn.edu.usth.mcma.frontend.dto.response.ViewCinemaResponse;
 
 public interface CinemaApi {

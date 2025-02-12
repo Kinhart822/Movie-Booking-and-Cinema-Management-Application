@@ -9,7 +9,7 @@ import vn.edu.usth.mcma.R;
 @Getter
 public enum SeatAvailables {
     SELECTED(-2, R.drawable.ic_seat_selecting),
-    NORMAL(1, R.drawable.ic_seat_standard),
+    STANDARD(1, R.drawable.ic_seat_standard),
     VIP(2, R.drawable.ic_seat_vip),
     LOVERS(3, R.drawable.ic_seat_lovers),
     BED(4, R.drawable.ic_seat_bed),;
@@ -19,16 +19,18 @@ public enum SeatAvailables {
         this.id = id;
         this.backgroundId = backgroundId;
     }
-    private static final Map<Integer, SeatAvailables> ID_MAP = new HashMap<>();
+    private static final Map<String, SeatAvailables> ID_MAP = new HashMap<>();
     static {
         for (SeatAvailables seatAvailables : SeatAvailables.values()) {
-            ID_MAP.put(seatAvailables.getId(), seatAvailables);
+            ID_MAP.put(seatAvailables.name(), seatAvailables);
         }
     }
-    public static SeatAvailables getById(int id) {
+    public static SeatAvailables getById(String id) {
+        System.out.println(id);
+        System.out.println(ID_MAP);
         return ID_MAP.get(id);
     }
-    public static Map<Integer, SeatAvailables> getIdMap() {
+    public static Map<String, SeatAvailables> getIdMap() {
         return ID_MAP;
     }
 }

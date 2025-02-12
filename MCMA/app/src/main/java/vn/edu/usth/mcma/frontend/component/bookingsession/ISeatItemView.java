@@ -1,7 +1,7 @@
 package vn.edu.usth.mcma.frontend.component.bookingsession;
 
-import vn.edu.usth.mcma.frontend.model.Seat;
+import vn.edu.usth.mcma.frontend.model.item.SeatItem;
 
 public interface ISeatItemView {
-    void onSeatClickListener(Seat seat);
+    void onSeatClickListener(SeatItem seat);
 }

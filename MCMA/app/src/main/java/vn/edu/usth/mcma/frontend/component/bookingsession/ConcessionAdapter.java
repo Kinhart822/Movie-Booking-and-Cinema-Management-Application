@@ -21,12 +21,12 @@ import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.model.item.ConcessionItem;
 import vn.edu.usth.mcma.frontend.utils.ImageDecoder;
 
-public class BookingConcessionAdapter extends RecyclerView.Adapter<BookingConcessionAdapter.ViewHolder> {
+public class ConcessionAdapter extends RecyclerView.Adapter<ConcessionAdapter.ViewHolder> {
     private final Context context;
     private final List<ConcessionItem> items;
     private final IConcessionItemView iConcessionItemView;
 
-    public BookingConcessionAdapter(
+    public ConcessionAdapter(
             Context context,
             List<ConcessionItem> items,
             IConcessionItemView iConcessionItemView) {
@@ -100,7 +100,7 @@ public class BookingConcessionAdapter extends RecyclerView.Adapter<BookingConces
         return items
                 .stream()
                 .filter(c -> c.getQuantity() > 0)
-                .collect(Collectors.toList());
+                .toList();
     }
     public double getTotalConcessionPrice() {
         return this

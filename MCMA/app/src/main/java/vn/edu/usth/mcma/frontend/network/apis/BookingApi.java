@@ -9,7 +9,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
-import vn.edu.usth.mcma.frontend.dto.bookingsession.AudienceDetail;
+import vn.edu.usth.mcma.frontend.model.response.AudienceTypeResponse;
 import vn.edu.usth.mcma.frontend.dto.response.ApiResponse;
 import vn.edu.usth.mcma.frontend.model.request.HoldSeatRequest;
 import vn.edu.usth.mcma.frontend.model.request.SessionRegistration;
@@ -20,19 +20,20 @@ import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CouponResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.SendBookingResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.TicketResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingResponse;
-import vn.edu.usth.mcma.frontend.dto.response.SeatTypeResponse;
+import vn.edu.usth.mcma.frontend.model.response.PaymentMethodResponse;
+import vn.edu.usth.mcma.frontend.model.response.SeatTypeResponse;
 import vn.edu.usth.mcma.frontend.dto.response.ViewCouponResponse;
-import vn.edu.usth.mcma.frontend.model.Seat;
+import vn.edu.usth.mcma.frontend.model.response.SeatResponse;
 
 public interface BookingApi {
     @GET("/api/v1/user/booking/schedule/{scheduleId}")
     Call<ScheduleDetail> findScheduleDetail(@Path("scheduleId") Long scheduleId);
-    @GET("/api/v1/user/booking/rating/{ratingId}/audience-type")
-    Call<List<AudienceDetail>> findAllAudienceTypeByRating(@Path("ratingId") String ratingId);
-    @GET("/api/v1/user/booking/seat-types")
-    Call<List<SeatTypeResponse>> findAllSeatTypes();
+    @GET("/api/v1/user/booking/schedule/{scheduleId}/audience-type")
+    Call<List<AudienceTypeResponse>> findAllAudienceTypeBySchedule(@Path("scheduleId") Long scheduleId);
+    @GET("/api/v1/user/booking/schedule/{scheduleId}/seat-types")
+    Call<List<SeatTypeResponse>> findAllSeatTypeBySchedule(@Path("scheduleId") Long scheduleId);
     @GET("/api/v1/user/booking/schedule/{scheduleId}/seat")
-    Call<List<Seat>> findAllSeatBySchedule(@Path("scheduleId") Long scheduleId);
+    Call<List<SeatResponse>> findAllSeatBySchedule(@Path("scheduleId") Long scheduleId);
     @GET("/api/v1/user/booking/schedule/{scheduleId}/concession")
     Call<List<ConcessionResponse>> findAllConcessionBySchedule(@Path("scheduleId") Long scheduleId);
 
@@ -41,11 +42,15 @@ public interface BookingApi {
     interface RegisterBookingSessionCallback {
         void onSessionRegistered(String sessionId);
     }
+
     @PUT("/api/v1/user/booking/schedule/{scheduleId}/seat/hold-request")
     Call<ApiResponse> holdSeatRequest(@Path("scheduleId") Long scheduleId, @Body HoldSeatRequest request);
     interface HoldSeatRequestCallback {
         void onSeatHoldSuccessfully();
     }
+
+    @GET("/api/v1/user/booking/payment-method")
+    Call<List<PaymentMethodResponse>> findAllPaymentMethod();
 
 
     @POST("/api/v1/user/booking/processingBooking")

@@ -79,7 +79,7 @@
                 android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/hint_count_per_type"
+                android:text="@string/hint_quantity"
                 android:textSize="16sp"
                 android:textColor="@color/white"
                 app:layout_constraintStart_toEndOf="@id/button_minus"

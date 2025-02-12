@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.model;
+package vn.edu.usth.mcma.frontend.model.parcelable;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -14,16 +14,16 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AudienceType implements Parcelable {
+public class AudienceTypeParcelable implements Parcelable {
     private String id;
-    private Double unitPrice;
+    private double unitPrice;
     private int quantity;
 
     @Override
     public int describeContents() {
         return 0;
     }
-    protected AudienceType(Parcel in) {
+    protected AudienceTypeParcelable(Parcel in) {
         id = in.readString();
         quantity = in.readInt();
         unitPrice = in.readDouble();
@@ -34,14 +34,14 @@ public class AudienceType implements Parcelable {
         dest.writeInt(quantity);
         dest.writeDouble(unitPrice);
     }
-    public static final Creator<AudienceType> CREATOR = new Parcelable.Creator<>() {
+    public static final Creator<AudienceTypeParcelable> CREATOR = new Parcelable.Creator<>() {
         @Override
-        public AudienceType createFromParcel(Parcel in) {
-            return new AudienceType(in);
+        public AudienceTypeParcelable createFromParcel(Parcel in) {
+            return new AudienceTypeParcelable(in);
         }
         @Override
-        public AudienceType[] newArray(int size) {
-            return new AudienceType[size];
+        public AudienceTypeParcelable[] newArray(int size) {
+            return new AudienceTypeParcelable[size];
         }
     };
 }

@@ -15,17 +15,18 @@ import java.util.List;
 
 import lombok.Getter;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.model.AudienceType;
+import vn.edu.usth.mcma.frontend.model.item.AudienceTypeItem;
+import vn.edu.usth.mcma.frontend.model.parcelable.AudienceTypeParcelable;
 
 //todo quantity limited
-public class BookingAudienceTypeAdapter extends RecyclerView.Adapter<BookingAudienceTypeAdapter.ViewHolder> {
+public class AudienceTypeAdapter extends RecyclerView.Adapter<AudienceTypeAdapter.ViewHolder> {
     @Getter
-    private final List<AudienceType> items;
+    private final List<AudienceTypeItem> items;
     private final IAudienceTypeItemView iAudienceTypeItemView;
     private final int targetAudienceCount;
 
-    public BookingAudienceTypeAdapter(
-            List<AudienceType> items,
+    public AudienceTypeAdapter(
+            List<AudienceTypeItem> items,
             IAudienceTypeItemView iAudienceTypeItemView,
             int targetAudienceCount) {
         this.items = items;
@@ -61,7 +62,7 @@ public class BookingAudienceTypeAdapter extends RecyclerView.Adapter<BookingAudi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (getItemViewType(position) == 1) {
             if (position == 0) {
-                holder.textView.setText(String.format("We are having a discount for students. All students will be charged $%d per seat.", items.get(0).getUnitPrice().intValue()));
+                holder.textView.setText(String.format("We are having a discount for students. All students will be charged $%.1f per seat.", items.get(0).getUnitPrice()));
                 return;
             }
             if (position == 2) {
@@ -69,7 +70,7 @@ public class BookingAudienceTypeAdapter extends RecyclerView.Adapter<BookingAudi
                 return;
             }
         }
-        AudienceType item = getItemByPosition(position);
+        AudienceTypeItem item = getItemByPosition(position);
         holder.audienceTypeTextView.setText(item.getId());
         holder.unitPriceTextView.setText(String.format("$%.1f x", item.getUnitPrice()));
         holder.minusButton.setOnClickListener(v -> updateQuantity(position, -1));
@@ -81,11 +82,11 @@ public class BookingAudienceTypeAdapter extends RecyclerView.Adapter<BookingAudi
     public int getItemCount() {
         return items.size() + 2;
     }
-    private AudienceType getItemByPosition(int position) {
+    private AudienceTypeItem getItemByPosition(int position) {
         return (position == 1) ? items.get(0) : items.get(position - 2);
     }
     private void updateQuantity(int position, int delta) {
-        AudienceType item = getItemByPosition(position);
+        AudienceTypeItem item = getItemByPosition(position);
         item.setQuantity(Math.max(0, item.getQuantity() + delta));
         if (this.getCurrentAudienceCount() > targetAudienceCount) {
             item.setQuantity(item.getQuantity() - delta);
@@ -118,7 +119,7 @@ public class BookingAudienceTypeAdapter extends RecyclerView.Adapter<BookingAudi
         return this
                 .items
                 .stream()
-                .mapToInt(AudienceType::getQuantity)
+                .mapToInt(AudienceTypeItem::getQuantity)
                 .sum();
     }
     public double getTotalAudienceTypePrice() {

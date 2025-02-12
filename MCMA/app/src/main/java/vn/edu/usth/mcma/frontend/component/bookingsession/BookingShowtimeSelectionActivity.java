@@ -61,7 +61,7 @@ public class BookingShowtimeSelectionActivity extends AppCompatActivity {
     private CityButton selectedCity;
     private TextView noScheduleTextView;
     private RecyclerView cinemaButtonsRecyclerView;
-    private BookingShowtimeCinemaAdapter bookingShowtimeCinemaAdapter;
+    private CinemaAdapter cinemaAdapter;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -215,12 +215,12 @@ public class BookingShowtimeSelectionActivity extends AppCompatActivity {
     }
     private void prepareCinemaButtonsRecyclerView() {
         cinemaButtonsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        bookingShowtimeCinemaAdapter = new BookingShowtimeCinemaAdapter(
+        cinemaAdapter = new CinemaAdapter(
                 this,
                 id,
                 this::onTimeButtonCLickListener);
         feedAdapter();
-        cinemaButtonsRecyclerView.setAdapter(bookingShowtimeCinemaAdapter);
+        cinemaButtonsRecyclerView.setAdapter(cinemaAdapter);
     }
     private void onTimeButtonCLickListener(BookingApi.RegisterBookingSessionCallback callback) {
         registerBookingSession(callback);
@@ -254,7 +254,7 @@ public class BookingShowtimeSelectionActivity extends AppCompatActivity {
         Optional<Map<String, Map<String, List<ShowtimeOfMovieBySchedule>>>> food = Optional.ofNullable(dateCityCinemaNameScreenTypeScheduleMap)
                 .map(map -> map.get(selectedDate.getDate()))
                 .map(map -> map.get(selectedCity.getCityId()));
-        bookingShowtimeCinemaAdapter.updateData(food.orElse(null));
+        cinemaAdapter.updateData(food.orElse(null));
         if (food.isEmpty()) {
             cinemaButtonsRecyclerView.setVisibility(View.GONE);
             noScheduleTextView.setVisibility(View.VISIBLE);

@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.frontend.model;
+package vn.edu.usth.mcma.frontend.model.parcelable;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -13,25 +13,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-//todo consider separate response and model
-public class Seat implements Parcelable {
-    private Integer row;
-    private Integer col;
-    private Integer typeId;
+public class SeatParcelable implements Parcelable {
+    private int row;
+    private int col;
+    private String typeId;
     private String name;
-    private Integer rootRow;
-    private Integer rootCol;
-    private String availability;//todo
-    //todo price
+    private int rootRow;
+    private int rootCol;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Seat seat = (Seat) o;
+        SeatParcelable seat = (SeatParcelable) o;
         return Objects.equals(getRow(), seat.getRow()) && Objects.equals(getCol(), seat.getCol());
     }
     @Override
@@ -46,27 +43,27 @@ public class Seat implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int i) {
         dest.writeInt(row);
         dest.writeInt(col);
-        dest.writeInt(typeId);
+        dest.writeString(typeId);
         dest.writeString(name);
         dest.writeInt(rootRow);
         dest.writeInt(rootCol);
     }
-    protected Seat(Parcel in) {
+    protected SeatParcelable(Parcel in) {
         row = in.readInt();
         col = in.readInt();
-        typeId = in.readInt();
+        typeId = in.readString();
         name = in.readString();
         rootRow = in.readInt();
         rootCol = in.readInt();
     }
-    public static final Parcelable.Creator<Seat> CREATOR = new Parcelable.Creator<>() {
+    public static final Parcelable.Creator<SeatParcelable> CREATOR = new Parcelable.Creator<>() {
         @Override
-        public Seat createFromParcel(Parcel parcel) {
-            return new Seat(parcel);
+        public SeatParcelable createFromParcel(Parcel parcel) {
+            return new SeatParcelable(parcel);
         }
         @Override
-        public Seat[] newArray(int size) {
-            return new Seat[size];
+        public SeatParcelable[] newArray(int size) {
+            return new SeatParcelable[size];
         }
     };
 }

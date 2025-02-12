@@ -71,7 +71,7 @@ public class ShowtimesFragment extends Fragment implements TheaterAdapter.OnThea
                                                 .cityName(cityName)//todo
                                                 .imageResId(R.drawable.button_selector_showtime) //todo
                                                 .build())
-                                        .collect(Collectors.toList()));
+                                        .toList());
                     }
                     @Override
                     public void onFailure(@NonNull Call<List<CinemaDetailShort>> call, @NonNull Throwable t) {

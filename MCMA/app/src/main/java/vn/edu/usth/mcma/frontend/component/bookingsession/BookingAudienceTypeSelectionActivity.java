@@ -17,19 +17,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.component.customview.navigate.CustomNavigateButton;
-import vn.edu.usth.mcma.frontend.dto.bookingsession.AudienceDetail;
+import vn.edu.usth.mcma.frontend.model.item.AudienceTypeItem;
+import vn.edu.usth.mcma.frontend.model.response.AudienceTypeResponse;
 import vn.edu.usth.mcma.frontend.model.Booking;
 import vn.edu.usth.mcma.frontend.network.ApiService;
-import vn.edu.usth.mcma.frontend.model.AudienceType;
+import vn.edu.usth.mcma.frontend.model.parcelable.AudienceTypeParcelable;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
+import vn.edu.usth.mcma.frontend.utils.mapper.AudienceTypeMapper;
 
 public class BookingAudienceTypeSelectionActivity extends AppCompatActivity {
     private static final String TAG = BookingAudienceTypeSelectionActivity.class.getName();
@@ -40,9 +42,9 @@ public class BookingAudienceTypeSelectionActivity extends AppCompatActivity {
     private CustomNavigateButton nextButton;
 
     private Booking booking;
-    private List<AudienceDetail> audienceDetails;
+    private List<AudienceTypeResponse> audienceDetails;
     private RecyclerView audienceTypeRecyclerView;
-    private BookingAudienceTypeAdapter bookingAudienceTypeAdapter;
+    private AudienceTypeAdapter audienceTypeAdapter;
     private int targetAudienceCount;
     private int currentAudienceCount;
     private double totalPrice;
@@ -68,7 +70,7 @@ public class BookingAudienceTypeSelectionActivity extends AppCompatActivity {
         backButton
                 .setOnClickListener(v -> onBackPressed());
 
-        booking = getIntent().getParcelableExtra(IntentKey.BOOKING.name());
+        booking = getIntent().getParcelableExtra(IntentKey.BOOKING.name(), Booking.class);
 
         assert booking != null;
         cinemaNameTextView.setText(booking.getCinemaName());
@@ -83,56 +85,49 @@ public class BookingAudienceTypeSelectionActivity extends AppCompatActivity {
         totalAudienceCountTextView.setText(String.format("%d / %d audiences", currentAudienceCount, targetAudienceCount));
         totalPriceTextView.setText(String.format("$%.1f", totalPrice));
 
-        findAllAudienceTypeByRating();
+        findAllAudienceTypeBySchedule();
         prepareTimeRemaining();
         prepareNextButton();
     }
-    private void findAllAudienceTypeByRating() {
+    private void findAllAudienceTypeBySchedule() {
         ApiService
                 .getBookingApi(this)
-                .findAllAudienceTypeByRating(booking.getRating())
+                .findAllAudienceTypeBySchedule(booking.getScheduleId())
                 .enqueue(new Callback<>() {
                     @Override
-                    public void onResponse(@NonNull Call<List<AudienceDetail>> call, @NonNull Response<List<AudienceDetail>> response) {
+                    public void onResponse(@NonNull Call<List<AudienceTypeResponse>> call, @NonNull Response<List<AudienceTypeResponse>> response) {
                         if (!response.isSuccessful() || response.body() == null) {
-                            Log.e(TAG, "findAllAudienceTypeByRating onResponse: code not 200 || body is null");
+                            Log.e(TAG, "findAllAudienceTypeBySchedule onResponse: code not 200 || body is null");
                             return;
                         }
                         audienceDetails = response.body();
                         postFindAllAudienceTypeByRating();
                     }
                     @Override
-                    public void onFailure(@NonNull Call<List<AudienceDetail>> call, @NonNull Throwable throwable) {
-                        Log.e(TAG, "findAllAudienceTypeByRating onFailure: " + throwable);
+                    public void onFailure(@NonNull Call<List<AudienceTypeResponse>> call, @NonNull Throwable throwable) {
+                        Log.e(TAG, "findAllAudienceTypeBySchedule onFailure: " + throwable);
                     }
                 });
     }
     private void postFindAllAudienceTypeByRating() {
         //todo: after audienceDiscount, do all this in adapter instead
-        List<AudienceType> items = audienceDetails
-                .stream()
-                .map(a -> AudienceType.builder()
-                        .id(a.getId())
-                        .unitPrice(a.getUnitPrice())
-                        .quantity(0)
-                        .build())
-                .collect(Collectors.toList());
-        items.add(0, AudienceType.builder()
+        List<AudienceTypeItem> items = new ArrayList<>(AudienceTypeMapper.fromResponseList(audienceDetails));
+        items.add(0, AudienceTypeItem.builder()
                 .id("Student")
                 .quantity(0)
                 .unitPrice(priceForStudent)
                 .build());
-        bookingAudienceTypeAdapter = new BookingAudienceTypeAdapter(
+        audienceTypeAdapter = new AudienceTypeAdapter(
                 items,
                 this::onQuantityChangeListener,
                 targetAudienceCount);
         audienceTypeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        audienceTypeRecyclerView.setAdapter(bookingAudienceTypeAdapter);
+        audienceTypeRecyclerView.setAdapter(audienceTypeAdapter);
     }
     @SuppressLint("DefaultLocale")
     private void onQuantityChangeListener() {
-        currentAudienceCount = bookingAudienceTypeAdapter.getCurrentAudienceCount();
-        totalPrice = booking.getTotalPrice() + bookingAudienceTypeAdapter.getTotalAudienceTypePrice();
+        currentAudienceCount = audienceTypeAdapter.getCurrentAudienceCount();
+        totalPrice = booking.getTotalPrice() + audienceTypeAdapter.getTotalAudienceTypePrice();
         totalAudienceCountTextView.setText(String.format("%d / %d audiences", currentAudienceCount, targetAudienceCount));
         totalPriceTextView.setText(String.format("$%.1f", totalPrice));
         nextButton.setEnabled(currentAudienceCount == targetAudienceCount);
@@ -170,9 +165,8 @@ public class BookingAudienceTypeSelectionActivity extends AppCompatActivity {
         nextButton
                 .setOnClickListener(v -> {
                     //todo warning dialog cccd
-                    booking = booking.toBuilder()
-                            .audienceTypes(bookingAudienceTypeAdapter.getItems())
-                            .build();
+                    booking = booking
+                            .setAudienceTypes(AudienceTypeMapper.fromItemList(audienceTypeAdapter.getItems()));
                     Intent intent = new Intent(this, BookingConcessionSelectionActivity.class);
                     intent.putExtra(IntentKey.BOOKING.name(), booking);
                     startActivity(intent);

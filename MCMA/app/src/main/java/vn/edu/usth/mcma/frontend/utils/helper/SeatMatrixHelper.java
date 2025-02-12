@@ -7,29 +7,29 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import lombok.Getter;
-import vn.edu.usth.mcma.frontend.model.Seat;
+import vn.edu.usth.mcma.frontend.model.item.SeatItem;
 
-public class SeatMapHelper {
-    private final List<Seat> seatResponses;
+public class SeatMatrixHelper {
+    private final List<SeatItem> seatItems;
     @Getter
-    private Map<Integer, Map<Integer, Seat>> seatMatrix;
+    private Map<Integer, Map<Integer, SeatItem>> seatMatrix;
     @Getter
-    private Map<Integer, Map<Integer, List<Seat>>> rootSeatMatrix;
+    private Map<Integer, Map<Integer, List<SeatItem>>> rootSeatMatrix;
     @Getter
     private int maxSeatPerRow;
     @Getter
     private String nearestRow;
     @Getter
     private String farthestRow;
-    public SeatMapHelper(List<Seat> seatResponses) {
-        this.seatResponses = seatResponses;
+    public SeatMatrixHelper(List<SeatItem> seatItems) {
+        this.seatItems = seatItems;
         this.generateSeatMatrix();
         this.calculateMaxSeatPerRowAndNearestRowAndFarthestRow();
     }
     private void generateSeatMatrix() {
         seatMatrix = new TreeMap<>();
         rootSeatMatrix = new TreeMap<>();
-        for (Seat seat : seatResponses) {
+        for (SeatItem seat : seatItems) {
             seatMatrix
                     .computeIfAbsent(seat.getRow(), r -> new TreeMap<>())
                     .put(seat.getCol(), seat);

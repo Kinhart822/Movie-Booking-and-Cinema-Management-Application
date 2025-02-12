@@ -234,15 +234,15 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                                 List<String> dates = schedules
                                         .stream()
                                         .map(s -> s.getStartTime().substring(0, 10))
-                                        .collect(Collectors.toList());
+                                        .toList();
                                 List<String> times = schedules
                                         .stream()
                                         .map(s -> s.getStartTime().substring(11, 16))
-                                        .collect(Collectors.toList());
+                                        .toList();
                                 List<Long> scheduleIds = schedules
                                         .stream()
                                         .map(Schedule::getId)
-                                        .collect(Collectors.toList());
+                                        .toList();
 
                                 //todo dd/MM/yyyy
                                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());

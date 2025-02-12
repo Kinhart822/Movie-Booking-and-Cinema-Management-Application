@@ -9,7 +9,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.view.View;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,13 +43,12 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView seeMoreLessTextView;
     private boolean isOverviewExpanded;
     private TextView publishDateTextView;
-    private TextView ratingTextView;
+    private TextView ratingDescriptionTextView;
     private TextView directorTextView;
     private TextView castTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
         id = getIntent().getLongExtra(IntentKey.MOVIE_ID.name(), -1L);
@@ -65,7 +63,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         seeMoreLessTextView = findViewById(R.id.text_view_see_more_less);
         isOverviewExpanded = false;
         publishDateTextView = findViewById(R.id.text_view_release_date);
-        ratingTextView = findViewById(R.id.text_view_rating);//todo: description instead, color red in xml?
+        ratingDescriptionTextView = findViewById(R.id.text_view_movie_rating_description);
         directorTextView = findViewById(R.id.text_view_director);
         castTextView = findViewById(R.id.text_view_cast);
         Button bookTicketsButton = findViewById(R.id.button_book_tickets);
@@ -111,7 +109,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         lengthTextView.setText(String.format("%d minutes", movieDetail.getLength()));
         overviewTextView.setText(movieDetail.getOverview());
         publishDateTextView.setText(Instant.parse(movieDetail.getReleaseDate()).atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern("MMM dd, uuuu")));
-        ratingTextView.setText(movieDetail.getRating());
+        ratingDescriptionTextView.setText(movieDetail.getRatingDescription());
         directorTextView.setText(String.join(", ", movieDetail.getDirectors()));
         castTextView.setText(String.join(", ", movieDetail.getActors()));
         prepareOverview();

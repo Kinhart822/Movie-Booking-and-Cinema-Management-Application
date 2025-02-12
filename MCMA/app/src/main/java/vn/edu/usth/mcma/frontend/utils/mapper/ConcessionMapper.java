@@ -22,11 +22,12 @@ public class ConcessionMapper {
         return responses
                 .stream()
                 .map(ConcessionMapper::fromResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
     public static ConcessionParcelable fromItem(ConcessionItem item) {
         return ConcessionParcelable.builder()
                 .id(item.getId())
+                .name(item.getName())
                 .comboPrice(item.getComboPrice())
                 .quantity(item.getQuantity())
                 .build();
@@ -35,6 +36,6 @@ public class ConcessionMapper {
         return items
                 .stream()
                 .map(ConcessionMapper::fromItem)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

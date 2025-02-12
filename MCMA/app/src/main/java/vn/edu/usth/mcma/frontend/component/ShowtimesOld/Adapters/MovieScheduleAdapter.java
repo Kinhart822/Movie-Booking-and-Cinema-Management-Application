@@ -85,7 +85,7 @@ public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdap
                     .map(s -> s
                             .toString()
                             .substring(11,16))
-                    .collect(Collectors.toList());
+                    .toList();
 
             // 4. Tạo nút (Button) cho mỗi thời gian đã sắp xếp
             for (String schedule : sortedSchedules) {
@@ -110,7 +110,7 @@ public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdap
             viewDetails.setOnClickListener(v -> {
                 Intent intent = new Intent(itemView.getContext(), MovieDetailActivity.class);
                 intent.putExtra(IntentKey.MOVIE_NAME.name(), movie.getTitle());
-                intent.putExtra(IntentKey.MOVIE_GENRES.name(), new ArrayList<>(movie.getGenreResponses().stream().map(GenreResponse::getName).collect(Collectors.toList())));
+                intent.putExtra(IntentKey.MOVIE_GENRES.name(), new ArrayList<>(movie.getGenreResponses().stream().map(GenreResponse::getName).toList()));
                 intent.putExtra(IntentKey.MOVIE_LENGTH.name(), movie.getMovieLength());
                 intent.putExtra(IntentKey.MOVIE_DESCRIPTION.name(), movie.getDescription());
                 intent.putExtra(IntentKey.PUBLISHED_DATE.name(), movie.getPublishDate());
@@ -118,9 +118,9 @@ public class MovieScheduleAdapter extends RecyclerView.Adapter<MovieScheduleAdap
                 intent.putExtra(IntentKey.BACKGROUND_IMAGE_URL.name(), movie.getBackgroundImageUrl());
                 intent.putExtra(IntentKey.TRAILER.name(), movie.getTrailerUrl());
                 intent.putExtra(IntentKey.MOVIE_RATING.name(), movie.getRatingResponse().getName());
-                intent.putExtra(IntentKey.MOVIE_PERFORMER_NAME.name(), new ArrayList<>(movie.getPerformerResponses().stream().map(PerformerResponse::getName).collect(Collectors.toList())));
-                intent.putStringArrayListExtra(IntentKey.MOVIE_PERFORMER_TYPE.name(), new ArrayList<>(movie.getPerformerResponses().stream().map(p->p.getTypeId().toString()).collect(Collectors.toList())));
-                intent.putExtra(IntentKey.MOVIE_COMMENT.name(), new ArrayList<>(movie.getReviews().stream().map(Review::getUserComment).collect(Collectors.toList())));
+                intent.putExtra(IntentKey.MOVIE_PERFORMER_NAME.name(), new ArrayList<>(movie.getPerformerResponses().stream().map(PerformerResponse::getName).toList()));
+                intent.putStringArrayListExtra(IntentKey.MOVIE_PERFORMER_TYPE.name(), new ArrayList<>(movie.getPerformerResponses().stream().map(p->p.getTypeId().toString()).toList()));
+                intent.putExtra(IntentKey.MOVIE_COMMENT.name(), new ArrayList<>(movie.getReviews().stream().map(Review::getUserComment).toList()));
                 intent.putExtra(IntentKey.AVERAGE_STAR.name(), movie.getReviews().stream().mapToInt(Review::getUserVote).average().orElse(0.0));
 
                 itemView.getContext().startActivity(intent);

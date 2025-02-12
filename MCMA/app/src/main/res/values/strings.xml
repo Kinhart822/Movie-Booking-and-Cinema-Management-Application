@@ -121,6 +121,7 @@
     <string name="feedback">Feedback</string>
     <string name="account">Account</string>
     <string name="total">Total</string>
+    <string name="terms_agreement">I have read, understood and agreed with the <u>terms</u></string>
     <!--header-->
     <string name="header_seat_selection">Seat Selection</string>
     <string name="header_audience_type_selection">Audience Type Selection</string>
@@ -145,7 +146,7 @@
     <string name="hint_total_price">$999.0</string>
     <string name="hint_audience_type">audience_type</string>
     <string name="hint_sum_per_type">$99.0</string>
-    <string name="hint_count_per_type">9</string>
+    <string name="hint_quantity">9</string>
     <string name="hint_text_view">text_view</string>
     <string name="hint_unit_price">$11.0 x</string>
     <string name="hint_total_seat_count">.... seats selected</string>
@@ -163,9 +164,12 @@
     <string name="hint_cinema_name_screen_name">cinema_name - screen_name</string>
     <string name="hint_date_duration">MMM dd, uuuu HH:mm ~ HH:mm</string>
     <string name="hint_items_ordered_summary">9 tickets + 9 concessions</string>
+    <string name="hint_item_name">item_name</string>
+    <string name="hint_payment_method_description">payment_method_description</string>
     <!--content description-->
     <string name="content_description_decrement">decrement</string>
     <string name="content_description_increment">increment</string>
     <string name="content_description_banner">banner</string>
+    <string name="content_description_payment_method_icon">content_description_payment_method_icon</string>
 </resources>
 

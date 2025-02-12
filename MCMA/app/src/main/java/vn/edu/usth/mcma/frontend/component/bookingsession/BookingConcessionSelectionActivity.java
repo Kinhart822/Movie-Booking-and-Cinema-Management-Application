@@ -23,7 +23,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
-import vn.edu.usth.mcma.frontend.component.ShowtimesOld.UI.BookingCheckoutActivity;
 import vn.edu.usth.mcma.frontend.component.customview.navigate.CustomNavigateButton;
 import vn.edu.usth.mcma.frontend.model.response.ConcessionResponse;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
@@ -40,7 +39,7 @@ public class BookingConcessionSelectionActivity extends AppCompatActivity {
     private Booking booking;
     private List<ConcessionResponse> concessionResponses;
     private RecyclerView concessionRecyclerView;
-    private BookingConcessionAdapter bookingConcessionAdapter;
+    private ConcessionAdapter concessionAdapter;
     private double totalPrice;
     private Handler timeRemainingHandler;
 
@@ -64,7 +63,7 @@ public class BookingConcessionSelectionActivity extends AppCompatActivity {
         backButton
                 .setOnClickListener(v -> onBackPressed());
 
-        booking = getIntent().getParcelableExtra(IntentKey.BOOKING.name());
+        booking = getIntent().getParcelableExtra(IntentKey.BOOKING.name(), Booking.class);
 
         assert booking != null;
         cinemaNameTextView.setText(booking.getCinemaName());
@@ -102,16 +101,16 @@ public class BookingConcessionSelectionActivity extends AppCompatActivity {
                 });
     }
     private void postFindAllConcessionBySchedule() {
-        bookingConcessionAdapter = new BookingConcessionAdapter(
+        concessionAdapter = new ConcessionAdapter(
                 this,
                 ConcessionMapper.fromResponseList(concessionResponses),
                 this::onConcessionClickListener);
         concessionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        concessionRecyclerView.setAdapter(bookingConcessionAdapter);
+        concessionRecyclerView.setAdapter(concessionAdapter);
     }
     @SuppressLint("DefaultLocale")
     private void onConcessionClickListener() {
-        totalPrice = booking.getTotalPrice() + bookingConcessionAdapter.getTotalConcessionPrice();
+        totalPrice = booking.getTotalPrice() + concessionAdapter.getTotalConcessionPrice();
         totalPriceTextView.setText(String.format("$%.1f", totalPrice));
     }
     private void prepareTimeRemaining() {
@@ -146,11 +145,8 @@ public class BookingConcessionSelectionActivity extends AppCompatActivity {
         nextButton.setText("Next (3/4)");
         nextButton
                 .setOnClickListener(v -> {
-                    booking = booking.toBuilder()
-                            .concessions(ConcessionMapper
-                                    .fromItemList(bookingConcessionAdapter
-                                            .getItems()))
-                            .build();
+                    booking = booking
+                            .setConcessions(ConcessionMapper.fromItemList(concessionAdapter.getItems()));
                     Intent intent = new Intent(this, BookingCheckoutActivity.class);
                     intent.putExtra(IntentKey.BOOKING.name(), booking);
                     startActivity(intent);

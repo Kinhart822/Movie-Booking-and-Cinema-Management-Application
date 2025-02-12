@@ -30,7 +30,7 @@ public class MovieHelper {
                                 .description(g.getDescription())
                                 .imageBase64(g.getImageBase64())
                                 .build())
-                        .collect(Collectors.toList()))
+                        .toList())
                 .performers(response
                         .getPerformers()
                         .stream()
@@ -41,7 +41,7 @@ public class MovieHelper {
                                 .dob(Instant.parse(p.getDob()))
                                 .sex(p.getSex())
                                 .build())
-                        .collect(Collectors.toList()))
+                        .toList())
                 .rating(Rating.builder()
                         .id(response.getRating().getId())
                         .name(response.getRating().getName())
@@ -56,7 +56,7 @@ public class MovieHelper {
                                 .userComment(r.getUserComment())
                                 .userVote(r.getUserVote())
                                 .build())
-                        .collect(Collectors.toList()))
+                        .toList())
                 .build();
     }
 }

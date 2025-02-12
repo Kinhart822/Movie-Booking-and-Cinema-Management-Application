@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/sign_in_fragment"
@@ -7,17 +8,21 @@
     android:layout_height="match_parent"
     android:paddingHorizontal="40dp"
     android:paddingVertical="30dp"
-    android:background="@drawable/loading_page_border"
-    android:fitsSystemWindows="true"
+    android:background="@color/black"
     android:focusable="true"
     android:focusableInTouchMode="true"
     tools:context=".frontend.component.auth.SignInFragment">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <!-- Logo -->
     <ImageView
         android:id="@+id/logo"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginVertical="50dp"
         android:contentDescription="@string/logo"
         android:src="@drawable/cinemalogo3"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,10 +62,8 @@
         android:layout_width="221dp"
         android:layout_height="55dp"
         android:layout_marginTop="50dp"
-        android:backgroundTint="@color/gray_text"
         android:text="@string/sign_in"
         android:textAllCaps="false"
-        android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -69,6 +72,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/button_sign_in"
@@ -81,7 +85,6 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/don_t_have_an_account_underlined"
-            android:textColor="@color/black"
             android:textSize="15sp"/>
         <!-- "Forgot Password" Text -->
         <TextView
@@ -91,7 +94,6 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/forgot_password_underlined"
-            android:textColor="@color/black"
             android:textSize="15sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

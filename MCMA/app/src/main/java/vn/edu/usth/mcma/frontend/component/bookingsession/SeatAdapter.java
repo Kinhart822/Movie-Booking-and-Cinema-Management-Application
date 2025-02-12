@@ -22,43 +22,44 @@ import lombok.Getter;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.constant.SeatAvailability;
 import vn.edu.usth.mcma.frontend.constant.SeatAvailables;
-import vn.edu.usth.mcma.frontend.model.Seat;
-import vn.edu.usth.mcma.frontend.dto.response.SeatTypeResponse;
-import vn.edu.usth.mcma.frontend.utils.helper.SeatMapHelper;
+import vn.edu.usth.mcma.frontend.model.response.SeatTypeItem;
+import vn.edu.usth.mcma.frontend.model.response.SeatTypeResponse;
+import vn.edu.usth.mcma.frontend.model.item.SeatItem;
+import vn.edu.usth.mcma.frontend.utils.helper.SeatHelper;
+import vn.edu.usth.mcma.frontend.utils.helper.SeatMatrixHelper;
 
-public class BookingSeatAdapter extends RecyclerView.Adapter<BookingSeatAdapter.ViewHolder> {
-    private static final String TAG = BookingSeatAdapter.class.getName();
+public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
     private final Context context;
-    private final Map<Integer, SeatTypeResponse> seatTypes;
-    private final Map<Integer, Map<Integer, Seat>> seatMatrix;
-    private final Map<Integer, Map<Integer, List<Seat>>> rootSeatMatrix;
+    @Getter
+    private final Map<String, SeatTypeItem> seatTypes;
+    private final Map<Integer, Map<Integer, SeatItem>> seatMatrix;
+    private final Map<Integer, Map<Integer, List<SeatItem>>> rootSeatMatrix;
     private final ISeatItemView iSeatItemView;
     @Getter
     private final int maxSeatPerRow;
-    private final List<Seat> selectedSeats;
-    @Getter // this contains list of root seats
-    private final List<Seat> selectedRootSeats;
+    @Getter
+    private final List<SeatItem> selectedSeats;
+    @Getter
+    private final List<SeatItem> selectedRootSeats;
     @Getter
     private final String nearestRow;
     @Getter
     private final String farthestRow;
 
 
-    public BookingSeatAdapter(
+    public SeatAdapter(
             Context context,
-            List<SeatTypeResponse> seatTypeResponses,
-            List<Seat> seatResponses,
+            Map<String, SeatTypeItem> seatTypes,
+            List<SeatItem> seatItems,
             ISeatItemView iSeatItemView) {
         this.context = context;
-        this.seatTypes = new HashMap<>();
-        seatTypeResponses
-                .forEach(st -> this.seatTypes.put(st.getId(), st));
-        SeatMapHelper seatMapHelper = new SeatMapHelper(seatResponses);
-        this.seatMatrix = seatMapHelper.getSeatMatrix();
-        this.rootSeatMatrix = seatMapHelper.getRootSeatMatrix();
-        this.maxSeatPerRow = seatMapHelper.getMaxSeatPerRow();
-        this.nearestRow = seatMapHelper.getNearestRow();
-        this.farthestRow = seatMapHelper.getFarthestRow();
+        this.seatTypes = seatTypes;
+        SeatMatrixHelper seatMatrixHelper = new SeatMatrixHelper(seatItems);
+        this.seatMatrix = seatMatrixHelper.getSeatMatrix();
+        this.rootSeatMatrix = seatMatrixHelper.getRootSeatMatrix();
+        this.maxSeatPerRow = seatMatrixHelper.getMaxSeatPerRow();
+        this.nearestRow = seatMatrixHelper.getNearestRow();
+        this.farthestRow = seatMatrixHelper.getFarthestRow();
         this.iSeatItemView = iSeatItemView;
         this.selectedSeats = new ArrayList<>();
         this.selectedRootSeats  = new ArrayList<>();
@@ -100,7 +101,7 @@ public class BookingSeatAdapter extends RecyclerView.Adapter<BookingSeatAdapter.
         int row = position / (maxSeatPerRow + 1);
         int col = position % (maxSeatPerRow + 1);
         if (col == 0) {
-            for (Seat seat : Objects.requireNonNull(seatMatrix.get(row)).values()) {
+            for (SeatItem seat : Objects.requireNonNull(seatMatrix.get(row)).values()) {
                 if (seat.getName() != null) {
                     holder.seatIndexTextView.setText(seat.getName().substring(0, 1));
                     return;
@@ -109,12 +110,12 @@ public class BookingSeatAdapter extends RecyclerView.Adapter<BookingSeatAdapter.
             holder.seatIndexTextView.setText(null);
             return;
         }
-        Seat seat = Objects
+        SeatItem seat = Objects
                 .requireNonNull(seatMatrix.get(row))
                 .get(col - 1);
         assert seat != null;
         String name = seat.getName();
-        int seatTypeId = seat.getTypeId();
+        String seatTypeId = seat.getTypeId();
         String availability = seat.getAvailability();
         if (name != null) {
             setSeatBackground(holder.itemView, SeatAvailability.getById(availability).getBackgroundId());
@@ -135,19 +136,19 @@ public class BookingSeatAdapter extends RecyclerView.Adapter<BookingSeatAdapter.
     private void setSeatBackground(View view, int backgroundId) {
         view.setBackground(ContextCompat.getDrawable(context, backgroundId));
     }
-    private void toggleSeat(Seat seat) {
+    private void toggleSeat(SeatItem seat) {
         int rootRow = seat.getRootRow();
         int rootCol = seat.getRootCol();
-        List<Seat> rectangle = Objects
+        List<SeatItem> rectangle = Objects
                 .requireNonNull(Objects
                         .requireNonNull(rootSeatMatrix
                                 .get(rootRow))
                 .get(rootCol));
-        Optional<Seat> rootSeatOpt = rectangle
+        Optional<SeatItem> rootSeatOpt = rectangle
                 .stream()
                 .filter(s -> s.getRootRow() == rootRow && s.getRootCol() == rootCol)
                 .findFirst();//if use find any -> rootSeat may not be in selectedRootSeats
-        Seat rootSeat = null;
+        SeatItem rootSeat = null;
         if (rootSeatOpt.isPresent()) {
             rootSeat = rootSeatOpt.get();
         }
@@ -162,12 +163,6 @@ public class BookingSeatAdapter extends RecyclerView.Adapter<BookingSeatAdapter.
         rectangle.forEach(s -> notifyItemChanged(s.getRow() * (maxSeatPerRow + 1) + s.getCol() + 1));
         iSeatItemView.onSeatClickListener(seat);
     }
-    private int getNumberOfAudiencePerSeat(Seat seat) {
-        return (Objects.equals(seat.getTypeId(), SeatAvailables.LOVERS.getId()) ||
-                Objects.equals(seat.getTypeId(), SeatAvailables.BED.getId()))
-                ? 2
-                : 1;
-    }
     @Override
     public int getItemCount() {
         return seatMatrix.size() * (maxSeatPerRow + 1);
@@ -180,14 +175,12 @@ public class BookingSeatAdapter extends RecyclerView.Adapter<BookingSeatAdapter.
         }
     }
     public int getTotalAudienceCount() {
-        return selectedRootSeats
-                .stream()
-                .mapToInt(this::getNumberOfAudiencePerSeat)
+        return this.selectedRootSeats.stream()
+                .mapToInt(SeatHelper::getNumberOfAudiencePerSeat)
                 .sum();
     }
     public double getTotalSeatPrice() {
-        return this.selectedRootSeats
-                .stream()
+        return this.selectedRootSeats.stream()
                 .mapToDouble(s -> Objects.requireNonNull(seatTypes
                                 .get(s.getTypeId()))
                         .getUnitPrice())

@@ -69,8 +69,7 @@
             android:exported="false" />
         <activity
             android:name=".frontend.component.bookingsession.MovieDetailActivity"
-            android:exported="true"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:exported="false" />
         <activity
             android:name=".frontend.component.Personal.Movie_Feedback_Activity"
             android:exported="false" />
@@ -96,7 +95,7 @@
             android:name=".frontend.component.bookingsession.BookingAudienceTypeSelectionActivity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.ShowtimesOld.UI.BookingCheckoutActivity"
+            android:name=".frontend.component.bookingsession.BookingCheckoutActivity"
             android:exported="false" />
         <activity
             android:name=".frontend.component.bookingsession.BookingConcessionSelectionActivity"

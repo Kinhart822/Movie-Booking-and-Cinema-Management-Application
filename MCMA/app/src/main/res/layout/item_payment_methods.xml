@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--deprecated-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp">
+    <ImageView
+        android:id="@+id/image_view_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:contentDescription="@string/content_description_payment_method_icon" />
+    <TextView
+        android:id="@+id/text_view_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="15"
+        android:layout_gravity="center_vertical"
+        android:paddingHorizontal="10dp"
+        android:text="@string/hint_payment_method_description"
+        android:textSize="16sp"
+        android:ellipsize="end"/>
+    <RadioButton
+        android:id="@+id/radio_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"/>
+</LinearLayout>
