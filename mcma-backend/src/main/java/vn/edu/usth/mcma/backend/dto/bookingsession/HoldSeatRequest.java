@@ -6,7 +6,6 @@ import java.util.List;
 
 @Data
 public class HoldSeatRequest {
-    private String sessionId;
     private List<HoldRootSeat> rootSeats;
     private Long timeRemaining;//todo: system elapsed time instead
 }

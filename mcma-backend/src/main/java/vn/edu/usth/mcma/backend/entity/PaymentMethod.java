@@ -1,5 +1,6 @@
 package vn.edu.usth.mcma.backend.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ public class PaymentMethod extends AbstractAuditing implements Serializable {
     @Id
     private String id;
     private String description;
+    @Column(columnDefinition = "LONGTEXT")
     private String imageBase64;
     private String appPackageName;
 }

@@ -41,15 +41,20 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.findAllConcessionBySchedule(scheduleId));
     }
     @PostMapping("/register-booking-session")
-    public ResponseEntity<ApiResponse> registerBookingSession(@RequestBody SessionRegistration request) {
-        return ResponseEntity.ok(bookingService.registerBookingSession(request));
+    public ResponseEntity<Long> registerBookingSession(@RequestBody Long scheduleId) {
+        return ResponseEntity.ok(bookingService.registerBookingSession(scheduleId));
     }
-    @PutMapping("/schedule/{scheduleId}/seat/hold-request")
-    public ResponseEntity<ApiResponse> holdSeatRequest(@PathVariable Long scheduleId, @RequestBody HoldSeatRequest request) {
-        return ResponseEntity.ok(bookingService.holdSeatRequest(scheduleId, request));
+    @PutMapping("/{bookingId}/hold-request")
+    public ResponseEntity<ApiResponse> holdSeatRequest(@PathVariable Long bookingId, @RequestBody HoldSeatRequest request) {
+        return ResponseEntity.ok(bookingService.holdSeatRequest(bookingId, request));
     }
     @GetMapping("/payment-method")
     public ResponseEntity<List<PaymentMethod>> findAllPaymentMethod() {
         return ResponseEntity.ok(bookingService.findAllPaymentMethod());
     }
+    @PostMapping("/{bookingId}/pending-payment")
+    public ResponseEntity<BankTransferForm> pendingPayment(@PathVariable Long bookingId, @RequestBody BookingPendingPayment request) {
+        return ResponseEntity.ok(bookingService.pendingPayment(bookingId, request));
+    }
+
 }

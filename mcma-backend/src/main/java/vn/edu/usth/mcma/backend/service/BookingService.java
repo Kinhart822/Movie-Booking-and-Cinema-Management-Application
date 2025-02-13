@@ -3,7 +3,11 @@ package vn.edu.usth.mcma.backend.service;
 import constants.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.apache.commons.text.RandomStringGenerator;
 import org.springframework.stereotype.Service;
+import vn.edu.usth.mcma.backend.domain.Booking;
+import vn.edu.usth.mcma.backend.domain.BookingSeat;
+import vn.edu.usth.mcma.backend.domain.BookingSeatPK;
 import vn.edu.usth.mcma.backend.dto.*;
 import vn.edu.usth.mcma.backend.dto.bookingsession.*;
 import vn.edu.usth.mcma.backend.dto.cinema.CinemaPresentation;
@@ -16,6 +20,7 @@ import vn.edu.usth.mcma.backend.entity.*;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.*;
+import vn.edu.usth.mcma.backend.security.JwtHelper;
 
 import java.time.Instant;
 import java.util.*;
@@ -33,9 +38,16 @@ public class BookingService {
     private final RatingRepository ratingRepository;
     private final ScheduleSeatRepository scheduleSeatRepository;
     private final MovieRepository movieRepository;
-    private static final Set<String> sessionSet = new HashSet<>();
+    private static final Set<String> sessionSet = new HashSet<>();// todo: encoded and given by server (course: Cryptography)
+    private static final RandomStringGenerator alphabeticGenerator = new RandomStringGenerator.Builder()
+            .selectFrom(new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'})
+            .get();
     private final SeatTypeRepository seatTypeRepository;
     private final PaymentMethodRepository paymentMethodRepository;
+    private final BookingRepository bookingRepository;
+    private final UserRepository userRepository;
+    private final JwtHelper jwtHelper;
+    private final BookingSeatRepository bookingSeatRepository;
 
     @Deprecated
     public MoviePresentation getAllInformationOfSelectedMovie(Long movieId) {
@@ -277,20 +289,33 @@ public class BookingService {
                 .toList();
     }
 
-    public ApiResponse registerBookingSession(SessionRegistration request) {
-        if (sessionSet.add(request.getSessionId())) {
-            return ApiResponse.ok();
-        }
-        return ApiResponse.badRequest();
+    public Long registerBookingSession(Long scheduleId) {
+        Long userId = jwtHelper.getIdUserRequesting();
+        Instant now = Instant.now();
+        return bookingRepository
+                .save(Booking.builder()
+                        .bookingNo(String.format("%s%d", alphabeticGenerator.generate(6), System.currentTimeMillis()))
+                        .schedule(scheduleRepository
+                                .findById(scheduleId)
+                                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND.setDescription(String.format("Schedule not found with id: %d", scheduleId)))))
+                        .createdDate(now)
+                        .lastModifiedDate(now)
+                        .bookingStatus(BookingStatus.WAITING_FOR_SEAT)
+                        .user(userRepository
+                                .findById(userId)
+                                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND.setDescription(String.format("User not found with id: %d", userId)))))
+                        .build())
+                .getId();
     }
 
-    public ApiResponse holdSeatRequest(Long scheduleId, HoldSeatRequest request) {
-        if (!sessionSet.contains(request.getSessionId())) {
-            throw new BusinessException(ApiResponseCode.SESSION_ID_NOT_FOUND);
+    public ApiResponse holdSeatRequest(Long bookingId, HoldSeatRequest request) {
+        Booking booking = bookingRepository
+                .findById(bookingId)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND.setDescription(String.format("Booking not found with id: %d", bookingId))));
+        if (booking.getBookingStatus() != BookingStatus.WAITING_FOR_SEAT) {
+            throw new BusinessException(ApiResponseCode.INVALID_BOOKING_REQUEST.setDescription("Invalid action for current booking status"));
         }
-        Schedule schedule = scheduleRepository
-                .findById(scheduleId)
-                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+        Schedule schedule = booking.getSchedule();
         Map<SeatPK, Seat> rootSeatIdSeatMap = new HashMap<>();
         seatRepository
                 .findAllRootByScreen(schedule.getScreen())
@@ -308,6 +333,9 @@ public class BookingService {
                                 .seatAvailability(SeatAvailability.HELD.name())
                                 .holdUntil(Instant.now().plusMillis(request.getTimeRemaining())).build())
                         .toList());
+        bookingRepository.save(booking.toBuilder()
+                        .lastModifiedDate(Instant.now())
+                        .bookingStatus(BookingStatus.IN_PROGRESS).build());
         return ApiResponse.ok();
     }
 
@@ -329,6 +357,68 @@ public class BookingService {
 
     public List<PaymentMethod> findAllPaymentMethod() {
         return paymentMethodRepository.findAll();
+    }
+
+    public BankTransferForm pendingPayment(Long bookingId, BookingPendingPayment request) {
+        Booking booking = bookingRepository
+                .findById(bookingId)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND.setDescription(String.format("Booking not found with id: %d", bookingId))));
+        if (booking.getBookingStatus() != BookingStatus.IN_PROGRESS) {
+            throw new BusinessException(ApiResponseCode.INVALID_BOOKING_REQUEST.setDescription("Invalid action for current booking status"));
+        }
+        Schedule schedule = booking.getSchedule();
+        Screen screen = schedule.getScreen();
+        // verify that all seats in the request are exist
+        List<SeatPK> rootSeatIdRequests = request.getSeats().stream()
+                .map(s -> SeatPK.builder()
+                        .screen(screen)
+                        .row(s.getRootRow())
+                        .col(s.getRootCol())
+                        .build())
+                .toList();
+        List<Seat> rootSeats = seatRepository.findAllById(rootSeatIdRequests);
+        if (rootSeats.size() != rootSeatIdRequests.size()) {
+            throw new BusinessException(ApiResponseCode.INTERNAL_SERVER_ERROR);
+        }
+        // fetch state of all seat and verify amount
+        List<ScheduleSeatPK> scheduleSeatIds = rootSeats.stream()
+                .map(rootSeat -> ScheduleSeatPK.builder()
+                        .schedule(schedule)
+                        .seat(rootSeat)
+                        .build())
+                .toList();
+        List<ScheduleSeat> scheduleSeats = scheduleSeatRepository.findAllById(scheduleSeatIds);
+        if (scheduleSeats.size() != rootSeatIdRequests.size()) {
+            throw new BusinessException(ApiResponseCode.INTERNAL_SERVER_ERROR);
+        }
+        // change all state from HELD to SOLD
+        scheduleSeatRepository.saveAll(scheduleSeats.stream()
+                .map(ss -> ss.toBuilder()
+                        .seatAvailability(SeatAvailability.SOLD.name())
+                        .holdUntil(null)
+                        .build())
+                .toList());
+
+        Booking capturedBooking = booking;
+        // map booking and seat
+        bookingSeatRepository.saveAll(rootSeats.stream()
+                .map(rootSeat -> BookingSeat.builder()
+                        .id(BookingSeatPK.builder()
+                                .booking(capturedBooking)
+                                .seat(rootSeat).build())
+                        .build())
+                .toList());
+        // map booking and audience
+
+        //booking concession
+        booking = booking.toBuilder()
+                .lastModifiedDate(Instant.now())
+                .finalPrice(null)
+                .coupons(null)
+                .bookingStatus(BookingStatus.PENDING_PAYMENT).build();
+        booking = bookingRepository.save(booking);
+        return BankTransferForm.builder()
+                .transactionContent(booking.getBookingNo()).build();
     }
 //    public List<TicketResponse> getAllTickets() {
 //        List<Ticket> tickets = ticketRepository.findAll();

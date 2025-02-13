@@ -2,10 +2,7 @@ package vn.edu.usth.mcma.backend.domain;
 
 import constants.BookingStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import vn.edu.usth.mcma.backend.entity.*;
@@ -20,6 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder(toBuilder = true)
 public class Booking implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -54,12 +52,6 @@ public class Booking implements Serializable {
             joinColumns = @JoinColumn(name = "booking_id"),
             inverseJoinColumns = @JoinColumn(name = "coupon_id"))
     private Set<Coupon> coupons;
-    @ManyToMany
-    @JoinTable(
-            name = "map_booking_concession",
-            joinColumns = @JoinColumn(name = "booking_id"),
-            inverseJoinColumns = @JoinColumn(name = "concession_id"))
-    private Set<Concession> concessionSet;
 }
 
 
