@@ -5,12 +5,8 @@ import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -20,7 +16,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.component.auth.SignInFragment;
-import vn.edu.usth.mcma.frontend.component.Notification.Notification_Activity;
 import vn.edu.usth.mcma.frontend.network.AuthPrefsManager;
 
 public class MainActivity extends AppCompatActivity {
@@ -58,11 +53,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         searchButton.setOnClickListener(v -> {
-            Intent i = new Intent(MainActivity.this, SearchMovieActivity.class);
-            startActivity(i);
+            Intent intent = new Intent(MainActivity.this, SearchMovieActivity.class);
+            startActivity(intent);
         });
         notificationButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, Notification_Activity.class);
+            Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
             startActivity(intent);
         });
     }

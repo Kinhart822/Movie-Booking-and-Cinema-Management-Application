@@ -126,6 +126,7 @@
     <string name="header_seat_selection">Seat Selection</string>
     <string name="header_audience_type_selection">Audience Type Selection</string>
     <string name="header_concession_selection">Concession Selection</string>
+    <string name="header_notification">Notification</string>
     <!--category-->
     <string name="category_movie_overview">Overview</string>
     <string name="category_movie_release_date">Release date</string>
@@ -166,10 +167,13 @@
     <string name="hint_items_ordered_summary">9 tickets + 9 concessions</string>
     <string name="hint_item_name">item_name</string>
     <string name="hint_payment_method_description">payment_method_description</string>
+    <string name="hint_notification_title">notification_title</string>
+    <string name="hint_notification_time">HH:mm</string>
     <!--content description-->
     <string name="content_description_decrement">decrement</string>
     <string name="content_description_increment">increment</string>
     <string name="content_description_banner">banner</string>
     <string name="content_description_payment_method_icon">content_description_payment_method_icon</string>
+    <string name="hint_notification_content">notification_content</string>
 </resources>
 

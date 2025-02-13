@@ -122,7 +122,7 @@
             android:name=".frontend.component.Personal.Edit_Update_Account_Info_Activity"
             android:exported="false" />
         <activity
-            android:name=".frontend.component.Notification.Notification_Activity"
+            android:name=".frontend.component.main.NotificationActivity"
             android:exported="false" />
         <activity
             android:name=".frontend.component.account.ResetPassword_Activity"

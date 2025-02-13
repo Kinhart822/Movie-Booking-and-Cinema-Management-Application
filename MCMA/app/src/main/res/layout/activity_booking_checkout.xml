@@ -240,6 +240,12 @@
             android:id="@+id/button_next"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+        <vn.edu.usth.mcma.frontend.component.customview.navigate.CustomNavigateButton
+            android:id="@+id/button_assume_success"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/color_darker_primary"
+            android:visibility="gone"/>
         <!--todo assume paid-->
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

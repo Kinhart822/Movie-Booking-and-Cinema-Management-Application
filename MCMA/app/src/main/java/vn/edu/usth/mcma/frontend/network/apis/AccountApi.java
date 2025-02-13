@@ -21,7 +21,7 @@ import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CouponResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingResponse;
 import vn.edu.usth.mcma.frontend.dto.account.EmailExistenceResponse;
 import vn.edu.usth.mcma.frontend.dto.response.MovieRespondResponse;
-import vn.edu.usth.mcma.frontend.dto.response.NotificationResponse;
+import vn.edu.usth.mcma.frontend.model.response.NotificationResponse;
 import vn.edu.usth.mcma.frontend.dto.response.UserDetailsResponse;
 import vn.edu.usth.mcma.frontend.dto.account.OtpDueDate;
 import vn.edu.usth.mcma.frontend.dto.account.OtpCheckResult;
@@ -43,6 +43,9 @@ public interface AccountApi {
     @POST("/api/v1/account/user/forgot-password/finish")
     Call<ApiResponse> forgotPasswordFinish(@Body NewPassword request);
 
+    @GET("/api/v1/account/user/notification")
+    Call<List<NotificationResponse>> findAllNotifications();
+
     @PUT("/api/v1/auth/update-account/{userId}")
     Call<Void> updateAccount(@Path("userId") int userId, @Body UpdateAccountRequest updateAccountRequest);
     @DELETE("/api/v1/auth/delete-account/{userId}")
@@ -51,8 +54,6 @@ public interface AccountApi {
     Call<List<BookingResponse>> getBookingHistory();
     @GET("/api/v1/user/view/viewMovieRespondByUser")
     Call<List<MovieRespondResponse>> getAllUserFeedback();
-    @GET("/api/v1/user/view/notifications")
-    Call<NotificationResponse> getNotifications();
     @POST("/api/v1/auth/update-password")
     Call<String> updatePassword(@Body ChangePasswordRequest changePasswordRequest);
     @GET("api/v1/auth/getUserInformation")

@@ -62,7 +62,7 @@ public class DrinkItem implements Parcelable {
         return 0;
     }
 
-    public static final Creator<DrinkItem> CREATOR = new Creator<DrinkItem>() {
+    public static final Creator<DrinkItem> CREATOR = new Creator<>() {
         @Override
         public DrinkItem createFromParcel(Parcel in) {
             return new DrinkItem(in);

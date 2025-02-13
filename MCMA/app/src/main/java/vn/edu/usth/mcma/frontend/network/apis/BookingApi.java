@@ -13,7 +13,7 @@ import vn.edu.usth.mcma.frontend.model.request.BookingPendingPayment;
 import vn.edu.usth.mcma.frontend.model.response.AudienceTypeResponse;
 import vn.edu.usth.mcma.frontend.dto.response.ApiResponse;
 import vn.edu.usth.mcma.frontend.model.request.HoldSeatRequest;
-import vn.edu.usth.mcma.frontend.model.response.BankTransferForm;
+import vn.edu.usth.mcma.frontend.model.response.BankTransferResponse;
 import vn.edu.usth.mcma.frontend.model.response.ConcessionResponse;
 import vn.edu.usth.mcma.frontend.dto.bookingsession.ScheduleDetail;
 import vn.edu.usth.mcma.frontend.dto.request.BookingRequest;
@@ -51,9 +51,15 @@ public interface BookingApi {
     }
 
     @POST("/api/v1/user/booking/{bookingId}/pending-payment")
-    Call<BankTransferForm> pendingPayment(@Path("bookingId") Long bookingId, @Body BookingPendingPayment request);
+    Call<BankTransferResponse> pendingPayment(@Path("bookingId") Long bookingId, @Body BookingPendingPayment request);
     interface PendingPaymentCallback {
         void onWaitForPayment();
+    }
+
+    @GET("/api/v1/user/booking/{bookingId}/finish")
+    Call<Boolean> finishBooking(@Path("bookingId") Long bookingId);
+    interface BookingCheckCallback {
+        void onBookedSuccessfully();
     }
 
     @GET("/api/v1/user/booking/payment-method")

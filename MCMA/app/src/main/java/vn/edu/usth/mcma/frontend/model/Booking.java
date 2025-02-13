@@ -1,8 +1,8 @@
 package vn.edu.usth.mcma.frontend.model;
 
-import android.annotation.SuppressLint;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -12,13 +12,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import vn.edu.usth.mcma.frontend.model.item.ItemsOrderedItem;
+import lombok.Setter;
 import vn.edu.usth.mcma.frontend.model.parcelable.AudienceTypeParcelable;
+import vn.edu.usth.mcma.frontend.model.parcelable.BankTransferParcelable;
 import vn.edu.usth.mcma.frontend.model.parcelable.ConcessionParcelable;
 import vn.edu.usth.mcma.frontend.model.parcelable.ItemsOrderedParcelable;
 import vn.edu.usth.mcma.frontend.model.parcelable.SeatParcelable;
@@ -30,6 +31,7 @@ import vn.edu.usth.mcma.frontend.utils.helper.SeatHelper;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Booking implements Parcelable {
+    private static final String TAG = Booking.class.getName();
     //todo consider separate details
     private Long bookingId;
     private Long movieId;
@@ -45,9 +47,10 @@ public class Booking implements Parcelable {
     private List<ItemsOrderedParcelable> itemsOrdered;
     private Map<String, SeatTypeParcelable> seatTypes;
     private List<SeatParcelable> seats;
+    @Setter(AccessLevel.NONE)
     private List<AudienceTypeParcelable> audienceTypes;
     private List<ConcessionParcelable> concessions;
-    private String bankTransferContent;
+    private BankTransferParcelable bankTransfer;
     @Override
     public int describeContents() {
         return 0;
@@ -69,7 +72,7 @@ public class Booking implements Parcelable {
         seats = in.readParcelableList(seats = new ArrayList<>(), SeatParcelable.class.getClassLoader(), SeatParcelable.class);
         audienceTypes = in.readParcelableList(audienceTypes = new ArrayList<>(), AudienceTypeParcelable.class.getClassLoader(), AudienceTypeParcelable.class);
         concessions = in.readParcelableList(concessions = new ArrayList<>(), ConcessionParcelable.class.getClassLoader(), ConcessionParcelable.class);
-        bankTransferContent = in.readString();
+        bankTransfer = in.readParcelable(BankTransferParcelable.class.getClassLoader(), BankTransferParcelable.class);
     }
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -89,7 +92,7 @@ public class Booking implements Parcelable {
         dest.writeParcelableList(seats, 0);
         dest.writeParcelableList(audienceTypes, 0);
         dest.writeParcelableList(concessions, 0);
-        dest.writeString(bankTransferContent);
+        dest.writeParcelable(bankTransfer, 0);
     }
     public static final Creator<Booking> CREATOR = new Parcelable.Creator<>() {
         @Override
@@ -108,7 +111,7 @@ public class Booking implements Parcelable {
                     .mapToInt(SeatHelper::getNumberOfAudiencePerSeat)
                     .sum();
         }
-        return audienceTypes.size();
+        return audienceTypes.stream().mapToInt(AudienceTypeParcelable::getQuantity).sum();
     }
     public double getTotalPrice() {
         return itemsOrdered.stream()
@@ -140,27 +143,23 @@ public class Booking implements Parcelable {
         return this;
     }
     public Booking setAudienceTypes(List<AudienceTypeParcelable> audienceTypes) {
-        this.audienceTypes = audienceTypes;
-        this.audienceTypes.forEach(audienceType -> {
-            if (audienceType.getQuantity() > 0) {
-                itemsOrdered.add(ItemsOrderedParcelable.builder()
-                        .quantity(audienceType.getQuantity())
-                        .name(audienceType.getId())
-                        .totalPrice(audienceType.getUnitPrice() * audienceType.getQuantity()).build());
-            }
-        });
+        this.audienceTypes = audienceTypes.stream()
+                .filter(a -> a.getQuantity() > 0)
+                .toList();
+        this.audienceTypes.forEach(audienceType -> itemsOrdered.add(ItemsOrderedParcelable.builder()
+                .quantity(audienceType.getQuantity())
+                .name(audienceType.getId())
+                .totalPrice(audienceType.getUnitPrice() * audienceType.getQuantity()).build()));
         return this;
     }
     public Booking setConcessions(List<ConcessionParcelable> concessions) {
-        this.concessions = concessions;
-        this.concessions.forEach(concession -> {
-            if (concession.getQuantity() > 0) {
-                itemsOrdered.add(ItemsOrderedParcelable.builder()
-                        .quantity(concession.getQuantity())
-                        .name(concession.getName())
-                        .totalPrice(concession.getComboPrice() * concession.getQuantity()).build());
-            }
-        });
+        this.concessions = concessions.stream()
+                .filter(c -> c.getQuantity() > 0)
+                .toList();
+        this.concessions.forEach(concession -> itemsOrdered.add(ItemsOrderedParcelable.builder()
+                .quantity(concession.getQuantity())
+                .name(concession.getName())
+                .totalPrice(concession.getComboPrice() * concession.getQuantity()).build()));
         return this;
     }
 }
