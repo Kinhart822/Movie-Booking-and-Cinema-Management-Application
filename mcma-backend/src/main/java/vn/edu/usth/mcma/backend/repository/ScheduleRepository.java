@@ -17,13 +17,15 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     @Query(nativeQuery = true, value = """
             select *
             from schedule s
-            where (:start between s.start_date_time and s.end_date_time
-               or :end between s.start_date_time and s.end_date_time
-               or :start < s.start_date_time and :end > s.end_date_time)
-               and s.screen_id = :screenId
+            where s.screen_id = :screenId
+              and s.start_date_time < date_add(:start, interval :length minute)
+              and date_add(s.start_date_time, interval :length minute) > :start
             """)
-    List<Schedule> eventsInRange(@Param(value = "screenId") Long screenId, @Param(value = "start") Instant time, @Param(value = "end") Instant endTime);
+    List<Schedule> eventsInRange(@Param(value = "screenId") Long screenId, @Param(value = "start") Instant time, @Param(value = "length") Integer length);
     List<Schedule> findAllByMovieAndStartDateTimeIsAfterAndStatusIs(Movie movie, Instant time, Integer status);
     List<Schedule> findAllByMovieAndScreenAndStartDateTimeIsAfterAndStatusIs(Movie movie, Screen screen, Instant time, Integer status);
     List<Schedule> findAllByStartDateTimeIsAfterAndStatusIs(Instant time, Integer status);
+
+    @Query("select s from Schedule s left join Cinema c on s.screen.cinema = c where c.id = :cinemaId")
+    List<Schedule> findAllScheduleByCinema(Long cinemaId);
 }

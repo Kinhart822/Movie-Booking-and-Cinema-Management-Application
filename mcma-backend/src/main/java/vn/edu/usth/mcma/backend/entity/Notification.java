@@ -21,6 +21,7 @@ public class Notification implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String title;
     @Column
     private String content;
     @ManyToOne

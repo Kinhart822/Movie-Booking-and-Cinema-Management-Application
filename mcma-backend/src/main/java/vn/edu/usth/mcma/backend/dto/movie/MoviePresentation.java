@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import vn.edu.usth.mcma.backend.dto.ReviewPresentation;
-import vn.edu.usth.mcma.backend.dto.SchedulePresentation;
+import vn.edu.usth.mcma.backend.dto.unsorted.ReviewPresentation;
+import vn.edu.usth.mcma.backend.dto.unsorted.SchedulePresentation;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.backend.dto;
+package vn.edu.usth.mcma.backend.dto.unsorted;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

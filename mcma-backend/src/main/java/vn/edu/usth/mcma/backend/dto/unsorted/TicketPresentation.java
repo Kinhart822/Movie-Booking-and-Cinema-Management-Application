@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.backend.dto;
+package vn.edu.usth.mcma.backend.dto.unsorted;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SeatTypeResponse {
-    private String id;
+public class TicketPresentation {
+    private Long id;
+    private String type;
     private String description;
-    private Integer width;
-    private Integer height;
-    private Double unitPrice;
+    private Double price;
 }

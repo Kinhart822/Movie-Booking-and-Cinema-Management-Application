@@ -6,12 +6,15 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.usth.mcma.backend.dto.*;
 import vn.edu.usth.mcma.backend.dto.account.*;
+import vn.edu.usth.mcma.backend.dto.unsorted.AdminPresentation;
+import vn.edu.usth.mcma.backend.dto.unsorted.UserPresentation;
+import vn.edu.usth.mcma.backend.entity.Notification;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.service.AccountService;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -107,5 +110,13 @@ public class AccountController {
     @GetMapping("/user/profile")
     public ResponseEntity<UserPresentation> getUser() {
         return ResponseEntity.ok(accountService.getUser());
+    }
+
+    /*
+     * notification
+     */
+    @GetMapping("/user/notification")
+    public ResponseEntity<List<Notification>> findAllNotifications() {
+        return ResponseEntity.ok(accountService.findAllNotifications());
     }
 }

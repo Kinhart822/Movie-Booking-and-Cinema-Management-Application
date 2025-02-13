@@ -3,8 +3,8 @@ package vn.edu.usth.mcma.backend.controller.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.usth.mcma.backend.dto.SeatPresentation;
-import vn.edu.usth.mcma.backend.dto.SeatTypeResponse;
+import vn.edu.usth.mcma.backend.dto.unsorted.SeatPresentation;
+import vn.edu.usth.mcma.backend.dto.unsorted.SeatTypeResponse;
 import vn.edu.usth.mcma.backend.dto.bookingsession.*;
 import vn.edu.usth.mcma.backend.entity.PaymentMethod;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
@@ -56,5 +56,8 @@ public class BookingController {
     public ResponseEntity<BankTransferForm> pendingPayment(@PathVariable Long bookingId, @RequestBody BookingPendingPayment request) {
         return ResponseEntity.ok(bookingService.pendingPayment(bookingId, request));
     }
-
+    @GetMapping("/{bookingId}/finish")
+    public ResponseEntity<Boolean> finishBooking(@PathVariable Long bookingId) {
+        return ResponseEntity.ok(bookingService.finishBooking(bookingId));
+    }
 }

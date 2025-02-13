@@ -1,17 +1,24 @@
 package vn.edu.usth.mcma.backend.controller.admin;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.usth.mcma.backend.dto.*;
 import vn.edu.usth.mcma.backend.dto.cinema.CinemaProjection;
 import vn.edu.usth.mcma.backend.dto.cinema.CinemaRequest;
+import vn.edu.usth.mcma.backend.dto.cinema.ScheduleOfScreenResponse;
+import vn.edu.usth.mcma.backend.dto.movie.MovieScheduleRequest;
+import vn.edu.usth.mcma.backend.dto.unsorted.ScreenProjection;
+import vn.edu.usth.mcma.backend.dto.unsorted.ScreenRequest;
+import vn.edu.usth.mcma.backend.dto.unsorted.SeatHelperInput;
+import vn.edu.usth.mcma.backend.dto.unsorted.SeatResponse;
 import vn.edu.usth.mcma.backend.entity.Screen;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.repository.ScreenRepository;
 import vn.edu.usth.mcma.backend.service.CinemaService;
 import vn.edu.usth.mcma.backend.entity.Cinema;
+import vn.edu.usth.mcma.backend.service.MovieService;
 import vn.edu.usth.mcma.backend.service.ScreenService;
 import vn.edu.usth.mcma.backend.service.SeatService;
 
@@ -25,6 +32,8 @@ public class CinemaController {
     private final ScreenService screenService;
     private final ScreenRepository screenRepository;
     private final SeatService seatService;
+    private final MovieService movieService;
+
     /*
      * ==========
      * Cinema
@@ -99,5 +108,19 @@ public class CinemaController {
     @PutMapping("/screen/{screenId}/seat")
     public ResponseEntity<ApiResponse> updateSeatMap(@PathVariable Long screenId, @Valid @RequestBody List<SeatHelperInput> seatHelperInputs) {
         return ResponseEntity.ok(seatService.updateSeatMap(screenId, seatHelperInputs));
+    }
+    /*
+     * ========
+     * schedule
+     * ========
+     */
+    @PostMapping("/cinema/schedule")
+    public ResponseEntity<ApiResponse> addSchedules(@RequestBody List<MovieScheduleRequest> requests) {
+        return ResponseEntity.ok(movieService.addSchedules(requests));
+    }
+    @Operation(summary = "Find all schedule by cinema")
+    @GetMapping("/cinema/{cinemaId}/schedule")
+    public ResponseEntity<List<ScheduleOfScreenResponse>> findAllScheduleByCinema(@PathVariable Long cinemaId) {
+        return ResponseEntity.ok(movieService.findAllScheduleByCinema(cinemaId));
     }
 }

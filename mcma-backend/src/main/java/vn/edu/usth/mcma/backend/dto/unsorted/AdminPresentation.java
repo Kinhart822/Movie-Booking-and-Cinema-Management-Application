@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.backend.dto;
+package vn.edu.usth.mcma.backend.dto.unsorted;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.time.Instant;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserPresentation {
+public class AdminPresentation {
     private Long id;
     private String username;
     private String firstName;
@@ -20,6 +20,9 @@ public class UserPresentation {
     private Instant dateOfBirth;
     private String phone;
     private String address;
+    private Integer status;
+    private Long createdBy;
+    private Long lastModifiedBy;
     private Instant createdDate;
     private Instant lastModifiedDate;
 }

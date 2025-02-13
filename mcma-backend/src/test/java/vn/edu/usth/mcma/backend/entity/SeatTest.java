@@ -2,7 +2,7 @@ package vn.edu.usth.mcma.backend.entity;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import vn.edu.usth.mcma.backend.dto.SeatHelperInput;
+import vn.edu.usth.mcma.backend.dto.unsorted.SeatHelperInput;
 import vn.edu.usth.mcma.backend.helper.SeatHelper;
 
 import java.util.ArrayList;

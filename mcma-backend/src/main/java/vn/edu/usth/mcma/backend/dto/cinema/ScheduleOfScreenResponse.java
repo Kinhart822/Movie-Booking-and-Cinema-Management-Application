@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.backend.dto;
+package vn.edu.usth.mcma.backend.dto.cinema;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +11,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReviewPresentation {
-    private Long id;
-    private Long userId;
-    private String userComment;
-    private Integer userVote;
+public class ScheduleOfScreenResponse {
+    private Long screenId;
+    private String screenName;
+    private List<ScheduleResponse> schedules;
 }

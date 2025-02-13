@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.backend.dto;
+package vn.edu.usth.mcma.backend.dto.unsorted;
 
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

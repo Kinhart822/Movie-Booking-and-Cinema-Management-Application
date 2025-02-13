@@ -2,9 +2,9 @@ package vn.edu.usth.mcma.backend.helper;
 
 import constants.ApiResponseCode;
 import lombok.Getter;
-import vn.edu.usth.mcma.backend.dto.SeatHelperInput;
-import vn.edu.usth.mcma.backend.dto.SeatHelperOutput;
-import vn.edu.usth.mcma.backend.dto.SeatTile;
+import vn.edu.usth.mcma.backend.dto.unsorted.SeatHelperInput;
+import vn.edu.usth.mcma.backend.dto.unsorted.SeatHelperOutput;
+import vn.edu.usth.mcma.backend.dto.unsorted.SeatTile;
 import vn.edu.usth.mcma.backend.entity.SeatType;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
 

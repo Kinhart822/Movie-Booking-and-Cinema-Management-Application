@@ -1,14 +1,12 @@
 package vn.edu.usth.mcma.backend.service;
 
 import constants.ApiResponseCode;
-import constants.SeatType;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import vn.edu.usth.mcma.backend.dto.SeatHelperInput;
-import vn.edu.usth.mcma.backend.dto.SeatResponse;
-import vn.edu.usth.mcma.backend.dto.SeatTile;
-import vn.edu.usth.mcma.backend.dto.SeatTypeResponse;
+import vn.edu.usth.mcma.backend.dto.unsorted.SeatHelperInput;
+import vn.edu.usth.mcma.backend.dto.unsorted.SeatResponse;
+import vn.edu.usth.mcma.backend.dto.unsorted.SeatTile;
 import vn.edu.usth.mcma.backend.entity.Screen;
 import vn.edu.usth.mcma.backend.entity.Seat;
 import vn.edu.usth.mcma.backend.entity.SeatPK;

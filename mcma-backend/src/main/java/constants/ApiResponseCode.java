@@ -1,6 +1,5 @@
 package constants;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
@@ -18,7 +17,7 @@ public enum ApiResponseCode {
     INVALID_REFRESH_REQUEST_USERNAME("401", "MISMATCH: Refresh token's subject and username"),
     INVALID_REFRESH_REQUEST_EXPIRED("401", "Refresh token is expired"),
     INVALID_SEAT_MAP("400", "INVALID_SEAT_MAP"),
-    INVALID_START_TIME("400", "INVALID_START_TIME"),
+    INVALID_SCHEDULE_START_TIME("400", "INVALID_START_TIME"),
     MOVIE_NOT_PUBLISHED("400", "MOVIE_NOT_PUBLISHED"),
     SCREEN_OCCUPIED("400", "SCREEN_OCCUPIED"),
     BAD_REQUEST("400", "BAD_REQUEST"),
@@ -27,6 +26,7 @@ public enum ApiResponseCode {
     BUSY_SCREEN("400", "Cannot update SeatMap: Screen is going to be used"),
     INVALID_BOOKING_REQUEST("400", "Invalid booking request"),
     INTERNAL_SERVER_ERROR("500", "Internal Server Error"),
+    INVALID_STATUS("400", "Invalid status"),
     ;
     private final String status;
     private String description;

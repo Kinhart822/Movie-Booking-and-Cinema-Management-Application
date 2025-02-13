@@ -9,11 +9,14 @@ import org.apache.commons.text.RandomStringGenerator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.edu.usth.mcma.backend.domain.Otp;
-import vn.edu.usth.mcma.backend.dto.*;
 import vn.edu.usth.mcma.backend.dto.account.*;
+import vn.edu.usth.mcma.backend.dto.unsorted.AdminPresentation;
+import vn.edu.usth.mcma.backend.dto.unsorted.UserPresentation;
+import vn.edu.usth.mcma.backend.entity.Notification;
 import vn.edu.usth.mcma.backend.entity.User;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
+import vn.edu.usth.mcma.backend.repository.NotificationRepository;
 import vn.edu.usth.mcma.backend.repository.UserRepository;
 import vn.edu.usth.mcma.backend.security.JwtHelper;
 
@@ -34,6 +37,7 @@ public class AccountService {
     private static final String VALID_KEY = "isValid";
     private static final RandomStringGenerator numericGenerator = new RandomStringGenerator.Builder().withinRange('0', '9').get();
     private static final Map<String, Otp> sessionOtpMap = new HashMap<>();
+    private final NotificationRepository notificationRepository;
 
     public ApiResponse createAdmin(CreateAdmin request) {
         String email = request.getEmail();
@@ -217,6 +221,13 @@ public class AccountService {
                         .lastModifiedDate(Instant.now())
                         .build());
         return ApiResponse.ok();
+    }
+
+    public List<Notification> findAllNotifications() {
+        Long userId = jwtHelper.getIdUserRequesting();
+        return notificationRepository.findAllByUser(userRepository
+                .findById(userId)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND.setDescription(String.format("User not found with id: %d", userId)))));
     }
 //    public void deleteAccount(Long userId) {
 //        User user = userRepository

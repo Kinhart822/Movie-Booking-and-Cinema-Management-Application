@@ -3,8 +3,8 @@ package vn.edu.usth.mcma.backend.controller.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.usth.mcma.backend.dto.*;
 import vn.edu.usth.mcma.backend.dto.movie.*;
+import vn.edu.usth.mcma.backend.dto.unsorted.AdvertisementRepresentation;
 import vn.edu.usth.mcma.backend.service.ViewService;
 
 import java.util.List;

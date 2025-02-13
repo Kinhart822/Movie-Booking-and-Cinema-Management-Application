@@ -13,7 +13,7 @@ import java.time.Instant;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 public class Schedule extends AbstractAuditing implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -28,8 +28,6 @@ public class Schedule extends AbstractAuditing implements Serializable {
     private Movie movie;
     @Column
     private Instant startDateTime;
-    @Column
-    private Instant endDateTime;
     @Column(columnDefinition = "TINYINT")
     private Integer status;
 }

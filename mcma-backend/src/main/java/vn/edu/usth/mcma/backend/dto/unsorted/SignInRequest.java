@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.backend.dto;
+package vn.edu.usth.mcma.backend.dto.unsorted;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

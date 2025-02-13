@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.backend.dto;
+package vn.edu.usth.mcma.backend.dto.unsorted;
 
 import lombok.*;
 import vn.edu.usth.mcma.backend.dto.movie.GenrePresentation;

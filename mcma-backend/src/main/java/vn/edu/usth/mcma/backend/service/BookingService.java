@@ -5,10 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.apache.commons.text.RandomStringGenerator;
 import org.springframework.stereotype.Service;
-import vn.edu.usth.mcma.backend.domain.Booking;
-import vn.edu.usth.mcma.backend.domain.BookingSeat;
-import vn.edu.usth.mcma.backend.domain.BookingSeatPK;
-import vn.edu.usth.mcma.backend.dto.*;
+import vn.edu.usth.mcma.backend.domain.*;
 import vn.edu.usth.mcma.backend.dto.bookingsession.*;
 import vn.edu.usth.mcma.backend.dto.cinema.CinemaPresentation;
 import vn.edu.usth.mcma.backend.dto.cinema.CityPresentation;
@@ -16,6 +13,7 @@ import vn.edu.usth.mcma.backend.dto.movie.GenrePresentation;
 import vn.edu.usth.mcma.backend.dto.movie.MoviePresentation;
 import vn.edu.usth.mcma.backend.dto.movie.PerformerPresentation;
 import vn.edu.usth.mcma.backend.dto.movie.RatingPresentation;
+import vn.edu.usth.mcma.backend.dto.unsorted.*;
 import vn.edu.usth.mcma.backend.entity.*;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
@@ -23,6 +21,8 @@ import vn.edu.usth.mcma.backend.repository.*;
 import vn.edu.usth.mcma.backend.security.JwtHelper;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.*;
 
 @Transactional
@@ -48,6 +48,11 @@ public class BookingService {
     private final UserRepository userRepository;
     private final JwtHelper jwtHelper;
     private final BookingSeatRepository bookingSeatRepository;
+    private final BookingAudienceRepository bookingAudienceRepository;
+    private final AudienceRepository audienceRepository;
+    private final ConcessionRepository concessionRepository;
+    private final BookingConcessionRepository bookingConcessionRepository;
+    private final NotificationRepository notificationRepository;
 
     @Deprecated
     public MoviePresentation getAllInformationOfSelectedMovie(Long movieId) {
@@ -108,7 +113,7 @@ public class BookingService {
                         .screenId(s.getScreen().getId())
                         .movieId(s.getMovie().getId())
                         .startTime(s.getStartDateTime().toString())
-                        .endTime(s.getEndDateTime().toString())
+                        .endTime((s.getStartDateTime().plus(s.getMovie().getLength(), ChronoUnit.MINUTES)).toString())
                         .build())
                 .toList();
         return MoviePresentation
@@ -196,7 +201,7 @@ public class BookingService {
                         .screenId(s.getScreen().getId())
                         .movieId(s.getMovie().getId())
                         .startTime(s.getStartDateTime().toString())
-                        .endTime(s.getEndDateTime().toString())
+                        .endTime((s.getStartDateTime().plus(s.getMovie().getLength(), ChronoUnit.MINUTES)).toString())
                         .build())
                 .toList();
     }
@@ -210,7 +215,7 @@ public class BookingService {
                 .cinemaName(schedule.getScreen().getCinema().getName())
                 .screenName(schedule.getScreen().getName())
                 .startDateTime(schedule.getStartDateTime())
-                .endDateTime(schedule.getEndDateTime())
+                .endDateTime((schedule.getStartDateTime().plus(schedule.getMovie().getLength(), ChronoUnit.MINUTES)))
                 .movieName(schedule.getMovie().getName())
                 .rating(schedule.getMovie().getRating().getId())
                 .ratingDescription(schedule.getMovie().getRating().getDescription())
@@ -378,6 +383,7 @@ public class BookingService {
                 .toList();
         List<Seat> rootSeats = seatRepository.findAllById(rootSeatIdRequests);
         if (rootSeats.size() != rootSeatIdRequests.size()) {
+            //todo throw id not found instead
             throw new BusinessException(ApiResponseCode.INTERNAL_SERVER_ERROR);
         }
         // fetch state of all seat and verify amount
@@ -389,6 +395,7 @@ public class BookingService {
                 .toList();
         List<ScheduleSeat> scheduleSeats = scheduleSeatRepository.findAllById(scheduleSeatIds);
         if (scheduleSeats.size() != rootSeatIdRequests.size()) {
+            //todo throw id not found instead
             throw new BusinessException(ApiResponseCode.INTERNAL_SERVER_ERROR);
         }
         // change all state from HELD to SOLD
@@ -399,26 +406,92 @@ public class BookingService {
                         .build())
                 .toList());
 
-        Booking capturedBooking = booking;
         // map booking and seat
         bookingSeatRepository.saveAll(rootSeats.stream()
                 .map(rootSeat -> BookingSeat.builder()
                         .id(BookingSeatPK.builder()
-                                .booking(capturedBooking)
+                                .booking(booking)
                                 .seat(rootSeat).build())
                         .build())
                 .toList());
         // map booking and audience
+        Map<String, Audience> audiences = new HashMap<>();
+        List<String> audienceIds = request.getAudienceTypes().stream()
+                .map(BookingAudienceTypeRequest::getId)
+                .toList();
+        audienceRepository
+                .findAllById(audienceIds)
+                .forEach(a -> audiences.put(a.getId(), a));
+        bookingAudienceRepository.saveAll(request.getAudienceTypes().stream()
+                .map(a -> BookingAudience.builder()
+                        .id(BookingAudiencePK.builder()
+                                .booking(booking)
+                                .audience(audiences.get(a.getId())).build())
+                        .quantity(a.getQuantity()).build())
+                .toList());
+        // map booking and concession
+        Map<Long, Concession> concessions = new HashMap<>();
+        List<Long> concessionIds = request.getConcessions().stream()
+                .map(BookingConcessionRequest::getId)
+                .toList();
+        concessionRepository
+                .findAllById(concessionIds)
+                .forEach(c -> concessions.put(c.getId(), c));
+        bookingConcessionRepository.saveAll(request.getConcessions().stream()
+                .map(c -> BookingConcession.builder()
+                        .id(BookingConcessionPK.builder()
+                                .booking(booking)
+                                .concession(concessions.get(c.getId())).build())
+                        .quantity(c.getQuantity()).build())
+                .toList());
+        // calculate price
+        double finalPrice =
+                bookingSeatRepository
+                        .findAllByBooking(booking).stream()
+                        .mapToDouble(bs -> bs.getId().getSeat().getSeatType().getUnitPrice())
+                        .sum() +
+                bookingAudienceRepository
+                        .findAllByBooking(booking).stream()
+                        .mapToDouble(ba -> ba.getId().getAudience().getUnitPrice() * ba.getQuantity())
+                        .sum() +
+                bookingConcessionRepository
+                        .findAllByBooking(booking).stream()
+                        .mapToDouble(bc -> bc.getId().getConcession().getComboPrice() * bc.getQuantity())
+                        .sum();
+        // todo apply coupon
 
-        //booking concession
-        booking = booking.toBuilder()
+        // save final details
+        Booking finalBooking = bookingRepository.save(booking.toBuilder()
                 .lastModifiedDate(Instant.now())
-                .finalPrice(null)
-                .coupons(null)
-                .bookingStatus(BookingStatus.PENDING_PAYMENT).build();
-        booking = bookingRepository.save(booking);
+                .finalPrice(finalPrice)
+                .coupons(null)//todo
+                .bookingStatus(BookingStatus.PENDING_PAYMENT).build());
         return BankTransferForm.builder()
-                .transactionContent(booking.getBookingNo()).build();
+                .price(finalPrice)
+                .transactionContent(finalBooking.getBookingNo()).build();
+    }
+
+    public Boolean finishBooking(Long bookingId) {
+        Booking booking = bookingRepository
+                .findById(bookingId)
+                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND.setDescription(String.format("Booking not found with id: %d", bookingId))));
+        if (booking.getBookingStatus() != BookingStatus.PENDING_PAYMENT) {
+            throw new BusinessException(ApiResponseCode.INVALID_BOOKING_REQUEST.setDescription("Invalid action for current booking status"));
+        }
+        //todo: actual checking payment logic
+        Booking bookingAfterSave = bookingRepository.save(booking.toBuilder()
+                        .lastModifiedDate(Instant.now())
+                .bookingStatus(BookingStatus.CONFIRMED).build());
+        //notification
+        Long userId = jwtHelper.getIdUserRequesting();
+        notificationRepository.save(Notification.builder()
+                .title(bookingAfterSave.getBookingNo())
+                .content("show this qr at cinema")
+                .user(userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND.setDescription(String.format("User not found with id: %d", userId)))))
+                .createdDate(Instant.now()).build());
+        return true;
     }
 //    public List<TicketResponse> getAllTickets() {
 //        List<Ticket> tickets = ticketRepository.findAll();

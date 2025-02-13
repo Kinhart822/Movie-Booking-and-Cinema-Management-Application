@@ -1,14 +1,6 @@
 package vn.edu.usth.mcma.backend.entity;
 
-import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import vn.edu.usth.mcma.backend.dto.SeatHelperInput;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SeatMapInitTest {
     @BeforeEach
