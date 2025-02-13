@@ -105,15 +105,15 @@ public class CinemaAdapter extends RecyclerView.Adapter<CinemaAdapter.ViewHolder
                             .forEach((schedule) -> {
                                 TimeButton showtimeTimeButton = new TimeButton(context);
                                 showtimeTimeButton.setText(schedule.getTime().toString());
-                                showtimeTimeButton.setOnClickListener(v -> iTimeButton.onClickListener(sessionId -> {
+                                showtimeTimeButton.setOnClickListener(v -> iTimeButton.onClickListener(schedule.getScheduleId(), bookingId -> {
                                     //todo: time dialog
 
                                     Intent intent = new Intent(context, BookingSeatSelectionActivity.class);
                                     intent.putExtra(
                                             IntentKey.BOOKING.name(),
                                             Booking.builder()
+                                                    .bookingId(bookingId)
                                                     .movieId(movieId)
-                                                    .sessionId(sessionId)
                                                     .scheduleId(schedule.getScheduleId()).build());
                                     context.startActivity(intent);
                                 }));

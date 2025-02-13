@@ -259,9 +259,8 @@ public class BookingSeatSelectionActivity extends AppCompatActivity {
         ApiService
                 .getBookingApi(this)
                 .holdSeatRequest(
-                        scheduleId,
+                        booking.getBookingId(),
                         HoldSeatRequest.builder()
-                                .sessionId(booking.getSessionId())
                                 .rootSeats(seatAdapter
                                         .getSelectedRootSeats().stream()
                                         .map(r -> HoldRootSeat.builder()

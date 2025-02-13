@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SessionRegistration {
-    private String sessionId;
+public class BookingSeatRequest {
+    private Integer rootRow;
+    private Integer rootCol;
 }

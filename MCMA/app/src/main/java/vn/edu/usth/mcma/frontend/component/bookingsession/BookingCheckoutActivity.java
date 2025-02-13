@@ -10,9 +10,11 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,18 +33,25 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.edu.usth.mcma.R;
 import vn.edu.usth.mcma.frontend.component.customview.item.PaymentMethodLayout;
+import vn.edu.usth.mcma.frontend.component.customview.navigate.CustomNavigateButton;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort2;
+import vn.edu.usth.mcma.frontend.dto.response.ApiResponse;
 import vn.edu.usth.mcma.frontend.dto.response.BookingProcess.CouponResponse;
 import vn.edu.usth.mcma.frontend.model.Booking;
 import vn.edu.usth.mcma.frontend.model.item.PaymentMethodItem;
+import vn.edu.usth.mcma.frontend.model.response.BankTransferForm;
 import vn.edu.usth.mcma.frontend.model.response.PaymentMethodResponse;
 import vn.edu.usth.mcma.frontend.network.ApiService;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Adapters.CouponAdapter;
 import vn.edu.usth.mcma.frontend.component.ShowtimesOld.Models.Coupon;
 import vn.edu.usth.mcma.frontend.constant.IntentKey;
+import vn.edu.usth.mcma.frontend.network.apis.BookingApi;
 import vn.edu.usth.mcma.frontend.utils.ImageDecoder;
+import vn.edu.usth.mcma.frontend.utils.mapper.BookingMapper;
 import vn.edu.usth.mcma.frontend.utils.mapper.ItemsOrderedMapper;
 import vn.edu.usth.mcma.frontend.utils.mapper.PaymentMethodMapper;
+import vn.edu.usth.mcma.frontend.utils.mapper.SeatMapper;
+import vn.edu.usth.mcma.frontend.utils.mapper.SeatTypeMapper;
 
 public class BookingCheckoutActivity extends AppCompatActivity {
     private static final String TAG = BookingCheckoutActivity.class.getName();
@@ -50,6 +59,8 @@ public class BookingCheckoutActivity extends AppCompatActivity {
     private ImageView movieBannerImageView;
     private TextView totalPriceTextView;
     private LinearLayout paymentMethodsLinearLayout;
+    private CheckBox termsAgreementCheckBox;
+    private CustomNavigateButton nextButton;
 
     private Booking booking;
     private Handler timeRemainingHandler;
@@ -79,6 +90,7 @@ public class BookingCheckoutActivity extends AppCompatActivity {
         TextView itemsOrderedSummaryTextView = findViewById(R.id.text_view_items_ordered_summary);
         totalPriceTextView = findViewById(R.id.text_view_total_price);
         itemsOrderedRecyclerView = findViewById(R.id.recycler_view_items_ordered);
+        nextButton.findViewById(R.id.button_next);
         paymentMethodsLinearLayout = findViewById(R.id.linear_layout_payment_methods);
 
         backButton.setOnClickListener(view -> onBackPressed());
@@ -159,13 +171,17 @@ public class BookingCheckoutActivity extends AppCompatActivity {
                 });
     }
     private void postFindAllPaymentMethod() {
+        preparePaymentMethod();
+    }
+    private void preparePaymentMethod() {
         PaymentMethodMapper.fromResponseList(paymentMethodResponses)
                 .forEach(item -> {
                     PaymentMethodLayout paymentMethodLayout = new PaymentMethodLayout(this);
-                    paymentMethodLayout.setItem(item);
+                    paymentMethodLayout.init(item);
                     paymentMethodLayout.getRadioButton().setOnClickListener(v -> {
-                        selectedPaymentMethod.getRadioButton().setSelected(false);
-                        paymentMethodLayout.setSelected(true);
+                        selectedPaymentMethod.getRadioButton().setChecked(false);
+                        paymentMethodLayout.getRadioButton().setChecked(true);
+                        selectedPaymentMethod = paymentMethodLayout;
                     });
                     paymentMethodsLinearLayout.addView(paymentMethodLayout);
                 });
@@ -358,5 +374,44 @@ public class BookingCheckoutActivity extends AppCompatActivity {
             }
         };
         timeRemainingHandler.post(timeRemainingRunnable);
+    }
+    @SuppressLint("SetTextI18n")
+    private void prepareNextButton() {
+        nextButton.setText("Finish (4/4)");
+        nextButton.setEnabled(selectedPaymentMethod.getRadioButton().isChecked() && termsAgreementCheckBox.isChecked());
+        nextButton
+                .setOnClickListener(v -> pendingPayment(() -> {
+//                    booking = booking.toBuilder()
+//                            .ratingDescription(scheduleDetail.getRatingDescription())
+//                            .limitPlusCurrentElapsedBootTime(limitPlusCurrentElapsedBootTime)
+//                            .seatTypes(SeatTypeMapper.fromItemMap(seatAdapter.getSeatTypes())).build()
+//                            .setSeats(SeatMapper.fromItemList(seatAdapter.getSelectedSeats()));
+//                    Intent intent = new Intent(this, BookingAudienceTypeSelectionActivity.class);
+//                    intent.putExtra(IntentKey.BOOKING.name(), booking);
+//                    startActivity(intent);
+                }));
+    }
+    private void pendingPayment(BookingApi.PendingPaymentCallback callback) {
+        ApiService
+                .getBookingApi(this)
+                .pendingPayment(
+                        booking.getBookingId(),
+                        BookingMapper.fromBooking(booking))
+                .enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<BankTransferForm> call, @NonNull Response<BankTransferForm> response) {
+                        if (!response.isSuccessful() || response.body() == null) {
+                            Log.e(TAG, "onResponse: code not 200 || body is null");
+                            return;
+                        }
+//                        booking = booking.toBuilder()
+//                                .bankTransferContent(response.body()).build();
+                        callback.onWaitForPayment();
+                    }
+                    @Override
+                    public void onFailure(@NonNull Call<BankTransferForm> call, @NonNull Throwable throwable) {
+                        Log.e(TAG, "pendingPayment onFailure: " + throwable);
+                    }
+                });
     }
 }

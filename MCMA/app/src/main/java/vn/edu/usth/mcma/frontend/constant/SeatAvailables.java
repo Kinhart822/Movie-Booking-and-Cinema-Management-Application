@@ -26,8 +26,6 @@ public enum SeatAvailables {
         }
     }
     public static SeatAvailables getById(String id) {
-        System.out.println(id);
-        System.out.println(ID_MAP);
         return ID_MAP.get(id);
     }
     public static Map<String, SeatAvailables> getIdMap() {

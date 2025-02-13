@@ -31,6 +31,7 @@ import vn.edu.usth.mcma.frontend.utils.helper.SeatHelper;
 @NoArgsConstructor
 public class Booking implements Parcelable {
     //todo consider separate details
+    private Long bookingId;
     private Long movieId;
     private String cinemaName;
     private String screenNameDateDuration;
@@ -39,20 +40,20 @@ public class Booking implements Parcelable {
     private String ratingDescription;
     private String screenType;
 
-    private String sessionId;
     private Long limitPlusCurrentElapsedBootTime;
     private Long scheduleId;
-    @Getter
     private List<ItemsOrderedParcelable> itemsOrdered;
     private Map<String, SeatTypeParcelable> seatTypes;
     private List<SeatParcelable> seats;
     private List<AudienceTypeParcelable> audienceTypes;
     private List<ConcessionParcelable> concessions;
+    private String bankTransferContent;
     @Override
     public int describeContents() {
         return 0;
     }
     protected Booking(Parcel in) {
+        bookingId = in.readLong();
         movieId = in.readLong();
         cinemaName = in.readString();
         screenNameDateDuration = in.readString();
@@ -61,7 +62,6 @@ public class Booking implements Parcelable {
         ratingDescription = in.readString();
         screenType = in.readString();
 
-        sessionId = in.readString();
         limitPlusCurrentElapsedBootTime = in.readLong();
         scheduleId = in.readLong();
         itemsOrdered = in.readParcelableList(itemsOrdered = new ArrayList<>(), ItemsOrderedParcelable.class.getClassLoader(), ItemsOrderedParcelable.class);
@@ -69,9 +69,11 @@ public class Booking implements Parcelable {
         seats = in.readParcelableList(seats = new ArrayList<>(), SeatParcelable.class.getClassLoader(), SeatParcelable.class);
         audienceTypes = in.readParcelableList(audienceTypes = new ArrayList<>(), AudienceTypeParcelable.class.getClassLoader(), AudienceTypeParcelable.class);
         concessions = in.readParcelableList(concessions = new ArrayList<>(), ConcessionParcelable.class.getClassLoader(), ConcessionParcelable.class);
+        bankTransferContent = in.readString();
     }
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeLong(bookingId);
         dest.writeLong(movieId);
         dest.writeString(cinemaName);
         dest.writeString(screenNameDateDuration);
@@ -80,7 +82,6 @@ public class Booking implements Parcelable {
         dest.writeString(ratingDescription);
         dest.writeString(screenType);
 
-        dest.writeString(sessionId);
         dest.writeLong(limitPlusCurrentElapsedBootTime == null ? 0L : limitPlusCurrentElapsedBootTime);
         dest.writeLong(scheduleId);
         dest.writeParcelableList(itemsOrdered, 0);
@@ -88,6 +89,7 @@ public class Booking implements Parcelable {
         dest.writeParcelableList(seats, 0);
         dest.writeParcelableList(audienceTypes, 0);
         dest.writeParcelableList(concessions, 0);
+        dest.writeString(bankTransferContent);
     }
     public static final Creator<Booking> CREATOR = new Parcelable.Creator<>() {
         @Override
@@ -109,7 +111,6 @@ public class Booking implements Parcelable {
         return audienceTypes.size();
     }
     public double getTotalPrice() {
-        System.out.println(itemsOrdered);
         return itemsOrdered.stream()
                 .mapToDouble(ItemsOrderedParcelable::getTotalPrice)
                 .sum();

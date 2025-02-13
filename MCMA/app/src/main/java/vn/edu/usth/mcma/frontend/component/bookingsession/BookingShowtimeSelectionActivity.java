@@ -2,7 +2,6 @@ package vn.edu.usth.mcma.frontend.component.bookingsession;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -26,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
-import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,8 +34,6 @@ import vn.edu.usth.mcma.frontend.component.customview.filter.CityButton;
 import vn.edu.usth.mcma.frontend.component.customview.filter.DateButton;
 import vn.edu.usth.mcma.frontend.dto.movie.MovieDetailShort2;
 import vn.edu.usth.mcma.frontend.dto.movie.ShowtimeOfMovieByCityResponse;
-import vn.edu.usth.mcma.frontend.dto.response.ApiResponse;
-import vn.edu.usth.mcma.frontend.model.request.SessionRegistration;
 import vn.edu.usth.mcma.frontend.network.apis.BookingApi;
 import vn.edu.usth.mcma.frontend.utils.ImageDecoder;
 import vn.edu.usth.mcma.frontend.model.ShowtimeOfMovieBySchedule;
@@ -222,27 +218,24 @@ public class BookingShowtimeSelectionActivity extends AppCompatActivity {
         feedAdapter();
         cinemaButtonsRecyclerView.setAdapter(cinemaAdapter);
     }
-    private void onTimeButtonCLickListener(BookingApi.RegisterBookingSessionCallback callback) {
-        registerBookingSession(callback);
+    private void onTimeButtonCLickListener(Long scheduleId, BookingApi.RegisterBookingSessionCallback callback) {
+        registerBookingSession(scheduleId, callback);
     }
-    private void registerBookingSession(BookingApi.RegisterBookingSessionCallback callback) {
-        String sessionId = UUID.randomUUID().toString() + "-" + SystemClock.elapsedRealtime();
+    private void registerBookingSession(Long scheduleId, BookingApi.RegisterBookingSessionCallback callback) {
         ApiService
                 .getBookingApi(this)
-                .registerBookingSession(SessionRegistration.builder()
-                        .sessionId(sessionId)
-                        .build())
+                .registerBookingSession(scheduleId)
                 .enqueue(new Callback<>() {
                     @Override
-                    public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
+                    public void onResponse(@NonNull Call<Long> call, @NonNull Response<Long> response) {
                         if (!response.isSuccessful() || response.body() == null) {
                             Log.e(TAG, "registerBookingSession onResponse: code not 200 || body is null");
                             return;
                         }
-                        callback.onSessionRegistered(sessionId);
+                        callback.onSessionRegistered(response.body());
                     }
                     @Override
-                    public void onFailure(@NonNull Call<ApiResponse> call, @NonNull Throwable throwable) {
+                    public void onFailure(@NonNull Call<Long> call, @NonNull Throwable throwable) {
                         Log.e(TAG, "registerBookingSession onFailure: " + throwable);
                     }
                 });
