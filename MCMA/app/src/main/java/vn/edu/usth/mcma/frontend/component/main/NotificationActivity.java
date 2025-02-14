@@ -57,6 +57,6 @@ public class NotificationActivity extends AppCompatActivity {
     }
     private void postFindAllNotifications() {
         notificationRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        notificationRecyclerView.setAdapter(new NotificationAdapter(NotificationMapper.fromResponseList(notificationResponses)));
+        notificationRecyclerView.setAdapter(new NotificationAdapter(this, NotificationMapper.fromResponseList(notificationResponses)));
     }
 }
