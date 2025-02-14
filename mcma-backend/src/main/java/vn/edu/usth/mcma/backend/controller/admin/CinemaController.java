@@ -5,6 +5,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.usth.mcma.backend.dto.admin.dto.cinema.FilterCinema;
+import vn.edu.usth.mcma.backend.dto.admin.dto.cinema.FilterScreen;
 import vn.edu.usth.mcma.backend.dto.cinema.CinemaProjection;
 import vn.edu.usth.mcma.backend.dto.cinema.CinemaRequest;
 import vn.edu.usth.mcma.backend.dto.cinema.ScheduleOfScreenResponse;
@@ -122,5 +124,19 @@ public class CinemaController {
     @GetMapping("/cinema/{cinemaId}/schedule")
     public ResponseEntity<List<ScheduleOfScreenResponse>> findAllScheduleByCinema(@PathVariable Long cinemaId) {
         return ResponseEntity.ok(movieService.findAllScheduleByCinema(cinemaId));
+    }
+
+
+
+    /*
+     * unsorted
+     */
+    @GetMapping("/cinema/filter")
+    public ResponseEntity<List<FilterCinema>> filterByCinema() {
+        return ResponseEntity.ok(cinemaService.filterByCinema());
+    }
+    @GetMapping("/cinema/{cinemaId}/screen/filter")
+    public ResponseEntity<List<FilterScreen>> filterByScreen(@PathVariable Long cinemaId) {
+        return ResponseEntity.ok(cinemaService.filterByScreen(cinemaId));
     }
 }

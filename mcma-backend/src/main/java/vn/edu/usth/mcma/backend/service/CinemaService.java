@@ -5,11 +5,14 @@ import constants.CommonStatus;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import vn.edu.usth.mcma.backend.dto.admin.dto.cinema.FilterCinema;
+import vn.edu.usth.mcma.backend.dto.admin.dto.cinema.FilterScreen;
 import vn.edu.usth.mcma.backend.dto.cinema.CinemaDetailShort;
 import vn.edu.usth.mcma.backend.dto.cinema.CinemaProjection;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.CityRepository;
+import vn.edu.usth.mcma.backend.repository.ScreenRepository;
 import vn.edu.usth.mcma.backend.security.JwtHelper;
 import vn.edu.usth.mcma.backend.dto.cinema.CinemaRequest;
 import vn.edu.usth.mcma.backend.repository.CinemaRepository;
@@ -25,6 +28,7 @@ public class CinemaService {
     private final CinemaRepository cinemaRepository;
     private final CityRepository cityRepository;
     private final JwtHelper jwtHelper;
+    private final ScreenRepository screenRepository;
 
     /*
      * ADMIN
@@ -109,6 +113,19 @@ public class CinemaService {
                         .name(c.getName())
                         .address(c.getAddress())
                         .build())
+                .toList();
+    }
+
+    public List<FilterCinema> filterByCinema() {
+        return cinemaRepository.findAll().stream().map(c -> FilterCinema.builder().cinemaId(c.getId()).cinemaName(c.getName()).build()).toList();
+    }
+
+    public List<FilterScreen> filterByScreen(Long cinemaId) {
+        return screenRepository
+                .findAllByCinema(cinemaRepository
+                        .findById(cinemaId)
+                        .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND)))
+                .stream().map(s -> FilterScreen.builder().screenId(s.getId()).screenName(s.getName()).build())
                 .toList();
     }
 }

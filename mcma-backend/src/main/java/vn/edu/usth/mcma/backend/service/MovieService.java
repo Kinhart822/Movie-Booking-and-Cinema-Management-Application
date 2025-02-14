@@ -5,7 +5,9 @@ import constants.CommonStatus;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import vn.edu.usth.mcma.backend.admin.dto.movie.MovieShortResponse;
+import vn.edu.usth.mcma.backend.dto.admin.dto.cinema.FilterScreen;
+import vn.edu.usth.mcma.backend.dto.admin.dto.movie.FilterMovie;
+import vn.edu.usth.mcma.backend.dto.admin.dto.movie.MovieShortResponse;
 import vn.edu.usth.mcma.backend.dto.cinema.ScheduleOfScreenResponse;
 import vn.edu.usth.mcma.backend.dto.cinema.ScheduleResponse;
 import vn.edu.usth.mcma.backend.dto.movie.MovieRequest;
@@ -17,7 +19,6 @@ import vn.edu.usth.mcma.backend.repository.*;
 import vn.edu.usth.mcma.backend.security.JwtHelper;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -179,6 +180,12 @@ public class MovieService {
                 .releaseDate(m.getReleaseDate())
                 .trailerYoutubeId(m.getTrailerYoutubeId())
                 .status(m.getStatus()).build()).toList();
+    }
+
+    public List<FilterMovie> filterByMovie() {
+        return movieRepository.findAll().stream().map(m -> FilterMovie.builder()
+                .movieId(m.getId())
+                .movieName(m.getName()).build()).toList();
     }
     /*
      * TODO:USER

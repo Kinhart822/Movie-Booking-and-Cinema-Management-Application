@@ -225,7 +225,7 @@ public class AccountService {
 
     public List<Notification> findAllNotifications() {
         Long userId = jwtHelper.getIdUserRequesting();
-        return notificationRepository.findAllByUser(userRepository
+        return notificationRepository.findAllByUserOrderByCreatedDateDesc(userRepository
                 .findById(userId)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND.setDescription(String.format("User not found with id: %d", userId)))));
     }

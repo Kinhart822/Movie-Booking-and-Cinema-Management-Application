@@ -1,4 +1,4 @@
-package vn.edu.usth.mcma.backend.admin.dto.movie;
+package vn.edu.usth.mcma.backend.dto.admin.dto.movie;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -28,4 +28,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
     @Query("select s from Schedule s left join Cinema c on s.screen.cinema = c where c.id = :cinemaId")
     List<Schedule> findAllScheduleByCinema(Long cinemaId);
+
+    List<Schedule> findAllByScreen(Screen screen);
 }

@@ -13,6 +13,7 @@ import vn.edu.usth.mcma.backend.entity.SeatPK;
 import vn.edu.usth.mcma.backend.exception.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.helper.SeatHelper;
+import vn.edu.usth.mcma.backend.repository.ScheduleRepository;
 import vn.edu.usth.mcma.backend.repository.ScreenRepository;
 import vn.edu.usth.mcma.backend.repository.SeatRepository;
 import vn.edu.usth.mcma.backend.repository.SeatTypeRepository;
@@ -29,6 +30,7 @@ public class SeatService {
     private final ScreenRepository screenRepository;
     private final JwtHelper jwtHelper;
     private final SeatTypeRepository seatTypeRepository;
+    private final ScheduleRepository scheduleRepository;
 
     public ApiResponse initSeatMap(Long screenId, List<SeatHelperInput> seatHelperInputs) {
         Screen screen = screenRepository
@@ -88,7 +90,7 @@ public class SeatService {
         Screen screen = screenRepository
                 .findById(screenId)
                 .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
-        if (!screen.isMutable()) {
+        if (!scheduleRepository.findAllByScreen((screen)).isEmpty()) {
             throw new BusinessException(ApiResponseCode.BUSY_SCREEN);
         }
         Long userId = jwtHelper.getIdUserRequesting();
