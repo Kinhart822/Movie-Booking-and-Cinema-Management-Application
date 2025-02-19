@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginHorizontal="105dp" >
+    <!--
+    Fact
+        params of viewpager2's children must match its parent
+        if use centerInParent or centerHorizontal, children will collapse
+    Solution
+        use layout_marginHorizontal to make child (in our case, CardView) be in the middle without overlapping other children
+        Why RelativeLayout?
+            CardView has white background, RelativeLayout don't.
+            And after use layout_marginHorizontal, child (in our case, CardView) of RelativeLayout can be centerHorizontal
+        Why 105dp?
+            the devices used to test are pixel 2xl and pixel 6a, both has width of 411dp
+            the child (CardView) width is 200dp, so we should have 105dp each side
+    -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        app:cardElevation="5dp">
+        <FrameLayout
+            android:layout_width="200dp"
+            android:layout_height="300dp"
+            android:background="@drawable/image_view_poster">
+            <ImageView
+                android:id="@+id/image_view_poster"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/movie_poster"
+                android:scaleType="centerCrop" />
+        </FrameLayout>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_primary">#ff44bbff</color>
+    <color name="color_darker_primary">#ff00bbbb</color>
+    <color name="color_on_primary">#ffffffff</color>
+    <color name="color_secondary">#ffd0d0d0</color>
+    <color name="color_on_secondary">#d0d0d0d0</color>
+    <color name="disabled">#ff9e9e9e</color>
+    <color name="tab_indicator">#ff555555</color>
+    <color name="tab_background">#ff333333</color>
+    <color name="booking_summary">#ff333333</color>
+    <color name="item_concession">#ff222222</color>
+    <color name="screen_type_background">#ff666666</color>
+    <color name="transparent">#00000000</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="sandy_brown">#F09C3A</color>
+    <color name="blue">#0765ff</color>
+    <color name="grey">#f0f2f5</color>
+    <color name="dark_grey">#CCC</color>
+    <color name="better_grey">#e2e5ea</color>
+    <color name="blue_dot">#294fd1</color>
+    <color name="very_dark_grey">#181818</color>
+    <color name="red">#FF0000</color>
+    <color name="light_gray">#716F6F</color>
+    <color name="yellow">#FFFF53</color>
+    <color name="bottom_navigator_before">#9BA6AB</color>
+    <color name="bottom_navigator_after">#85FAF0</color>
+    <color name="green">#00ff00</color>
+    <color name="darkgreen">#21b81c</color>
+    <color name="colorPrimary">#3b5998</color>
+    <color name="colorPrimaryLight">#8b9dc3</color>
+    <color name="colorAccentDark">#dfe3ee</color>
+    <color name="colorAccent">#f7f7f7</color>
+    <color name="colorAccentLight">#ffffff</color>
+    <color name="colorLightBlue">#6098eb</color>
+    <color name="colorNeonBlue">#4dc0e3</color>
+    <color name="DarkBlue">#4a67d9</color>
+    <color name="LightBlue">#03adfc</color>
+    <color name="backgroundColor">#000000</color>
+    <color name="selectedDayColor">#4CAF50</color>
+    <color name="unselectedDayColor">#333333</color>
+    <color name="selectedTimeColor">#4CAF50</color>
+    <color name="unselectedTimeColor">#555555</color>
+    <color name="linkColor">#03A9F4</color>
+    <color name="dividerColor">#777777</color>
+    <color name="green_primary">#4CAF50</color>
+    <color name="green_dark">#388E3C</color>
+    <color name="gray_background">#F5F5F5</color>
+    <color name="gray_text">#757575</color>
+    <color name="black_text">#212121</color>
+    <color name="button_disabled">#BDBDBD</color>
+    <color name="primaryColor">#3F51B5</color>
+    <color name="disabledColor">#9E9E9E</color>
+    <color name="gold">#ccac00</color>
+    <color name ="dark_red">#8b0000</color>
+    <color name="orange_type">#FFA500</color>
+    <color name="pale_violet_red">#EA4995</color>
+    <color name="peru">#B38E33</color>
+    <!-- Button text selectors -->
+    <color name="button_text_selector">#FF000000</color>  <!-- Black -->
+    <color name="date_text_selector">#000000</color>    <!-- Black -->
+
+    <color name="first_class_text_color">#FFD700</color>
+    <color name="regular_text_color">#B8860B</color>
+
+    <color name="green_type">#4CAF50</color>
+    <color name="red_type">#FF4444</color>
+    <color name="gray_type">#757575</color>
+    <color name="purple_type">#800080</color>
+    <color name="blue_type">#3F51B5</color>
+
+    <color name="GreenBtn">#008000</color>
+    <color name="not_too_bright_yellow">#FFD700</color>
+
+    <color name="seat_sold">#70FF0000</color>
+    <color name="seat_held">#700000FF</color>
+    <color name="seat_selecting">#7000FF00</color>
+    <color name="seat_blank">#424242</color>
+    <color name="seat_standard">#C0C0C0</color>
+    <color name="seat_vip">#FFD700</color>
+    <color name="seat_lovers">#FF4081</color>
+    <color name="seat_bed">#AA6A0DAD</color>
+</resources>

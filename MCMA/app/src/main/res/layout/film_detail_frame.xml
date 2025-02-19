@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Movie Poster Image -->
+        <ImageView
+            android:id="@+id/movie_poster"
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder_image"
+            android:contentDescription="Movie Poster" />
+
+        <!-- Movie Title -->
+        <TextView
+            android:id="@+id/movie_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LINH MIEU: QUY NHAP TRANG"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:paddingTop="12dp" />
+
+        <!-- Movie Genre -->
+        <TextView
+            android:id="@+id/movie_genre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Horror, Thriller, Drama"
+            android:textColor="#B0B0B0"
+            android:textSize="14sp"
+            android:paddingTop="4dp" />
+
+        <!-- Duration, Rating, Language, Screen Type -->
+        <TextView
+            android:id="@+id/movie_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="109 phút"
+            android:textColor="#B0B0B0"
+            android:textSize="14sp"
+            android:drawableLeft="@drawable/ic_time"
+            android:drawableTint="@color/white"
+            android:drawablePadding="4dp"
+            android:paddingTop="4dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="4dp">
+
+            <!-- Star Icons -->
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_star"
+                app:tint="#4CAF50" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_star"
+                app:tint="#4CAF50" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_star"
+                app:tint="#4CAF50" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_star"
+                app:tint="#4CAF50" />
+
+            <ImageView
+                android:layout_marginLeft="-6dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_star_half"
+                app:tint="#4CAF50" />
+
+            <!-- Rating Text -->
+            <TextView
+                android:id="@+id/movieRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4.5"
+                android:textColor="#B0B0B0"
+                android:textSize="14sp"
+                android:layout_marginStart="8dp"
+                android:layout_gravity="center_vertical" />
+        </LinearLayout>
+
+
+        <!-- Movie Description -->
+        <TextView
+            android:id="@+id/movieDescriptionTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:paddingTop="12dp" />
+
+        <TextView
+            android:id="@+id/movie_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Linh Mieu is based on folklore material related to demonic possession, exploring the tragedy of a family living in Hue..."
+            android:textColor="#C0C0C0"
+            android:textSize="14sp"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:paddingTop="4dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#BDBDBD"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"/>
+
+
+
+        <!-- Release Date -->
+        <TextView
+            android:id="@+id/releaseDateLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Released Date"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:paddingTop="12dp" />
+
+        <TextView
+            android:id="@+id/release_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="22 tháng 11, 2024"
+            android:textColor="#B0B0B0"
+            android:textSize="14sp"
+            android:paddingTop="4dp" />
+
+        <!-- Rating -->
+        <TextView
+            android:id="@+id/rating_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Rating"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:paddingTop="12dp" />
+
+        <TextView
+            android:id="@+id/rating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="C18 - No Children Under 18 Years Old"
+            android:textColor="#FF4444"
+            android:textSize="14sp"
+            android:paddingTop="4dp" />
+
+        <!-- Languages -->
+        <TextView
+            android:id="@+id/language_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Languages"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:paddingTop="12dp" />
+
+        <TextView
+            android:id="@+id/language"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Phụ đề tiếng Anh"
+            android:textColor="#B0B0B0"
+            android:textSize="14sp"
+            android:paddingTop="4dp" />
+
+        <!-- Screen -->
+        <TextView
+            android:id="@+id/screenLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Screen"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:paddingTop="12dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#BDBDBD"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"/>
+
+
+        <!-- Director -->
+        <TextView
+            android:id="@+id/directorLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Director"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:paddingTop="12dp" />
+
+        <TextView
+            android:id="@+id/director"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lưu Thành Luân"
+            android:textColor="#B0B0B0"
+            android:textSize="14sp"
+            android:paddingTop="4dp" />
+
+        <!-- Cast -->
+        <TextView
+            android:id="@+id/cast_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cast"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:paddingTop="12dp" />
+
+        <TextView
+            android:id="@+id/cast_actor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hồng Đào, Thiên An, Nguyễn Thúc Thùy Tiên, Văn Bảo Duy"
+            android:textColor="#B0B0B0"
+            android:textSize="14sp"
+            android:paddingTop="4dp" />
+
+        <!-- Booking Button -->
+        <Button
+            android:id="@+id/bookingButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#4CAF50"
+            android:text="Booking"
+            android:textColor="#FFFFFF"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:drawableLeft="@drawable/ic_ticket"
+            android:drawableTint="@color/white"
+            android:drawablePadding="8dp"
+            android:layout_marginBottom="50dp"/>
+    </LinearLayout>
+</ScrollView>
