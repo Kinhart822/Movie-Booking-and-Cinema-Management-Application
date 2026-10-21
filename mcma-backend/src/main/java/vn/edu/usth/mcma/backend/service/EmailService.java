@@ -1,12 +1,15 @@
 package vn.edu.usth.mcma.backend.service;
 
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import vn.edu.usth.mcma.backend.domain.Otp;
+
+import vn.edu.usth.mcma.backend.entity.Otp;
 import vn.edu.usth.mcma.backend.entity.User;
+
+import lombok.RequiredArgsConstructor;
 
 @Transactional
 @Service
@@ -28,11 +31,14 @@ public class EmailService {
         message.setSubject("MBCM: Verify Your Email");
         String date = otp.getDueDate().toString().substring(0, 10);
         String time = otp.getDueDate().toString().substring(11, 16);
-        message.setText(String.format("""
+        message.setText(
+                String.format(
+                        """
                 Lmao!
                 OTP: %s
                 Please verify your email before %s %s
-                """, otp.getOtp(), date, time));
+                """,
+                        otp.getOtp(), date, time));
         javaMailSender.send(message);
     }
 
@@ -40,20 +46,24 @@ public class EmailService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(user.getEmail());
         message.setSubject("MBCM: Reset Password");
-        message.setText(String.format("""
+        message.setText(
+                String.format(
+                        """
                 Lmao!
                 OTP: %s
-                """, user.getResetKey()));
+                """,
+                        user.getResetKey()));
         javaMailSender.send(message);
     }
 
     public void sendCancelMailMessage(String toEmail) {
         String subject = "Cancel Booking Successfully!";
-        String message = """
+        String message =
+                """
                 Dear Customer,
 
                 We are pleased to inform you that your booking has been successfully canceled.
-               
+
                 Thank you for choosing our service!
 
                 Best Regards,
@@ -68,11 +78,12 @@ public class EmailService {
 
     public void sendDeleteMailMessage(String toEmail) {
         String subject = "Delete Booking Successfully";
-        String message = """
+        String message =
+                """
                 Dear Customer,
 
                 We are pleased to inform you that your booking has been successfully deleted.
-               
+
                 Thank you for choosing our service!
 
                 Best Regards,
@@ -87,7 +98,8 @@ public class EmailService {
 
     public void sendReinstateMailMessage(String toEmail) {
         String subject = "Booking Reinstated Successfully";
-        String message = """
+        String message =
+                """
                 Dear Customer,
 
                 We are pleased to inform you that your booking has been successfully reinstated.

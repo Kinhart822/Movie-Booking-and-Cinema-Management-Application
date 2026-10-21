@@ -1,16 +1,23 @@
 package vn.edu.usth.mcma.backend.controller;
 
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import vn.edu.usth.mcma.backend.dto.request.account.RefreshRequest;
+import vn.edu.usth.mcma.backend.dto.request.account.SignInRequest;
+import vn.edu.usth.mcma.backend.common.dto.ApiResponse;
+import vn.edu.usth.mcma.backend.service.AuthService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import vn.edu.usth.mcma.backend.dto.account.RefreshRequest;
-import vn.edu.usth.mcma.backend.dto.unsorted.SignInRequest;
-import vn.edu.usth.mcma.backend.exception.ApiResponse;
-import vn.edu.usth.mcma.backend.service.AuthService;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -24,10 +31,12 @@ public class AuthController {
     public ResponseEntity<Map<String, String>> signIn(@RequestBody SignInRequest signInRequest) {
         return ResponseEntity.ok(authService.signIn(signInRequest));
     }
+
     @PutMapping("/refresh")
     public ResponseEntity<Map<String, String>> refresh(@RequestBody RefreshRequest refreshRequest) {
         return ResponseEntity.ok(authService.refresh(refreshRequest));
     }
+
     @PutMapping("/sign-out")
     public ResponseEntity<ApiResponse> signOut(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(authService.signOut(token.replace("Bearer ", "")));

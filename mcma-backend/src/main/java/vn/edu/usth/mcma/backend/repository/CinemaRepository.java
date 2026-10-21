@@ -1,20 +1,23 @@
 package vn.edu.usth.mcma.backend.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-import vn.edu.usth.mcma.backend.dto.cinema.CinemaProjection;
+
+import vn.edu.usth.mcma.backend.projection.CinemaProjection;
 import vn.edu.usth.mcma.backend.entity.Cinema;
 import vn.edu.usth.mcma.backend.entity.City;
 
-import java.util.List;
-
-@Repository
 public interface CinemaRepository extends JpaRepository<Cinema, Long> {
     @Deprecated
     List<Cinema> findAllByNameContaining(String name);
-    @Query(nativeQuery = true, value = """
+
+    @Query(
+            nativeQuery = true,
+            value =
+                    """
             select cine.id                                as id,
                    cine.name                              as name,
                    c.name                                 as city,

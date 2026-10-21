@@ -1,11 +1,9 @@
 package vn.edu.usth.mcma.backend.entity;
 
 import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import java.io.Serial;
-import java.io.Serializable;
 
 @Entity
 @Getter
@@ -13,14 +11,13 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class City extends AbstractAuditing implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class City extends AbstractAuditing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
-    private String name;
+
+    @Column private String name;
+
     @Column(columnDefinition = "TINYINT")
     private Integer status;
 }

@@ -1,13 +1,12 @@
 package vn.edu.usth.mcma.backend.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
-
-import java.io.Serial;
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.Set;
+
+import jakarta.persistence.*;
+
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
@@ -15,20 +14,22 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Performer extends AbstractAuditing implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class Performer extends AbstractAuditing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
-    private String name;
+
+    @Column private String name;
+
     @Column(columnDefinition = "TINYINT")
     private Integer typeId;
+
     @Column(columnDefinition = "TINYINT")
     private Integer sex;
+
     @Column(name = "dob")
     private Instant dateOfBirth;
+
     @Column(columnDefinition = "TINYINT")
     private Integer status;
 

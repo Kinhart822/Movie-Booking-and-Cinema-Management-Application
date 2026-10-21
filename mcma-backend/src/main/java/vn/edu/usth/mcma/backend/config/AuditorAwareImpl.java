@@ -1,12 +1,12 @@
 package vn.edu.usth.mcma.backend.config;
 
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
+
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
-import vn.edu.usth.mcma.backend.exception.BusinessException;
-import vn.edu.usth.mcma.backend.security.JwtHelper;
 
-import java.util.Optional;
+import vn.edu.usth.mcma.backend.exception.BusinessException;
+import vn.edu.usth.mcma.backend.security.jwt.JwtHelper;
 
 @Component
 public class AuditorAwareImpl implements AuditorAware<Long> {
@@ -17,13 +17,12 @@ public class AuditorAwareImpl implements AuditorAware<Long> {
         this.jwtUtil = jwtHelper;
     }
 
-    @NotNull
     @Override
     public Optional<Long> getCurrentAuditor() {
         try {
-            return Optional.of(jwtUtil.getIdUserRequesting());
+            return Optional.ofNullable(jwtUtil.getIdUserRequesting());
         } catch (BusinessException e) {
-            return Optional.of(0L);
+            return Optional.empty();
         }
     }
 }

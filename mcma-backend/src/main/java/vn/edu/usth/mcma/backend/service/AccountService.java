@@ -1,27 +1,31 @@
 package vn.edu.usth.mcma.backend.service;
 
-import constants.ApiResponseCode;
-import constants.CommonStatus;
-import constants.UserType;
+import java.time.Instant;
+import java.util.*;
+
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+
 import org.apache.commons.text.RandomStringGenerator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import vn.edu.usth.mcma.backend.domain.Otp;
-import vn.edu.usth.mcma.backend.dto.account.*;
-import vn.edu.usth.mcma.backend.dto.unsorted.AdminPresentation;
-import vn.edu.usth.mcma.backend.dto.unsorted.UserPresentation;
+
+import vn.edu.usth.mcma.backend.common.constant.ApiResponseCode;
+import vn.edu.usth.mcma.backend.common.enums.CommonStatus;
+import vn.edu.usth.mcma.backend.common.enums.UserType;
+
+import vn.edu.usth.mcma.backend.dto.request.account.*;
+import vn.edu.usth.mcma.backend.dto.response.account.AdminPresentation;
+import vn.edu.usth.mcma.backend.dto.response.account.UserPresentation;
 import vn.edu.usth.mcma.backend.entity.Notification;
+import vn.edu.usth.mcma.backend.entity.Otp;
 import vn.edu.usth.mcma.backend.entity.User;
-import vn.edu.usth.mcma.backend.exception.ApiResponse;
+import vn.edu.usth.mcma.backend.common.dto.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.NotificationRepository;
 import vn.edu.usth.mcma.backend.repository.UserRepository;
-import vn.edu.usth.mcma.backend.security.JwtHelper;
+import vn.edu.usth.mcma.backend.security.jwt.JwtHelper;
 
-import java.time.Instant;
-import java.util.*;
+import lombok.AllArgsConstructor;
 
 @Service
 @Transactional
@@ -35,7 +39,8 @@ public class AccountService {
     private static final String EMAIL_EXISTENCE_KEY = "emailExisted";
     private static final String OTP_DUE_DATE_KEY = "otpDueDate";
     private static final String VALID_KEY = "isValid";
-    private static final RandomStringGenerator numericGenerator = new RandomStringGenerator.Builder().withinRange('0', '9').get();
+    private static final RandomStringGenerator numericGenerator =
+            new RandomStringGenerator.Builder().withinRange('0', '9').get();
     private static final Map<String, Otp> sessionOtpMap = new HashMap<>();
     private final NotificationRepository notificationRepository;
 
@@ -46,8 +51,8 @@ public class AccountService {
         }
         Long userId = jwtHelper.getIdUserRequesting();
         Instant now = Instant.now();
-        userRepository
-                .save(User.builder()
+        User admin =
+                User.builder()
                         .email(email)
                         .password(passwordEncoder.encode(request.getPassword()))
                         .roles(List.of(UserType.ADMIN.name()))
@@ -56,7 +61,8 @@ public class AccountService {
                         .createdDate(now)
                         .lastModifiedBy(userId)
                         .lastModifiedDate(now)
-                        .build());
+                        .build();
+        userRepository.save(admin);
         return ApiResponse.ok();
     }
 
@@ -65,27 +71,31 @@ public class AccountService {
         response.put(EMAIL_EXISTENCE_KEY, userRepository.existsByEmailIgnoreCase(query));
         return response;
     }
+
     public Map<String, Instant> signUpBegin(SendOtpRequest request) {
         return sendOtpToEmail(request);
     }
+
     public Map<String, Boolean> signUpCheckOtp(CheckOtpRequest request) {
         return checkOtp(request);
     }
+
     public ApiResponse signUpFinish(SignUp request) {
         String sessionId = request.getSessionId();
         if (!sessionOtpMap.containsKey(sessionId)) {
             throw new BusinessException(ApiResponseCode.SESSION_ID_NOT_FOUND);
         }
         Instant now = Instant.now();
-        userRepository
-                .save(User.builder()
+        User user =
+                User.builder()
                         .email(sessionOtpMap.get(sessionId).getEmail())
                         .password(passwordEncoder.encode(request.getPassword()))
                         .roles(List.of(UserType.USER.name()))
                         .status(CommonStatus.ACTIVE.getStatus())
                         .createdDate(now)
                         .lastModifiedDate(now)
-                        .build());
+                        .build();
+        userRepository.save(user);
         sessionOtpMap.remove(request.getSessionId());
         return ApiResponse.ok();
     }
@@ -93,17 +103,21 @@ public class AccountService {
     private Map<String, Instant> sendOtpToEmail(SendOtpRequest request) {
         String email = request.getEmail();
         String sessionId = request.getSessionId();
-        sessionOtpMap.computeIfAbsent(sessionId, o -> Otp.builder()
-                .email(email)
-                .otp(numericGenerator.generate(6))
-                .dueDate(Instant.now().plusSeconds(60))
-                .build());
+        sessionOtpMap.computeIfAbsent(
+                sessionId,
+                o ->
+                        Otp.builder()
+                                .email(email)
+                                .otp(numericGenerator.generate(6))
+                                .dueDate(Instant.now().plusSeconds(60))
+                                .build());
         Otp otp = sessionOtpMap.get(sessionId);
         emailService.sendEmailVerificationOtp(otp);
         Map<String, Instant> response = new HashMap<>();
         response.put(OTP_DUE_DATE_KEY, otp.getDueDate());
         return response;
     }
+
     private Map<String, Boolean> checkOtp(CheckOtpRequest request) {
         String sessionId = request.getSessionId();
         if (!sessionOtpMap.containsKey(sessionId)) {
@@ -111,36 +125,44 @@ public class AccountService {
         }
         Otp otp = sessionOtpMap.get(sessionId);
         Map<String, Boolean> response = new HashMap<>();
-        response.put(VALID_KEY, Objects.equals(otp.getOtp(), request.getOtp()) && otp.getDueDate().isAfter(Instant.now()));
+        response.put(
+                VALID_KEY,
+                Objects.equals(otp.getOtp(), request.getOtp())
+                        && otp.getDueDate().isAfter(Instant.now()));
         return response;
     }
 
     public Map<String, Instant> forgotPasswordBegin(SendOtpRequest request) {
         return sendOtpToEmail(request);
     }
+
     public Map<String, Boolean> forgotPasswordCheckOtp(CheckOtpRequest request) {
         return checkOtp(request);
     }
+
     public ApiResponse forgotPasswordFinish(ForgotPassword request) {
         String sessionId = request.getSessionId();
         if (!sessionOtpMap.containsKey(sessionId)) {
             throw new BusinessException(ApiResponseCode.SESSION_ID_NOT_FOUND);
         }
-        userRepository
-                .save(((User) userService
-                        .loadUserByUsername(sessionOtpMap.get(sessionId).getEmail()))
-                        .toBuilder()
+        User existingUser =
+                (User) userService.loadUserByUsername(sessionOtpMap.get(sessionId).getEmail());
+        User updatedUser =
+                existingUser.toBuilder()
                         .password(passwordEncoder.encode(request.getPassword()))
                         .lastModifiedDate(Instant.now())
-                        .build());
+                        .build();
+        userRepository.save(updatedUser);
         sessionOtpMap.remove(sessionId);
         return ApiResponse.ok();
     }
 
     public AdminPresentation getAdmin() {
-        User admin = userRepository
-                .findById(jwtHelper.getIdUserRequesting())
-                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+        Long userId = jwtHelper.getIdUserRequesting();
+        User admin =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         return AdminPresentation.builder()
                 .id(admin.getId())
                 .username(admin.getUsername())
@@ -157,10 +179,13 @@ public class AccountService {
                 .lastModifiedDate(admin.getLastModifiedDate())
                 .build();
     }
+
     public UserPresentation getUser() {
-        User user = userRepository
-                .findById(jwtHelper.getIdUserRequesting())
-                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+        Long userId = jwtHelper.getIdUserRequesting();
+        User user =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
         return UserPresentation.builder()
                 .id(user.getId())
                 .username(user.getUsername())
@@ -183,6 +208,7 @@ public class AccountService {
         emailService.sendResetPasswordMail(user.get());
         return ApiResponse.ok();
     }
+
     public Map<String, Boolean> resetPasswordCheck(ResetPasswordCheck check) {
         String resetKey = check.getResetKey();
 
@@ -191,8 +217,11 @@ public class AccountService {
         response.put(VALID_KEY, user.isPresent());
         return response;
     }
+
     public ApiResponse resetPasswordFinish(ResetPasswordFinish finish) {
-        Optional<User> user = userService.resetPasswordFinish(finish.getResetKey(), passwordEncoder.encode(finish.getNewPassword()));
+        Optional<User> user =
+                userService.resetPasswordFinish(
+                        finish.getResetKey(), passwordEncoder.encode(finish.getNewPassword()));
         if (user.isEmpty()) {
             throw new BusinessException(ApiResponseCode.INVALID_RESET_KEY);
         }
@@ -201,16 +230,18 @@ public class AccountService {
 
     /**
      * use this to update account detail for both admin and user
+     *
      * @param request contains firstName, lastName, sex, dateOfBirth, phone, address
      * @return ApiResponse
      */
     public ApiResponse updateAccount(AccountUpdateRequest request) {
         Long id = jwtHelper.getIdUserRequesting();
-        userRepository
-                .save(userRepository
+        User user =
+                userRepository
                         .findById(id)
-                        .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND))
-                        .toBuilder()
+                        .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+        User updatedUser =
+                user.toBuilder()
                         .firstName(request.getFirstName())
                         .lastName(request.getLastName())
                         .sex(request.getSex())
@@ -219,24 +250,32 @@ public class AccountService {
                         .address(request.getAddress())
                         .lastModifiedBy(id)
                         .lastModifiedDate(Instant.now())
-                        .build());
+                        .build();
+        userRepository.save(updatedUser);
         return ApiResponse.ok();
     }
 
     public List<Notification> findAllNotifications() {
         Long userId = jwtHelper.getIdUserRequesting();
-        return notificationRepository.findAllByUserOrderByCreatedDateDesc(userRepository
-                .findById(userId)
-                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND.setDescription(String.format("User not found with id: %d", userId)))));
+        User user =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(
+                                () ->
+                                        new BusinessException(
+                                                ApiResponseCode.ENTITY_NOT_FOUND.setDescription(
+                                                        String.format(
+                                                                "User not found with id: %d",
+                                                                userId))));
+        return notificationRepository.findAllByUserOrderByCreatedDateDesc(user);
     }
-//    public void deleteAccount(Long userId) {
-//        User user = userRepository
-//                .findById(userId)
-//                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
-//        List<Token> allTokens = tokenRepository.findAllByUser(userId);
-//        tokenRepository.deleteAll(allTokens);
-//
-//        userRepository.delete(user);
-//        //TODO: set status
-//    }
+    //    public void deleteAccount(Long userId) {
+    //        User user = userRepository
+    //                .findById(userId)
+    //                .orElseThrow(() -> new BusinessException(ApiResponseCode.ENTITY_NOT_FOUND));
+    //        List<Token> allTokens = tokenRepository.findAllByUser(userId);
+    //        tokenRepository.deleteAll(allTokens);
+    //
+    //        userRepository.delete(user);
+    //    }
 }

@@ -1,27 +1,31 @@
 package vn.edu.usth.mcma.backend.service;
 
-import constants.ApiResponseCode;
-import constants.CommonStatus;
-import io.jsonwebtoken.ExpiredJwtException;
-import lombok.RequiredArgsConstructor;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vn.edu.usth.mcma.backend.dto.account.RefreshRequest;
-import vn.edu.usth.mcma.backend.dto.unsorted.SignInRequest;
+
+import vn.edu.usth.mcma.backend.common.constant.ApiResponseCode;
+import vn.edu.usth.mcma.backend.common.enums.CommonStatus;
+
+import vn.edu.usth.mcma.backend.dto.request.account.RefreshRequest;
+import vn.edu.usth.mcma.backend.dto.request.account.SignInRequest;
 import vn.edu.usth.mcma.backend.entity.RefreshToken;
 import vn.edu.usth.mcma.backend.entity.User;
-import vn.edu.usth.mcma.backend.exception.ApiResponse;
+import vn.edu.usth.mcma.backend.common.dto.ApiResponse;
 import vn.edu.usth.mcma.backend.exception.BusinessException;
 import vn.edu.usth.mcma.backend.repository.RefreshTokenRepository;
-import vn.edu.usth.mcma.backend.security.JwtUtil;
+import vn.edu.usth.mcma.backend.security.jwt.JwtUtil;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import io.jsonwebtoken.ExpiredJwtException;
+import lombok.RequiredArgsConstructor;
 
 @Transactional
 @Service
@@ -34,16 +38,14 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    //todo: check blacklist sign-in AND refresh
+    // todo: check blacklist sign-in AND refresh
     public Map<String, String> signIn(SignInRequest signInRequest) {
         String username = signInRequest.getEmail();
         UserDetails userDetails = userService.loadUserByUsername(username);
         try {
-            authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(
-                            username,
-                            signInRequest.getPassword()));
-        } catch (BadCredentialsException e){
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, signInRequest.getPassword()));
+        } catch (BadCredentialsException e) {
             // wrong password
             throw new BusinessException(ApiResponseCode.BAD_CREDENTIALS);
         } catch (Exception e) {
@@ -57,14 +59,15 @@ public class AuthService {
             return response;
         }
         String refreshToken = jwtUtil.generateRefreshToken(userDetails);
-        refreshTokenRepository
-                .save(RefreshToken.builder()
-                    .refreshToken(refreshToken)
-                    .status(CommonStatus.ACTIVE.getStatus())
-                    .user(user)
-                    .createdDate(jwtUtil.extractIssuedDate(refreshToken))
-                    .expirationDate(jwtUtil.extractExpirationDate(refreshToken))
-                    .build());
+        RefreshToken tokenToSave =
+                RefreshToken.builder()
+                        .refreshToken(refreshToken)
+                        .status(CommonStatus.ACTIVE.getStatus())
+                        .user(user)
+                        .createdDate(jwtUtil.extractIssuedDate(refreshToken))
+                        .expirationDate(jwtUtil.extractExpirationDate(refreshToken))
+                        .build();
+        refreshTokenRepository.save(tokenToSave);
         response.put(REFRESH_TOKEN_KEY, refreshToken);
         return response;
     }
@@ -78,14 +81,18 @@ public class AuthService {
                 throw new BusinessException(ApiResponseCode.INVALID_REFRESH_REQUEST_USERNAME);
             }
         } catch (ExpiredJwtException e) {
-            refreshTokenRepository
-                    .saveAll(refreshTokenRepository
-                            .findAllByUserAndStatus((User) userDetails, CommonStatus.ACTIVE.getStatus())
+            List<RefreshToken> tokensToUpdate =
+                    refreshTokenRepository
+                            .findAllByUserAndStatus(
+                                    (User) userDetails, CommonStatus.ACTIVE.getStatus())
                             .stream()
-                            .map(r -> r.toBuilder()
-                                    .status(CommonStatus.DELETED.getStatus())
-                                    .build())
-                            .toList());
+                            .<RefreshToken>map(
+                                    r ->
+                                            r.toBuilder()
+                                                    .status(CommonStatus.DELETED.getStatus())
+                                                    .build())
+                            .toList();
+            refreshTokenRepository.saveAll(tokensToUpdate);
             throw new BusinessException(ApiResponseCode.INVALID_REFRESH_REQUEST_EXPIRED);
         }
         Map<String, String> response = new HashMap<>();
@@ -94,18 +101,18 @@ public class AuthService {
     }
 
     public ApiResponse signOut(String accessToken) {
-        refreshTokenRepository
-                .saveAll(refreshTokenRepository
+        List<RefreshToken> tokensToUpdate =
+                refreshTokenRepository
                         .findAllByUserAndStatus(
-                                (User) userService
-                                        .loadUserByUsername(jwtUtil
-                                                .extractUsername(accessToken)),
+                                (User)
+                                        userService.loadUserByUsername(
+                                                jwtUtil.extractUsername(accessToken)),
                                 CommonStatus.ACTIVE.getStatus())
                         .stream()
-                        .map(r -> r.toBuilder()
-                                .status(CommonStatus.DELETED.getStatus())
-                                .build())
-                        .toList());
+                        .<RefreshToken>map(
+                                r -> r.toBuilder().status(CommonStatus.DELETED.getStatus()).build())
+                        .toList();
+        refreshTokenRepository.saveAll(tokensToUpdate);
         return ApiResponse.ok();
     }
 }

@@ -1,18 +1,20 @@
 package vn.edu.usth.mcma.backend.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-import vn.edu.usth.mcma.backend.dto.unsorted.ScreenProjection;
+
+import vn.edu.usth.mcma.backend.projection.ScreenProjection;
 import vn.edu.usth.mcma.backend.entity.Cinema;
 import vn.edu.usth.mcma.backend.entity.Screen;
 
-import java.util.List;
-
-@Repository
 public interface ScreenRepository extends JpaRepository<Screen, Long> {
-    @Query(nativeQuery = true, value = """
+    @Query(
+            nativeQuery = true,
+            value =
+                    """
             select s.id                                         as id,
                    s.name                                       as name,
                    st.id                                        as type,
@@ -27,6 +29,8 @@ public interface ScreenRepository extends JpaRepository<Screen, Long> {
             where (:query is null or :query like concat('%', :query, '%'))
               and s.cinema_id = :cinemaId
             group by s.id""")
-    List<ScreenProjection> findAllProjectionByQuery(@Param(value = "cinemaId") Long cinemaId, @Param(value = "query") String query);
+    List<ScreenProjection> findAllProjectionByQuery(
+            @Param(value = "cinemaId") Long cinemaId, @Param(value = "query") String query);
+
     List<Screen> findAllByCinema(Cinema cinema);
 }

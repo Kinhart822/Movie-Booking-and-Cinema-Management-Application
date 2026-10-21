@@ -1,0 +1,18 @@
+package vn.edu.usth.mcma.backend.common.validation;
+
+import java.lang.annotation.*;
+
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+
+@Documented
+@Constraint(validatedBy = PhoneValidator.class)
+@Target({ElementType.METHOD, ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface PhoneNumber {
+    String message() default "Invalid phone number";
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
+}
