@@ -1,6 +1,6 @@
 package vn.edu.usth.mcma.backend.security.jwt;
 
-import static vn.edu.usth.mcma.backend.config.AppConfig.dotenv;
+import static vn.edu.usth.mcma.backend.common.config.AppConfig.dotenv;
 
 import java.security.Key;
 import java.util.Date;
@@ -10,7 +10,7 @@ import java.util.Objects;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import vn.edu.usth.mcma.backend.entity.User;
+import vn.edu.usth.mcma.backend.module.auth.entity.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

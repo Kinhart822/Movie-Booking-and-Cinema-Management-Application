@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import vn.edu.usth.mcma.backend.common.constant.ApiEndpoints;
-import vn.edu.usth.mcma.backend.service.UserService;
+import vn.edu.usth.mcma.backend.module.auth.service.UserService;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;

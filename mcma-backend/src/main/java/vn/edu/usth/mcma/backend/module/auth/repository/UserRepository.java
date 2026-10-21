@@ -1,0 +1,19 @@
+package vn.edu.usth.mcma.backend.module.auth.repository;
+
+import java.time.Instant;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import vn.edu.usth.mcma.backend.module.auth.entity.User;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByEmailIgnoreCaseAndStatus(String email, Integer status);
+
+    boolean existsByEmailIgnoreCase(String email);
+
+    Optional<User> findByResetKeyAndStatusAndResetDueDateIsAfter(
+            String resetKey, Integer userType, Instant time);
+
+    boolean existsByResetKey(String resetKey);
+}

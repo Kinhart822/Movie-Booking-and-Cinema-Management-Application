@@ -21,8 +21,8 @@ import org.springframework.web.cors.CorsConfiguration;
 
 import vn.edu.usth.mcma.backend.common.constant.ApiEndpoints;
 import vn.edu.usth.mcma.backend.common.enums.UserType;
+import vn.edu.usth.mcma.backend.module.auth.service.UserService;
 import vn.edu.usth.mcma.backend.security.jwt.JwtAuthenticationFilter;
-import vn.edu.usth.mcma.backend.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 

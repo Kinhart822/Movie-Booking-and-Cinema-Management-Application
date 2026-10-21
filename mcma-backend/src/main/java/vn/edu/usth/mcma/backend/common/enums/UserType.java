@@ -1,7 +1,7 @@
 package vn.edu.usth.mcma.backend.common.enums;
 
 import vn.edu.usth.mcma.backend.common.constant.ApiResponseCode;
-import vn.edu.usth.mcma.backend.exception.BusinessException;
+import vn.edu.usth.mcma.backend.common.exception.BusinessException;
 
 import lombok.Getter;
 
